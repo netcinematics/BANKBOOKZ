@@ -44,10 +44,16 @@
     .scrollBarV::-webkit-scrollbar-thumb { background-color: #04223c; border-radius: 13px;
         background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 26%, transparent 26%, transparent 51%, rgba(255, 255, 255, -0.4) 51%, rgba(255, 255, 255, 0.6) 74%, transparent 74%, transparent);
     }  
+    /*******CUSTOM MAIN MENU *******************MAIN MENU*********************************/
+    .MAIN_MENU {background:rgb(72, 80, 111);border:solid 1px rgb(0, 128, 45);border-radius: 13px;
+        padding:0.666em 1em 0.666em 1em;box-shadow: inset 0px 3px 10px purple;
+        display: flex;justify-content: space-evenly;max-width: 80%;margin: -1em auto 1.111em auto;
+        font-size: 0.666em;padding: 0.444em;display: flex;flex:0;
+    } 
+    /*******END CUSTOM MAIN MENU *******************MAIN MENU*********************************/
     /* CUSTOM TITLES ***************************TITLES***********************/
     .mainTitle {font-size: 1.444em;display:flex;justify-content: space-between; padding: 0em 1em 0 1em;
         text-shadow: -8px -1px 8px blue;}
-    .proloTitle {font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em}
     /* CUSTOM EXPANDER ***************************EXPANDER***********************/
     .expanderROW {display:flex;justify-content:space-between;padding: 0.444em 1em 0.444em 1em;border-bottom:1px dashed #021d33}
     .expanderTITLE{font-size:0.888em;color:steelblue;    margin-top: 0.333em;}
@@ -58,14 +64,21 @@
     .expanderBTN:hover{color:cyan;background:darkblue;border:solid 1px teal;}
     .expanderBTN:active{color:cyan;background:blue;border:solid 1px teal;box-shadow:1px 1px 1px black;
     }
-    /** END CUSTOM EXPANDER ***************************************************************/   
-    /*******CUSTOM MAIN MENU *******************MAIN MENU*********************************/
-    .MAIN_MENU {background:rgb(72, 80, 111);border:solid 1px rgb(0, 128, 45);border-radius: 13px;
-        padding:0.666em 1em 0.666em 1em;box-shadow: inset 0px 3px 10px purple;
-        display: flex;justify-content: space-evenly;max-width: 80%;margin: -1em auto 1.111em auto;
-        font-size: 0.666em;padding: 0.444em;display: flex;flex:0;
-    } 
-    /*******END CUSTOM MAIN MENU *******************MAIN MENU*********************************/
+    /** END CUSTOM EXPANDER ******************END EXPANDER*********************************************/   
+    /**  **************************SELECTOR*************************************/
+    .chartBTN {background:steelblue;border-radius: 10px;border: 1px solid orangered;
+        padding: 0.666%;}
+    .chartBTN:hover{color:aqua;background:black;}
+    .chartSELECTOR {background:black; color:steelblue;border-radius: 10px;border: 1px solid aqua;
+        padding: 0.333%;}
+    .chartSELECTOR:hover{color:aqua;background:black;}
+    .chartSELECTOR:focus {border-color: teal;
+    }/* focus border */
+    .chartSELECTOR:focus option:checked {background-color:black;color:limegreen;
+    } /* focused item */
+    .chartSELECTOR:focus-visible{outline-color: teal;
+    } /* focused item */
+    /**  *************************END SELECTOR**************************************/      
     /** CUSTOM TV CHARTS *********************CHARTS******************************************/    
     .tv-lightweight-charts{ margin: 1em 0 1em 0; border-radius:13px;}
     /** END  TV CHARTS *************************CHARTS**************************************/   
@@ -120,7 +133,7 @@
                 <article id="baselineFRAME_BTC" style="justify-content: center;
                 flex:1; display:flex;">
                 </article>
-                <header class="proloTitle">
+                <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
                     <span>
                         <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                         margin-right: 0.5em;"></div>                        
@@ -141,12 +154,19 @@
                     </span>
                 </header>                  
             </section>            
-            <menu id="btnFRAME_BTC" class="FRAME" style="justify-content:space-evenly;
-                border-radius: 13px; flex:1; display:flex;padding:0.222em 0 0.222em 0;
-                width: 66.666%;align-self: center; margin: 0.666em auto;">
-                <button class="BTN">Btn1</button>
+            <menu id="selectorFRAME_BTC" class="FRAME" style="align-items: center;
+                border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
+                <select style="max-height:2em;margin: 0 1em;" class="chartSELECTOR"
+                    onclick="getDataSelector(event)">
+                    <option value="true" selected>2024_10_NVDA</option>
+                    <option value="false">2023_11_AMZN</option>
+                    <option value="false">2022_20_COIN</option>
+                </select>
+                <aside id="selectorVIEW_BTC" style="border: solid 1px steelblue;border-radius: 13px;
+                    padding: 1%;flex: 1"> </aside>
+                <!-- <button class="BTN">Btn1</button>
                 <button class="BTN">Btn2</button>
-                <button class="BTN">Btn3</button>
+                <button class="BTN">Btn3</button> -->
             </menu>
             <menu id="dataFRAME_BTC" class="FRAME" style="justify-content: center;
                 border-radius: 13px; flex:1; display:flex;flex-direction: column;">
@@ -187,7 +207,7 @@
                 <article id="baselineFRAME_ETH" style="justify-content: center;
                 flex:1; display:flex;">
                 </article>
-                <header class="proloTitle">
+                <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
                     <span>
                         <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                         margin-right: 0.5em;"></div>                        
@@ -263,21 +283,7 @@
 
     </section><!--end DATAVIEW-->
 
-    <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
-    background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
-        <div style="margin-top:0;margin-bottom:0em;">
-            2020 - <span id="dateTXTStamp"></span><script>
-                const dateTXTStamp = document.getElementById('dateTXTStamp');
-                dateTXTStamp.innerHTML = new Date().getFullYear();</script> BANKBOOKZ&#8482; by © NetCinematics llc. All rights reserved.
-                See License. DESCRIPTION: Template for Personal_Ledger_System. 
-                Generative Data Visualization for ARTIFICIAL INTELLIGENCE.
-                Charts by <a href="https://www.tradingview.com/">Trading View</a> ♥ ~:).
-        </div>
-    </legal>
-    <!--[if lt IE 7]>
-        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-</body>
+
 <script async defer>// ******************************CUSTOM INTERFACE**********************
 //*************************************************CUSTOM MINMAX***********
 function MINMAX(e){ //get parent and hide/show everything but expanderROW
@@ -380,8 +386,7 @@ window.addEventListener('resize', () => {
 });
 //**END EVENT-HANDLERS*****************************************************
 </script><!--****************************************END CHART IMPLEMENTATION-->
-<script async defer> 
-//*********************MAIN_APP**************************
+<script async defer> //*********************MAIN_APP**************************
 // ******DATES *********************DATES*****************************
 // const dateTXTStr = document.getElementById('dateTXTStamp');
 // dateTXTStam.innerHTML = new Date().getFullYear();
@@ -485,5 +490,58 @@ function go_DATA_IMPORT_FRAME(){
 
 // ******************************************END VIEW METHODS**********
 // **** END VIEWS ****************************END VIEWS***************************
+    //---*************CUSTOM CHART_SELECTOR------------------
+    function getDataSelector(e){
+        let TGT = e.target;
+        const selectedIndex = TGT.selectedIndex;
+        if (selectedIndex !== -1) {
+            const selectedOption = TGT.options[selectedIndex];
+            console.log("Selected value:", selectedOption.value);
+            console.log("Selected text:", selectedOption.text);
+        } else {
+            console.log("No option selected.");
+        }
+    }
+    // const ymt_SELECTOR = document.getElementById('ymt_SELECTOR');
+    // const selectionOutput = document.getElementById('selectionOutput');
+    // ymt_SELECTOR.addEventListener('change', ()=>{
+        // getRandomData(initialDateStr, barData);
+        // updateTKRChart1();      
+        // updateSelections();   
+        // getDataForChart();
+        // updateTKRChart2();      
+    // });
+    // const reset_SELECTOR = ()=>{
+    //     ymt_SELECTOR.innerHTML = ""; //clear children
+    //     ai_bankbookz_2 = JSON.parse(localStorage.ai_bankbookz_2); //update
+    //     let dataKeys = Object.keys(ai_bankbookz_2.ymt_MonthlyMap);
+    //     let options, dataKey;
+    //     for(var i=0;i<dataKeys.length;i++){
+    //         dataKey = dataKeys[i];
+    //         options = document.createElement("option");
+    //         options.value = dataKey; options.text = dataKey;
+    //         ymt_SELECTOR.appendChild(options);
+    //     }
+    //     let selectNone = document.createElement("option");
+    //     selectNone.value = '...'; selectNone.text = '...';
+    //     selectNone.selected = true;
+    //     ymt_SELECTOR.appendChild(selectNone);
+    // }; reset_SELECTOR();
+    // ********************END CHART SELECTOR
 </script><!--*****************************END MAIN_APP******************-->
+<legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
+background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
+    <div style="margin-top:0;margin-bottom:0em;">
+        2020 - <span id="dateTXTStamp"></span><script>
+            const dateTXTStamp = document.getElementById('dateTXTStamp');
+            dateTXTStamp.innerHTML = new Date().getFullYear();</script> BANKBOOKZ&#8482; by © NetCinematics llc. All rights reserved.
+            See License. DESCRIPTION: Template for Personal_Ledger_System. 
+            Generative Data Visualization for ARTIFICIAL INTELLIGENCE.
+            Charts by <a href="https://www.tradingview.com/">Trading View</a> ♥ ~:).
+    </div>
+</legal>
+<!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+</body>
 </html>
