@@ -64,15 +64,11 @@
         padding:0.666em 1em 0.666em 1em;box-shadow: inset 0px 3px 10px purple;
         display: flex;justify-content: space-evenly;max-width: 80%;margin: -1em auto 1.111em auto;
         font-size: 0.666em;padding: 0.444em;display: flex;flex:0;
-    }
-    .MAIN_VIEW {background:black;border:solid 1px lime;border-radius: 13px;margin:1%;padding:3%;
-        margin-top:0.444%;margin-bottom:0.444%;box-shadow: inset 0px 0px 7px lime;display: flex;
-        justify-content: center;height: 100%;min-height: 100%;flex:1;
-    }    
+    } 
     /*******END CUSTOM MAIN MENU *******************MAIN MENU*********************************/
     /** CUSTOM TV CHARTS *********************CHARTS******************************************/    
     .tv-lightweight-charts{ margin: 1em 0 1em 0; border-radius:13px;}
-    /** END  TV CHARTS *************************CHARTS**************************************/    
+    /** END  TV CHARTS *************************CHARTS**************************************/   
 </style>      
 </head>
 <body class="scrollBarV">
@@ -84,14 +80,12 @@
         <button class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
         <button class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
     </menu>
-    <section id="TCKR_VIEW" class="MAIN_VIEW hiddenTab">~ Loading...</section>
-    <section id="BANK_VIEW" class="MAIN_VIEW hiddenTab">~ bamk...</section>
-    <!-- <section id="BOOK_VIEW" class="MAIN_VIEW hiddenTab ">~ book...</section> -->
-    <section id="DATA_VIEW" class="MAIN_VIEW hiddenTab">~ data...</section>
-    <!-- <article id="CHART_VIEW" ></article> -->
+    <section id="TCKR_VIEW" class=" hiddenTab">~ Loading...
 
+    </section><!-- end tckr view-->
+    <section id="BANK_VIEW" class=" hiddenTab">~ bamk...
 
-
+    </section><!-- END BANK VIEW -->
     <section id="BOOK_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
     border-radius: 13px; flex:1; height:10em; display:flex; padding:3%;max-width: 800px;margin:0 10%;
     box-shadow: 1px 3px 13px 0px steelblue;align-self:center; width:88.888%;">
@@ -230,7 +224,45 @@
                 <section style="display:none;">...</section>
             </menu>
         </section><!--end bookframe-->        
-    </section>
+    </section><!--end BOOKVIEW-->
+
+    <section id="DATA_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
+    border-radius: 13px; flex:1; height:10em; display:flex; padding:3%;max-width: 800px;margin:0 10%;
+    box-shadow: 1px 3px 13px 0px steelblue;align-self:center; width:88.888%;" class="hiddenTab">
+            <menu style="display:flex;margin: 0;justify-content: flex-start;height: 3em;">
+                <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                    onclick="go_DATA_GALLERY_FRAME('${EDIT_YMT_RECORD_ID}')">GALLERY</button>
+                <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                    onclick="go_DATA_EDIT_FRAME('${EDIT_YMT_RECORD_ID}')">EDIT</button>
+                <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                    onclick="go_DATA_IMPORT_FRAME('${EDIT_YMT_RECORD_ID}')">IMPORT</button>
+            </menu>
+        <article id="DATA_GALLERY_FRAME" class="hiddenTab">
+            <menu style="display:flex;">
+                <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                    onclick="getDataGallery('tickr')">TICKR_DATA</button>
+                <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                    onclick="getDataGallery('trade')">TRADE_DATA</button>
+            </menu>
+            <main id="data_gallery_list"></main>
+            
+        </article>        
+
+        <article id="DATA_EDIT_FRAME" class="hiddenTab" >
+            <textarea id="editTXTz" style="resize:vertical;height:80%;width:90%;line-height:2.222em;
+                background:black;color:lime;width: 91%;padding: 4%; border-radius: 13px;height:500px;">
+                Loading... </textarea>
+            <!-- <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                onclick="go_DATA_TKR_FRAME('${EDIT_YMT_RECORD_ID}')">TICKR</button>
+            <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
+                onclick="go_DATA_TRADE_FRAME('${EDIT_YMT_RECORD_ID}')">TRADE</button>             -->
+            <!-- <main id="data_edit_list"></main> -->
+        </article>
+
+        <article id="DATA_IMPORT_FRAME" class="hiddenTab"></article>        
+
+    </section><!--end DATAVIEW-->
+
     <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
     background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
         <div style="margin-top:0;margin-bottom:0em;">
@@ -367,14 +399,19 @@ const TCKR_VIEW = document.getElementById("TCKR_VIEW");
 const BANK_VIEW = document.getElementById("BANK_VIEW");
 const BOOK_VIEW = document.getElementById("BOOK_VIEW");
 const DATA_VIEW = document.getElementById("DATA_VIEW");
+const DATA_EDIT_FRAME = document.getElementById("DATA_EDIT_FRAME");
+const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
+const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
 TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BANK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
-BOOK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
-BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT
-// const GALLERY_FRAME = document.getElementById("GALLERY_FRAME");
-// let EDIT_YMT_RECORD_ID = ''; //persist record editing between views.
-// let CHART_SELECTIONS = []; //persist chart selections between views.  
+BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
+DATA_EDIT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
+DATA_IMPORT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
+DATA_GALLERY_FRAME.classList.remove('hiddenTab') //SUB TAB DEFAULT handle
+let EDIT_YMT_RECORD_ID = ''; //persist record editing between views.
+let CHART_SELECTIONS = []; //persist chart selections between views. 
+let DATA_GALLERY_LIST = `hi there`; 
 // ******************************************VIEW METHODS**********
 function go_TICKR_VIEW(){ //TAB SWITCH
     TCKR_VIEW.classList.remove('hiddenTab');     
@@ -400,6 +437,52 @@ function go_DATA_VIEW(){
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.remove('hiddenTab');
 }
+function go_DATA_GALLERY_FRAME(){
+    DATA_EDIT_FRAME.classList.add('hiddenTab')     
+    DATA_IMPORT_FRAME.classList.add('hiddenTab')     
+    DATA_GALLERY_FRAME.classList.remove('hiddenTab') 
+}
+function getDataGallery(type){
+    if(type==='tickr'){
+        DATA_EDIT_FRAME.classList.add('hiddenTab')     
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')     
+        DATA_GALLERY_FRAME.classList.remove('hiddenTab') 
+    }else if (type==='trade'){
+
+    }else{ //YMTID data edit
+
+    }
+}
+function go_DATA_EDIT_FRAME(){
+    DATA_EDIT_FRAME.classList.remove('hiddenTab')     
+    DATA_IMPORT_FRAME.classList.add('hiddenTab')     
+    DATA_GALLERY_FRAME.classList.add('hiddenTab') 
+}
+function go_DATA_IMPORT_FRAME(){
+        let dynamic_height = '20em';
+        dynamic_height = screenHeight-200+'px';        
+        let example_txt = `[{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+            "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
+        {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+            "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
+        {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+            "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]`;
+        DATA_IMPORT_FRAME.innerHTML = 
+        `<section style="height:${dynamic_height};width:100%;font-size:0.777em;margin:1%;
+            display:flex;flex-direction:column;">
+            <header style="margin-bottom:1em;">IMPORT DATA</header>
+            <textarea id="importTXT" style="flex: 1 1 0;resize:vertical;background:black; color:lime; width: 91%; 
+                box-shadow: 0px 0px 8px purple; max-height: 500px;padding: 4%; border-radius: 13px;">
+                ${example_txt}</textarea> 
+            <footer class="main_footer" style="display:flex;justify-content: flex-end;padding: 1em;height: 2em;font-size: 1.333em;">
+                <button class="BTN" style="background:forestgreen" onclick="import_BTNClick()">IMPORT</button>
+            </footer>   
+        </section>`;
+    DATA_EDIT_FRAME.classList.add('hiddenTab')     
+    DATA_IMPORT_FRAME.classList.remove('hiddenTab')     
+    DATA_GALLERY_FRAME.classList.add('hiddenTab') 
+}
+
 // ******************************************END VIEW METHODS**********
 // **** END VIEWS ****************************END VIEWS***************************
 </script><!--*****************************END MAIN_APP******************-->
