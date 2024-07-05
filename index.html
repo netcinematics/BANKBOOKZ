@@ -26,17 +26,21 @@
     .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
         cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    .hiddenTab{ display:none !important;}
+    .blueBTN{border-radius: 13px;background: #6cd8d8;cursor: pointer;font-size: 0.777em;color: #012d56;line-height: 2; }
     /**************RESPONSIVE BTN *******************/
     .BTN:hover{border:1px solid steelblue; color:purple}
     .BTN:active{border:1px solid lime; color:green}
+    .blueBTN:hover{border:1px solid lime;  background:black;  color:green}
+    .blueBTN:active{border:1px solid steelblue;  background:black; color:purple}
     @media only screen and (max-width: 800px) { /************* TABLET */
         body{  background-color: #00070d;}
         .BTN{font-size:0.999em;}
+        .blueBTN{font-size:0.999em;}
     }  
     @media only screen and (max-width: 500px) { /************* PHONE */
         body{ background-color: #07000c; }
         .BTN{font-size:1em;}
+        .blueBTN{font-size:1em;}
     }
     /* ***********************************CUSTOM SCROLLBAR****************************/
     .scrollBarV {overflow-x:scroll;}
@@ -51,6 +55,14 @@
         display: flex;justify-content: space-evenly;max-width: 80%;margin: -1em auto 1.111em auto;
         font-size: 0.666em;padding: 0.444em;display: flex;flex:0;
     } 
+    .hiddenTab{ display:none !important;}
+    /* CUSTOM HR ***************************HR***********************/
+    hr {border-top:solid 1px steelblue; border-bottom: none; border-radius: 2px;}    
+    /* CUSTOM INPUT ***************************INPUT***********************/
+    .inputELEM { border-radius: 13px;text-align: center;background: darkslategrey;
+        color: cyan;margin-right:1em;width:7em;padding: 0;font-size:0.888em;
+    }
+    /* END CUSTOM INPUT ***************************END INPUT***********************/
     /*******END CUSTOM MAIN MENU *******************MAIN MENU*********************************/
     /* CUSTOM TITLES ***************************TITLES***********************/
     .mainTitle {font-size: 1.444em;display:flex;justify-content: space-between; padding: 0em 1em 0 1em;
@@ -86,7 +98,12 @@
     /** API ***************************************************************/
     #keyBOX{ margin:1%;border: solid 1px steelblue;font-size: 0.777em;}
     #keyINPUT:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px #233453 inset;}
-    /** END API ***************************************************************/    
+    /** END API ***************************************************************/ 
+    /** VIEW IMPLEMENTATIONS ***************************************************/   
+    .tkrROWZ{margin: 1%; width:92%; border:solid 1px steelblue; display: flex;justify-content: space-between;
+        border-radius:18px;padding: 0 3% 0 3%; align-items: center; flex-wrap: wrap;
+    }    
+    /** END VIEW IMPLEMENTATIONS *****************************************/   
 </style>      
 </head>
 <body class="scrollBarV">
@@ -98,11 +115,46 @@
         <button class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
         <button class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
     </menu>
-    <section id="TCKR_VIEW" class=" hiddenTab">~ Loading...
+    <section id="TCKR_VIEW" class=" hiddenTab" style="flex:1;border-radius: 13px; border: solid 1px steelblue; 
+        box-shadow: inset 1px 1px 11px 0px cyan; padding:2%;padding-top: 3%;padding-left:4%; color: cyan; 
+        line-height:1.666em;">
 
-    </section><!-- end tckr view-->
-    <section id="BANK_VIEW" class=" hiddenTab">~ bamk...
+        <header class="mainTitle expanderROW">
+            <span class="boxTitle">
+                <span style="font-size:0.777em; color:cyan">1</span>
+                <span>TICKERS</span>
+                <!-- <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span> -->
+            </span>
+        </header>
 
+        <!-- <span class="boxTitle"> <span style="font-size:1.777em; color:cyan">1</span>
+        <span style="font-size: 2.222em;color:cyan;">Tickers</span> 
+        <span style="font-size:1.555em">List&nbsp;</span>
+        <span style="font-size:1.555em">🎪</span></span>
+        <button id=expandCollapseBtn1 class="expandCollapseBtn1" onclick="assetsExpandCollapseClick()">🕸️</button> -->
+        <hr/>
+        <article id="TKR_RENDER_FRAME"></article>
+        <hr/>
+        <button id="saveTickBtn1" class="blueBTN" onclick="saveTickerClick()">save🌟</button>
+        <button id="addTickBtn1" class="blueBTN" onclick="add_TKRZ_Click()">add🎇</button>
+    </section><!-- END TCKR VIEW-->
+    <section id="BANK_VIEW" class=" hiddenTab">
+        <section id="allMarginsBOX">
+            <button id=expandCollapseBtn3 class="expandCollapseBtn1" onclick="marginsExpandCollapseClick()">🕸️</button>
+            <span class="boxTitle">🐤 <span style="font-size:1.777em; color:cyan">3</span> 
+            <span style="font-size:1.555em">Genr8</span>
+            <span style="font-size: 2.222em;color:cyan;font-family: monospace;">MARGINz</span>
+            <span style="font-size:1.555em">📏(on longz)💎</span>
+            </span><br>
+            <article style="font-size:1.777em;font-family: sans-serif;line-height:2.222em;">
+               <hr> 
+               <!-- Margins: -->
+               <article id="MARGINZ_RENDER_FRAME"></article>
+               <hr> 
+               <!-- <button id="detailsBtn1" class="genReportBtn1" style="display:none;" onclick="setMarginDetailsClick(event)">details💎</button>  -->
+               <button id="detailsBtn1" class="genReportBtn1 hide_MarginzBtns" onclick="setMarginDetailsClick(event)">details💎</button> 
+               <!-- <button id="totalsBtn1" class="genReportBtn1 hide_MarginzBtns" onclick="setMarginDetailsClick(event)">totals⚙️</button>  -->
+         </section>
     </section><!-- END BANK VIEW -->
     <section id="BOOK_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
     border-radius: 13px; flex:1; height:10em; display:flex; padding:3%;max-width: 800px;margin:0 10%;
@@ -111,7 +163,7 @@
         <section id="BOOKFRAME_XMPL" class="BOOKFRAME_Item">
             <header class="mainTitle expanderROW">
                 <span>XMPL</span>
-                <span class="expanderBTN" style="font-size:0.777em;" onclick="expanderClick_Bookz(event)">✧</span>
+                <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
             </header>
             <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
                 margin-top: 0;padding: 0.222em 0px; width: 66.666%; align-self: center;">
@@ -185,7 +237,7 @@
         <section id="BOOKFRAME_ETH" class="BOOKFRAME_Item">
             <header class="mainTitle expanderROW">
                 <span>ETH</span>
-                <span class="expanderBTN" style="font-size:0.777em;" onclick="expanderClick_Bookz(event)">✧</span>
+                <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
             </header>
             <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
                 margin-top: 0;padding: 0.222em 0px; width: 66.666%; align-self: center;">
@@ -294,7 +346,7 @@
  * bankbookz_DB - ability to save monthly data in localstorage
 \*************************************************************/
 let bankbookz_DB=null;
-const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //READ
+const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     bankbookz_DB = { 
         // ymt_MonthlyMap:{"2020_1_BTC":[
         TRADE_TXNZ_YMT:{"2020_1_BTC":[ //Monthly trade data
@@ -305,7 +357,9 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //READ
         TICKR_DATA_YMT:{"2020_1_BTC":[ //Monthly market data
 
         ]},
-        TICKR_LIST:[{name:'BTC',lastLoadYMD:''},{name:'ETH',lastLoadYMD:''}],
+        TICKR_LIST:[{name:'XMPL',lastLoadYMD:''},
+            {name:'BTC',lastLoadYMD:''},{name:'ETH',lastLoadYMD:''}
+        ],
         METASTATE:{ 
             BOOKZ_EXPANDER:['ETH'] //multiple expansion.
             // CHART_SELECTOR_YMT:[],
@@ -440,7 +494,6 @@ function resizeCandlestickChart1(){
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
     candlestickChart1.resize(maxWidth, maxHeight);
 }
-
 //*************************************************MAIN BASELINE CHART***********
 let baselineChart1;
 function initBaselineChart1(){
@@ -493,7 +546,7 @@ TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BANK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
-init_BOOKZ_TABZ();
+// setTimeout(init_BOOKZ_TABZ,3000);
 DATA_EDIT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 DATA_IMPORT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 DATA_GALLERY_FRAME.classList.remove('hiddenTab') //SUB TAB DEFAULT handle
@@ -506,12 +559,14 @@ function go_TICKR_VIEW(){ //TAB SWITCH
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');
+    init_TKRZ_TABZ()
 }
 function go_BANK_VIEW(){
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.remove('hiddenTab');
     BOOK_VIEW.classList.add('hiddenTab');
-    DATA_VIEW.classList.add('hiddenTab');   
+    DATA_VIEW.classList.add('hiddenTab');  
+    init_BANKZ_TABZ() 
 }
 function go_BOOK_VIEW(){
     TCKR_VIEW.classList.add('hiddenTab');     
@@ -571,6 +626,64 @@ function go_DATA_IMPORT_FRAME(){
     DATA_IMPORT_FRAME.classList.remove('hiddenTab')     
     DATA_GALLERY_FRAME.classList.add('hiddenTab') 
 }
+
+</script><!--*******************************END VIEW structure LOGIC-->
+<script async defer>  //********TAB VIEW LOGIC**************************
+//*********************TICKRZ-LOGIC**********************/
+const init_TKRZ_TABZ = ()=>{
+    let tkrREC = {}, tkrINPUT, tkrROW;
+    let TKR_RENDER_FRAME = document.getElementById('TKR_RENDER_FRAME');
+    TKR_RENDER_FRAME.innerHTML=''; //blank out
+    for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
+        tkrREC = bankbookz_DB.TICKR_LIST[i];
+        tkrINPUT = document.createElement('input')
+        tkrINPUT.value = tkrREC.name;
+        tkrINPUT.readOnly = false;
+        tkrINPUT.placeholder = "ticker";
+        tkrINPUT.classList.add('inputELEM')
+        tkrINPUT.style.margin='1em 0 1em 0';
+        tkrROW = document.createElement('article')
+        tkrROW.classList.add('tkrROWZ')
+        tkrROW.appendChild(tkrINPUT)
+        delBTN = document.createElement('button')
+        delBTN.innerHTML = '🗑️'
+        delBTN.classList.add('blueBTN')
+        delBTN.addEventListener("click",(e)=>{ deleteTickerClick() });
+        tkrROW.appendChild(delBTN)
+        TKR_RENDER_FRAME.appendChild(tkrROW)  
+    }
+}
+const add_TKRZ_Click = ()=>{ 
+
+}
+
+//*********************BANKZ- TAB - LOGIC**********************/
+const init_BANKZ_TABZ = ()=>{
+    let tkrREC = {}, tkrINPUT, tkrROW;
+    let MARGINZ_RENDER_FRAME = document.getElementById('MARGINZ_RENDER_FRAME');
+    MARGINZ_RENDER_FRAME.innerHTML=''; //blank out
+    for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
+        tkrREC = bankbookz_DB.TICKR_LIST[i];
+        tkrINPUT = document.createElement('input')
+        tkrINPUT.value = tkrREC.name;
+        tkrINPUT.readOnly = false;
+        tkrINPUT.placeholder = "ticker";
+        tkrINPUT.classList.add('inputELEM')
+        tkrINPUT.style.margin='1em 0 1em 0';
+        tkrROW = document.createElement('article')
+        tkrROW.classList.add('tkrROWZ')
+        tkrROW.appendChild(tkrINPUT)
+        delBTN = document.createElement('button')
+        delBTN.innerHTML = '🗑️'
+        delBTN.classList.add('blueBTN')
+        delBTN.addEventListener("click",(e)=>{ deleteTickerClick() });
+        tkrROW.appendChild(delBTN)
+        MARGINZ_RENDER_FRAME.appendChild(tkrROW)  
+    }
+}
+const add_BANKZ_Click = ()=>{ }
+</script><!--*******************************END VIEW structure LOGIC-->
+<script async defer>  //*********************BOOKZ-LOGIC**********************/
 function init_BOOKZ_TABZ(){ //collapse all BOOKZ except expanded tabs in local storage,
     let tgtTKR='',viewTKR='',viewID='',expanded=false, tgtBTN;
     const allBookz = document.getElementsByClassName('BOOKFRAME_Item');
@@ -593,7 +706,7 @@ function init_BOOKZ_TABZ(){ //collapse all BOOKZ except expanded tabs in local s
         }
     }
 }; 
-function expanderClick_Bookz(e){
+function expander_BOOKZ_Click(e){
     let TGT = e.target;
     MINMAX(TGT);
     saveBookSelection(TGT);
