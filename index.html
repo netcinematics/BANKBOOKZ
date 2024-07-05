@@ -7,9 +7,10 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>TV CHARTS</title>
+        <title>BANKBOOKZ</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="./favicon.ico" />
         <script type="text/javascript"
             src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 <style>
@@ -82,6 +83,10 @@
     /** CUSTOM TV CHARTS *********************CHARTS******************************************/    
     .tv-lightweight-charts{ margin: 1em 0 1em 0; border-radius:13px;}
     /** END  TV CHARTS *************************CHARTS**************************************/   
+    /** API ***************************************************************/
+    #keyBOX{ margin:1%;border: solid 1px steelblue;font-size: 0.777em;}
+    #keyINPUT:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px #233453 inset;}
+    /** END API ***************************************************************/    
 </style>      
 </head>
 <body class="scrollBarV">
@@ -103,10 +108,10 @@
     border-radius: 13px; flex:1; height:10em; display:flex; padding:3%;max-width: 800px;margin:0 10%;
     box-shadow: 1px 3px 13px 0px steelblue;align-self:center; width:88.888%;">
     
-        <section id="bookFRAME_BTC">
+        <section id="BOOKFRAME_XMPL" class="BOOKFRAME_Item">
             <header class="mainTitle expanderROW">
-                <span>BTC</span>
-                <span class="expanderBTN" style="font-size:0.777em;" onclick="MINMAX(event)">✧</span>
+                <span>XMPL</span>
+                <span class="expanderBTN" style="font-size:0.777em;" onclick="expanderClick_Bookz(event)">✧</span>
             </header>
             <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
                 margin-top: 0;padding: 0.222em 0px; width: 66.666%; align-self: center;">
@@ -121,16 +126,16 @@
                     <span style="font-size:0.444em;">PROFITnLOSS</span>
                 </span>
             </menu>
-            <article id="candelstickFRAME_BTC" style="justify-content:center;
+            <article id="candelstickFRAME_XMPL" style="justify-content:center;
                 flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
             </article>
             <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
             border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;align-self:center;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">PnL:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event)">✧</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
                 </header>
-                <article id="baselineFRAME_BTC" style="justify-content: center;
+                <article id="baselineFRAME_XMPL" style="justify-content: center;
                 flex:1; display:flex;">
                 </article>
                 <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
@@ -154,33 +159,33 @@
                     </span>
                 </header>                  
             </section>            
-            <menu id="selectorFRAME_BTC" class="FRAME" style="align-items: center;
+            <menu id="selectorFRAME_XMPL" class="FRAME" style="align-items: center;
                 border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
                 <select style="max-height:2em;margin: 0 1em;" class="chartSELECTOR"
-                    onclick="getDataSelector(event)">
+                    onclick="getDataSelector(event.target)">
                     <option value="true" selected>2024_10_NVDA</option>
                     <option value="false">2023_11_AMZN</option>
                     <option value="false">2022_20_COIN</option>
                 </select>
-                <aside id="selectorVIEW_BTC" style="border: solid 1px steelblue;border-radius: 13px;
+                <aside id="selectorVIEW_XMPL" style="border: solid 1px steelblue;border-radius: 13px;
                     padding: 1%;flex: 1"> </aside>
                 <!-- <button class="BTN">Btn1</button>
                 <button class="BTN">Btn2</button>
                 <button class="BTN">Btn3</button> -->
             </menu>
-            <menu id="dataFRAME_BTC" class="FRAME" style="justify-content: center;
+            <menu id="dataFRAME_XMPL" class="FRAME" style="justify-content: center;
                 border-radius: 13px; flex:1; display:flex;flex-direction: column;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">METADATA:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event)">✴</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;">...</section>
             </menu>
-        </section><!--***********************************************end bookframe-->
-        <section id="bookFRAME_ETH">
+        </section><!--***********************************************end BOOKFRAME-->
+        <section id="BOOKFRAME_ETH" class="BOOKFRAME_Item">
             <header class="mainTitle expanderROW">
                 <span>ETH</span>
-                <span class="expanderBTN" style="font-size:0.777em;" onclick="MINMAX(event)">✧</span>
+                <span class="expanderBTN" style="font-size:0.777em;" onclick="expanderClick_Bookz(event)">✧</span>
             </header>
             <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
                 margin-top: 0;padding: 0.222em 0px; width: 66.666%; align-self: center;">
@@ -202,7 +207,7 @@
             border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;align-self:center;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">PnL:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event)">✧</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
                 </header>
                 <article id="baselineFRAME_ETH" style="justify-content: center;
                 flex:1; display:flex;">
@@ -239,11 +244,11 @@
                 border-radius: 13px; flex:1; display:flex;flex-direction: column;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">METADATA:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event)">✴</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;">...</section>
             </menu>
-        </section><!--end bookframe-->        
+        </section><!--end BOOKFRAME-->        
     </section><!--end BOOKVIEW-->
 
     <section id="DATA_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
@@ -284,25 +289,102 @@
     </section><!--end DATAVIEW-->
 
 
-<script async defer>// ******************************CUSTOM INTERFACE**********************
+<script async defer>// *************LOCAL_DB*********************
+/*************************************************************\
+ * bankbookz_DB - ability to save monthly data in localstorage
+\*************************************************************/
+let bankbookz_DB=null;
+const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //READ
+    bankbookz_DB = { 
+        // ymt_MonthlyMap:{"2020_1_BTC":[
+        TRADE_TXNZ_YMT:{"2020_1_BTC":[ //Monthly trade data
+            {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"111","shares":"0.0017","price":"64,428.71","role":""}
+        ]},
+        // TICKR_DATA_API_RAW:[],
+        TICKR_DATA_YMT:{"2020_1_BTC":[ //Monthly market data
+
+        ]},
+        TICKR_LIST:[{name:'BTC',lastLoadYMD:''},{name:'ETH',lastLoadYMD:''}],
+        METASTATE:{ 
+            BOOKZ_EXPANDER:['ETH'] //multiple expansion.
+            // CHART_SELECTOR_YMT:[],
+        } 
+    }
+}
+const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
+    try{
+        bankbookz_DB = (localStorage.bankbookz_DB)?
+        JSON.parse( localStorage.bankbookz_DB ):null;
+        bankbookz_DB = null; //DEV: load mock data for TEST
+        if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
+    } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
+}; bankbookz_DB_init();
+function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
+    // debugger;
+    //localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+}
+</script><!--***********************END LOCAL DB*********************-->
+<script async defer>// *************APP UTILITIES*********************
 //*************************************************CUSTOM MINMAX***********
-function MINMAX(e){ //get parent and hide/show everything but expanderROW
-    const TGT = e.target;
-    const STATE = TGT.innerHTML;
+function MINMAX(TGT, setState){ 
+    //setState optional to force expand or collapse, otherwise toggle.
+    //get parent and hide/show everything but expanderROW
+    const CURR_STATE = TGT.innerHTML;
     const ROW = TGT.parentElement; //required
     if(ROW.classList.contains("expanderROW")){ //if row hide siblings.
         let aSibling = ROW.nextElementSibling;
         while (aSibling) { //loop next siblings
-            if(STATE==='✴'){ //COLLAPSE
+            if(CURR_STATE==='✴'||setState){ //COLLAPSE
                 aSibling.style.display = 'flex'; //required
             } else { aSibling.style.display = 'none'; 
             }//EXPAND (default)
             aSibling = aSibling.nextElementSibling;
         }
-        TGT.innerHTML = (STATE==='✴') ? '✧' : '✴';
+        TGT.innerHTML = (CURR_STATE==='✴'||setState) ? '✧' : '✴';
     }
-}//*************************************************END MINMAX***********
-</script><!--****************************************END CUSTOM INTERFACE-->
+}
+//*************************************************END MINMAX***********
+//---*************CUSTOM CHART_SELECTOR------------------
+function getDataSelector(e){
+    let TGT = e.target;
+    const selectedIndex = TGT.selectedIndex;
+    if (selectedIndex !== -1) {
+        const selectedOption = TGT.options[selectedIndex];
+        console.log("Selected value:", selectedOption.value);
+        console.log("Selected text:", selectedOption.text);
+    } else {
+        console.log("No option selected.");
+    }
+}
+    // const ymt_SELECTOR = document.getElementById('ymt_SELECTOR');
+    // const selectionOutput = document.getElementById('selectionOutput');
+    // ymt_SELECTOR.addEventListener('change', ()=>{
+        // getRandomData(initialDateStr, barData);
+        // updateTKRChart1();      
+        // updateSelections();   
+        // getDataForChart();
+        // updateTKRChart2();      
+    // });
+    // const reset_SELECTOR = ()=>{
+    //     ymt_SELECTOR.innerHTML = ""; //clear children
+    //     bankbookz_DB = JSON.parse(localStorage.bankbookz_DB); //update
+    //     let dataKeys = Object.keys(bankbookz_DB.ymt_MonthlyMap);
+    //     let options, dataKey;
+    //     for(var i=0;i<dataKeys.length;i++){
+    //         dataKey = dataKeys[i];
+    //         options = document.createElement("option");
+    //         options.value = dataKey; options.text = dataKey;
+    //         ymt_SELECTOR.appendChild(options);
+    //     }
+    //     let selectNone = document.createElement("option");
+    //     selectNone.value = '...'; selectNone.text = '...';
+    //     selectNone.selected = true;
+    //     ymt_SELECTOR.appendChild(selectNone);
+    // }; reset_SELECTOR();
+    // ********************END CHART SELECTOR
+
+</script><!--***********END APP UTILITIES *********************-->
 <script async defer>// ******************************MAIN CANDLESTICK CHART**********************
 let candlestickChart1;
 function initCandleChart1(){
@@ -315,7 +397,7 @@ function initCandleChart1(){
         },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
     }
-    candlestickChart1 = LightweightCharts.createChart(document.getElementById('candelstickFRAME_BTC'), chartOptions);
+    candlestickChart1 = LightweightCharts.createChart(document.getElementById('candelstickFRAME_XMPL'), chartOptions);
     //AREA-SERIES******************************************************
     const areaSeries = candlestickChart1.addAreaSeries({
         lineColor: '#2962FF', topColor: '#2962FF',
@@ -366,14 +448,14 @@ function initBaselineChart1(){
         layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
     };
-    baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_BTC'), chartOptions);
+    baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
     const baselineSeries = baselineChart1.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
     const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
     baselineSeries.setData(data);
     baselineChart1.timeScale().fitContent();
 }; initBaselineChart1(); 
 function resizeBaselineChart1(){
-    let frame = document.getElementById('baselineFRAME_BTC');
+    let frame = document.getElementById('baselineFRAME_XMPL');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
     let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
     baselineChart1.resize(maxWidth, maxHeight);
@@ -411,6 +493,7 @@ TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BANK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
+init_BOOKZ_TABZ();
 DATA_EDIT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 DATA_IMPORT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 DATA_GALLERY_FRAME.classList.remove('hiddenTab') //SUB TAB DEFAULT handle
@@ -434,7 +517,8 @@ function go_BOOK_VIEW(){
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.remove('hiddenTab');
-    DATA_VIEW.classList.add('hiddenTab');   
+    DATA_VIEW.classList.add('hiddenTab'); 
+    init_BOOKZ_TABZ();  
 }
 function go_DATA_VIEW(){
     TCKR_VIEW.classList.add('hiddenTab');     
@@ -466,11 +550,11 @@ function go_DATA_EDIT_FRAME(){
 function go_DATA_IMPORT_FRAME(){
         let dynamic_height = '20em';
         dynamic_height = screenHeight-200+'px';        
-        let example_txt = `[{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+        let example_txt = `[{"tkr":"XMPL","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
             "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-        {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+        {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
             "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
-        {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+        {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
             "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]`;
         DATA_IMPORT_FRAME.innerHTML = 
         `<section style="height:${dynamic_height};width:100%;font-size:0.777em;margin:1%;
@@ -487,48 +571,237 @@ function go_DATA_IMPORT_FRAME(){
     DATA_IMPORT_FRAME.classList.remove('hiddenTab')     
     DATA_GALLERY_FRAME.classList.add('hiddenTab') 
 }
-
-// ******************************************END VIEW METHODS**********
-// **** END VIEWS ****************************END VIEWS***************************
-    //---*************CUSTOM CHART_SELECTOR------------------
-    function getDataSelector(e){
-        let TGT = e.target;
-        const selectedIndex = TGT.selectedIndex;
-        if (selectedIndex !== -1) {
-            const selectedOption = TGT.options[selectedIndex];
-            console.log("Selected value:", selectedOption.value);
-            console.log("Selected text:", selectedOption.text);
-        } else {
-            console.log("No option selected.");
+function init_BOOKZ_TABZ(){ //collapse all BOOKZ except expanded tabs in local storage,
+    let tgtTKR='',viewTKR='',viewID='',expanded=false, tgtBTN;
+    const allBookz = document.getElementsByClassName('BOOKFRAME_Item');
+    for(var j=0; j<allBookz.length;j++){ //collapse all except selected.
+        viewID = viewTKR=allBookz[j].id;
+        if(!viewID){continue}
+        viewID = viewID.split('_')[1]
+        if(!viewID){continue}
+        expanded = false;
+        for(var i=0; i<bankbookz_DB.METASTATE.BOOKZ_EXPANDER.length;i++){
+            tgtTKR=bankbookz_DB.METASTATE.BOOKZ_EXPANDER[i];
+            if(viewID===tgtTKR){ expanded = true; break; }
+        }
+        tgtBTN = allBookz[j].children[0].children[1];
+        if(expanded){
+            loadBookSelection(viewID);
+            MINMAX(tgtBTN,expanded);
+        }else if(!expanded){
+            MINMAX(tgtBTN,expanded);
         }
     }
-    // const ymt_SELECTOR = document.getElementById('ymt_SELECTOR');
-    // const selectionOutput = document.getElementById('selectionOutput');
-    // ymt_SELECTOR.addEventListener('change', ()=>{
-        // getRandomData(initialDateStr, barData);
-        // updateTKRChart1();      
-        // updateSelections();   
-        // getDataForChart();
-        // updateTKRChart2();      
-    // });
-    // const reset_SELECTOR = ()=>{
-    //     ymt_SELECTOR.innerHTML = ""; //clear children
-    //     ai_bankbookz_2 = JSON.parse(localStorage.ai_bankbookz_2); //update
-    //     let dataKeys = Object.keys(ai_bankbookz_2.ymt_MonthlyMap);
-    //     let options, dataKey;
-    //     for(var i=0;i<dataKeys.length;i++){
-    //         dataKey = dataKeys[i];
-    //         options = document.createElement("option");
-    //         options.value = dataKey; options.text = dataKey;
-    //         ymt_SELECTOR.appendChild(options);
-    //     }
-    //     let selectNone = document.createElement("option");
-    //     selectNone.value = '...'; selectNone.text = '...';
-    //     selectNone.selected = true;
-    //     ymt_SELECTOR.appendChild(selectNone);
-    // }; reset_SELECTOR();
-    // ********************END CHART SELECTOR
+}; 
+function expanderClick_Bookz(e){
+    let TGT = e.target;
+    MINMAX(TGT);
+    saveBookSelection(TGT);
+    let CURR_STATE = TGT.innerHTML;
+    if(CURR_STATE!='✴'){//only load on expand (collapse icon)
+        let viewID = TGT.parentElement.parentElement.id;
+        let viewTKR = viewID.split('_')[1];    
+        loadBookSelection(viewTKR);
+    }
+}
+function loadBookSelection(viewTKR){
+    if(viewTKR==='XMPL'){return}
+    console.log('LOAD DATA',viewTKR)
+}
+function saveBookSelection(TGT){
+    let CURR_STATE = TGT.innerHTML;
+    let viewID = TGT.parentElement.parentElement.id;
+    let viewTKR = viewID.split('_')[1];
+    let lookupIDX = bankbookz_DB.METASTATE.BOOKZ_EXPANDER.indexOf(viewTKR)
+    if(CURR_STATE==='✴'){ //add singular to BOOKZ_EXPANDER
+        if(lookupIDX>-1){
+            bankbookz_DB.METASTATE.BOOKZ_EXPANDER.splice(lookupIDX,1)
+            save_BANKBOOKZ_DB();
+        }
+    }else{ //remove from BOOKZ_EXPANDER.
+        if(lookupIDX<0){
+            bankbookz_DB.METASTATE.BOOKZ_EXPANDER.push(viewTKR)
+            save_BANKBOOKZ_DB();
+        }
+    }
+}
+// ******************************************END VIEW METHODS**********
+// **** END VIEWS ****************************END VIEWS***************************
+
 </script><!--*****************************END MAIN_APP******************-->
+
+<script async defer>/****************************************CRYPTO OHLCV API***********/
+
+let stock_api_key = null;//API_KEY - set in local storage.
+let keyBOX = document.getElementById('keyBOX');
+let keyINPUT = document.getElementById('keyINPUT');  
+
+let init_api_key = ()=>{
+   if(localStorage.stock_api_key){
+        stock_api_key = localStorage.stock_api_key;
+        let status = document.getElementById('connectStatus')
+        status.innerHTML='CONNECTED'        
+   }
+}; init_api_key();
+
+let setAPIKEY = ()=>{
+   if(keyINPUT.value){
+        stock_api_key = keyINPUT.value;
+        localStorage.stock_api_key = stock_api_key;
+        let status = document.getElementById('connectStatus')
+        status.innerHTML='CONNECTED'
+   }
+}; 
+
+// let init_monthly = ()=>{
+//    if(!stock_api_key){return;}
+//    debugger;
+//    if(localStorage.monthly_NVDA_data){ //LOAD FROM LOCAL not API.
+//          monthly_data = JSON.parse(localStorage.monthly_NVDA_data);
+//          // let, val_ath=0,val_atl=0,curr_price=0,perc_off_ath=0;
+//          let data_keys = Object.keys(monthly_data);
+//          for(let i=0; i<data_keys.length;i++){
+//             daily_data = monthly_data[data_keys[i]];
+//             if(parseFloat(daily_data["2. high"]) > calculate_ATH){
+//                calculate_ATH = parseFloat(daily_data["2. high"])
+//             }
+//             if(parseFloat(daily_data["3. low"]) < calculate_ATL || calculate_ATL===0){
+//                calculate_ATL = parseFloat(daily_data["3. low"])
+//             }
+//          }
+//          console.log('ATH:',calculate_ATH)
+//          console.log('ATL:',calculate_ATL)
+//          console.log('Curr Price:', current_PRICE)
+//          console.log('%off ATH', perc_off_ath)
+//          return;
+//    }
+//    // const apiKey = '';
+//    // const symbol = 'NVDA';
+//    const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${target_SYMBOL}&apikey=${stock_api_key}`;
+//    fetch(apiUrl)
+//    .then(response => response.json())
+//    .then(data => {
+//          localStorage.monthly_NVDA_data = JSON.stringify(data["Monthly Adjusted Time Series"]);
+
+//    })
+//    .catch(error => {
+//          console.error('Error fetching data:', error);
+//    });
+// }; //init_monthly();
+
+const getCrypto_Quotes = async (queries)=>{
+let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=USD&interval=5min&apikey=${stock_api_key}`;
+// fetch(queries[i].url).then((data)=>{
+fetch(url).then((data)=>{
+            if(data.ok){
+               return data.json();
+            } else{ debugger; }
+         }).then((tickResp)=>{
+             let tickDaily = tickResp["Time Series (Digital Currency Daily)"]
+             let chartFormat = formatCryptoDaily_to_ChartJS(tickDaily);
+             save_NEW_CRYPTO_DAILY(chartFormat); //skip duplicates
+
+         }).catch((error)=>{
+            debugger;
+            // showErrorMSG('🛠️ bad request')
+            console.log(error)
+         })
+}
+// const getData_Quotes = async (queries)=>{
+// //    if(!stock_api_key){ showErrorMSG('🛠️ connect api'); return;}
+//    if(!queries.length){return;}
+//    try{
+//       for(let i=0; i<queries.length;i++){
+//          console.log('Query:',queries[i].tkr)
+//          //CRYPTO QUERIES-----------------------------------
+//          if(queries[i].tkr==='BTC' 
+//             || queries[i].tkr==='ETH'  
+//             || queries[i].tkr==='LTC'  
+//             || queries[i].tkr==='AVAX' ){
+//             console.log('Crypto Query:',queries[i].tkr)
+//             //getCryptoPriceQuery(); //TODO
+//             continue;
+//          }
+//          //END CRYPTO QUERIES-----------------------------------
+//          fetch(queries[i].url).then((data)=>{
+//             if(data.ok){
+//                return data.json();
+//             } else{ debugger; }
+//          }).then((tickData)=>{
+//             debugger;
+//             let xmpl = tickData["Weekly Adjusted Time Series"]["2024-06-18"]
+//             // if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+//             //    showErrorMSG('🛠️ api daily limit');
+//             //    debugger;
+//             //    return;
+//             // }
+//             // if(!tickData || !tickData["Meta Data"] || !tickData["Meta Data"]["2. Symbol"] ){
+//             //    debugger; //todo
+//             // }
+//             // let responseTick = tickData["Meta Data"]["2. Symbol"];
+//             // if(!responseTick){return;}
+//             // let latestClose = tickData["Time Series (5min)"][Object.keys(tickData["Time Series (5min)"])[0]]["4. close"];
+//             // if(!latestClose){return;}
+//             // console.log(responseTick,"last close",latestClose)
+//             // updateLatestTickPrice(responseTick,latestClose);
+//             //SHOW CONNNECTED and CAP, hide disconnected and key input
+//             // stateConnectedBox.style.display = "inline";
+//             // stateNotConnectedBox.style.display = "none";   
+//             // keyBOX.style.display = "none"; 
+//             // latestBtn1.style.display = "none"; //do not call twice. because of limit
+//             // localStorage.ai_ledger = JSON.stringify(ai_ledger) //SAVE to LOCAL STORAGE
+//             // initEncode(); //RELOAD VIEW. 
+
+//          }).catch((error)=>{
+//             debugger;
+//             // showErrorMSG('🛠️ bad request')
+//             console.log(error)
+//          })
+//       }
+//    } catch(error) {
+//         //  showErrorMSG('🛠️ api down')
+//    }           
+// }
+
+
+// const getLastPriceClick = ()=>{ //loop all for last close.
+//    let item={},queries=[];//urls=[];
+// //    for(let i=0;i<ai_ledger.ticks.length;i++){
+//       // if(i>=1){continue;}//DEV_limiter stay below 20
+//     //   item = ai_ledger.ticks[i];
+//     debugger;
+//       item.tick = 'NVDA';//DEV_specifier 
+//       item.url =  `https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${item.tick}&apikey=${stock_api_key}`;
+//       // urls.push(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${item.tick}&interval=5min&apikey=${stock_api_key}`)
+//     //   queries.push({tkr:item.tick,url:`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${item.tick}&interval=5min&apikey=${stock_api_key}`})
+//       queries.push({tkr:item.tick,url:item.url})
+// //    }
+//    // if(stock_api_key && urls.length){
+//    if(stock_api_key && queries.length){
+//       getData_Quotes(queries)
+//     //   showErrorMSG('🌼DATA UPDATED🌼') //todo error. need show message not error.
+//    } else {
+//     //   showErrorMSG('🛠️ connect api key'); 
+//    }
+// }; //getLastPriceClick();
+</script><!--*****************************END STOCK DATA API******************-->
+<!--***************************** STOCK API INPUT******************-->
+<footer style="display:flex;border: solid 1px steelblue;
+border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;    margin: 1% 0% 0% 0;
+justify-content: space-between;
+">
+    <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
+    border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;
+    margin:1%;">
+        API:<input id="keyINPUT"  type="password" placeholder="api_key" 
+        style="margin-left: 1em; background:#233453;
+        border-radius: 10px 0px 0px 10px;"></input>
+        <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+        border-radius: 0px 10px 10px 0px; font-size:0.777em;padding: 4px;" onclick="setAPIKEY();">SET</button>
+    </section>  
+    <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
+</footer>
+<!--***************************** END STOCK API INPUT******************-->
 <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
 background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
     <div style="margin-top:0;margin-bottom:0em;">
