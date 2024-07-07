@@ -22,14 +22,20 @@
     .FRAME{ border:solid 1px steelblue;box-shadow: 1px 1px 3px 0px steelblue;
         border-radius: 10px;padding: 2%;margin: 0.333em;
     }
-    /* BTN **********************************BTN**************************/
-    .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
-        cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    .BTN {color:aqua;background:#000033;border:solid 1px seagreen;
+        text-align: center;border-radius:13px;box-shadow: 1px 1px 1px teal;
+        cursor:pointer;height: 1.444em;
     }
+    .BTN:hover{color:lime;border:solid 1px lime;}
+    .BTN:active{color:cyan;background:blue;border:solid 1px teal;box-shadow:1px 1px 1px black;}    
+    .BTN.selectedBTN{color:cyan;background:darkblue;border:solid 1px teal;}
+    /* BTN **********************************BTN**************************/
+    /* .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
+        cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;} */
     .blueBTN{border-radius: 13px;background: #6cd8d8;cursor: pointer;font-size: 0.777em;color: #012d56;line-height: 2; }
     /**************RESPONSIVE BTN *******************/
-    .BTN:hover{border:1px solid steelblue; color:purple}
-    .BTN:active{border:1px solid lime; color:green}
+    /* .BTN:hover{border:1px solid steelblue; color:purple}
+    .BTN:active{border:1px solid lime; color:green} */
     .blueBTN:hover{border:1px solid lime;  background:black;  color:green}
     .blueBTN:active{border:1px solid steelblue;  background:black; color:purple}
     @media only screen and (max-width: 800px) { /************* TABLET */
@@ -110,10 +116,10 @@
     <header style="position:absolute;top:0.555em;align-self:center;display:flex;">
         BANKBOOKZ</header>
     <menu class="MAIN_MENU">
-        <button class="BTN" style="margin:0 0em 0 0em;" onclick="go_TICKR_VIEW()">TICKRZ</button>
-        <button class="BTN" style="margin:0 1em 0 1em;" onclick="go_BANK_VIEW()">BANKZ</button>
-        <button class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
-        <button class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
+        <button id="TCKR_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_TICKR_VIEW()">TICKRZ</button>
+        <button id="BANK_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_BANK_VIEW()">BANKZ</button>
+        <button id="BOOK_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
+        <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
     </menu>
     <section id="TCKR_VIEW" class=" hiddenTab" style="flex:1;border-radius: 13px; border: solid 1px steelblue; 
         box-shadow: inset 1px 1px 11px 0px cyan; padding:2%;padding-top: 3%;padding-left:4%; color: cyan;line-height:1.666em;">
@@ -229,7 +235,8 @@
                 <section style="display:none;">...</section>
             </menu>
         </section><!--***********************************************end BOOKFRAME-->
-        <section id="baselineFRAME_TEST" class="dynamicBaseline" style="height:4em;">hello</section><!--REMOVE ME-->
+        <!-- <section id="baselineFRAME_TEST" class="dynamicBaseline" style="height:4em;">hello</section> -->
+        <!--REMOVE ME-->
       
     </section><!--end BOOKVIEW-->
 
@@ -406,51 +413,85 @@ function init_DYNA_CHART_Candle(tgtELEM){
         {time: '2018-12-30', open: 10611.33, high: 11011.20, low: 9011.39, close: 9811.10 },{time: '2018-12-31', open: 10911.87, high: 11411.69, low: 8511.66, close: 11111.26 },
     ]);
     Dyna_Chart_CandleStick.timeScale().fitContent();    
-    resize_DYNA_CHART(Dyna_Chart_CandleStick);
+    resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
 }; //END INIT DYNA_CHART - candle
-function resize_DYNA_CHART(elem){
+function resize_DYNA_CHART_Candle(elem){
     let frame = document.getElementById('BOOK_VIEW');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
+    if(maxWidth<100 || maxHeight<50){return}
     elem.resize(maxWidth, maxHeight);
 }
 //*************************************************END DYNA CHART CHART***********
-//******************************SCREEN RESIZE - DYNA CHART***********
-window.addEventListener('resize', () => { //for SCREEN RESIZE
-    for(var j=0; j<DYNA_CHART_CANDLES.length;j++){
-        tgtTKR = DYNA_CHART_CANDLES[j];
-        resize_DYNA_CHART(tgtTKR)
-    }  
-});
-//******************************SCREEN RESIZE - DYNA CHART***********
+
 //******DYNA CHART - BASELINE*****************************************
 let DYNA_CHART_BASELINES = []; //for screen resize
 function init_DYNA_CHART_Baseline(tgtELEM){
-    const chartOptions = {layout:{ textColor:'white',background:{type:'solid',color:'black'}},
-        grid:{vertLines:{color:"#222"},horzLines:{color:"#282828" } }, 
+    // let baselineChart2;
+    const chartOptions = { width:300,height:100,
+        layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
+        grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
     };
-    tgtELEM.innerHTML=''; //blank out
-    // document.getElementById('baselineFRAME_TEST').innerHTML=''; //blank out
-    const Dyna_Chart_Baseline =     
-        // LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
-        LightweightCharts.createChart(tgtELEM, chartOptions);
-    // baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
-    const baselineSeries = baselineChart1.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
+    // debugger;
+    tgtELEM.innerHTML='';
+    // document.getElementById('baselineFRAME_BTC').innerHTML='';
+    // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
+    let Dyna_Chart_Baseline = LightweightCharts.createChart(tgtELEM, chartOptions);
+    // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_BTC'), chartOptions);
+    const baselineSeries = Dyna_Chart_Baseline.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
     const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
     baselineSeries.setData(data);
     Dyna_Chart_Baseline.timeScale().fitContent();
+    // baselineSET.push(baselineChart2)
     resize_DYNA_CHART_Baseline(Dyna_Chart_Baseline);
-    // resize_DYNA_CHART(Dyna_Chart_Baseline);
+    // resize_DYNA_CHART_Candle(baselineChart2);    
     DYNA_CHART_BASELINES.push(Dyna_Chart_Baseline); //for screen resize    
+
+    // const chartOptions = {width:300,height:100, layout:{ textColor:'white',background:{type:'solid',color:'black'}},
+    //     grid:{vertLines:{color:"#222"},horzLines:{color:"#282828" } }, 
+    // };
+    // tgtELEM.innerHTML=''; //blank out
+    // // document.getElementById('baselineFRAME_TEST').innerHTML=''; //blank out
+    // const Dyna_Chart_Baseline =     
+    //     // LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
+    //     LightweightCharts.createChart(tgtELEM, chartOptions);
+    // // baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
+    // const baselineSeries = baselineChart1.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
+    // const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
+    // baselineSeries.setData(data);
+    // Dyna_Chart_Baseline.timeScale().fitContent();
+    // // resize_DYNA_CHART_Baseline(Dyna_Chart_Baseline);
+    // // resize_DYNA_CHART_Candle(Dyna_Chart_Baseline);
 }; //END INIT DYNA_CHART - baseline
 function resize_DYNA_CHART_Baseline(elem){
     // let frame = document.getElementById('baselineFRAME_XMPL');
-    let maxWidth = (elem.offsetWidth>800)?700:(elem.offsetWidth<400)?elem.offsetWidth-0:elem.offsetWidth-80;//(frame.offsetWidth*0.1);
-    let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
+    // let maxWidth = (elem.offsetWidth>800)?700:(elem.offsetWidth<400)?elem.offsetWidth-0:elem.offsetWidth-80;//(frame.offsetWidth*0.1);
+    // let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
+    // elem.resize(maxWidth, maxHeight);
+    // debugger;
+    // let frame = elem;//document.getElementById('BOOK_VIEW');
+    let frame = document.getElementsByClassName('dynamicBaseline')[0]
+    // let maxWidth = (frame.offsetWidth>700)?500:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-60;//(frame.offsetWidth*0.1);
+    let maxWidth = (frame.offsetWidth>700)?700:(frame.offsetWidth<700)?frame.offsetWidth-40:frame.offsetWidth-60;//(frame.offsetWidth*0.1);
+    let maxHeight = 100;//(frame.offsetWidth>800)?600:frame.offsetWidth-200;  
+    if(maxWidth<100){return}
+    console.log('res base',maxWidth);  
     elem.resize(maxWidth, maxHeight);
 }; 
 //*************************************************END DYNA-CHART BASELINE***********
+//******************************SCREEN RESIZE - DYNA CHART***********
+window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
+    for(var j=0; j<DYNA_CHART_CANDLES.length;j++){
+        tgtTKR = DYNA_CHART_CANDLES[j];
+        resize_DYNA_CHART_Candle(tgtTKR)
+    }  
+    for(var j=0; j<DYNA_CHART_BASELINES.length;j++){
+        tgtTKR = DYNA_CHART_BASELINES[j];
+        resize_DYNA_CHART_Baseline(tgtTKR)
+    }  
+});
+//******************************SCREEN RESIZE - DYNA CHART***********
 
 </script><!--****************************END DYNAMIC CHART-->
 <script async defer>// ****************************** XMPL CHART**********************
@@ -507,6 +548,7 @@ function resizeCandlestickChart1(){
     let frame = document.getElementById('BOOK_VIEW');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
+    if(maxWidth<100 || maxHeight<50){return}
     candlestickChart1.resize(maxWidth, maxHeight);
 }
 //*************************************************MAIN BASELINE CHART***********
@@ -522,29 +564,30 @@ function initBaselineChart1(){
     baselineSeries.setData(data);
     baselineChart1.timeScale().fitContent();
 }; initBaselineChart1(); 
-let baselineSET = [];
-function init_Baseline_Test(tgtELEM){ //REMOVE ME
-    let baselineChart2;
-    const chartOptions = { 
-        layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
-        grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
-    };
-    debugger;
-    tgtELEM.innerHTML='';
-    // document.getElementById('baselineFRAME_BTC').innerHTML='';
-    // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
-    baselineChart2 = LightweightCharts.createChart(tgtELEM, chartOptions);
-    // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_BTC'), chartOptions);
-    const baselineSeries = baselineChart2.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
-    const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
-    baselineSeries.setData(data);
-    baselineChart2.timeScale().fitContent();
-    baselineSET.push(baselineChart2)
-}; 
+// let baselineSET = [];
+// function init_Baseline_Test(tgtELEM){ //REMOVE ME
+//     let baselineChart2;
+//     const chartOptions = { 
+//         layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
+//         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
+//     };
+//     // debugger;
+//     tgtELEM.innerHTML='';
+//     // document.getElementById('baselineFRAME_BTC').innerHTML='';
+//     // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
+//     baselineChart2 = LightweightCharts.createChart(tgtELEM, chartOptions);
+//     // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_BTC'), chartOptions);
+//     const baselineSeries = baselineChart2.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
+//     const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
+//     baselineSeries.setData(data);
+//     baselineChart2.timeScale().fitContent();
+//     baselineSET.push(baselineChart2)
+// }; 
 function resizeBaselineChart1(){
     let frame = document.getElementById('baselineFRAME_XMPL');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
     let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
+    if(maxWidth<100){return}
     baselineChart1.resize(maxWidth, maxHeight);
 }; resizeBaselineChart1();
 //*************************************************END MAIN BASELINE CHART***********
@@ -573,12 +616,17 @@ const TCKR_VIEW = document.getElementById("TCKR_VIEW");
 const BANK_VIEW = document.getElementById("BANK_VIEW");
 const BOOK_VIEW = document.getElementById("BOOK_VIEW");
 const DATA_VIEW = document.getElementById("DATA_VIEW");
+const TCKR_VIEW_BTN = document.getElementById("TCKR_VIEW_BTN");
+const BANK_VIEW_BTN = document.getElementById("BANK_VIEW_BTN");
+const BOOK_VIEW_BTN = document.getElementById("BOOK_VIEW_BTN");
+const DATA_VIEW_BTN = document.getElementById("DATA_VIEW_BTN");
 const DATA_EDIT_FRAME = document.getElementById("DATA_EDIT_FRAME");
 const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
 const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
 TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BANK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+BOOK_VIEW_BTN.classList.add('selectedBTN') //TAB DEFAULT handle
 BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
 // setTimeout(init_BOOKZ_TABZ,3000);
 DATA_EDIT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
@@ -589,31 +637,45 @@ let CHART_SELECTIONS = []; //persist chart selections between views.
 let DATA_GALLERY_LIST = `hi there`; 
 // ******************************************VIEW METHODS**********
 function go_TICKR_VIEW(){ //TAB SWITCH
+    remove_VIEW_SELECTED();
     TCKR_VIEW.classList.remove('hiddenTab');     
+    TCKR_VIEW_BTN.classList.add('selectedBTN');
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');
     init_TKRZ_TABZ()
 }
 function go_BANK_VIEW(){
+    remove_VIEW_SELECTED();
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.remove('hiddenTab');
+    BANK_VIEW_BTN.classList.add('selectedBTN');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');  
     init_BANKZ_TABZ() 
 }
 function go_BOOK_VIEW(){
+    remove_VIEW_SELECTED();
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.remove('hiddenTab');
+    BOOK_VIEW_BTN.classList.add('selectedBTN');
     DATA_VIEW.classList.add('hiddenTab'); 
     init_BOOKZ_TABZ();  
 }
 function go_DATA_VIEW(){
+    remove_VIEW_SELECTED();
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.remove('hiddenTab');
+    DATA_VIEW_BTN.classList.add('selectedBTN');
+}
+function remove_VIEW_SELECTED(){
+    TCKR_VIEW_BTN.classList.remove('selectedBTN');     
+    BANK_VIEW_BTN.classList.remove('selectedBTN');
+    BOOK_VIEW_BTN.classList.remove('selectedBTN');
+    DATA_VIEW_BTN.classList.remove('selectedBTN');  
 }
 function go_DATA_GALLERY_FRAME(){
     DATA_EDIT_FRAME.classList.add('hiddenTab')     
@@ -749,14 +811,15 @@ const init_BOOKZ_TABZ = ()=>{
                     <i>Loading...</i>
                 </article>
                 <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
-                border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;align-self:center;">
+                border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;margin: 1em auto;">
                     <header class="expanderROW">
                         <span class="expanderTITLE">PnL:</span>
                         <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
                     </header>
-                    <article id="baselineFRAME_${tgtTKR.name}" class="dynamicBaseline" style="height:4em;">
+                    <article id="baselineFRAME_${tgtTKR.name}" class="dynamicBaseline" style="display:flex;justify-content:center;flex:1;">
                     </article>
-                    <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
+                    <footer style="font-size:0.888em;margin-bottom:1em;display:flex;
+                        justify-content:space-between; padding: 0em 3em 0 2em">
                         <span>
                             <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                             margin-right: 0.5em;"></div>                        
@@ -775,17 +838,10 @@ const init_BOOKZ_TABZ = ()=>{
                             <span style="font-size:0.666em;">BANK:</span>
                             <span style="font-size:0.666em;">444</span>
                         </span>
-                    </header>                  
+                    </footer>                  
                 </section>            
-                <menu id="btnFRAME_${tgtTKR.name}" class="FRAME" style="justify-content:space-evenly;
-                    border-radius: 13px; flex:1; display:flex;padding:0.222em 0 0.222em 0;
-                    width: 66.666%;align-self: center; margin: 0.666em auto;">
-                    <button class="BTN">Btn1</button>
-                    <button class="BTN">Btn2</button>
-                    <button class="BTN">Btn3</button>
-                </menu>
                 <menu id="dataFRAME_${tgtTKR.name}" class="FRAME" style="justify-content: center;
-                    border-radius: 13px; flex:1; display:flex;flex-direction: column;">
+                    border-radius: 13px; flex:1; display:flex;flex-direction: column;padding-top: 0.111em;padding-bottom: 0.222em;">
                     <header class="expanderROW">
                         <span class="expanderTITLE">METADATA:</span>
                         <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
@@ -794,6 +850,13 @@ const init_BOOKZ_TABZ = ()=>{
                 </menu>
             </section><!--end BOOKFRAME-->         
         `;
+        // <menu id="btnFRAME_${tgtTKR.name}" class="FRAME" style="justify-content:space-evenly;
+        //             border-radius: 13px; flex:1; display:flex;padding:0.222em 0 0.222em 0;
+        //             width: 66.666%;align-self: center; margin: 0.666em auto;">
+        //             <button class="BTN">Btn1</button>
+        //             <button class="BTN">Btn2</button>
+        //             <button class="BTN">Btn3</button>
+        //         </menu>
         BOOKZ_RENDER_FRAME.innerHTML += bookFrame_Model; 
     }//END BUILD LOOP
     init_BOOKZ_EXPANDER();
@@ -808,14 +871,14 @@ function render_ALL_BOOKZ_CHARTZ(){
         tgt_Candle = All_DynaCandles[i];
         init_DYNA_CHART_Candle(tgt_Candle);
     }
-    debugger;
+    // debugger;
     let tgt_Baseline; //Render all BASELINE DYNA_CHARTZ
     const All_Dynabaselines = document.getElementsByClassName('dynamicBaseline')
     DYNA_CHART_BASELINES = []; //blank out. for screen resize
     for(var j=0; j<All_Dynabaselines.length;j++){
         tgt_Baseline = All_Dynabaselines[j];
-        // init_DYNA_CHART_Baseline(tgt_Baseline);
-        init_Baseline_Test(tgt_Baseline);
+        init_DYNA_CHART_Baseline(tgt_Baseline);
+        // init_Baseline_Test(tgt_Baseline);
     }    
     // init_Baseline_Test();
 }
