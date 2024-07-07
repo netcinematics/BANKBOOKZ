@@ -229,6 +229,7 @@
                 <section style="display:none;">...</section>
             </menu>
         </section><!--***********************************************end BOOKFRAME-->
+        <section id="baselineFRAME_TEST" class="dynamicBaseline" style="height:4em;">hello</section><!--REMOVE ME-->
       
     </section><!--end BOOKVIEW-->
 
@@ -369,31 +370,20 @@ function getDataSelector(e){
 
 </script><!--***********END APP UTILITIES *********************-->
 <script async defer>// ********************MAIN DYNAMIC CHART**********************
-
-let DYNA_CHART_ELEMS = [];
-// function init_DYNA_CHART(frameName){
-function init_DYNA_CHART(tgtELEM){
-    const chartOptions = { width: 400, height: 300, 
-        layout: { textColor: 'steelblue', background: { type: 'solid', color: '#000000' } },
+let DYNA_CHART_CANDLES = []; //for screen resize
+function init_DYNA_CHART_Candle(tgtELEM){
+    const chartOptions = {width:400,height:300,layout:{textColor:'steelblue',background:{type:'solid',color:'#000000'} },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } },
-        crosshair: { mode: LightweightCharts.CrosshairMode.Normal ,
-            vertLine: { color: "darkslategrey" },
-            horzLine: { color: "darkslategrey" },
-        },
+        crosshair:{mode:LightweightCharts.CrosshairMode.Normal,vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
     }
-    // let Dyna_Chart_CandleStick_ID = "candelstickFRAME_"+frameName;
-    // let Dyna_Chart_ELEM = document.getElementById(Dyna_Chart_CandleStick_ID)
-    tgtELEM.innerHTML='';
-    Dyna_Chart_CandleStick = LightweightCharts.createChart(
-        tgtELEM, chartOptions);
-        // document.getElementById('candelstickFRAME_XMPL'), chartOptions);
+    tgtELEM.innerHTML=''; //blank out
+    const Dyna_Chart_CandleStick = 
+        LightweightCharts.createChart(tgtELEM, chartOptions);
     //AREA-SERIES******************************************************
     const areaSeries = Dyna_Chart_CandleStick.addAreaSeries({
-        lineColor: '#2962FF', topColor: '#2962FF',
-        bottomColor: 'rgba(41, 98, 255, 0.28)',layout: { textColor: 'steelblue', 
-        background: { type: 'solid', color: '#000000' } } ,
-        pointMarkersVisible:true, pointMarkersRadius:4
+        lineColor:'#2962FF',topColor:'#2962FF',bottomColor:'rgba(41, 98, 255, 0.28)',layout:{ textColor: 'steelblue', 
+        background: { type: 'solid', color: '#000000' } }, pointMarkersVisible:true, pointMarkersRadius:4
     });
     areaSeries.setData([
         { time: '2018-12-22', value: 232.51 },{ time: '2018-12-23', value: 331.11 },
@@ -405,13 +395,8 @@ function init_DYNA_CHART(tgtELEM){
     //END: AREA-SERIES******************************************************        
     // CANDLESTICK-SERIES******************************************************        
     const candlestickSeries = Dyna_Chart_CandleStick.addCandlestickSeries({
-        priceScaleId: 'left',
-        layout: { textColor: 'steelblue', 
-        background: { type: 'solid', color: '#000000' } }  ,
-        wickUpColor: "#26a69a",
-        upColor: "#26a69a",
-        wickDownColor: "rgb(225, 50, 85)",
-        downColor: "rgb(225, 50, 85)",
+        priceScaleId: 'left', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
+        wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
     candlestickSeries.setData([
         {time: '2018-12-22', open: 7511.16, high: 8211.84, low: 3611.16, close: 4511.72 },{time: '2018-12-23', open: 4511.12, high: 5311.90, low: 4511.12, close: 4811.09 },
@@ -421,40 +406,52 @@ function init_DYNA_CHART(tgtELEM){
         {time: '2018-12-30', open: 10611.33, high: 11011.20, low: 9011.39, close: 9811.10 },{time: '2018-12-31', open: 10911.87, high: 11411.69, low: 8511.66, close: 11111.26 },
     ]);
     Dyna_Chart_CandleStick.timeScale().fitContent();    
-    // resizeCandlestickChart1();
+    resize_DYNA_CHART(Dyna_Chart_CandleStick);
+    DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
+}; //END INIT DYNA_CHART - candle
+function resize_DYNA_CHART(elem){
+    let frame = document.getElementById('BOOK_VIEW');
+    let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
+    let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
+    elem.resize(maxWidth, maxHeight);
+}
+//*************************************************END DYNA CHART CHART***********
+//******************************SCREEN RESIZE - DYNA CHART***********
+window.addEventListener('resize', () => { //for SCREEN RESIZE
+    for(var j=0; j<DYNA_CHART_CANDLES.length;j++){
+        tgtTKR = DYNA_CHART_CANDLES[j];
+        resize_DYNA_CHART(tgtTKR)
+    }  
+});
+//******************************SCREEN RESIZE - DYNA CHART***********
+//******DYNA CHART - BASELINE*****************************************
+let DYNA_CHART_BASELINES = []; //for screen resize
+function init_DYNA_CHART_Baseline(tgtELEM){
+    const chartOptions = {layout:{ textColor:'white',background:{type:'solid',color:'black'}},
+        grid:{vertLines:{color:"#222"},horzLines:{color:"#282828" } }, 
+    };
+    tgtELEM.innerHTML=''; //blank out
+    // document.getElementById('baselineFRAME_TEST').innerHTML=''; //blank out
+    const Dyna_Chart_Baseline =     
+        // LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
+        LightweightCharts.createChart(tgtELEM, chartOptions);
+    // baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
+    const baselineSeries = baselineChart1.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
+    const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
+    baselineSeries.setData(data);
+    Dyna_Chart_Baseline.timeScale().fitContent();
+    resize_DYNA_CHART_Baseline(Dyna_Chart_Baseline);
+    // resize_DYNA_CHART(Dyna_Chart_Baseline);
+    DYNA_CHART_BASELINES.push(Dyna_Chart_Baseline); //for screen resize    
+}; //END INIT DYNA_CHART - baseline
+function resize_DYNA_CHART_Baseline(elem){
+    // let frame = document.getElementById('baselineFRAME_XMPL');
+    let maxWidth = (elem.offsetWidth>800)?700:(elem.offsetWidth<400)?elem.offsetWidth-0:elem.offsetWidth-80;//(frame.offsetWidth*0.1);
+    let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
+    elem.resize(maxWidth, maxHeight);
 }; 
+//*************************************************END DYNA-CHART BASELINE***********
 
-// function resizeCandlestickChart1(){
-//     let frame = document.getElementById('BOOK_VIEW');
-//     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
-//     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
-//     candlestickChart1.resize(maxWidth, maxHeight);
-// }
-//*************************************************MAIN BASELINE CHART***********
-// let baselineChart1;
-// function initBaselineChart1(){
-//     const chartOptions = { 
-//         layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
-//         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
-//     };
-//     baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
-//     const baselineSeries = baselineChart1.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
-//     const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
-//     baselineSeries.setData(data);
-//     baselineChart1.timeScale().fitContent();
-// }; initBaselineChart1(); 
-// function resizeBaselineChart1(){
-//     let frame = document.getElementById('baselineFRAME_XMPL');
-//     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
-//     let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
-//     baselineChart1.resize(maxWidth, maxHeight);
-// }; resizeBaselineChart1();
-//*************************************************END MAIN BASELINE CHART***********
-//**EVENT-HANDLERS*****************************************************
-// window.addEventListener('resize', () => {
-//     resizeCandlestickChart1();
-//     resizeBaselineChart1();
-// });
 </script><!--****************************END DYNAMIC CHART-->
 <script async defer>// ****************************** XMPL CHART**********************
 let candlestickChart1;
@@ -525,6 +522,25 @@ function initBaselineChart1(){
     baselineSeries.setData(data);
     baselineChart1.timeScale().fitContent();
 }; initBaselineChart1(); 
+let baselineSET = [];
+function init_Baseline_Test(tgtELEM){ //REMOVE ME
+    let baselineChart2;
+    const chartOptions = { 
+        layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
+        grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
+    };
+    debugger;
+    tgtELEM.innerHTML='';
+    // document.getElementById('baselineFRAME_BTC').innerHTML='';
+    // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_TEST'), chartOptions);
+    baselineChart2 = LightweightCharts.createChart(tgtELEM, chartOptions);
+    // baselineChart2 = LightweightCharts.createChart(document.getElementById('baselineFRAME_BTC'), chartOptions);
+    const baselineSeries = baselineChart2.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
+    const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
+    baselineSeries.setData(data);
+    baselineChart2.timeScale().fitContent();
+    baselineSET.push(baselineChart2)
+}; 
 function resizeBaselineChart1(){
     let frame = document.getElementById('baselineFRAME_XMPL');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
@@ -704,102 +720,104 @@ const init_BANKZ_TABZ = ()=>{
 <script async defer>  //*********************BOOKZ-LOGIC**********************/
 //*********************BOOKZ- TAB - LOGIC**********************/
 const init_BOOKZ_TABZ = ()=>{
-let BOOKZ_RENDER_FRAME = document.getElementById('BOOKZ_RENDER_FRAME');
-BOOKZ_RENDER_FRAME.innerHTML=''; //blank out
-let bookFrame_Model = ``, tgtTKR={};
-for(var i=0; i< bankbookz_DB.TICKR_LIST.length; i++){
-    tgtTKR = bankbookz_DB.TICKR_LIST[i];
-    bookFrame_Model = `
-    <section id="BOOKFRAME_${tgtTKR.name}" class="BOOKFRAME_Item">
-            <header class="mainTitle expanderROW">
-                <span>${tgtTKR.name}</span>
-                <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
-            </header>
-            <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
-                margin-top: 0;padding: 0.222em 0px; width: 66.666%; align-self: center;">
-                <span>
-                    <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                    margin-right: 0.5em;"></div>
-                    <span style="font-size:0.444em;">PRICE</span>
-                </span>
-                <span>
-                    <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                    margin-right: 0.5em;"></div>
-                    <span style="font-size:0.444em;">PROFITnLOSS</span>
-                </span>
-            </menu>
-            <article id="candlestickFRAME_${tgtTKR.name}" class="dynamicCandleStick" style="justify-content:center;
-                flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
-                <i>Loading...</i>
-            </article>
-            <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
-            border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;align-self:center;">
-                <header class="expanderROW">
-                    <span class="expanderTITLE">PnL:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
+    let BOOKZ_RENDER_FRAME = document.getElementById('BOOKZ_RENDER_FRAME');
+    BOOKZ_RENDER_FRAME.innerHTML=''; //blank out
+    let bookFrame_Model = ``, tgtTKR={};
+    for(var i=0; i< bankbookz_DB.TICKR_LIST.length; i++){
+        tgtTKR = bankbookz_DB.TICKR_LIST[i];
+        bookFrame_Model = `
+        <section id="BOOKFRAME_${tgtTKR.name}" class="BOOKFRAME_Item">
+                <header class="mainTitle expanderROW">
+                    <span>${tgtTKR.name}</span>
+                    <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
                 </header>
-                <article id="baselineFRAME_${tgtTKR.name}" style="justify-content: center;
-                flex:1; display:flex;">
+                <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+                    margin-top: 0;padding: 0.222em 0px; width: 66.666%; align-self: center;">
+                    <span>
+                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                        margin-right: 0.5em;"></div>
+                        <span style="font-size:0.444em;">PRICE</span>
+                    </span>
+                    <span>
+                        <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                        margin-right: 0.5em;"></div>
+                        <span style="font-size:0.444em;">PROFITnLOSS</span>
+                    </span>
+                </menu>
+                <article id="candlestickFRAME_${tgtTKR.name}" class="dynamicCandleStick" style="justify-content:center;
+                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
+                    <i>Loading...</i>
                 </article>
-                <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
-                    <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                        margin-right: 0.5em;"></div>                        
-                        <span style="font-size:0.666em;margin-top: 0.333em;color:steelblue">PnL:</span>
-                        <span style="font-size:0.666em;">234</span>
-                    </span>
-                    <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                        margin-right: 0.5em;"></div>
-                        <span style="font-size:0.666em;">BOOK:</span>
-                        <span style="font-size:0.666em;">1,234</span>
-                    </span>
-                    <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                        margin-right: 0.5em;"></div>
-                        <span style="font-size:0.666em;">BANK:</span>
-                        <span style="font-size:0.666em;">444</span>
-                    </span>
-                </header>                  
-            </section>            
-            <menu id="btnFRAME_${tgtTKR.name}" class="FRAME" style="justify-content:space-evenly;
-                border-radius: 13px; flex:1; display:flex;padding:0.222em 0 0.222em 0;
-                width: 66.666%;align-self: center; margin: 0.666em auto;">
-                <button class="BTN">Btn1</button>
-                <button class="BTN">Btn2</button>
-                <button class="BTN">Btn3</button>
-            </menu>
-            <menu id="dataFRAME_${tgtTKR.name}" class="FRAME" style="justify-content: center;
-                border-radius: 13px; flex:1; display:flex;flex-direction: column;">
-                <header class="expanderROW">
-                    <span class="expanderTITLE">METADATA:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
-                </header>
-                <section style="display:none;">...</section>
-            </menu>
-        </section><!--end BOOKFRAME-->         
-    `;
-    BOOKZ_RENDER_FRAME.innerHTML += bookFrame_Model; 
-}//END BUILD LOOP
-init_BOOKZ_EXPANDER();
-setTimeout(render_ALL_BOOKZ_CHARTZ,222);
-// let All_FRAMEZ = document.getElementsByClassName('dynamicCandleStick')
-// let frameName = ''
-// for(var j=0; j<All_FRAMEZ.length;j++){
-//     tgtTKR = All_FRAMEZ[j];
-//     frameName = tgtTKR.id.split('_')[1];
-//     init_DYNA_CHART(frameName);
-// }
+                <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
+                border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;align-self:center;">
+                    <header class="expanderROW">
+                        <span class="expanderTITLE">PnL:</span>
+                        <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
+                    </header>
+                    <article id="baselineFRAME_${tgtTKR.name}" class="dynamicBaseline" style="height:4em;">
+                    </article>
+                    <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
+                        <span>
+                            <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>                        
+                            <span style="font-size:0.666em;margin-top: 0.333em;color:steelblue">PnL:</span>
+                            <span style="font-size:0.666em;">234</span>
+                        </span>
+                        <span>
+                            <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;">BOOK:</span>
+                            <span style="font-size:0.666em;">1,234</span>
+                        </span>
+                        <span>
+                            <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;">BANK:</span>
+                            <span style="font-size:0.666em;">444</span>
+                        </span>
+                    </header>                  
+                </section>            
+                <menu id="btnFRAME_${tgtTKR.name}" class="FRAME" style="justify-content:space-evenly;
+                    border-radius: 13px; flex:1; display:flex;padding:0.222em 0 0.222em 0;
+                    width: 66.666%;align-self: center; margin: 0.666em auto;">
+                    <button class="BTN">Btn1</button>
+                    <button class="BTN">Btn2</button>
+                    <button class="BTN">Btn3</button>
+                </menu>
+                <menu id="dataFRAME_${tgtTKR.name}" class="FRAME" style="justify-content: center;
+                    border-radius: 13px; flex:1; display:flex;flex-direction: column;">
+                    <header class="expanderROW">
+                        <span class="expanderTITLE">METADATA:</span>
+                        <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
+                    </header>
+                    <section style="display:none;">...</section>
+                </menu>
+            </section><!--end BOOKFRAME-->         
+        `;
+        BOOKZ_RENDER_FRAME.innerHTML += bookFrame_Model; 
+    }//END BUILD LOOP
+    init_BOOKZ_EXPANDER();
+    setTimeout(render_ALL_BOOKZ_CHARTZ,222);
 
 };init_BOOKZ_TABZ();
 function render_ALL_BOOKZ_CHARTZ(){
-    let All_FRAMEZ = document.getElementsByClassName('dynamicCandleStick')
-    let frameName = ''
-    for(var j=0; j<All_FRAMEZ.length;j++){
-        tgtTKR = All_FRAMEZ[j];
-        frameName = tgtTKR.id.split('_')[1];
-        init_DYNA_CHART(tgtTKR);
+    let tgt_Candle; //Render all CANDLESTICK DYNA_CHARTZ
+    const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
+    DYNA_CHART_CANDLES = []; //blank out. for screen resize
+    for(var i=0; i<All_DynaCandles.length;i++){
+        tgt_Candle = All_DynaCandles[i];
+        init_DYNA_CHART_Candle(tgt_Candle);
     }
+    debugger;
+    let tgt_Baseline; //Render all BASELINE DYNA_CHARTZ
+    const All_Dynabaselines = document.getElementsByClassName('dynamicBaseline')
+    DYNA_CHART_BASELINES = []; //blank out. for screen resize
+    for(var j=0; j<All_Dynabaselines.length;j++){
+        tgt_Baseline = All_Dynabaselines[j];
+        // init_DYNA_CHART_Baseline(tgt_Baseline);
+        init_Baseline_Test(tgt_Baseline);
+    }    
+    // init_Baseline_Test();
 }
 // const add_BOOKZ_Click = ()=>{ }
 function init_BOOKZ_EXPANDER(){ //collapse all BOOKZ except expanded tabs in local storage,
