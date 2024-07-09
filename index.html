@@ -28,12 +28,13 @@
     }
     .BTN:hover{color:lime;border:solid 1px lime;}
     .BTN:active{color:cyan;background:blue;border:solid 1px teal;box-shadow:1px 1px 1px black;}    
-    .BTN.selectedBTN{color:cyan;background:darkblue;border:solid 1px teal;}
+    .BTN.selectedMAINBTN{color:cyan;background:darkblue;border:solid 1px teal;}
+    .blackBTN.selectedSUBBTN{color:cyan;box-shadow: inset 1px 1px 12px 0px blue;border:solid 1px teal;}
     /* BTN **********************************BTN**************************/
     /* .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
         cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;} */
     .blackBTN{border-radius: 13px;background:black;cursor: pointer;font-size: 0.777em;
-        color: aqua;line-height: 2;box-shadow:1px 1px 1px aqua; }
+        color: aqua;line-height:1;box-shadow:1px 1px 1px aqua;padding: 0.555% 1% 0.555% 1%;}
     /**************RESPONSIVE BTN *******************/
     /* .BTN:hover{border:1px solid steelblue; color:purple}
     .BTN:active{border:1px solid lime; color:green} */
@@ -109,7 +110,7 @@
     /** VIEW IMPLEMENTATIONS ***************************************************/   
     .tkrROWZ{margin: 1%; width:92%; border:solid 1px steelblue; display: flex;justify-content: space-between;
         border-radius:18px;padding: 0 3% 0 3%; align-items: center; flex-wrap: wrap;
-    }    
+    } 
     /** END VIEW IMPLEMENTATIONS *****************************************/   
 </style>      
 </head>
@@ -241,38 +242,61 @@
     <section id="DATA_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
     border-radius: 13px; flex:1; height:10em; display:flex; padding:0 3% 2% 3%;max-width: 800px;margin:0 10%;
     box-shadow: 1px 3px 13px 0px steelblue;align-self:center; width:88.888%;" class="hiddenTab">
-            <!-- <menu style="display:flex;margin: 0;justify-content: flex-start;height: 3em;font-size:0.666em;">
-                <button class="BTN" style="" 
-                    onclick="go_DATA_GALLERY_FRAME('${EDIT_YMT_RECORD_ID}')">GALLERY</button>
-                <button class="BTN" style="" 
-                    onclick="go_DATA_IMPORT_FRAME('${EDIT_YMT_RECORD_ID}')">IMPORT</button>
-            </menu> -->
         <article id="DATA_GALLERY_FRAME">
             <menu style="display:flex;flex-wrap: wrap;font-size: 0.999em;padding-left:0;
                 justify-content: space-evenly;border-bottom: 1px dashed #021d33;padding-bottom: 0.666em;">
-                <!-- <button class="BTN" style="" 
-                    onclick="go_DATA_GALLERY_FRAME('${EDIT_YMT_RECORD_ID}')">GALLERY</button>
-                <button class="BTN" style="" 
-                    onclick="go_DATA_IMPORT_FRAME('${EDIT_YMT_RECORD_ID}')">IMPORT</button>                 -->
-                    <!-- <button class="BTN" style="" 
-                        onclick="getDataGallery('edit')">EDIT_DATA</button> -->
-                <button class="blackBTN" onclick="getDataGallery('tickr')">TKR_DATA</button>
-                <button class="blackBTN" onclick="getDataGallery('trade')">TRADE_DATA</button>
-                <button class="blackBTN" onclick="getDataGallery('import')">IMPORT</button>
+                <button id="TKR_VIEW_BTN" class="blackBTN" onclick="getDataGallery('tickr')">TKR_DATA</button>
+                <button id="TRADE_VIEW_BTN" class="blackBTN" onclick="getDataGallery('trade')">TRADE_DATA</button>
+                <button id="IMPORT_VIEW_BTN" class="blackBTN" onclick="getDataGallery('import')">IMPORT</button>
             </menu>
             <main id="data_gallery_list"></main>
         </article>        
 
-        <article id="DATA_TKR_FRAME" style="height:10em; border:solid 1px steelblue;border-radius:10px;" class="">tkr</article>        
-        <article id="DATA_TRADE_FRAME" style="height:10em; border:solid 1px steelblue;border-radius:10px;" class="hiddenTab">trade</article> 
-        <article id="DATA_IMPORT_FRAME" style="height:10em; border:solid 1px steelblue;border-radius:10px;" class="hiddenTab">import</article>        
-        <article id="DATA_EDIT_FRAME" style="height:10em; border:solid 1px steelblue;border-radius:10px;" class="hiddenTab" >edit
-            <textarea id="editTXTz" style="resize:vertical;height:80%;width:90%;line-height:2.222em;
-                background:black;color:lime;width: 91%;padding: 4%; border-radius: 13px;height:500px;">
-                Loading... </textarea>
-             <button class="BTN" style="margin:0.444em 1em 1em 1em;" 
-                onclick="getDataGallery('edit')">go edit</button>
-            
+        <article id="DATA_TKR_FRAME"  style="height:35em; border:solid 1px steelblue;border-radius:10px;
+        background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
+            <header style="margin:1em;width: 100%;padding-left:2em;">TICKER DATA</header>
+            <section id="render_TICKR_DATA" style="width: 88.888%;"></section>
+        </article> 
+        <article id="DATA_TRADE_FRAME"  style="height:35em; border:solid 1px steelblue;border-radius:10px;
+        background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
+            <header style="margin:1em;width: 100%;padding-left:2em;">TRADE DATA</header>
+            <section id="render_TRADE_DATA" style="width: 88.888%;"></section>
+        </article> 
+        <article id="DATA_IMPORT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
+                background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
+            <header style="margin:1em;width: 100%;padding-left:2em;">IMPORT DATA</header>
+            <textarea id="importTXT" style="flex: 1 1 0;resize:vertical;background: black;color: lime;
+                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
+            [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
+            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
+            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
+            <footer class="main_footer">
+                <button class="BTN" style="font-size:0.666em;margin:1em;" onclick="import_BTNClick()">IMPORT TRADE DATA</button>
+            </footer>               
+        </article>        
+        <article id="DATA_EDIT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
+        background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
+            <header style="margin:1em;width: 100%;padding-left:2em;">EDIT DATA</header>
+
+            <select id="edit_SELECTOR_YMT" style="float: right;margin-top: 1em;" class="chartSELECTOR">
+                <option value="true" selected>...</option>
+                <option value="false">AMZN</option>
+                <option value="false">COIN</option>
+            </select>
+            <textarea id="render_EDIT_DATA" style="flex: 1 1 0;resize:vertical;background: black;color: lime;
+                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
+            [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
+            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
+            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
+            <footer class="main_footer">
+                <button class="BTN" style="font-size:0.666em;margin:1em;" onclick="import_BTNClick()">SAVE DATA</button>
+            </footer>   
         </article>
 
        
@@ -293,8 +317,8 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""}
         ]},
         // TICKR_DATA_API_RAW:[],
-        TICKR_DATA_YMT:{"2020_1_BTC":[ //Monthly market data
-
+        TICKR_DATA_YMT:{"2020_1_BTC":[ //Monthly market data ohlc
+            {}
         ]},
         TICKR_LIST:[//{name:'XMPL',lastLoadYMD:''},
             {name:'BTC',lastLoadYMD:''},{name:'ETH',lastLoadYMD:''}
@@ -573,15 +597,22 @@ const TCKR_VIEW_BTN = document.getElementById("TCKR_VIEW_BTN");
 const BANK_VIEW_BTN = document.getElementById("BANK_VIEW_BTN");
 const BOOK_VIEW_BTN = document.getElementById("BOOK_VIEW_BTN");
 const DATA_VIEW_BTN = document.getElementById("DATA_VIEW_BTN");
+const TKR_VIEW_BTN = document.getElementById("TKR_VIEW_BTN");
+const TRADE_VIEW_BTN = document.getElementById("TRADE_VIEW_BTN");
+const IMPORT_VIEW_BTN = document.getElementById("IMPORT_VIEW_BTN");
 const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
 const DATA_TKR_FRAME = document.getElementById("DATA_TKR_FRAME");
 const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
 const DATA_EDIT_FRAME = document.getElementById("DATA_EDIT_FRAME");
 const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
+const render_TICKR_DATA = document.getElementById("render_TICKR_DATA");
+const render_TRADE_DATA = document.getElementById("render_TRADE_DATA");
+const render_EDIT_DATA = document.getElementById("render_EDIT_DATA");
+const edit_SELECTOR_YMT = document.getElementById("edit_SELECTOR_YMT");
 TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BANK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
-BOOK_VIEW_BTN.classList.add('selectedBTN') //TAB DEFAULT handle
+BOOK_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
 BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
 // setTimeout(init_BOOKZ_TABZ,3000);
 // DATA_GALLERY_FRAME.classList.remove('hiddenTab') //SUB TAB DEFAULT handle
@@ -597,7 +628,7 @@ let DATA_GALLERY_LIST = `hi there`;
 function go_TICKR_VIEW(){ //TAB SWITCH
     remove_VIEW_SELECTED();
     TCKR_VIEW.classList.remove('hiddenTab');     
-    TCKR_VIEW_BTN.classList.add('selectedBTN');
+    TCKR_VIEW_BTN.classList.add('selectedMAINBTN');
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');
@@ -607,7 +638,7 @@ function go_BANK_VIEW(){
     remove_VIEW_SELECTED();
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.remove('hiddenTab');
-    BANK_VIEW_BTN.classList.add('selectedBTN');
+    BANK_VIEW_BTN.classList.add('selectedMAINBTN');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');  
     init_BANKZ_TABZ() 
@@ -617,7 +648,7 @@ function go_BOOK_VIEW(){
     TCKR_VIEW.classList.add('hiddenTab');     
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.remove('hiddenTab');
-    BOOK_VIEW_BTN.classList.add('selectedBTN');
+    BOOK_VIEW_BTN.classList.add('selectedMAINBTN');
     DATA_VIEW.classList.add('hiddenTab'); 
     init_BOOKZ_TABZ();  
 }
@@ -627,13 +658,19 @@ function go_DATA_VIEW(){
     BANK_VIEW.classList.add('hiddenTab');
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.remove('hiddenTab');
-    DATA_VIEW_BTN.classList.add('selectedBTN');
+    DATA_VIEW_BTN.classList.add('selectedMAINBTN');
+    getDataGallery('tickr')
 }
 function remove_VIEW_SELECTED(){
-    TCKR_VIEW_BTN.classList.remove('selectedBTN');     
-    BANK_VIEW_BTN.classList.remove('selectedBTN');
-    BOOK_VIEW_BTN.classList.remove('selectedBTN');
-    DATA_VIEW_BTN.classList.remove('selectedBTN');  
+    TCKR_VIEW_BTN.classList.remove('selectedMAINBTN');     
+    BANK_VIEW_BTN.classList.remove('selectedMAINBTN');
+    BOOK_VIEW_BTN.classList.remove('selectedMAINBTN');
+    DATA_VIEW_BTN.classList.remove('selectedMAINBTN');  
+}
+function remove_SUB_VIEW_SELECTED(){
+    TKR_VIEW_BTN.classList.remove('selectedSUBBTN');     
+    TRADE_VIEW_BTN.classList.remove('selectedSUBBTN');
+    IMPORT_VIEW_BTN.classList.remove('selectedSUBBTN');
 }
 function getDataGallery(type){
     if(type==='tickr'){
@@ -641,32 +678,36 @@ function getDataGallery(type){
         load_TKR_FRAME_DATA();     
         DATA_TRADE_FRAME.classList.add('hiddenTab')     
         DATA_EDIT_FRAME.classList.add('hiddenTab')     
-        DATA_IMPORT_FRAME.classList.add('hiddenTab')     
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')   
+        remove_SUB_VIEW_SELECTED();
+        TKR_VIEW_BTN.classList.add('selectedSUBBTN')            
     }else if (type==='trade'){
         DATA_TKR_FRAME.classList.add('hiddenTab')     
         DATA_TRADE_FRAME.classList.remove('hiddenTab')   
         load_TRADE_FRAME_DATA();     
         DATA_EDIT_FRAME.classList.add('hiddenTab')     
-        DATA_IMPORT_FRAME.classList.add('hiddenTab')    
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')  
+        remove_SUB_VIEW_SELECTED();
+        TRADE_VIEW_BTN.classList.add('selectedSUBBTN')          
     }else if(type==='edit'){ 
         DATA_TKR_FRAME.classList.add('hiddenTab')     
         DATA_TRADE_FRAME.classList.add('hiddenTab')     
         DATA_EDIT_FRAME.classList.remove('hiddenTab')   
-        load_EDIT_FRAME_DATA();     
+        // load_EDIT_FRAME_DATA(); //inverted    
         DATA_IMPORT_FRAME.classList.add('hiddenTab')    
     }else if(type==='import'){ 
         DATA_TKR_FRAME.classList.add('hiddenTab')     
         DATA_TRADE_FRAME.classList.add('hiddenTab')     
         DATA_EDIT_FRAME.classList.add('hiddenTab')     
         DATA_IMPORT_FRAME.classList.remove('hiddenTab')    
-        load_IMPORT_FRAME_DATA();          
+        load_IMPORT_FRAME_DATA();
+        remove_SUB_VIEW_SELECTED();
+        IMPORT_VIEW_BTN.classList.add('selectedSUBBTN')          
     }
 }
-
 function load_TKR_FRAME_DATA(){
-    let tkrREC = {}, tkrINPUT, tkrROW, delBTN;
-    // let MARGINZ_RENDER_FRAME = document.getElementById('MARGINZ_RENDER_FRAME');
-    DATA_TKR_FRAME.innerHTML=''; //blank out
+    let tkrREC = {}, tkrINPUT, tkrROW, editBTN;
+    render_TICKR_DATA.innerHTML=''; //blank out
     for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
         tkrREC = bankbookz_DB.TICKR_LIST[i];
         tkrINPUT = document.createElement('input')
@@ -678,38 +719,100 @@ function load_TKR_FRAME_DATA(){
         tkrROW = document.createElement('article')
         tkrROW.classList.add('tkrROWZ')
         tkrROW.appendChild(tkrINPUT)
-        delBTN = document.createElement('button')
-        delBTN.innerHTML = '🗑️'
-        delBTN.classList.add('blackBTN')
-        delBTN.addEventListener("click",(e)=>{ deleteTickerClick() });
-        tkrROW.appendChild(delBTN)
-        DATA_TKR_FRAME.appendChild(tkrROW)  
+        editBTN = document.createElement('button')
+        editBTN.innerHTML = 'edit'+'⚡';
+        editBTN.classList.add('blackBTN')
+        editBTN.addEventListener("click",(e)=>{ editDataClick(e,'TKR') });
+        tkrROW.appendChild(editBTN)
+        render_TICKR_DATA.appendChild(tkrROW)  
     }
-
 }
+function load_TRADE_FRAME_DATA(){
+    let tkrREC = {}, tkrINPUT, tkrROW, editBTN;
+    render_TRADE_DATA.innerHTML=''; //blank out
+    for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
+        tkrREC = bankbookz_DB.TICKR_LIST[i];
+        tkrINPUT = document.createElement('input')
+        tkrINPUT.value = tkrREC.name;
+        tkrINPUT.readOnly = false;
+        tkrINPUT.placeholder = "ticker";
+        tkrINPUT.classList.add('inputELEM')
+        tkrINPUT.style.margin='1em 0 1em 0';
+        tkrROW = document.createElement('article')
+        tkrROW.classList.add('tkrROWZ')
+        tkrROW.appendChild(tkrINPUT)
+        editBTN = document.createElement('button')
+        editBTN.innerHTML = 'edit'+'⚡';
+        editBTN.classList.add('blackBTN')
+        editBTN.addEventListener("click",(e)=>{ editDataClick(e,'TRADE') });
+        tkrROW.appendChild(editBTN)
+        render_TRADE_DATA.appendChild(tkrROW)  
+    }
+}
+function editDataClick(e, datatype){
+    let datatgt = e.target.parentElement.children[0].value;
+    getDataGallery('edit'); //show data panel.
+    if(datatype==='TKR'){
+        renderTICKRData(datatgt);
+    }else if(datatype==='TRADE'){
+        renderTRADEData(datatgt);
+    }
+}
+function renderTICKRData(datatgt){
+    let dataREC = {};
+    // debugger;
+    let TKRKEYS = Object.keys(bankbookz_DB.TICKR_DATA_YMT);
+    let dataSTR = '';
+    render_EDIT_DATA.value=''; //blank out
+    for(var i=0; i<TKRKEYS.length;i++){
+        dataKEY = TKRKEYS[i];
+        dataREC = bankbookz_DB.TICKR_DATA_YMT[dataKEY];
+        dataSTR += JSON.stringify(dataREC)+ `\n\n;`;
+    } 
+    if(dataSTR){
+        render_EDIT_DATA.value= dataSTR;
+    }
+}
+function renderTRADEData(datatgt){
+    // debugger;
+    let TKRKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+    let dataSTR = '';
+    render_EDIT_DATA.innerHTML=''; //blank out
+    for(var i=0; i<TKRKEYS.length;i++){
+        dataKEY = TKRKEYS[i];
+        dataREC = bankbookz_DB.TRADE_TXNZ_YMT[dataKEY];
+        dataSTR += JSON.stringify(dataREC) + `\n\n;`;
+    }  
+    if(dataSTR){
+        render_EDIT_DATA.value= dataSTR;
+    }       
+    // edit_SELECTOR_YMT.selectedIndex  
+           
+}
+
+
+//--------------------------------------END DATA fns----------------------------------
+//---------------------------------IMPORT fns----------------------------------
 function load_IMPORT_FRAME_DATA(){
-        let dynamic_height = '20em';
-        dynamic_height = screenHeight-200+'px';        
-        let example_txt = `[{"tkr":"XMPL","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
-            "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-        {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
-            "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
-        {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
-            "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]`;
-        DATA_IMPORT_FRAME.innerHTML = 
-        `<section style="height:${dynamic_height};width:100%;font-size:0.777em;margin:1%;
-            display:flex;flex-direction:column;">
-            <header style="margin-bottom:1em;">IMPORT DATA</header>
-            <textarea id="importTXT" style="flex: 1 1 0;resize:vertical;background:black; color:lime; width: 91%; 
-                box-shadow: 0px 0px 8px purple; max-height: 500px;padding: 4%; border-radius: 13px;">
-                ${example_txt}</textarea> 
-            <footer class="main_footer" style="display:flex;justify-content: flex-end;padding: 1em;height: 2em;font-size: 1.333em;">
-                <button class="BTN" style="background:forestgreen" onclick="import_BTNClick()">IMPORT</button>
-            </footer>   
-        </section>`;
-    DATA_EDIT_FRAME.classList.add('hiddenTab')     
-    DATA_IMPORT_FRAME.classList.remove('hiddenTab')     
-    DATA_GALLERY_FRAME.classList.add('hiddenTab') 
+        // let dynamic_height = '20em';
+        // dynamic_height = screenHeight-200+'px';        
+        // let example_txt = `[{"tkr":"XMPL","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
+        //     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
+        // {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
+        //     "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
+        // {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
+        //     "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]`;
+        // DATA_IMPORT_FRAME.innerHTML = 
+        // `<section style="height:${dynamic_height};width:100%;font-size:0.777em;margin:1%;
+        //     display:flex;flex-direction:column;">
+        //     <header style="margin-bottom:1em;">IMPORT DATA</header>
+        //     <textarea id="importTXT" style="flex: 1 1 0;resize:vertical;background:black; color:lime; width: 91%; 
+        //         box-shadow: 0px 0px 8px purple; max-height: 500px;padding: 4%; border-radius: 13px;">
+        //         ${example_txt}</textarea> 
+        //     <footer class="main_footer" style="display:flex;justify-content: flex-end;padding: 1em;height: 2em;font-size: 1.333em;">
+        //         <button class="BTN" style="background:forestgreen" onclick="import_BTNClick()">IMPORT</button>
+        //     </footer>   
+        // </section>`;
 }
 
 </script><!--*******************************END VIEW structure LOGIC-->
@@ -739,7 +842,6 @@ const init_TKRZ_TABZ = ()=>{
     }
 }
 const add_TKRZ_Click = ()=>{ }
-
 //*********************END TKRZ- TAB - LOGIC**********************/
 //*********************BANKZ- TAB - LOGIC**********************/
 const init_BANKZ_TABZ = ()=>{
@@ -1085,8 +1187,8 @@ fetch(url).then((data)=>{
 </script><!--*****************************END STOCK DATA API******************-->
 <!--***************************** STOCK API INPUT******************-->
 <footer style="display:flex;border: solid 1px steelblue;
-border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;    margin: 1% 0% 0% 0;
-justify-content: space-between;
+border-radius: 13px;padding: 2px 10%;color: #022e64;align-items: center; margin: 1% 0% 0% 0;
+justify-content: space-between;flex-wrap: wrap;
 ">
     <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
     border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;
