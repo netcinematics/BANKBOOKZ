@@ -11,6 +11,10 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="./favicon.ico" />
+        <script type="module">
+            import { default_data } from './default_data.js';
+            console.log("Imported Data:",`BTC:${default_data.default_BTC.length}`,`ETH:${default_data.default_ETH.length}`);
+        </script>        
         <script type="text/javascript"
             src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 <style>
