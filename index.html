@@ -112,6 +112,17 @@
     .tv-lightweight-charts{ margin: 1em 0 1em 0; border-radius:13px;}
     /** END  TV CHARTS *************************CHARTS**************************************/   
     /** API ***************************************************************/
+    #API_BOX{display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 10%;color: #022e64;align-items: center; 
+        justify-content: space-between;flex-wrap: wrap;margin: 12px auto 0 auto;
+    max-width: 30em;
+    min-width: 50%;}
+    @media only screen and (max-width: 800px) { /************* TABLET */
+        #API_BOX{margin: 8px 10% 0 10%;}
+    }  
+    @media only screen and (max-width: 500px) { /************* PHONE */
+        #API_BOX{margin: 6px 1% 0 1%;}
+    }        
     #keyBOX{ margin:1%;border: solid 1px steelblue;font-size: 0.777em;}
     #keyINPUT:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px #233453 inset;}
     /** END API ***************************************************************/ 
@@ -131,8 +142,14 @@
         <button id="BOOK_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
         <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
     </menu>
-    <section id="TCKR_VIEW" class=" hiddenTab" style="flex:1;border-radius: 13px; border: solid 1px steelblue; 
-        box-shadow: inset 1px 1px 11px 0px cyan; padding:2%;padding-top: 3%;padding-left:4%; color: cyan;line-height:1.666em;">
+    <section id="TCKR_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+    flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+    padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+    box-shadow: inset 1px 1px 11px 0px cyan;"/> 
+    
+        <!--style="flex:1;border-radius: 13px; border: solid 1px steelblue; 
+        box-shadow: inset 1px 1px 11px 0px cyan; padding:2%;padding-top: 3%;padding-left:4%; 
+        max-width:50em;color: cyan;line-height:1.666em;">-->
         <header class="mainTitle expanderROW">
             <span class="boxTitle">
                 <span style="font-size:0.777em; color:cyan">1</span>
@@ -148,9 +165,13 @@
             <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button>
         </menu>
     </section><!-- END TCKR VIEW-->
-    <section id="BANK_VIEW" class=" hiddenTab" 
-        style="flex: 1;border-radius: 13px;border: solid 1px steelblue;box-shadow: inset 1px 1px 11px 0px #00ffa5;
-            padding: 2%;padding-top: 3%;padding-left: 4%; color: cyan;line-height: 1.666em;">
+    <section id="BANK_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+    flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+    padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+    box-shadow: inset 1px 1px 11px 0px #00ffa5;"/> 
+        <!-- style="flex: 1;border-radius: 13px;border: solid 1px steelblue;box-shadow: inset 1px 1px 11px 0px #00ffa5;
+            padding: 2%;padding-top: 3%;padding-left: 4%;max-width:50em; color: cyan;line-height: 1.666em;"
+            >-->
         <article class="mainTitle expanderROW">
             <span class="boxTitle" style="width:100%;">
                 <span></span><span style="font-size:0.777em; color:cyan">2</span>
@@ -165,8 +186,13 @@
         <button id="detailsBtn1" class="blackBTN" onclick="setMarginDetailsClick(event)">details💎</button> 
     </section><!-- END BANKZ VIEW -->
     <!-- *********************************BOOKZ_-VIEW********************************-->
-    <section id="BOOK_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
-        border-radius: 13px;display:flex; padding:3%;flex:1;box-shadow:inset 1px 3px 13px 0px steelblue;">
+    <section id="BOOK_VIEW" style="border: solid 1px steelblue;justify-content: center; 
+        flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+        padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+        box-shadow:inset 1px 3px 13px 0px steelblue;"/>
+        <!-- border:solid 1px steelblue;justify-content: center;flex-direction: column;
+        border-radius: 13px;display:flex; padding:3%;flex:1;
+        box-shadow:inset 1px 3px 13px 0px steelblue;max-width:50em;"> -->
         <article id="BOOKZ_RENDER_FRAME"></article>
         <hr> 
         <section id="BOOKFRAME_XMPL" class="BOOKFRAME_Item">
@@ -243,7 +269,7 @@
     </section><!--end BOOKVIEW-->
 
     <section id="DATA_VIEW" style="border:solid 1px steelblue;justify-content: center;flex-direction: column;
-    border-radius: 13px; flex:1; height:10em; display:flex; padding:0 3% 2% 3%;max-width: 800px;margin:0 10%;
+    border-radius: 13px; flex:1; height:10em; display:flex; padding:1em 3% 2% 3%;max-width:50em;margin:0 10%;
     box-shadow: 1px 3px 13px 0px steelblue;align-self:center; width:88.888%;" class="hiddenTab">
         <article id="DATA_MENU_FRAME">
             <menu style="display:flex;flex-wrap: wrap;font-size: 0.999em;padding-left:0;
@@ -434,7 +460,6 @@ function init_DYNA_CHART_Candle(tgtELEM){
     });
     let candleSeriesDATA = getCandleSeriesDATA(tgtID);
     candlestickSeries.setData(candleSeriesDATA);
-    // init_DYNA_SELECTOR(tgtID);
     Dyna_Chart_CandleStick.timeScale().fitContent();    
     resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
@@ -450,16 +475,15 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+tkr)
     if(!selectELEM){debugger;}
     selectELEM.innerHTML = '';
+    // selectElement.multiple = true;
     selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)}); 
     const option1 = document.createElement("option");
     option1.text = "Last 30";
     option1.value = "Last 30"; 
-    // selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
     selectELEM.appendChild(option1);
     const option2 = document.createElement("option");
     option2.text = "All Time";
     option2.value = "All Time"; 
-    // selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
     selectELEM.appendChild(option2);
     let optionKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr]);
     let dynaOption;
@@ -475,6 +499,15 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
 }
 function DYNA_SELECTOR_Change(e){
+
+// debugger;
+// const selectedOptions = Array.from(selectElement.selectedOptions);
+//   selectedOptions.forEach(option => {
+//     console.log(option.value); // Access selected values
+//     // Do something with the selected options
+//   });
+
+
     let TGTymt = e.target.value;
     let TGTID = e.target.id;
     let TGTtkr = TGTID.split("_")[3]
@@ -563,8 +596,9 @@ function getCandleSeriesDATA(aTKR){
         }  
         candleSeriesDATA.reverse();        
     }else {
-        debugger;
         console.log('SELECTED',monthlySELECTOR)
+        candleSeriesDATA.push(...bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthlySELECTOR]);
+        candleSeriesDATA.reverse(); 
     }
     return candleSeriesDATA;
 }
@@ -1213,13 +1247,10 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
 }
 </script><!--*****************************END STOCK DATA API******************-->
 <!--***************************** STOCK API INPUT******************-->
-<footer style="display:flex;border: solid 1px steelblue;
-border-radius: 13px;padding: 2px 10%;color: #022e64;align-items: center; margin: 1% 0% 0% 0;
-justify-content: space-between;flex-wrap: wrap;
-">
+<footer id="API_BOX">
     <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
     border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;
-    margin:1%;">
+    margin:1em 1% 1em 1%;">
         API:<input id="keyINPUT"  type="new-password" placeholder="api_key" 
         style="margin-left: 1em; background:#233453;
         border-radius: 10px 0px 0px 10px;"></input>
@@ -1227,7 +1258,7 @@ justify-content: space-between;flex-wrap: wrap;
         border-radius: 0px 10px 10px 0px; font-size:0.777em;padding: 4px;" onclick="setAPIKEY();">SET</button>
     </section>  
     <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
-    <button id="latestBtn1" class="blackBTN"
+    <button id="latestBtn1" class="blackBTN" style="margin:1em 1% 1em 1%;"
         onclick="getCrypto_Loop()">getPrices🔄</button>
 </footer>
 <!--***************************** END STOCK API INPUT******************-->
