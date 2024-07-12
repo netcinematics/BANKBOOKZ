@@ -347,7 +347,7 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
         METASTATE:{ 
             BOOKZ_EXPANDER:['BTC'], //multiple expansion.
             lastRefreshMap:{'BTC':'2020-10-11 00:00:00'},
-            monthlySELECTORMap:{'BTC':'...'}
+            monthlySELECTORMap:{'BTC':'All Time'}
         } 
     }
 }
@@ -443,17 +443,20 @@ function resize_DYNA_CHART_Candle(elem){
     elem.resize(maxWidth, maxHeight);
 }
 function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
-    if(!bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]){ //save selection
-        bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = {} 
-    }
+
     let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+tkr)
     selectELEM.innerHTML = '';
 
     const option1 = document.createElement("option");
     option1.text = "Last 30";
-    option1.value = "..."; 
+    option1.value = "Last 30"; 
     selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
     selectELEM.appendChild(option1);
+    const option2 = document.createElement("option");
+    option2.text = "All Time";
+    option2.value = "All Time"; 
+    selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
+    selectELEM.appendChild(option2);
 
     let optionKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr]);
     let dynaOption;
@@ -463,11 +466,17 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
         dynaOption.value = ymd; 
         selectELEM.appendChild(dynaOption);
     }
+    if(!bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]){ //save selection
+        bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = 'Last 30'; //default 
+    }
+    selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
 }
 function DYNA_SELECTOR_Change(e){
-    debugger;
     let TGTymt = e.target.value;
-
+    let TGTID = e.target.id;
+    let TGTtkr = TGTID.split("_")[3]
+    bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = TGTymt;
+    save_BANKBOOKZ_DB();
 }
 //*************************************************END DYNA CHART CHART***********
 
@@ -512,10 +521,10 @@ function getCandleSeriesDATA(aTKR){
     let candleSeriesDATA = [];
     let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
     if(!monthlySELECTOR && aTKR){
-        monthlySELECTOR = '...';
+        monthlySELECTOR = 'Last 30';
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
-    if(monthlySELECTOR==='...'){ //LAST 30
+    if(monthlySELECTOR==='Last 30'){ //LAST 30
         let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         let dayCNT = 0;
@@ -907,7 +916,7 @@ const init_BOOKZ_TABZ = ()=>{
                     <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
                 </header>
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
-                    margin-top: 0;padding: 0.222em 0px;">
+                    margin-top: 0;padding: 1em 0 0 0;">
                     <span>
                         <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                         margin-right: 0.5em;"></div>
@@ -921,7 +930,7 @@ const init_BOOKZ_TABZ = ()=>{
 
                     <span>
                         <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
-                            <option value="true" selected>...</option>
+                            <option value="true" selected>Last 30</option>
                         </select>
                     </span>
 
