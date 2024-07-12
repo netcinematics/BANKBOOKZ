@@ -430,7 +430,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
     });
     let candleSeriesDATA = getCandleSeriesDATA(tgtID);
     candlestickSeries.setData(candleSeriesDATA);
-    init_DYNA_SELECTOR(tgtID);
+    // init_DYNA_SELECTOR(tgtID);
     Dyna_Chart_CandleStick.timeScale().fitContent();    
     resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
@@ -443,21 +443,20 @@ function resize_DYNA_CHART_Candle(elem){
     elem.resize(maxWidth, maxHeight);
 }
 function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
-
     let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+tkr)
+    if(!selectELEM){debugger;}
     selectELEM.innerHTML = '';
-
+    selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)}); 
     const option1 = document.createElement("option");
     option1.text = "Last 30";
     option1.value = "Last 30"; 
-    selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
+    // selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
     selectELEM.appendChild(option1);
     const option2 = document.createElement("option");
     option2.text = "All Time";
     option2.value = "All Time"; 
-    selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
+    // selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)});    
     selectELEM.appendChild(option2);
-
     let optionKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr]);
     let dynaOption;
     for(ymd of optionKEYS){
@@ -477,6 +476,16 @@ function DYNA_SELECTOR_Change(e){
     let TGTtkr = TGTID.split("_")[3]
     bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = TGTymt;
     save_BANKBOOKZ_DB();
+    
+    //GET RELATIVE CHART
+    let chartELEM = e.target.parentElement.parentElement.nextElementSibling;
+    init_DYNA_CHART_Candle(chartELEM);
+    
+    // const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
+    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
+    // for(var i=0; i<All_DynaCandles.length;i++){
+        // tgt_Candle = All_DynaCandles[i];
+        // init_DYNA_CHART_Candle(tgt_Candle);
 }
 //*************************************************END DYNA CHART CHART***********
 
@@ -524,7 +533,7 @@ function getCandleSeriesDATA(aTKR){
         monthlySELECTOR = 'Last 30';
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
-    if(monthlySELECTOR==='Last 30'){ //LAST 30
+    if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
         let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         let dayCNT = 0;
@@ -538,7 +547,19 @@ function getCandleSeriesDATA(aTKR){
             }
         }  
         candleSeriesDATA.reverse();
+    }else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
+        let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
+        let txnSET=[],monthKEY,txnItem;
+        for(var i = 0; i< ymtKEYS.length; i++){ //last 30 days
+            monthKEY = ymtKEYS[i];
+            txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthKEY]
+            for(var ii=0; ii<txnSET.length;ii++){
+                candleSeriesDATA.push(txnSET[ii]);
+            }
+        }  
+        candleSeriesDATA.reverse();        
     }else {
+        debugger;
         console.log('SELECTED',monthlySELECTOR)
     }
     return candleSeriesDATA;
@@ -985,10 +1006,11 @@ const init_BOOKZ_TABZ = ()=>{
     }//END BUILD LOOP
     init_BOOKZ_EXPANDER();
     setTimeout(render_ALL_BOOKZ_CHARTZ,222);
+    setTimeout(render_ALL_DYNA_SELECTORZ,222);
 
 };init_BOOKZ_TABZ();
 function render_ALL_BOOKZ_CHARTZ(){
-    let tgt_Candle; //Render all CANDLESTICK DYNA_CHARTZ
+    let tgt_Candle,tgtTKR; //Render all CANDLESTICK DYNA_CHARTZ
     const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
     DYNA_CHART_CANDLES = []; //blank out. for screen resize
     for(var i=0; i<All_DynaCandles.length;i++){
@@ -1001,7 +1023,18 @@ function render_ALL_BOOKZ_CHARTZ(){
     for(var j=0; j<All_Dynabaselines.length;j++){
         tgt_Baseline = All_Dynabaselines[j];
         init_DYNA_CHART_Baseline(tgt_Baseline);
-    }    
+    }  
+    // for(var k=0; k<bankbookz_DB.TICKR_LIST.length;k++){
+    //     tgtTKR = bankbookz_DB.TICKR_LIST[k];
+    //     init_DYNA_SELECTOR(tgtTKR);
+    // }  
+}
+function render_ALL_DYNA_SELECTORZ(){
+    let tgtTKR;
+    for(var k=0; k<bankbookz_DB.TICKR_LIST.length;k++){
+        tgtTKR = bankbookz_DB.TICKR_LIST[k].tkr;
+        init_DYNA_SELECTOR(tgtTKR);
+    }   
 }
 // const add_BOOKZ_Click = ()=>{ }
 function init_BOOKZ_EXPANDER(){ //collapse all BOOKZ except expanded tabs in local storage,
