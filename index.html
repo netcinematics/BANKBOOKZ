@@ -61,6 +61,7 @@
     .scrollBarV::-webkit-scrollbar-thumb { background-color: #04223c; border-radius: 13px;
         background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 26%, transparent 26%, transparent 51%, rgba(255, 255, 255, -0.4) 51%, rgba(255, 255, 255, 0.6) 74%, transparent 74%, transparent);
     } 
+    .txtSizer::-webkit-scrollbar{ width:1.222em; background:black;}
     /* option:active {
         background-color: darkslateblue;
         color: aqua;
@@ -288,7 +289,7 @@
         <article id="DATA_IMPORT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
                 background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
             <header style="margin:1em;width: 100%;padding-left:2em;">IMPORT DATA</header>
-            <textarea id="importTXT" class="scrollBarV" style="flex:1 1 0;resize:vertical;background: black;color: lime;
+            <textarea id="import_TKR_TXT" class="scrollBarV" style="flex:1 1 0;resize:vertical;background: black;color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
@@ -297,15 +298,16 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer">
-                <button class="BTN" style="font-size:0.666em;margin:1em;" onclick="import_BTNClick()">IMPORT TRADE DATA</button>
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_BTNClick('tradea')">IMPORT TRADE DATA</button>
             </footer>               
         </article>        
 
         <article id="DATA_TICKR_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
             <header style="margin:1em;width: 100%;padding-left:2em;">EDIT TICKER DATA</header>
-            <textarea id="render_TICKR_DATA" class="scrollBarV" style="flex: 1 1 0;resize:vertical;background: black;color: lime;
-                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
+            <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background:black;
+               color: lime;
+                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;margin-bottom: 1em;" >
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -313,17 +315,17 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
-                align-items:center;">
-                <select id="tickr_SELECTOR_YMT" class="chartSELECTOR">
+                align-items:center;margin-bottom: 1em;">
+                <!-- <select id="tickr_SELECTOR_YMT" class="chartSELECTOR">
                     <option value="true" selected>...</option>
-                </select>
-                <button class="BTN" style="font-size:0.666em;margin:1em;" onclick="import_BTNClick()">SAVE TKR DATA</button>
+                </select> -->
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_BTNClick('tkr')">OVERWRITE TKR MONTH</button>
             </footer>   
         </article>        
         <article id="DATA_TRADE_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
             <header style="margin:1em;width: 100%;padding-left:2em;">EDIT TRADE DATA</header>
-            <textarea id="render_TRADE_DATA" class="scrollBarV" style="flex: 1 1 0;resize:vertical;background: black;color: lime;
+            <textarea id="render_TRADE_DATA" class="scrollBarV txtSizer" style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background: black;color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
@@ -332,11 +334,11 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
-                align-items:center;">
-                <select id="trade_SELECTOR_YMT" class="chartSELECTOR">
+                align-items:center;margin:1em 0;">
+                <!-- <select id="trade_SELECTOR_YMT" class="chartSELECTOR">
                     <option value="true" selected>...</option>
-                </select>
-                <button class="BTN" style="font-size:0.666em;margin:1em;" onclick="import_BTNClick()">SAVE DATA</button>
+                </select> -->
+                <button class="BTN" style="font-size:1em;" onclick="import_BTNClick('trades')">OVERWRITE MONTH TRADES</button>
             </footer>   
         </article>        
     </section><!--end DATAVIEW-->
@@ -809,7 +811,7 @@ function getDataGallery(type){
         DATA_TICKR_FRAME.classList.add('hiddenTab')     
         DATA_TRADE_FRAME.classList.add('hiddenTab')      
         DATA_IMPORT_FRAME.classList.remove('hiddenTab')    
-        load_IMPORT_FRAME_DATA();
+        // load_IMPORT_FRAME_DATA();
         remove_SUB_VIEW_SELECTED();
         IMPORT_VIEW_BTN.classList.add('selectedSUBBTN')          
     }
@@ -853,37 +855,131 @@ function editDataClick(e, datatype){
 function renderTICKRData(datatgt){
     let dataSTR = '';//,selectionz=[],aSelection,tkrTAG;
     let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
-    let moKEY,txnSET=[];
+    let moKEY,txnSET=[],txnITEM,itemSTR;
     render_TICKR_DATA.value=''; //blank out
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
         txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-        dataSTR += `# Month:${moKEY}\n`+JSON.stringify(txnSET)+ `\n# ----------------->\n`;
+        // dataSTR += `# Month:${moKEY}\n`+JSON.stringify(txnSET)+ `\n# ----------------->\n`;
+        dataSTR += `# Month:${moKEY} --->\n`;
+        for(var ii=0; ii< txnSET.length;ii++){
+            txnItem = txnSET[ii]
+            itemSTR = JSON.stringify(txnItem)+'\n';
+            itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
+            dataSTR += itemSTR;
+        }
+        dataSTR += `# -----END-MONTH------->\n`;
     } 
     if(dataSTR){
         render_TICKR_DATA.value= dataSTR;
     }
-    tickr_SELECTOR_YMT.innerHTML = ""; //clear children
 }
 function renderTRADEData(datatgt){
-    let TKRKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-    let dataSTR = '',selectionz=[],aSelection,tkrTAG='';
+    let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+    let dataSTR = '',txnSET,txnItem,tkrTAG='';
     render_TRADE_DATA.innerHTML=''; //blank out
-    for(var i=0; i<TKRKEYS.length;i++){
-        dataKEY = TKRKEYS[i];
-        tkrTAG = dataKEY.split("_")[2]
+    for(var i=0; i<monthKEYS.length;i++){
+        moKEY = monthKEYS[i];
+        tkrTAG = moKEY.split("_")[2]
         if(tkrTAG!=datatgt){continue}
-        dataREC = bankbookz_DB.TRADE_TXNZ_YMT[dataKEY];
-        dataSTR += JSON.stringify(dataREC) + `\n\n;`;
+        txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
+        // dataSTR += JSON.stringify(txnSET) + `\n\n;`;
+        dataSTR += `# Month:${moKEY} --->\n`;
+        for(var ii=0; ii< txnSET.length;ii++){
+            txnItem = txnSET[ii]
+            itemSTR = JSON.stringify(txnItem)+'\n';
+            // itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
+            dataSTR += itemSTR;
+        }
+        dataSTR += `# -----END-MONTH------->\n`;        
     }  
     if(dataSTR){
         render_TRADE_DATA.value= dataSTR;
     }
-    trade_SELECTOR_YMT.innerHTML = ""; //clear children
 }
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
-function load_IMPORT_FRAME_DATA(){
+function import_BTNClick(importtype){
+    if(importtype==='trades'){
+        import_TradeClick();
+    }else if (importtype==='tkr'){
+        save_TickerClick();
+    }
+}
+
+let import_TradeClick = ()=>{
+        let importDATA = null, data_record=null, found=false;
+        let import_TKR_TXT = document.getElementById('import_TKR_TXT');
+        let importResults = '',saved_record;
+        try{
+            importDATA = JSON.parse(import_TKR_TXT.value);
+            if(!import_TKR_TXT || !importDATA){ go_DATA_VIEW(); } 
+            else if(bankbookz_DB&&bankbookz_DB.TRADE_TXNZ_YMT){
+                    for(var a=0; a<importDATA.length;a++){
+                        import_record=importDATA[a];
+                        saved_record=bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID];
+                        if(!saved_record){ // CREATE MONTH OBJ
+                            bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID] = [];
+                            importResults += `NEW ${import_record.ymtID}, `
+                            bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID].push(import_record)
+                        }else{
+                            importResults += `ADD ${import_record.ymtID}, `
+                            bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID].push(import_record)
+                        }
+                    }
+                    import_TKR_TXT.value = importResults + ', SAVED!'
+                    save_BANKBOOKZ_DB();
+            }
+        } catch (e){
+            console.log('Error on import.')
+            go_DATA_VIEW();
+        }
+    } //END IMPORT CLICK
+
+    function save_TickerClick(){
+        let import_TKR_TXT = document.getElementById('render_TICKR_DATA');
+        let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
+        let inputSTR = import_TKR_TXT.value, inputARR=[], txnOBJ={};
+        inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
+        try {
+            inputARR = JSON.parse('['+inputSTR+']');
+            //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
+            for(var i=0; i<inputARR.length;i++){
+                txnOBJ = inputARR[i];
+                tkrSTR = txnOBJ.tkr;
+                ymdARR = txnOBJ.time.split("-")
+                YMT_id = ymdARR[0]+"_"+ymdARR[1]+"_"+tkrSTR;
+                if(!clearDataMap[YMT_id]){ //clear MONTH data for OVERRIDE
+                    clearDataMap[YMT_id] = true;
+                    bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id] = [];
+                }
+                bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(txnOBJ)
+            }
+            save_BANKBOOKZ_DB();
+        } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
+
+//            timeSTR = txnOBJ.time.replace(/-/g,'_')
+// '2024_07_13'
+// ymt = timeSTR.split("_")[0]+"_"+txnOBJ.time.split("_")[1]+"_"+tkrSTR;
+// '2024_undefined_BTC'
+// ymt = timeSTR.split("_")[0]
+// '2024'
+// ymt = timeSTR.split("_")[1]
+
+
+        // bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
+    //     let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
+    // let moKEY,txnSET=[],txnITEM,itemSTR;
+    // render_TICKR_DATA.value=''; //blank out
+    // for(var i=0; i<monthKEYS.length;i++){
+    //     moKEY = monthKEYS[i];
+    //     txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
+    //     // dataSTR += `# Month:${moKEY}\n`+JSON.stringify(txnSET)+ `\n# ----------------->\n`;
+    //     dataSTR += `# Month:${moKEY}\n`;
+    //     for(var ii=0; ii< txnSET.length;ii++){        
+     
+    }
+// function load_IMPORT_FRAME_DATA(){
         // let dynamic_height = '20em';
         // dynamic_height = screenHeight-200+'px';        
         // let example_txt = `[{"tkr":"XMPL","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
@@ -903,7 +999,7 @@ function load_IMPORT_FRAME_DATA(){
         //         <button class="BTN" style="background:forestgreen" onclick="import_BTNClick()">IMPORT</button>
         //     </footer>   
         // </section>`;
-}
+// }
 
 </script><!--*******************************END VIEW structure LOGIC-->
 <script async defer>  //********TAB VIEW LOGIC**************************
