@@ -11,10 +11,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="./favicon.ico" />
-        <script type="module">
-            import { default_data } from './default_data.js';
-            console.log("Imported Data:",`BTC:${default_data.default_BTC.length}`,`ETH:${default_data.default_ETH.length}`);
-        </script>        
+        <script src="./default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
+        <script  > //****************LOAD-CUSTOM-DATA-MODULE******************
+            console.log("Imported Data:",
+                `BTC_TKRZ:${default_BTC_TKRZ.length}`,
+                `ETH_TKRZ:${default_ETH_TKRZ.length}`,
+                `BTC_TXNZ:${Object.keys(default_BTC_TRADEZ).length}`);
+        </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
         <script type="text/javascript"
             src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 <style>
@@ -288,8 +291,8 @@
         </article> 
         <article id="DATA_IMPORT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
                 background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">IMPORT DATA</header>
-            <textarea id="import_TKR_TXT" class="scrollBarV" style="flex:1 1 0;resize:vertical;background: black;color: lime;
+            <header style="margin:1em;width: 100%;padding-left:2em;">IMPORT TRADE DATA</header>
+            <textarea id="render_TRADE_IMPORT" class="scrollBarV txtSizer" style="overflow-x:visible;flex:1 1 0;resize:horizontal;background: black;color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
@@ -298,14 +301,14 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer">
-                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_BTNClick('tradea')">IMPORT TRADE DATA</button>
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_BTNClick('imports')">IMPORT TRADE DATA</button>
             </footer>               
         </article>        
 
         <article id="DATA_TICKR_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">EDIT TICKER DATA</header>
-            <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background:black;
+            <header style="margin:1em;width: 100%;padding-left:2em;">OVERWRITE TICKER DATA</header>
+            <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x:visible;flex: 1 1 0;resize:horizontal;background:black;
                color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;margin-bottom: 1em;" >
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -324,7 +327,7 @@
         </article>        
         <article id="DATA_TRADE_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">EDIT TRADE DATA</header>
+            <header style="margin:1em;width: 100%;padding-left:2em;">OVERWRITE TRADE DATA</header>
             <textarea id="render_TRADE_DATA" class="scrollBarV txtSizer" style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background: black;color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -342,14 +345,15 @@
             </footer>   
         </article>        
     </section><!--end DATAVIEW-->
-<script async defer>// *************LOCAL_DB*********************
+<script  >// *************LOCAL_DB*********************
 /*************************************************************\
  * bankbookz_DB - ability to save monthly data in localstorage
 \*************************************************************/
 let bankbookz_DB=null;
 const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     bankbookz_DB = { 
-        TRADE_TXNZ_YMT:{
+            TRADE_TXNZ_YMT:{//default_BTC_TRADEZ,
+        
             "2020_1_ETH":[ //Monthly trade data
                 {"tkr":"ETH","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_ETH",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
@@ -363,12 +367,16 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
             ],
             "2024_7_BTC":[ //Monthly trade data
-                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2024_7_4","ymtID":"2024_7_BTC",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                    "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
+                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2024_7_6","ymtID":"2024_7_BTC",
+                    "amt":"111","shares":"0.0014","price":"64,444.44","role":""},
             ],
         },
+        // TICKR_DATA_MAP_Monthly:{
+        //     "BTC":default_BTC_TKRZ,
+        //     "ETH":default_ETH_TKRZ,
+        // },
         TICKR_DATA_MAP_Monthly:{
             "BTC":{"2024_07_BTC":[]},
             "ETH":{"2024_07_ETH":[]},
@@ -381,6 +389,8 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             lastRefreshMap:{'BTC':'2020-10-11 00:00:00'},
             monthlySELECTORMap:{'BTC':'All Time'}
         } 
+
+
     }
 }
 const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
@@ -389,14 +399,22 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
         JSON.parse( localStorage.bankbookz_DB ):null;
         //bankbookz_DB = null; //DEV: load mock data for TEST
         if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
+        // if(true){bankbookz_DB_LOAD_MOCK_DATA_2()}
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
 function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
-    console.log('SAVED BANKBOOKZ DB.')
-    localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+    //console.log('SAVED BANKBOOKZ DB.')
+    //localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+}
+function bankbookz_DB_LOAD_MOCK_DATA_2(){
+    bankbookz_DB.TRADE_TXNZ_YMT = default_BTC_TRADEZ;
+    bankbookz_DB.TICKR_DATA_MAP_Monthly={
+            "BTC":default_BTC_TKRZ,
+            "ETH":default_ETH_TKRZ,
+    }
 }
 </script><!--***********************END LOCAL DB*********************-->
-<script async defer>// *************APP UTILITIES*********************
+<script  >// *************APP UTILITIES*********************
 //*************************************************CUSTOM MINMAX***********
 function MINMAX(TGT, setState){ 
     //setState optional to force expand or collapse, otherwise toggle.
@@ -429,7 +447,7 @@ function getDataSelector(e){
     }
 }
 </script><!--***********END APP UTILITIES *********************-->
-<script async defer>// ********************MAIN DYNAMIC CHART**********************
+<script  >// ********************MAIN DYNAMIC CHART**********************
 let DYNA_CHART_CANDLES = []; //for screen resize
 function init_DYNA_CHART_Candle(tgtELEM){
     const chartOptions = {width:400,height:300,layout:{textColor:'steelblue',background:{type:'solid',color:'#000000'} },
@@ -437,7 +455,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
         crosshair:{mode:LightweightCharts.CrosshairMode.Normal,vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
     }
-    let tgtID = tgtELEM.id.split('_')[1];   
+    let tgtTKR = tgtELEM.id.split('_')[1];   
     tgtELEM.innerHTML=''; //blank out
     const Dyna_Chart_CandleStick = 
         LightweightCharts.createChart(tgtELEM, chartOptions);
@@ -446,13 +464,14 @@ function init_DYNA_CHART_Candle(tgtELEM){
         lineColor:'#2962FF',topColor:'#2962FF',bottomColor:'rgba(41, 98, 255, 0.28)',layout:{ textColor: 'steelblue', 
         background: { type: 'solid', color: '#000000' } }, pointMarkersVisible:true, pointMarkersRadius:4
     });
-    let areaSeriesDATA = [
-        { time: '2018-12-22', value: 232.51 },{ time: '2018-12-23', value: 331.11 },
-        { time: '2018-12-24', value: 227.02 },{ time: '2018-12-25', value: 327.32 },
-        { time: '2018-12-26', value: 225.17 },{ time: '2018-12-27', value: 328.89 },
-        { time: '2018-12-28', value: 225.46 },{ time: '2018-12-29', value: 323.92 },
-        { time: '2018-12-30', value: 222.68 },{ time: '2018-12-31', value: 322.67 },
-    ]
+    // let areaSeriesDATA = [
+    //     { time: '2018-12-22', value: 232.51 },{ time: '2018-12-23', value: 331.11 },
+    //     { time: '2018-12-24', value: 227.02 },{ time: '2018-12-25', value: 327.32 },
+    //     { time: '2018-12-26', value: 225.17 },{ time: '2018-12-27', value: 328.89 },
+    //     { time: '2018-12-28', value: 225.46 },{ time: '2018-12-29', value: 323.92 },
+    //     { time: '2018-12-30', value: 222.68 },{ time: '2018-12-31', value: 322.67 },
+    // ]
+    let areaSeriesDATA = getArea_TRADE_DATA(tgtTKR);
     areaSeries.setData(areaSeriesDATA);
     //END: AREA-SERIES******************************************************        
     // CANDLESTICK-SERIES******************************************************        
@@ -460,7 +479,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
         priceScaleId: 'left', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
-    let candleSeriesDATA = getCandleSeriesDATA(tgtID);
+    let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
     candlestickSeries.setData(candleSeriesDATA);
     Dyna_Chart_CandleStick.timeScale().fitContent();    
     resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
@@ -565,6 +584,131 @@ window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
 });
 //******************************SCREEN RESIZE - DYNA CHART***********
 //*******GET DATA for - DYNA CHART***********
+function getArea_TRADE_DATA(aTKR){
+    let areaSeriesDATA = [];
+    let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
+    if(!monthlySELECTOR && aTKR){
+        monthlySELECTOR = 'Last 30';
+        bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
+    }
+    if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+        // debugger;
+        let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+        let tradeSET=[],monthKEY;//,txnItem;
+        let dayCNT = 0,tkrTAG,txnObj;
+        ymtKEYS.reverse(); //oldest first.
+        for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
+            monthKEY = ymtKEYS[i];
+            tkrTAG = monthKEY.split("_")[2]
+            if(tkrTAG!=aTKR){continue}
+            tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+            for(var ii=0; ii<tradeSET.length;ii++){
+                dayCNT++;
+                if(dayCNT>30){break;}
+                tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                // txnObj = {time:tradeSET[ii].ymd.replace(/_/g,'-'),
+                //     value:parseFloat(tradeSET[ii].price.replace(/,/g,'') )}
+                // areaSeriesDATA.push(txnObj);
+                areaSeriesDATA.push(tradeSET[ii]);
+            }
+        }  
+        // debugger;
+        // areaSeriesDATA.reverse();
+
+    //     areaSeriesDATA = [
+    //     { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
+    //     { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
+    //     { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
+    //     { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
+    //     { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
+    // ]
+
+    }else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
+        areaSeriesDATA = [
+        { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
+        { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
+        { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
+        { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
+        { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
+    ]        
+        // let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+        // let txnSET=[],monthKEY,txnItem;
+        // for(var i = 0; i< ymtKEYS.length; i++){ //all time
+        //     monthKEY = ymtKEYS[i];
+        //     tkrTAG = monthKEY.split("_")[2]
+        //     if(tkrTAG!=aTKR){continue}
+        //     txnSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+        //     for(var ii=0; ii<txnSET.length;ii++){
+        //         areaSeriesDATA.push(txnSET[ii]);
+        //     }
+        // }  
+        // areaSeriesDATA.reverse();        
+    }else {
+        areaSeriesDATA = [
+        { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
+        { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
+        { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
+        { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
+        { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
+    ]        
+        // console.log('SELECTED',monthlySELECTOR)
+        // areaSeriesDATA.push(...bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR]);
+        // areaSeriesDATA.reverse(); 
+    }
+    // return areaSeriesDATA;    
+//     let areaSeriesDATA = [];
+//     let ymtKeys = Object.keys( bankbookz_DB.TRADE_TXNZ_YMT );
+//     let tradeSET,tradeItem,ymt_id,tkrTAG, selector;
+//     debugger;
+//     for(var i=0; i< ymtKeys.length;i++){
+//         ymt_id = ymtKeys[i];
+//         tkrTAG = ymt_id.split("_")[2]
+//         selector = bankbookz_DB.METASTATE.monthlySELECTORMap[tkrTAG]
+//         if(tkrTAG!=aTKR){continue}
+//         if(selector==='Last 30'){
+//             debugger;
+//         }else if(selector==='All Time'){
+//             debugger;
+//         }else if(selector) {
+//             debugger;
+//         }
+        
+//     }
+// debugger;
+
+
+    // let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
+    //     let txnSET=[],monthKEY,txnItem;
+    //     for(var i = 0; i< ymtKEYS.length; i++){ //last 30 days
+    //         monthKEY = ymtKEYS[i];
+    //         txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthKEY]
+    //         for(var ii=0; ii<txnSET.length;ii++){
+    //             candleSeriesDATA.push(txnSET[ii]);
+    //         }
+    //     } 
+
+
+    // let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+    // let dataSTR = '',txnSET,txnItem,tkrTAG='';
+    // render_TRADE_DATA.innerHTML=''; //blank out
+    // for(var i=0; i<monthKEYS.length;i++){
+    //     moKEY = monthKEYS[i];
+    //     tkrTAG = moKEY.split("_")[2]
+    //     if(tkrTAG!=datatgt){continue}
+    //     txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
+    //     dataSTR += `# Month:${moKEY} --->\n`;
+    //     for(var ii=0; ii< txnSET.length;ii++){
+    //         txnItem = txnSET[ii]
+    //         itemSTR = JSON.stringify(txnItem)+'\n';
+    //         dataSTR += itemSTR;
+    //     }
+    //     dataSTR += `# -----END-MONTH------->\n\n`;        
+    // }  
+
+
+    return areaSeriesDATA;    
+}
 function getCandleSeriesDATA(aTKR){
     let candleSeriesDATA = [];
     let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
@@ -607,7 +751,7 @@ function getCandleSeriesDATA(aTKR){
 //*******END GET DATA for - DYNA CHART***********
 
 </script><!--****************************END DYNAMIC CHART-->
-<script async defer>// ****************************** XMPL CHART**********************
+<script  >// ****************************** XMPL CHART**********************
 let candlestickChart1;
 function initCandleChart1(){
     const chartOptions = { width: 400, height: 300, 
@@ -693,7 +837,7 @@ window.addEventListener('resize', () => {
 });
 //**END EVENT-HANDLERS*****************************************************
 </script><!--****************************************END CHART IMPLEMENTATION-->
-<script async defer> //*********************MAIN_APP**************************
+<script  > //*********************MAIN_APP**************************
 // ******DATES *********************DATES*****************************
 // const dateTXTStr = document.getElementById('dateTXTStamp');
 // dateTXTStam.innerHTML = new Date().getFullYear();
@@ -811,7 +955,6 @@ function getDataGallery(type){
         DATA_TICKR_FRAME.classList.add('hiddenTab')     
         DATA_TRADE_FRAME.classList.add('hiddenTab')      
         DATA_IMPORT_FRAME.classList.remove('hiddenTab')    
-        // load_IMPORT_FRAME_DATA();
         remove_SUB_VIEW_SELECTED();
         IMPORT_VIEW_BTN.classList.add('selectedSUBBTN')          
     }
@@ -860,7 +1003,6 @@ function renderTICKRData(datatgt){
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
         txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-        // dataSTR += `# Month:${moKEY}\n`+JSON.stringify(txnSET)+ `\n# ----------------->\n`;
         dataSTR += `# Month:${moKEY} --->\n`;
         for(var ii=0; ii< txnSET.length;ii++){
             txnItem = txnSET[ii]
@@ -868,11 +1010,9 @@ function renderTICKRData(datatgt){
             itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
             dataSTR += itemSTR;
         }
-        dataSTR += `# -----END-MONTH------->\n`;
+        dataSTR += `# -----END-MONTH------->\n\n`;
     } 
-    if(dataSTR){
-        render_TICKR_DATA.value= dataSTR;
-    }
+    if(dataSTR){ render_TICKR_DATA.value = dataSTR; }
 }
 function renderTRADEData(datatgt){
     let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
@@ -883,15 +1023,13 @@ function renderTRADEData(datatgt){
         tkrTAG = moKEY.split("_")[2]
         if(tkrTAG!=datatgt){continue}
         txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
-        // dataSTR += JSON.stringify(txnSET) + `\n\n;`;
         dataSTR += `# Month:${moKEY} --->\n`;
         for(var ii=0; ii< txnSET.length;ii++){
             txnItem = txnSET[ii]
             itemSTR = JSON.stringify(txnItem)+'\n';
-            // itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
             dataSTR += itemSTR;
         }
-        dataSTR += `# -----END-MONTH------->\n`;        
+        dataSTR += `# -----END-MONTH------->\n\n`;        
     }  
     if(dataSTR){
         render_TRADE_DATA.value= dataSTR;
@@ -901,108 +1039,97 @@ function renderTRADEData(datatgt){
 //---------------------------------IMPORT fns----------------------------------
 function import_BTNClick(importtype){
     if(importtype==='trades'){
-        import_TradeClick();
+        save_TradeClick();
     }else if (importtype==='tkr'){
         save_TickerClick();
+    }else if (importtype==='imports'){
+        import_TradeClick();
     }
 }
 
-let import_TradeClick = ()=>{
-        let importDATA = null, data_record=null, found=false;
-        let import_TKR_TXT = document.getElementById('import_TKR_TXT');
-        let importResults = '',saved_record;
-        try{
-            importDATA = JSON.parse(import_TKR_TXT.value);
-            if(!import_TKR_TXT || !importDATA){ go_DATA_VIEW(); } 
-            else if(bankbookz_DB&&bankbookz_DB.TRADE_TXNZ_YMT){
-                    for(var a=0; a<importDATA.length;a++){
-                        import_record=importDATA[a];
-                        saved_record=bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID];
-                        if(!saved_record){ // CREATE MONTH OBJ
-                            bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID] = [];
-                            importResults += `NEW ${import_record.ymtID}, `
-                            bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID].push(import_record)
-                        }else{
-                            importResults += `ADD ${import_record.ymtID}, `
-                            bankbookz_DB.TRADE_TXNZ_YMT[import_record.ymtID].push(import_record)
-                        }
-                    }
-                    import_TKR_TXT.value = importResults + ', SAVED!'
-                    save_BANKBOOKZ_DB();
-            }
-        } catch (e){
-            console.log('Error on import.')
-            go_DATA_VIEW();
-        }
-    } //END IMPORT CLICK
-
-    function save_TickerClick(){
-        let import_TKR_TXT = document.getElementById('render_TICKR_DATA');
-        let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
-        let inputSTR = import_TKR_TXT.value, inputARR=[], txnOBJ={};
+let save_TradeClick = ()=>{
+    let render_TRADE_DATA = document.getElementById('render_TRADE_DATA');
+        let YMT_id, ymdSTR,clearTRADEMap={'YMT_id':true};
+        let inputSTR = render_TRADE_DATA.value, inputARR=[], tradeObj={};
         inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
         try {
             inputARR = JSON.parse('['+inputSTR+']');
             //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
             for(var i=0; i<inputARR.length;i++){
-                txnOBJ = inputARR[i];
-                tkrSTR = txnOBJ.tkr;
-                ymdARR = txnOBJ.time.split("-")
+                tradeObj = inputARR[i];
+                YMT_id = tradeObj.ymtID;
+                if(!clearTRADEMap[YMT_id]){ //clear MONTH data for OVERRIDE
+                    clearTRADEMap[YMT_id] = true; //clear out MONTH... system.
+                    bankbookz_DB.TRADE_TXNZ_YMT[YMT_id] = []
+                }
+                bankbookz_DB.TRADE_TXNZ_YMT[YMT_id].push(tradeObj);
+            }
+            debugger;
+            
+            save_BANKBOOKZ_DB();
+        } catch (error) {console.log('ERR: Bad data.');}// go_DATA_VIEW(); } //todo msg
+    } //END IMPORT CLICK
+
+    function save_TickerClick(){
+        let render_TICKR_DATA = document.getElementById('render_TICKR_DATA');
+        let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
+        let inputSTR = render_TICKR_DATA.value, inputARR=[], tkrObj={};
+        inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
+        try {
+            inputARR = JSON.parse('['+inputSTR+']');
+            //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
+            for(var i=0; i<inputARR.length;i++){
+                tkrObj = inputARR[i];
+                tkrSTR = tkrObj.tkr;
+                ymdARR = tkrObj.time.split("-")
                 YMT_id = ymdARR[0]+"_"+ymdARR[1]+"_"+tkrSTR;
                 if(!clearDataMap[YMT_id]){ //clear MONTH data for OVERRIDE
                     clearDataMap[YMT_id] = true;
                     bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id] = [];
                 }
-                bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(txnOBJ)
+                bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(tkrObj)
             }
             save_BANKBOOKZ_DB();
         } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
-
-//            timeSTR = txnOBJ.time.replace(/-/g,'_')
-// '2024_07_13'
-// ymt = timeSTR.split("_")[0]+"_"+txnOBJ.time.split("_")[1]+"_"+tkrSTR;
-// '2024_undefined_BTC'
-// ymt = timeSTR.split("_")[0]
-// '2024'
-// ymt = timeSTR.split("_")[1]
-
-
-        // bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-    //     let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
-    // let moKEY,txnSET=[],txnITEM,itemSTR;
-    // render_TICKR_DATA.value=''; //blank out
-    // for(var i=0; i<monthKEYS.length;i++){
-    //     moKEY = monthKEYS[i];
-    //     txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-    //     // dataSTR += `# Month:${moKEY}\n`+JSON.stringify(txnSET)+ `\n# ----------------->\n`;
-    //     dataSTR += `# Month:${moKEY}\n`;
-    //     for(var ii=0; ii< txnSET.length;ii++){        
-     
     }
-// function load_IMPORT_FRAME_DATA(){
-        // let dynamic_height = '20em';
-        // dynamic_height = screenHeight-200+'px';        
-        // let example_txt = `[{"tkr":"XMPL","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
-        //     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-        // {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
-        //     "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
-        // {"tkr":"XMPL","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_XMPL",
-        //     "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]`;
-        // DATA_IMPORT_FRAME.innerHTML = 
-        // `<section style="height:${dynamic_height};width:100%;font-size:0.777em;margin:1%;
-        //     display:flex;flex-direction:column;">
-        //     <header style="margin-bottom:1em;">IMPORT DATA</header>
-        //     <textarea id="importTXT" style="flex: 1 1 0;resize:vertical;background:black; color:lime; width: 91%; 
-        //         box-shadow: 0px 0px 8px purple; max-height: 500px;padding: 4%; border-radius: 13px;">
-        //         ${example_txt}</textarea> 
-        //     <footer class="main_footer" style="display:flex;justify-content: flex-end;padding: 1em;height: 2em;font-size: 1.333em;">
-        //         <button class="BTN" style="background:forestgreen" onclick="import_BTNClick()">IMPORT</button>
-        //     </footer>   
-        // </section>`;
-// }
+function import_TradeClick(){
+    let render_TRADE_IMPORT = document.getElementById('render_TRADE_IMPORT');
+    let tkrSTR, YMT_id, txnSET=[],txnItem, dupeCNT=0, newCNT=0,txnFound=false;//, ymdSTR,clearDataMap={'YMT_id':true};
+    let inputSTR = render_TRADE_IMPORT.value, inputARR=[], txnOBJ={};
+    try {
+        inputARR = JSON.parse(inputSTR);
+        for(var i=0; i<inputARR.length;i++){
+            txnOBJ = inputARR[i];
+            tkrSTR = txnOBJ.tkr;
+            YMT_id = txnOBJ.ymtID;
+            txnSET = bankbookz_DB.TRADE_TXNZ_YMT[YMT_id];
+            if(!txnSET){ //CREATE NEW MONTH (trade)
+                bankbookz_DB.TRADE_TXNZ_YMT[YMT_id] = [];
+                txnSET = bankbookz_DB.TRADE_TXNZ_YMT[YMT_id]
+            } 
+            txnFound=false;
+            // CHECK FOR DUPLICATE TRADE TRANSACTIONS.
+            for(var ii=0;ii<txnSET.length;ii++){
+                txnItem = txnSET[ii];
+                if (txnItem.ymtID===txnOBJ.ymtID && txnItem.price===txnOBJ.price && txnItem.shares===txnOBJ.shares)
+                { //DUPLICATE RECORD
+                    dupeCNT++;
+                    txnFound=true;
+                    break;
+                } 
+            }
+            if(!txnFound){ //NEW RECORD
+                newCNT++;
+                bankbookz_DB.TRADE_TXNZ_YMT[YMT_id].push(txnOBJ);
+            }
+        }
+        console.log(`IMPORTS; NEW recs:${newCNT}, SKIP Dupes:${dupeCNT}, `) 
+        save_BANKBOOKZ_DB();
+    } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
+}
 
 </script><!--*******************************END VIEW structure LOGIC-->
-<script async defer>  //********TAB VIEW LOGIC**************************
+<script  >  //********TAB VIEW LOGIC**************************
 //*********************TICKRZ-LOGIC**********************/
 const init_TKRZ_TABZ = ()=>{
     let tkrREC = {}, tkrINPUT, tkrROW;
@@ -1056,7 +1183,7 @@ const init_BANKZ_TABZ = ()=>{
 // const add_BANKZ_Click = ()=>{ }
 //*********************END BANKZ- TAB - LOGIC**********************/
 </script><!--*******************************END VIEW structure LOGIC-->
-<script async defer>  //*********************BOOKZ-LOGIC**********************/
+<script  >  //*********************BOOKZ-LOGIC**********************/
 //*********************BOOKZ- TAB - LOGIC**********************/
 const init_BOOKZ_TABZ = ()=>{
     let BOOKZ_RENDER_FRAME = document.getElementById('BOOKZ_RENDER_FRAME');
@@ -1231,7 +1358,7 @@ function saveBookSelection(TGT){
 
 </script><!--*****************************END MAIN_APP******************-->
 
-<script async defer>/****************************************CRYPTO OHLCV API***********/
+<script  >/****************************************CRYPTO OHLCV API***********/
 let stock_api_key = null;//API_KEY - set in local storage.
 let init_api_key = ()=>{
    if(localStorage.stock_api_key){
@@ -1257,10 +1384,10 @@ const getCrypto_Loop = async ()=>{
         console.log('Request Price Data for:',tkrTGT)
         getCrypto_Daily(tkrTGT)
     }
-    setTimeout(save_BANKBOOKZ_DB,5000); //todo?
+    setTimeout(save_BANKBOOKZ_DB,3000); //todo?
 }
 const getCrypto_Daily = async (tkrTGT)=>{
-    if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
+    // if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
     if(!stock_api_key){return}
     let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${tkrTGT}&market=USD&interval=5min&apikey=${stock_api_key}`;
     fetch(url).then((data)=>{
@@ -1308,6 +1435,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     //DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
     let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
     let dupeCNT=0,newCNT=0;
+    tickDaily_TV.reverse();//align arrays, chronologically, else chart error.
     for (const aTicker of tickDaily_TV) {
         ymd = aTicker.time.replace(/-/g, "_");
         ym = ymd.split("_")[0] +"_"+ ymd.split("_")[1];
@@ -1334,9 +1462,9 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
                 break;
             } 
         }
-        if(!txnFound){ //NEW RECORD
+        if(!txnFound){ //NEW RECORD, unshift, else chronological error.
             newCNT++
-            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].push(aTicker)
+            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].unshift(aTicker)
         }
     }
     console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`) 
