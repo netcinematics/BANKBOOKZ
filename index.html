@@ -11,7 +11,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="./favicon.ico" />
-        <script src="./default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
+        <script src="./data/default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
         <script  > //****************LOAD-CUSTOM-DATA-MODULE******************
             console.log("Imported Data:",
                 `BTC_TKRZ:${default_BTC_TKRZ.length}`,
@@ -355,6 +355,7 @@
 \*************************************************************/
 let bankbookz_DB=null;
 const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
+    debugger;
     bankbookz_DB = { 
             TRADE_TXNZ_YMT:{//default_BTC_TRADEZ,
         
@@ -401,21 +402,43 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
     try{
         bankbookz_DB = (localStorage.bankbookz_DB)?
         JSON.parse( localStorage.bankbookz_DB ):null;
-        //bankbookz_DB = null; //DEV: load mock data for TEST
+        // bankbookz_DB = null; //DEV: load mock data for TEST
         if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
         // if(true){bankbookz_DB_LOAD_MOCK_DATA_2()}
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
 function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
-    //console.log('SAVED BANKBOOKZ DB.')
-    //localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+    console.log('SAVED BANKBOOKZ DB.')
+    localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
 }
-function bankbookz_DB_LOAD_MOCK_DATA_2(){
+function bankbookz_DB_LOAD_MOCK_DATA_2(){ //TRANSFORM DEFAULT DATA to DB.
     bankbookz_DB.TRADE_TXNZ_YMT = default_BTC_TRADEZ;
-    bankbookz_DB.TICKR_DATA_MAP_Monthly={
-            "BTC":default_BTC_TKRZ,
-            "ETH":default_ETH_TKRZ,
+    let transBTC = {}, transETH={}, itemSet, item,ymd,ym;
+    for(var i=0; i< default_BTC_TKRZ.length;i++){
+        itemSet = default_BTC_TKRZ[i]
+        for(var ii=0; ii< itemSet.length;ii++){
+            item = itemSet[ii];
+            ym = item.time.split('-')
+            ymd = `${ym[0]}_${ym[1]}_${item.tkr}`
+            if(!transBTC[ymd]){transBTC[ymd]=[]}
+            transBTC[ymd].push(item)
+        }
     }
+    for(var i=0; i< default_ETH_TKRZ.length;i++){
+        itemSet = default_ETH_TKRZ[i]
+        for(var ii=0; ii< itemSet.length;ii++){
+            item = itemSet[ii];
+            ym = item.time.split('-')
+            ymd = `${ym[0]}_${ym[1]}_${item.tkr}`
+            if(!transETH[ymd]){transETH[ymd]=[]}
+            transETH[ymd].push(item)
+        }
+    }
+    bankbookz_DB.TICKR_DATA_MAP_Monthly={
+            "BTC":transBTC,
+            "ETH":transETH,
+    }
+    save_BANKBOOKZ_DB();
 }
 </script><!--***********************END LOCAL DB*********************-->
 <script  >// *************APP UTILITIES*********************
@@ -629,8 +652,8 @@ function getMarker_TRADE_DATA(aTKR){
                     if(dayCNT>30){break;}
                     tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
                     tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                    tradeSET[ii].position = (true)?"aboveBar":"belowBar";
-                    tradeSET[ii].color = (true)?"#219644":"#e91e63";
+                    tradeSET[ii].position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
+                    tradeSET[ii].color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
                     displayVal = Math.trunc(tradeSET[ii].value)
                     tradeSET[ii].text = `${displayVal}`;
                     // tradeSET[ii].text = `${tradeSET[ii].type} ${displayVal}`;
@@ -1148,6 +1171,7 @@ let save_TradeClick = ()=>{
     } //END IMPORT CLICK
 
     function save_TickerClick(){
+        debugger;
         let render_TICKR_DATA = document.getElementById('render_TICKR_DATA');
         let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
         let inputSTR = render_TICKR_DATA.value, inputARR=[], tkrObj={};
@@ -1166,6 +1190,7 @@ let save_TradeClick = ()=>{
                 }
                 bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(tkrObj)
             }
+            debugger;
             save_BANKBOOKZ_DB();
         } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
     }
