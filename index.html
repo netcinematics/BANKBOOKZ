@@ -18,8 +18,12 @@
                 `ETH_TKRZ:${default_ETH_TKRZ.length}`,
                 `BTC_TXNZ:${Object.keys(default_BTC_TRADEZ).length}`);
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
-        <script type="text/javascript"
-            src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+        <!-- <script type="text/javascript"
+            src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script> -->
+        <script type="text/javascript" src="./module/derivative_lwc.js"></script>
+
+
+        
 <style>
     body{ background:black; color:steelblue; font-size: 1em;padding: 1em 2% 2% 2%;
         font-family: verdana;height: 100%; min-height: 100%; display: flex;
@@ -355,19 +359,19 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             TRADE_TXNZ_YMT:{//default_BTC_TRADEZ,
         
             "2020_1_ETH":[ //Monthly trade data
-                {"tkr":"ETH","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_ETH",
+                {"tkr":"ETH","type":"SELL","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_ETH",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
                 {"tkr":"ETH","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_ETH",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
             ],
             "2020_1_BTC":[ //Monthly trade data
-                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
+                {"tkr":"BTC","type":"SELL","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
                 {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
             ],
             "2024_7_BTC":[ //Monthly trade data
-                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2024_7_4","ymtID":"2024_7_BTC",
+                {"tkr":"BTC","type":"SELL","mode":"Limit","ymd":"2024_7_4","ymtID":"2024_7_BTC",
                     "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
                 {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2024_7_6","ymtID":"2024_7_BTC",
                     "amt":"111","shares":"0.0014","price":"64,444.44","role":""},
@@ -450,7 +454,12 @@ function getDataSelector(e){
 <script  >// ********************MAIN DYNAMIC CHART**********************
 let DYNA_CHART_CANDLES = []; //for screen resize
 function init_DYNA_CHART_Candle(tgtELEM){
-    const chartOptions = {width:400,height:300,layout:{textColor:'steelblue',background:{type:'solid',color:'#000000'} },
+    const chartOptions = {width:400,height:300,
+        layout:{textColor:'steelblue',
+            fontSize:10,
+            fontFamily:'sans-serif',//'Roboto',
+            // fontBoldWeight: 800,
+            background:{type:'solid',color:'#000000'} },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } },
         crosshair:{mode:LightweightCharts.CrosshairMode.Normal,vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
@@ -460,19 +469,12 @@ function init_DYNA_CHART_Candle(tgtELEM){
     const Dyna_Chart_CandleStick = 
         LightweightCharts.createChart(tgtELEM, chartOptions);
     //AREA-SERIES******************************************************
-    const areaSeries = Dyna_Chart_CandleStick.addAreaSeries({
-        lineColor:'#2962FF',topColor:'#2962FF',bottomColor:'rgba(41, 98, 255, 0.28)',layout:{ textColor: 'steelblue', 
-        background: { type: 'solid', color: '#000000' } }, pointMarkersVisible:true, pointMarkersRadius:4
-    });
-    // let areaSeriesDATA = [
-    //     { time: '2018-12-22', value: 232.51 },{ time: '2018-12-23', value: 331.11 },
-    //     { time: '2018-12-24', value: 227.02 },{ time: '2018-12-25', value: 327.32 },
-    //     { time: '2018-12-26', value: 225.17 },{ time: '2018-12-27', value: 328.89 },
-    //     { time: '2018-12-28', value: 225.46 },{ time: '2018-12-29', value: 323.92 },
-    //     { time: '2018-12-30', value: 222.68 },{ time: '2018-12-31', value: 322.67 },
-    // ]
-    let areaSeriesDATA = getArea_TRADE_DATA(tgtTKR);
-    areaSeries.setData(areaSeriesDATA);
+    // const areaSeries = Dyna_Chart_CandleStick.addAreaSeries({
+    //     lineColor:'#2962FF',topColor:'#2962FF',bottomColor:'rgba(41, 98, 255, 0.28)',layout:{ textColor: 'steelblue', 
+    //     background: { type: 'solid', color: '#000000' } }, pointMarkersVisible:true, pointMarkersRadius:4
+    // });
+    // let areaSeriesDATA = getArea_TRADE_DATA(tgtTKR);
+    // areaSeries.setData(areaSeriesDATA);
     //END: AREA-SERIES******************************************************        
     // CANDLESTICK-SERIES******************************************************        
     const candlestickSeries = Dyna_Chart_CandleStick.addCandlestickSeries({
@@ -481,6 +483,25 @@ function init_DYNA_CHART_Candle(tgtELEM){
     });
     let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
     candlestickSeries.setData(candleSeriesDATA);
+
+
+    let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
+    // let tradeMarkerData = [
+    //         {"time":{"year":2024,"month":7,"day":6},
+    //         "position":"aboveBar","color":"#f68410","shape":"circle","text":"D","size":4},
+    //         {"time":{"year":2024,"month":7,"day":8},
+    //         "position":"belowBar","color":"#2196F3","shape":"arrowUp","text":"Buy @ 42"},
+    //         {"time":{"year":2024,"month":7,"day":11},
+    //         "position":"belowBar","color":"#219644","shape":"square","text":"Buy @ 44",size:4},
+    //         {"time":{"year":2024,"month":7,"day":13},
+    //         "position":"aboveBar","color":"#e91e63","shape":"arrowDown","text":"Sell @ 75"},
+    //         {"time":{"year":2024,"month":7,"day":13},
+    //         "position":"aboveBar","color":"#e91e63","shape":"arrowDown","text":"Sell @ 77"}
+    //     ];
+
+    candlestickSeries.setMarkers(tradeMarkerData);
+
+
     Dyna_Chart_CandleStick.timeScale().fitContent();    
     resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
@@ -584,6 +605,73 @@ window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
 });
 //******************************SCREEN RESIZE - DYNA CHART***********
 //*******GET DATA for - DYNA CHART***********
+
+function getMarker_TRADE_DATA(aTKR){
+    let tradeMarkerData = [];
+        // debugger;
+        let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
+        if(!monthlySELECTOR && aTKR){
+            monthlySELECTOR = 'Last 30'; //DEFAULT
+            bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
+        }
+        if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+            let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+            let tradeSET=[],monthKEY,displayVal;
+            let dayCNT = 0,tkrTAG,txnObj;
+            ymtKEYS.reverse(); //oldest first.
+            for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
+                monthKEY = ymtKEYS[i];
+                tkrTAG = monthKEY.split("_")[2]
+                if(tkrTAG!=aTKR){continue}
+                tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+                for(var ii=0; ii<tradeSET.length;ii++){
+                    dayCNT++;
+                    if(dayCNT>30){break;}
+                    tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                    tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                    tradeSET[ii].position = (true)?"aboveBar":"belowBar";
+                    tradeSET[ii].color = (true)?"#219644":"#e91e63";
+                    displayVal = Math.trunc(tradeSET[ii].value)
+                    tradeSET[ii].text = `${displayVal}`;
+                    // tradeSET[ii].text = `${tradeSET[ii].type} ${displayVal}`;
+                    tradeSET[ii].shape = "circle";
+                    tradeSET[ii].size = 0.444;
+                    // {"time":'2024-7-1',"position":"aboveBar","color":"#ff8400","shape":"circle","text":"D","size":4},
+
+                    tradeMarkerData.push(tradeSET[ii]);
+                }
+            }  
+            // debugger;
+            return tradeMarkerData
+        }
+        // else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
+        //     tradeMarkerData = [
+        //     { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
+        //     { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
+        //     { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
+        //     { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
+        //     { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
+        // ]             
+        // }else {
+        //     tradeMarkerData = [
+        //     { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
+        //     { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
+        //     { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
+        //     { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
+        //     { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
+        // ]        
+        // } 
+        
+        tradeMarkerData = [
+            {"time":'2024-7-1',"position":"aboveBar","color":"#ff8400","shape":"circle","text":"D","size":4},
+            {"time":'2024-7-4',"position":"belowBar","color":"#e91e63","shape":"arrowUp","text":"Buy @ 42"},
+            {"time":'2024-7-6',"position":"belowBar","color":"#e91e63","shape":"circle","text":"Buy @ 44",size:4},
+            {"time":'2024-7-8',"position":"aboveBar","color":"#219644","shape":"arrowDown","text":"Sell @ 75"},
+            {"time":'2024-7-14',"position":"aboveBar","color":"#219644","shape":"arrowDown","text":"Sell @ 77"}
+        ];        
+
+        return tradeMarkerData;
+}
 function getArea_TRADE_DATA(aTKR){
     let areaSeriesDATA = [];
     let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
@@ -613,17 +701,6 @@ function getArea_TRADE_DATA(aTKR){
                 areaSeriesDATA.push(tradeSET[ii]);
             }
         }  
-        // debugger;
-        // areaSeriesDATA.reverse();
-
-    //     areaSeriesDATA = [
-    //     { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
-    //     { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
-    //     { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
-    //     { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
-    //     { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
-    // ]
-
     }else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
         areaSeriesDATA = [
         { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
@@ -756,7 +833,7 @@ let candlestickChart1;
 function initCandleChart1(){
     const chartOptions = { width: 400, height: 300, 
         layout: { textColor: 'steelblue', background: { type: 'solid', color: '#000000' } },
-        grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } },
+        grid: { vertLines: { color: "#222" }, horzLines: { color: "#9090ff" } },
         crosshair: { mode: LightweightCharts.CrosshairMode.Normal ,
             vertLine: { color: "darkslategrey" },
             horzLine: { color: "darkslategrey" },
