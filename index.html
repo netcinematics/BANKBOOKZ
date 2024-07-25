@@ -14,8 +14,10 @@
         <script src="./data/default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
         <script  > //****************LOAD-CUSTOM-DATA-MODULE******************
             console.log("Imported Data:",
-                `BTC_TKRZ:${default_BTC_TKRZ.length}`,
-                `ETH_TKRZ:${default_ETH_TKRZ.length}`,
+                // `BTC_TKRZ:${default_BTC_TKRZ.length}`,
+                // `ETH_TKRZ:${default_ETH_TKRZ.length}`,
+                `TICKRS, BTC(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['BTC']).length}`,
+                `TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`,
                 `BTC_TXNZ:${Object.keys(default_BTC_TRADEZ).length}`);
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
         <!-- <script type="text/javascript"
@@ -254,6 +256,10 @@
                     </span>
                 </header>                  
             </section>            
+            <menu id="trend_FRAME_XMPL" class="FRAME" style="justify-content: center;
+                border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
+                <section id="trend_line_chart_xmpl"></section>
+            </menu>
             <menu id="selectorFRAME_XMPL" class="FRAME" style="align-items: center;
                 border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
                 <select style="max-height:2em;margin: 0 1em;" class="chartSELECTOR"
@@ -355,7 +361,6 @@
 \*************************************************************/
 let bankbookz_DB=null;
 const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
-    debugger;
     bankbookz_DB = { 
             TRADE_TXNZ_YMT:{//default_BTC_TRADEZ,
         
@@ -379,13 +384,10 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             ],
         },
         // TICKR_DATA_MAP_Monthly:{
-        //     "BTC":default_BTC_TKRZ,
-        //     "ETH":default_ETH_TKRZ,
+        //     "BTC":{"2024_07_BTC":[]},
+        //     "ETH":{"2024_07_ETH":[]},
         // },
-        TICKR_DATA_MAP_Monthly:{
-            "BTC":{"2024_07_BTC":[]},
-            "ETH":{"2024_07_ETH":[]},
-        },
+        TICKR_DATA_MAP_Monthly : default_TICKR_DATA_MAP_Monthly,
         TICKR_LIST:[//{name:'XMPL',lastLoadYMD:''},
             {tkr:'BTC',lastLoadYMD:''},{tkr:'ETH',lastLoadYMD:''}
         ],
@@ -394,9 +396,8 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             lastRefreshMap:{'BTC':'2020-10-11 00:00:00'},
             monthlySELECTORMap:{'BTC':'All Time'}
         } 
-
-
     }
+    save_BANKBOOKZ_DB();
 }
 const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
     try{
@@ -404,41 +405,11 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
         JSON.parse( localStorage.bankbookz_DB ):null;
         // bankbookz_DB = null; //DEV: load mock data for TEST
         if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
-        // if(true){bankbookz_DB_LOAD_MOCK_DATA_2()}
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
 function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
     console.log('SAVED BANKBOOKZ DB.')
     localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
-}
-function bankbookz_DB_LOAD_MOCK_DATA_2(){ //TRANSFORM DEFAULT DATA to DB.
-    bankbookz_DB.TRADE_TXNZ_YMT = default_BTC_TRADEZ;
-    let transBTC = {}, transETH={}, itemSet, item,ymd,ym;
-    for(var i=0; i< default_BTC_TKRZ.length;i++){
-        itemSet = default_BTC_TKRZ[i]
-        for(var ii=0; ii< itemSet.length;ii++){
-            item = itemSet[ii];
-            ym = item.time.split('-')
-            ymd = `${ym[0]}_${ym[1]}_${item.tkr}`
-            if(!transBTC[ymd]){transBTC[ymd]=[]}
-            transBTC[ymd].push(item)
-        }
-    }
-    for(var i=0; i< default_ETH_TKRZ.length;i++){
-        itemSet = default_ETH_TKRZ[i]
-        for(var ii=0; ii< itemSet.length;ii++){
-            item = itemSet[ii];
-            ym = item.time.split('-')
-            ymd = `${ym[0]}_${ym[1]}_${item.tkr}`
-            if(!transETH[ymd]){transETH[ymd]=[]}
-            transETH[ymd].push(item)
-        }
-    }
-    bankbookz_DB.TICKR_DATA_MAP_Monthly={
-            "BTC":transBTC,
-            "ETH":transETH,
-    }
-    save_BANKBOOKZ_DB();
 }
 </script><!--***********************END LOCAL DB*********************-->
 <script  >// *************APP UTILITIES*********************
@@ -476,6 +447,7 @@ function getDataSelector(e){
 </script><!--***********END APP UTILITIES *********************-->
 <script  >// ********************MAIN DYNAMIC CHART**********************
 let DYNA_CHART_CANDLES = []; //for screen resize
+let Dyna_Chart_CandleStick; //for modular tools.
 function init_DYNA_CHART_Candle(tgtELEM){
     const chartOptions = {width:400,height:300,
         layout:{textColor:'steelblue',
@@ -489,8 +461,9 @@ function init_DYNA_CHART_Candle(tgtELEM){
     }
     let tgtTKR = tgtELEM.id.split('_')[1];   
     tgtELEM.innerHTML=''; //blank out
-    const Dyna_Chart_CandleStick = 
-        LightweightCharts.createChart(tgtELEM, chartOptions);
+    // const Dyna_Chart_CandleStick = 
+    Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);
+    // window.Dyna_CandleStick = Dyna_Chart_CandleStick;
     //AREA-SERIES******************************************************
     // const areaSeries = Dyna_Chart_CandleStick.addAreaSeries({
     //     lineColor:'#2962FF',topColor:'#2962FF',bottomColor:'rgba(41, 98, 255, 0.28)',layout:{ textColor: 'steelblue', 
@@ -1489,7 +1462,7 @@ const getCrypto_Loop = async ()=>{
     setTimeout(save_BANKBOOKZ_DB,3000); //todo?
 }
 const getCrypto_Daily = async (tkrTGT)=>{
-    // if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
+    if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
     if(!stock_api_key){return}
     let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${tkrTGT}&market=USD&interval=5min&apikey=${stock_api_key}`;
     fetch(url).then((data)=>{
@@ -1511,7 +1484,7 @@ const getCrypto_Daily = async (tkrTGT)=>{
                     high: parseFloat(obj["2. high"]),    
                     low: parseFloat(obj["3. low"]),     
                     close: parseFloat(obj["4. close"]),    
-                    volume: parseFloat(obj["5. volume"]),     
+                    volume: Math.round( parseFloat(obj["5. volume"]) )     
                 });
             }
             bankbookz_DB.METASTATE.lastRefreshMap[tkr] = lastRefreshTime;
@@ -1588,6 +1561,73 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
         onclick="getCrypto_Loop()">getPrices🔄</button>
 </footer>
 <!--***************************** END STOCK API INPUT******************-->
+<!--***************************** OVERLAY TREND LINES******************-->
+<script type="module">
+    import {P as lwcprod} from "./module/lwc.prod.js";
+    import {g as getRandomDataSet} from "./module/sample-data.js";
+    import {TrendLine_Class as TrendLine_Class} from "./module/trendlines.js";
+
+    const chartElem = window.chart = lwcprod("trend_line_chart_xmpl", {
+        width:400,height:300,
+        autoSize:false, layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } }
+    })
+    // debugger;
+    const lwc_lineSeries = chartElem.addLineSeries()
+    // const lwc_lineSeries = Dyna_Chart_CandleStick.addLineSeries()
+    const  dataSet = getRandomDataSet();
+    // debugger;
+    lwc_lineSeries.setData(dataSet);
+    const len = dataSet.length;
+    const EndPoint = {
+        time: dataSet[len - 50].time,
+        price: dataSet[len - 50].value * .9
+    }
+    const StartPoint = {
+        time: dataSet[len - 5].time,
+        price: dataSet[len - 5].value * 1.1
+    }
+
+    const trendLine1 = new TrendLine_Class(chartElem,lwc_lineSeries,EndPoint,StartPoint);
+    lwc_lineSeries.attachPrimitive(trendLine1);
+    let topEND={},topSTART={};
+    topEND.time = EndPoint.time;
+    topEND.price = EndPoint.price+10;
+    topSTART.time = StartPoint.time;
+    topSTART.price = StartPoint.price+200;
+    const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
+        labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
+    };            
+    const trendLineTOP = new TrendLine_Class(chartElem,lwc_lineSeries,topEND,topSTART,lineOptions_TOP);
+    lwc_lineSeries.attachPrimitive(trendLineTOP);
+    let midEND={},midSTART={};
+    midEND.time = EndPoint.time;
+    midEND.price = EndPoint.price-10;
+    midSTART.time = StartPoint.time;
+    midSTART.price = EndPoint.price-10;
+
+    
+    const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
+        labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue",
+        // LineStyle:'Dotted'
+    };
+
+    const trendLine_MID = new TrendLine_Class(chartElem,lwc_lineSeries,midEND,midSTART,lineOptions_MID);
+    lwc_lineSeries.attachPrimitive(trendLine_MID);
+
+    let btmEND={},btmSTART={};
+    btmEND.time = EndPoint.time;
+    btmEND.price = EndPoint.price-10;
+    btmSTART.time = StartPoint.time;
+    btmSTART.price = StartPoint.price-200;
+
+    const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
+        labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
+    };
+    const trendLine_BTM = new TrendLine_Class(chartElem,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
+    lwc_lineSeries.attachPrimitive(trendLine_BTM);
+
+</script>
+<!--***************************** END OVERLAY LINES******************-->
 <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
 background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
     <div style="margin-top:0;margin-bottom:0em;">
