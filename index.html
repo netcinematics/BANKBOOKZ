@@ -13,12 +13,11 @@
         <link rel="icon" href="./favicon.ico" />
         <script src="./data/default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
         <script  > //****************LOAD-CUSTOM-DATA-MODULE******************
-            console.log("Imported Data:",
-                // `BTC_TKRZ:${default_BTC_TKRZ.length}`,
-                // `ETH_TKRZ:${default_ETH_TKRZ.length}`,
-                `TICKRS, BTC(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['BTC']).length}`,
-                `TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`,
-                `BTC_TXNZ:${Object.keys(default_BTC_TRADEZ).length}`);
+            console.log("Imported Data:")
+            console.log(`TRADES:${default_raw_trade_data.length}`)
+            console.log(`TICKRS, BTC(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['BTC']).length}`)
+            console.log(`TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`)
+            console.log(`BTC_TXNZ: MONTH${Object.keys(default_BTC_TRADEZ).length}`);
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
         <!-- <script type="text/javascript"
             src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script> -->
@@ -408,16 +407,14 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
 function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
-    console.log('SAVED BANKBOOKZ DB.')
-    localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+    // console.log('SAVED BANKBOOKZ DB.')
+    // localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
 }
 </script><!--***********************END LOCAL DB*********************-->
 <script  >// *************APP UTILITIES*********************
 //*************************************************CUSTOM MINMAX***********
-function MINMAX(TGT, setState){ 
-    //setState optional to force expand or collapse, otherwise toggle.
-    //get parent and hide/show everything but expanderROW
-    const CURR_STATE = TGT.innerHTML;
+function MINMAX(TGT, setState){ //setState optional to force expand or collapse, otherwise toggle.
+    const CURR_STATE = TGT.innerHTML; //get parent and hide/show everything but expanderROW
     const ROW = TGT.parentElement; //required
     if(ROW.classList.contains("expanderROW")){ //if row hide siblings.
         let aSibling = ROW.nextElementSibling;
@@ -447,7 +444,7 @@ function getDataSelector(e){
 </script><!--***********END APP UTILITIES *********************-->
 <script  >// ********************MAIN DYNAMIC CHART**********************
 let DYNA_CHART_CANDLES = []; //for screen resize
-let Dyna_Chart_CandleStick; //for modular tools.
+let Dyna_Chart_CandleStick; //for modular tools. //TODO. candlesticks[]
 function init_DYNA_CHART_Candle(tgtELEM){
     const chartOptions = {width:400,height:300,
         layout:{textColor:'steelblue',
@@ -479,29 +476,12 @@ function init_DYNA_CHART_Candle(tgtELEM){
     });
     let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
     candlestickSeries.setData(candleSeriesDATA);
-
-
     let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
-    // let tradeMarkerData = [
-    //         {"time":{"year":2024,"month":7,"day":6},
-    //         "position":"aboveBar","color":"#f68410","shape":"circle","text":"D","size":4},
-    //         {"time":{"year":2024,"month":7,"day":8},
-    //         "position":"belowBar","color":"#2196F3","shape":"arrowUp","text":"Buy @ 42"},
-    //         {"time":{"year":2024,"month":7,"day":11},
-    //         "position":"belowBar","color":"#219644","shape":"square","text":"Buy @ 44",size:4},
-    //         {"time":{"year":2024,"month":7,"day":13},
-    //         "position":"aboveBar","color":"#e91e63","shape":"arrowDown","text":"Sell @ 75"},
-    //         {"time":{"year":2024,"month":7,"day":13},
-    //         "position":"aboveBar","color":"#e91e63","shape":"arrowDown","text":"Sell @ 77"}
-    //     ];
-
     candlestickSeries.setMarkers(tradeMarkerData);
-
-
     Dyna_Chart_CandleStick.timeScale().fitContent();    
     resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
-}; //END INIT DYNA_CHART - candle
+}; //END INIT DYNA_CHART - candle *****************************************
 function resize_DYNA_CHART_Candle(elem){
     let frame = document.getElementById('BOOK_VIEW');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
@@ -601,7 +581,6 @@ window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
 });
 //******************************SCREEN RESIZE - DYNA CHART***********
 //*******GET DATA for - DYNA CHART***********
-
 function getMarker_TRADE_DATA(aTKR){
     let tradeMarkerData = [];
         // debugger;
@@ -612,7 +591,7 @@ function getMarker_TRADE_DATA(aTKR){
         }
         if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
             let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-            let tradeSET=[],monthKEY,displayVal;
+            let tradeSET=[],markerOBJ={},monthKEY,displayVal;
             let dayCNT = 0,tkrTAG,txnObj;
             ymtKEYS.reverse(); //oldest first.
             for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
@@ -623,21 +602,18 @@ function getMarker_TRADE_DATA(aTKR){
                 for(var ii=0; ii<tradeSET.length;ii++){
                     dayCNT++;
                     if(dayCNT>30){break;}
-                    tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
-                    tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                    tradeSET[ii].position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
-                    tradeSET[ii].color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+                    markerOBJ={};
+                    markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                    markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                    markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
+                    markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
                     displayVal = Math.trunc(tradeSET[ii].value)
-                    tradeSET[ii].text = `${displayVal}`;
-                    // tradeSET[ii].text = `${tradeSET[ii].type} ${displayVal}`;
-                    tradeSET[ii].shape = "circle";
-                    tradeSET[ii].size = 0.444;
-                    // {"time":'2024-7-1',"position":"aboveBar","color":"#ff8400","shape":"circle","text":"D","size":4},
-
-                    tradeMarkerData.push(tradeSET[ii]);
+                    markerOBJ.text = `${displayVal}`;
+                    markerOBJ.shape = "circle";
+                    markerOBJ.size = 0.444;
+                    tradeMarkerData.push(markerOBJ);
                 }
             }  
-            // debugger;
             return tradeMarkerData
         }
         // else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
@@ -676,9 +652,8 @@ function getArea_TRADE_DATA(aTKR){
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
     if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
-        // debugger;
         let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-        let tradeSET=[],monthKEY;//,txnItem;
+        let tradeSET=[],monthKEY;
         let dayCNT = 0,tkrTAG,txnObj;
         ymtKEYS.reverse(); //oldest first.
         for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
@@ -691,9 +666,6 @@ function getArea_TRADE_DATA(aTKR){
                 if(dayCNT>30){break;}
                 tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
                 tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                // txnObj = {time:tradeSET[ii].ymd.replace(/_/g,'-'),
-                //     value:parseFloat(tradeSET[ii].price.replace(/,/g,'') )}
-                // areaSeriesDATA.push(txnObj);
                 areaSeriesDATA.push(tradeSET[ii]);
             }
         }  
@@ -825,8 +797,8 @@ function getCandleSeriesDATA(aTKR){
 
 </script><!--****************************END DYNAMIC CHART-->
 <script  >// ****************************** XMPL CHART**********************
-let candlestickChart1;
-function initCandleChart1(){
+let CandlestickChart1;
+function initCandleChart_XMPL(){
     const chartOptions = { width: 400, height: 300, 
         layout: { textColor: 'steelblue', background: { type: 'solid', color: '#000000' } },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#9090ff" } },
@@ -836,10 +808,10 @@ function initCandleChart1(){
         },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
     }
-    candlestickChart1 = LightweightCharts.createChart(
+    CandlestickChart1 = LightweightCharts.createChart(
         document.getElementById('candelstickFRAME_XMPL'), chartOptions);
     //AREA-SERIES******************************************************
-    const areaSeries = candlestickChart1.addAreaSeries({
+    const areaSeries = CandlestickChart1.addAreaSeries({
         lineColor: '#2962FF', topColor: '#2962FF',
         bottomColor: 'rgba(41, 98, 255, 0.28)',layout: { textColor: 'steelblue', 
         background: { type: 'solid', color: '#000000' } } ,
@@ -854,7 +826,7 @@ function initCandleChart1(){
     ]);
     //END: AREA-SERIES******************************************************        
     // CANDLESTICK-SERIES******************************************************        
-    const candlestickSeries = candlestickChart1.addCandlestickSeries({
+    const candlestickSeries = CandlestickChart1.addCandlestickSeries({
         priceScaleId: 'left',
         layout: { textColor: 'steelblue', 
         background: { type: 'solid', color: '#000000' } }  ,
@@ -870,43 +842,43 @@ function initCandleChart1(){
         {time: '2018-12-28', open: 11111.51, high: 14211.83, low: 10311.34, close: 13111.25 },{time: '2018-12-29', open: 13111.33, high: 15111.17, low: 7711.68, close: 9611.43 },
         {time: '2018-12-30', open: 10611.33, high: 11011.20, low: 9011.39, close: 9811.10 },{time: '2018-12-31', open: 10911.87, high: 11411.69, low: 8511.66, close: 11111.26 },
     ]);
-    candlestickChart1.timeScale().fitContent();    
+    CandlestickChart1.timeScale().fitContent();    
     resizeCandlestickChart1();
-}; initCandleChart1();
+}; initCandleChart_XMPL();
 
 function resizeCandlestickChart1(){
     let frame = document.getElementById('BOOK_VIEW');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
     if(maxWidth<100 || maxHeight<50){return}
-    candlestickChart1.resize(maxWidth, maxHeight);
+    CandlestickChart1.resize(maxWidth, maxHeight);
 }
 //*************************************************MAIN BASELINE CHART***********
-let baselineChart1;
-function initBaselineChart1(){
+let BaselineChart_XMPL;
+function initBaselineChart_XMPL(){
     const chartOptions = { 
         layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
     };
-    baselineChart1 = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
-    const baselineSeries = baselineChart1.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
+    BaselineChart_XMPL = LightweightCharts.createChart(document.getElementById('baselineFRAME_XMPL'), chartOptions);
+    const baselineSeries = BaselineChart_XMPL.addBaselineSeries({ baseValue: { type: 'price', price: 25 }, topLineColor: 'rgba( 38, 166, 154, 1)', topFillColor1: 'rgba( 38, 166, 154, 0.28)', topFillColor2: 'rgba( 38, 166, 154, 0.05)', bottomLineColor: 'rgba( 239, 83, 80, 1)', bottomFillColor1: 'rgba( 239, 83, 80, 0.05)', bottomFillColor2: 'rgba( 239, 83, 80, 0.28)' });
     const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
     baselineSeries.setData(data);
-    baselineChart1.timeScale().fitContent();
-}; initBaselineChart1(); 
+    BaselineChart_XMPL.timeScale().fitContent();
+}; initBaselineChart_XMPL(); 
 
-function resizeBaselineChart1(){
+function resizeBaselineChart_XMPL(){
     let frame = document.getElementById('baselineFRAME_XMPL');
     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
     let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
     if(maxWidth<100){return}
-    baselineChart1.resize(maxWidth, maxHeight);
-}; resizeBaselineChart1();
+    BaselineChart_XMPL.resize(maxWidth, maxHeight);
+}; resizeBaselineChart_XMPL();
 //*************************************************END MAIN BASELINE CHART***********
 //**EVENT-HANDLERS*****************************************************
 window.addEventListener('resize', () => {
     resizeCandlestickChart1();
-    resizeBaselineChart1();
+    resizeBaselineChart_XMPL();
 });
 //**END EVENT-HANDLERS*****************************************************
 </script><!--****************************************END CHART IMPLEMENTATION-->
@@ -1284,13 +1256,11 @@ const init_BOOKZ_TABZ = ()=>{
                         margin-right: 0.5em;"></div>
                         <span style="font-size:0.444em;">PROFITnLOSS</span>
                     </span>
-
                     <span>
                         <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
                             <option value="true" selected>Last 30</option>
                         </select>
                     </span>
-
                 </menu>
                 <article id="candlestickFRAME_${tgtTKR.tkr}" class="dynamicCandleStick" style="justify-content:center;
                     flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
@@ -1304,7 +1274,6 @@ const init_BOOKZ_TABZ = ()=>{
                     </header>
                     <article id="baselineFRAME_${tgtTKR.tkr}" class="dynamicBaseline" style="display:flex;justify-content:center;flex:1;">
                     </article>
-
                     <footer style="font-size:0.888em;margin-bottom:1em;display:flex;
                         justify-content:space-between; padding: 0em 3em 0 2em">
                         <span>
@@ -1337,7 +1306,6 @@ const init_BOOKZ_TABZ = ()=>{
                 </menu>
             </section><!--end BOOKFRAME-->         
         `;
-
         BOOKZ_RENDER_FRAME.innerHTML += bookFrame_Model; 
     }//END BUILD LOOP
     init_BOOKZ_EXPANDER();
@@ -1430,9 +1398,7 @@ function saveBookSelection(TGT){
 }
 // ******************************************END VIEW METHODS**********
 // **** END VIEWS ****************************END VIEWS***************************
-
 </script><!--*****************************END MAIN_APP******************-->
-
 <script  >/****************************************CRYPTO OHLCV API***********/
 let stock_api_key = null;//API_KEY - set in local storage.
 let init_api_key = ()=>{
@@ -1566,16 +1532,12 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     import {P as lwcprod} from "./module/lwc.prod.js";
     import {g as getRandomDataSet} from "./module/sample-data.js";
     import {TrendLine_Class as TrendLine_Class} from "./module/trendlines.js";
-
-    const chartElem = window.chart = lwcprod("trend_line_chart_xmpl", {
+    const TrendLineChart_XMPL = window.chart = lwcprod("trend_line_chart_xmpl", {
         width:400,height:300,
         autoSize:false, layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } }
     })
-    // debugger;
-    const lwc_lineSeries = chartElem.addLineSeries()
-    // const lwc_lineSeries = Dyna_Chart_CandleStick.addLineSeries()
+    const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
     const  dataSet = getRandomDataSet();
-    // debugger;
     lwc_lineSeries.setData(dataSet);
     const len = dataSet.length;
     const EndPoint = {
@@ -1586,8 +1548,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
         time: dataSet[len - 5].time,
         price: dataSet[len - 5].value * 1.1
     }
-
-    const trendLine1 = new TrendLine_Class(chartElem,lwc_lineSeries,EndPoint,StartPoint);
+    const trendLine1 = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,EndPoint,StartPoint);
     lwc_lineSeries.attachPrimitive(trendLine1);
     let topEND={},topSTART={};
     topEND.time = EndPoint.time;
@@ -1597,35 +1558,29 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
         labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
     };            
-    const trendLineTOP = new TrendLine_Class(chartElem,lwc_lineSeries,topEND,topSTART,lineOptions_TOP);
+    const trendLineTOP = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,topEND,topSTART,lineOptions_TOP);
     lwc_lineSeries.attachPrimitive(trendLineTOP);
     let midEND={},midSTART={};
     midEND.time = EndPoint.time;
     midEND.price = EndPoint.price-10;
     midSTART.time = StartPoint.time;
     midSTART.price = EndPoint.price-10;
-
-    
     const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
         labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue",
         // LineStyle:'Dotted'
     };
-
-    const trendLine_MID = new TrendLine_Class(chartElem,lwc_lineSeries,midEND,midSTART,lineOptions_MID);
+    const trendLine_MID = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,midEND,midSTART,lineOptions_MID);
     lwc_lineSeries.attachPrimitive(trendLine_MID);
-
     let btmEND={},btmSTART={};
     btmEND.time = EndPoint.time;
     btmEND.price = EndPoint.price-10;
     btmSTART.time = StartPoint.time;
     btmSTART.price = StartPoint.price-200;
-
     const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
         labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
     };
-    const trendLine_BTM = new TrendLine_Class(chartElem,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
+    const trendLine_BTM = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
     lwc_lineSeries.attachPrimitive(trendLine_BTM);
-
 </script>
 <!--***************************** END OVERLAY LINES******************-->
 <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
