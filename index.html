@@ -285,7 +285,7 @@
     border-radius: 13px; flex:1; height:10em; display:flex; padding:1em 3% 2% 3%;max-width:50em;margin:0 10%;
     box-shadow: 1px 3px 13px 0px steelblue;align-self:center; width:88.888%;" class="hiddenTab">
         <article id="DATA_MENU_FRAME">
-            <menu style="display:flex;flex-wrap: wrap;font-size: 0.999em;padding-left:0;
+            <menu style="display:flex;flex-wrap: wrap;font-size: 0.999em;padding-left:0; margin-top: 0.333em;
                 justify-content: space-evenly;border-bottom: 1px dashed #021d33;padding-bottom: 0.666em;">
                 <button id="GALLERY_VIEW_BTN" class="blackBTN" onclick="getDataGallery('gallery')">GALLERY</button>
                 <button id="IMPORT_VIEW_BTN" class="blackBTN" onclick="getDataGallery('import')">IMPORT</button>
@@ -302,7 +302,7 @@
                 background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
             <header style="margin:1em;width: 100%;padding-left:2em;">IMPORT TRADE DATA</header>
             <textarea id="render_TRADE_IMPORT" class="scrollBarV txtSizer" style="overflow-x:visible;flex:1 1 0;resize:horizontal;background: black;color: lime;
-                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
+                width:80.888%;padding:2em;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -310,7 +310,7 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer">
-                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_BTNClick('imports')">IMPORT TRADE DATA</button>
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_TradeClick()">IMPORT TRADE DATA</button>
             </footer>               
         </article>        
 
@@ -331,7 +331,7 @@
                 <!-- <select id="tickr_SELECTOR_YMT" class="chartSELECTOR">
                     <option value="true" selected>...</option>
                 </select> -->
-                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_BTNClick('tkr')">OVERWRITE TKR MONTH</button>
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">OVERWRITE TKR MONTH</button>
             </footer>   
         </article>        
         <article id="DATA_TRADE_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
@@ -350,7 +350,7 @@
                 <!-- <select id="trade_SELECTOR_YMT" class="chartSELECTOR">
                     <option value="true" selected>...</option>
                 </select> -->
-                <button class="BTN" style="font-size:1em;" onclick="import_BTNClick('trades')">OVERWRITE MONTH TRADES</button>
+                <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">OVERWRITE MONTH TRADES</button>
             </footer>   
         </article>        
     </section><!--end DATAVIEW-->
@@ -429,6 +429,27 @@ function MINMAX(TGT, setState){ //setState optional to force expand or collapse,
     }
 }
 //*************************************************END MINMAX***********
+// function order_YMD_KEYS(ymdSet) {
+//   return ymdSet.sort((a, b) => {
+//     const aParts = a.split('_');
+//     const bParts = b.split('_');
+//     return parseInt(aParts[1]) - parseInt(bParts[1]);
+//   });
+// }
+function order_YMD_KEYS(ymdSet) {
+  return ymdSet.sort((a, b) => {
+    const aParts = a.split('_');
+    const bParts = b.split('_');
+
+    // Compare years first
+    if (aParts[0] !== bParts[0]) {
+      return parseInt(aParts[0]) - parseInt(bParts[0]);
+    }
+
+    // If years are equal, compare months
+    return parseInt(aParts[1]) - parseInt(bParts[1]);
+  });
+}
 //---*************CUSTOM CHART_SELECTOR------------------
 function getDataSelector(e){
     let TGT = e.target;
@@ -456,7 +477,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
         crosshair:{mode:LightweightCharts.CrosshairMode.Normal,vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
     }
-    let tgtTKR = tgtELEM.id.split('_')[1];   
+    let tgtTKR = tgtELEM.id.split('_')[1]; 
     tgtELEM.innerHTML=''; //blank out
     // const Dyna_Chart_CandleStick = 
     Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);
@@ -515,16 +536,11 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
         bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = 'Last 30'; //default 
     }
     selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
+    //SET TEXT SELECTOR TITLES
+    const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${tkr}`);
+    all_TITLES_TXT.innerText = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
 }
 function DYNA_SELECTOR_Change(e){
-
-// debugger;
-// const selectedOptions = Array.from(selectElement.selectedOptions);
-//   selectedOptions.forEach(option => {
-//     console.log(option.value); // Access selected values
-//     // Do something with the selected options
-//   });
-
 
     let TGTymt = e.target.value;
     let TGTID = e.target.id;
@@ -533,14 +549,42 @@ function DYNA_SELECTOR_Change(e){
     save_BANKBOOKZ_DB();
     
     //GET RELATIVE CHART
-    let chartELEM = e.target.parentElement.parentElement.nextElementSibling;
+    // let chartELEM = e.target.parentElement.parentElement.nextElementSibling;
+    let chartELEM = e.target.parentElement.parentElement.previousSibling.previousSibling;
     init_DYNA_CHART_Candle(chartELEM);
     
-    // const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
-    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
-    // for(var i=0; i<All_DynaCandles.length;i++){
-        // tgt_Candle = All_DynaCandles[i];
-        // init_DYNA_CHART_Candle(tgt_Candle);
+    // debugger;
+    // DYNAMIC SELECTOR BEHAVIOR:
+    // - IF CURRENT_TGT exists in CURRENT selectionLIST, then REMOVE, else ADD.
+    const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
+    if(TGTymt==='Last 30' || TGTymt==='All Time'){
+        all_TITLES_TXT.innerText = `${TGTymt} - ${TGTtkr}`;
+        return;
+    }    
+    const currentSELECTORZ = all_TITLES_TXT.innerText.split(', ');
+    const newSELECTORZ = [TGTymt];//,foundSelector=false;;
+    for(var f=0;f<currentSELECTORZ.length;f++){
+        if(currentSELECTORZ[f].indexOf('Last 30')>-1 ||
+        currentSELECTORZ[f].indexOf('All Time')>-1){
+            break;
+        }
+        if(currentSELECTORZ[f]===TGTymt){//remove
+            newSELECTORZ.shift();//remove first
+            continue;
+        }else if(currentSELECTORZ[f].indexOf('_')>-1){
+            newSELECTORZ.push(currentSELECTORZ[f])
+        }
+    }
+    if(!newSELECTORZ.length){
+        all_TITLES_TXT.innerText = `Last 30 - ${TGTtkr}`;
+    }else{
+        all_TITLES_TXT.innerText = newSELECTORZ.join(', ')
+    }
+    //USE CASES:
+    //1. 'loading' - falls through only renders selection
+    //2. 'Last 30' & 'All Time' - only renders selection.
+    //3. New _ - add to newselectorz and join.
+    //4. OLD _ - remove from newselectors and join.
 }
 //*************************************************END DYNA CHART CHART***********
 
@@ -593,6 +637,14 @@ function getMarker_TRADE_DATA(aTKR){
             let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
             let tradeSET=[],markerOBJ={},monthKEY,displayVal;
             let dayCNT = 0,tkrTAG,txnObj;
+            ymtKEYS = order_YMD_KEYS(ymtKEYS);
+            // debugger;
+            // // const ymdSet = ["2024_3_A", "2024_1_A", "2024_02_A"];
+            // const ymdSet =  ["2024_03_A", "2024_1_A", "2024_02_A", "2023_1_A", "2022_2_A"];
+            // const result_array = order_YMD_KEYS(ymdSet);
+            // console.log(result_array);
+
+
             ymtKEYS.reverse(); //oldest first.
             for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
                 monthKEY = ymtKEYS[i];
@@ -607,7 +659,7 @@ function getMarker_TRADE_DATA(aTKR){
                     markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
                     markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
                     markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
-                    displayVal = Math.trunc(tradeSET[ii].value)
+                    displayVal = Math.trunc(markerOBJ.value)
                     markerOBJ.text = `${displayVal}`;
                     markerOBJ.shape = "circle";
                     markerOBJ.size = 0.444;
@@ -1082,15 +1134,15 @@ function renderTRADEData(datatgt){
 }
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
-function import_BTNClick(importtype){
-    if(importtype==='trades'){
-        save_TradeClick();
-    }else if (importtype==='tkr'){
-        save_TickerClick();
-    }else if (importtype==='imports'){
-        import_TradeClick();
-    }
-}
+// function import_BTNClick(importtype){
+//     if(importtype==='trades'){
+//         save_TradeClick(); //this is save trade edit btn click.
+//     }else if (importtype==='tkr'){
+//         save_TickerClick(); //This is save tkr edit btn click.
+//     }else if (importtype==='imports'){
+//         import_TradeClick(); //this is IMPORT btn click, not save.
+//     }
+// }
 
 let save_TradeClick = ()=>{
     let render_TRADE_DATA = document.getElementById('render_TRADE_DATA');
@@ -1143,11 +1195,24 @@ function import_TradeClick(){
     let render_TRADE_IMPORT = document.getElementById('render_TRADE_IMPORT');
     let tkrSTR, YMT_id, txnSET=[],txnItem, dupeCNT=0, newCNT=0,txnFound=false;//, ymdSTR,clearDataMap={'YMT_id':true};
     let inputSTR = render_TRADE_IMPORT.value, inputARR=[], txnOBJ={};
+    let trackItem, trackedItem=false,untrackedCNT=0;
     try {
         inputARR = JSON.parse(inputSTR);
         for(var i=0; i<inputARR.length;i++){
             txnOBJ = inputARR[i];
             tkrSTR = txnOBJ.tkr;
+            // CHECK TRACKED or UNTRACKED
+            trackedItem=false;
+            for(var f=0; f< bankbookz_DB.TICKR_LIST.length;f++){
+                trackItem = bankbookz_DB.TICKR_LIST[f];
+                console.log(trackItem.tkr)
+                if( trackItem.tkr===tkrSTR ) { //TRACKED ITEM
+                    trackedItem=true;
+                    untrackedCNT++;
+                    break;
+                }
+            }
+            if(!trackedItem){continue;} //SKIP UNTRACKED DATA
             YMT_id = txnOBJ.ymtID;
             txnSET = bankbookz_DB.TRADE_TXNZ_YMT[YMT_id];
             if(!txnSET){ //CREATE NEW MONTH (trade)
@@ -1167,10 +1232,12 @@ function import_TradeClick(){
             }
             if(!txnFound){ //NEW RECORD
                 newCNT++;
+                // debugger;
                 bankbookz_DB.TRADE_TXNZ_YMT[YMT_id].push(txnOBJ);
             }
         }
         console.log(`IMPORTS; NEW recs:${newCNT}, SKIP Dupes:${dupeCNT}, `) 
+        console.log(`Untracked transactions: ${untrackedCNT}`) 
         save_BANKBOOKZ_DB();
     } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
 }
@@ -1244,6 +1311,15 @@ const init_BOOKZ_TABZ = ()=>{
                     <span>${tgtTKR.tkr}</span>
                     <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
                 </header>
+                <article id="candlestickTITLES_${tgtTKR.tkr}" 
+                    style="justify-content:center;flex:1; display:flex;
+                    width:98%;padding: 0.444em;color: limegreen;">
+                    <i>Loading...</i>
+                </article>
+                <article id="candlestickFRAME_${tgtTKR.tkr}" class="dynamicCandleStick" style="justify-content:center;
+                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
+                    <i>Loading...</i>
+                </article>
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                     margin-top: 0;padding: 1em 0 0 0;">
                     <span>
@@ -1262,10 +1338,6 @@ const init_BOOKZ_TABZ = ()=>{
                         </select>
                     </span>
                 </menu>
-                <article id="candlestickFRAME_${tgtTKR.tkr}" class="dynamicCandleStick" style="justify-content:center;
-                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
-                    <i>Loading...</i>
-                </article>
                 <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
                 border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;margin: 1em auto;">
                     <header class="expanderROW">
@@ -1278,10 +1350,10 @@ const init_BOOKZ_TABZ = ()=>{
                         justify-content:space-between; padding: 0em 3em 0 2em">
                         <span>
                             <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                            margin-right: 0.5em;"></div>                        
-                            <span style="font-size:0.666em;margin-top: 0.333em;color:steelblue">PnL:</span>
-                            <span style="font-size:0.666em;">234</span>
-                        </span>
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;">BANK:</span>
+                            <span style="font-size:0.666em;">444</span>
+                        </span>                        
                         <span>
                             <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                             margin-right: 0.5em;"></div>
@@ -1290,10 +1362,11 @@ const init_BOOKZ_TABZ = ()=>{
                         </span>
                         <span>
                             <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                            margin-right: 0.5em;"></div>
-                            <span style="font-size:0.666em;">BANK:</span>
-                            <span style="font-size:0.666em;">444</span>
+                            margin-right: 0.5em;"></div>                        
+                            <span style="font-size:0.666em;margin-top: 0.333em;color:steelblue">NET(PnL):</span>
+                            <span style="font-size:0.666em;">234</span>
                         </span>
+
                     </footer>                  
                 </section>            
                 <menu id="dataFRAME_${tgtTKR.tkr}" class="FRAME" style="justify-content: center;
@@ -1340,7 +1413,6 @@ function render_ALL_DYNA_SELECTORZ(){
         init_DYNA_SELECTOR(tgtTKR);
     }   
 }
-// const add_BOOKZ_Click = ()=>{ }
 function init_BOOKZ_EXPANDER(){ //collapse all BOOKZ except expanded tabs in local storage,
     let tgtTKR='',viewTKR='',viewID='',expanded=false, tgtBTN;
     const allBookz = document.getElementsByClassName('BOOKFRAME_Item');
