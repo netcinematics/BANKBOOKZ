@@ -402,7 +402,7 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
     try{
         bankbookz_DB = (localStorage.bankbookz_DB)?
         JSON.parse( localStorage.bankbookz_DB ):null;
-        // bankbookz_DB = null; //DEV: load mock data for TEST
+        bankbookz_DB = null; //DEV: load mock data for TEST
         if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
@@ -633,18 +633,18 @@ function getMarker_TRADE_DATA(aTKR){
             monthlySELECTOR = 'Last 30'; //DEFAULT
             bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
         }
-        if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
-            let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-            let tradeSET=[],markerOBJ={},monthKEY,displayVal;
-            let dayCNT = 0,tkrTAG,txnObj;
-            ymtKEYS = order_YMD_KEYS(ymtKEYS);
+
             // debugger;
             // // const ymdSet = ["2024_3_A", "2024_1_A", "2024_02_A"];
             // const ymdSet =  ["2024_03_A", "2024_1_A", "2024_02_A", "2023_1_A", "2022_2_A"];
             // const result_array = order_YMD_KEYS(ymdSet);
             // console.log(result_array);
 
-
+        if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+            let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+            let tradeSET=[],markerOBJ={},monthKEY,displayVal;
+            let dayCNT = 0,tkrTAG,txnObj;
+            ymtKEYS = order_YMD_KEYS(ymtKEYS);
             ymtKEYS.reverse(); //oldest first.
             for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
                 monthKEY = ymtKEYS[i];
@@ -666,25 +666,65 @@ function getMarker_TRADE_DATA(aTKR){
                     tradeMarkerData.push(markerOBJ);
                 }
             }  
-            return tradeMarkerData
+            return tradeMarkerData;
+        } else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
+            let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+            let tradeSET=[],markerOBJ={},monthKEY,displayVal;
+            let dayCNT = 0,tkrTAG,txnObj;
+            ymtKEYS = order_YMD_KEYS(ymtKEYS);
+            ymtKEYS.reverse(); //oldest first.
+            for(var i = 0; i< ymtKEYS.length; i++){ //ALL TIME data LOOP.
+                monthKEY = ymtKEYS[i];
+                tkrTAG = monthKEY.split("_")[2]
+                if(tkrTAG!=aTKR){continue}
+                tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+                for(var ii=0; ii<tradeSET.length;ii++){
+                    markerOBJ={};
+                    markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                    markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                    markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
+                    markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+                    displayVal = Math.trunc(markerOBJ.value)
+                    markerOBJ.text = `${displayVal}`;
+                    markerOBJ.shape = "circle";
+                    markerOBJ.size = 0.444;
+                    tradeMarkerData.push(markerOBJ);
+                }
+            }  
+            return tradeMarkerData; 
         }
-        // else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
-        //     tradeMarkerData = [
-        //     { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
-        //     { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
-        //     { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
-        //     { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
-        //     { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
-        // ]             
-        // }else {
-        //     tradeMarkerData = [
-        //     { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
-        //     { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
-        //     { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
-        //     { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
-        //     { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
-        // ]        
-        // } 
+        else if (monthlySELECTOR.indexOf('_')>-1) {  //RETURN MONTH MARKERS.
+            debugger;
+            let tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR];
+            if(!tradeSET){console.log('No Monthly Data'); return [];}
+
+            // let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+            // let tradeSET=[],markerOBJ={},monthKEY,displayVal;
+            // let dayCNT = 0,tkrTAG,txnObj;
+            // ymtKEYS = order_YMD_KEYS(ymtKEYS);
+            // ymtKEYS.reverse(); //oldest first.
+            
+            // for(var i = 0; i< rec.length; i++){ 
+            //     monthKEY = ymtKEYS[i];
+            //     tkrTAG = monthKEY.split("_")[2]
+            //     if(tkrTAG!=aTKR){continue}
+            //     debugger;
+            //     tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+                for(var ii=0; ii<tradeSET.length;ii++){ //MONTHLY TXN data LOOP.
+                    markerOBJ={};
+                    markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                    markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                    markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
+                    markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+                    displayVal = Math.trunc(markerOBJ.value)
+                    markerOBJ.text = `${displayVal}`;
+                    markerOBJ.shape = "circle";
+                    markerOBJ.size = 0.444;
+                    tradeMarkerData.push(markerOBJ);
+                }
+                return tradeMarkerData;             
+            // }  
+        } 
         
         tradeMarkerData = [
             {"time":'2024-7-1',"position":"aboveBar","color":"#ff8400","shape":"circle","text":"D","size":4},
