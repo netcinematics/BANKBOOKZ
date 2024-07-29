@@ -88,12 +88,22 @@
         color: cyan;width:8em;padding: 0;font-size:0.888em;margin: 0.444em 0px;
     }
     /* END CUSTOM INPUT ***************************END INPUT***********************/
+    .deleteTXT{font-size: 0.666em;margin: 0 0 0 1em;padding: 0.222em 0.222em 0.222em 0.444em;
+        display: flex;
+    }
+    .delTXTBTN{color: aqua;background: #000033;border: solid 1px seagreen;width: 1em;
+        border-radius: 50%;box-shadow: 1px 1px 1px teal;cursor: pointer;height: 1.222em;
+        font-size: 1em;display: flex;justify-content: center;align-items: center;
+        margin-left: 0.222em;padding-bottom: 0.222em;
+    }
     /*******END CUSTOM MAIN MENU *******************MAIN MENU*********************************/
     /* CUSTOM TITLES ***************************TITLES***********************/
     .mainTitle {font-size: 1.444em;display:flex;justify-content: space-between; padding: 0em 1em 0 1em;
         text-shadow: -8px -1px 8px blue;}
     /* CUSTOM EXPANDER ***************************EXPANDER***********************/
-    .expanderROW {display:flex;justify-content:space-between;padding: 0.444em 1em 0.444em 1em;border-bottom:1px dashed #021d33}
+    .expanderROW {display:flex;justify-content:space-between;border-bottom:1px dashed #021d33;
+        padding: 0.222em 0em 0.333em 0em; margin: 0 2% 0.333em 2%;
+    }
     .expanderTITLE{font-size:0.888em;color:steelblue;    margin-top: 0.333em;}
     .expanderBTN {color:aqua;background:#000033;border:solid 1px seagreen;
         width: 1.444em;text-align: center;border-radius: 50%;box-shadow: 1px 1px 1px teal;
@@ -538,48 +548,70 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
     //SET TEXT SELECTOR TITLES
     const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${tkr}`);
-    all_TITLES_TXT.innerText = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
+    // all_TITLES_TXT.innerText = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
+    all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]}</span>`;
 }
 function DYNA_SELECTOR_Change(e){
-
     let TGTymt = e.target.value;
     let TGTID = e.target.id;
     let TGTtkr = TGTID.split("_")[3]
     bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = TGTymt;
     save_BANKBOOKZ_DB();
-    
-    //GET RELATIVE CHART
-    // let chartELEM = e.target.parentElement.parentElement.nextElementSibling;
-    let chartELEM = e.target.parentElement.parentElement.previousSibling.previousSibling;
+    //DYNA - DYNAMIC LOOKUP MECHANISM - pretty nice.
+    let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
     init_DYNA_CHART_Candle(chartELEM);
-    
-    // debugger;
     // DYNAMIC SELECTOR BEHAVIOR:
-    // - IF CURRENT_TGT exists in CURRENT selectionLIST, then REMOVE, else ADD.
     const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
+    debugger;
     if(TGTymt==='Last 30' || TGTymt==='All Time'){
-        all_TITLES_TXT.innerText = `${TGTymt} - ${TGTtkr}`;
+        all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
         return;
     }    
-    const currentSELECTORZ = all_TITLES_TXT.innerText.split(', ');
-    const newSELECTORZ = [TGTymt];//,foundSelector=false;;
+    debugger;
+    const currentSELECTORZ_TXT = all_TITLES_TXT.innerText;
+    const currentSELECTORZ = all_TITLES_TXT.children;
+    const newSELECTORZ = [TGTymt];//default selection
     for(var f=0;f<currentSELECTORZ.length;f++){
-        if(currentSELECTORZ[f].indexOf('Last 30')>-1 ||
-        currentSELECTORZ[f].indexOf('All Time')>-1){
+        if(currentSELECTORZ_TXT.indexOf('Last 30')>-1 ||
+        currentSELECTORZ_TXT.indexOf('All Time')>-1){
             break;
+            // continue;
         }
-        if(currentSELECTORZ[f]===TGTymt){//remove
-            newSELECTORZ.shift();//remove first
+        // if(currentSELECTORZ[f]===TGTymt){//remove
+        //     newSELECTORZ.shift();//remove first
+        //     continue;
+        // }
+        if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
+            debugger;
+            // newSELECTORZ.shift();//remove first
             continue;
-        }else if(currentSELECTORZ[f].indexOf('_')>-1){
-            newSELECTORZ.push(currentSELECTORZ[f])
         }
+        // else if(currentSELECTORZ[f].indexOf('_')>-1){
+            // newSELECTORZ.push(currentSELECTORZ[f])
+            // }
+            // debugger;
+        newSELECTORZ.push(currentSELECTORZ[f].innerText)
+
+        // newSELECTORZ.push(`<span class="deleteTXT">${currentSELECTORZ[f]} <button class="delTXTBTN">x</button> </span>`)
     }
-    if(!newSELECTORZ.length){
-        all_TITLES_TXT.innerText = `Last 30 - ${TGTtkr}`;
-    }else{
-        all_TITLES_TXT.innerText = newSELECTORZ.join(', ')
+    // if(!newSELECTORZ.length){
+    //     all_TITLES_TXT.innerText = `Last 30 - ${TGTtkr}`;
+    // }else{
+    if(newSELECTORZ.length>1){
+        let wrappedDATA = newSELECTORZ.map( (e,i)=>{
+            if(i===0){return  `<span class="defaultTXT">${e}</span>`}
+            return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT()">x</button> </span>`;
+        } ) 
+        all_TITLES_TXT.innerHTML = wrappedDATA.join('')
+    } else {
+        all_TITLES_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
     }
+    // else if (newSELECTORZ.indexOf('_'>-1)) {
+    //     all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
+    // }else {
+    //     all_TITLES_TXT.innerHTML = newSELECTORZ.join('')
+    // }
+    // }
     //USE CASES:
     //1. 'loading' - falls through only renders selection
     //2. 'Last 30' & 'All Time' - only renders selection.
@@ -694,7 +726,6 @@ function getMarker_TRADE_DATA(aTKR){
             return tradeMarkerData; 
         }
         else if (monthlySELECTOR.indexOf('_')>-1) {  //RETURN MONTH MARKERS.
-            debugger;
             let tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR];
             if(!tradeSET){console.log('No Monthly Data'); return [];}
 
@@ -886,6 +917,11 @@ function getCandleSeriesDATA(aTKR){
     return candleSeriesDATA;
 }
 //*******END GET DATA for - DYNA CHART***********
+//*******Delete selector for - DYNA CHART***********
+function delete_SELECTOR_TXT(){
+    debugger;
+}
+//*******END Delete selector for - DYNA CHART***********
 
 </script><!--****************************END DYNAMIC CHART-->
 <script  >// ****************************** XMPL CHART**********************
@@ -1351,15 +1387,32 @@ const init_BOOKZ_TABZ = ()=>{
                     <span>${tgtTKR.tkr}</span>
                     <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
                 </header>
+            <menu style="display: flex;margin-right:3.333%;padding-left:2.222%;align-items: center;margin-bottom: 0.555em;">
                 <article id="candlestickTITLES_${tgtTKR.tkr}" 
-                    style="justify-content:center;flex:1; display:flex;
+                    style="justify-content:flex-start;flex:1; display:flex;
                     width:98%;padding: 0.444em;color: limegreen;">
                     <i>Loading...</i>
                 </article>
+                <span>
+                        <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
+                            <option value="true" selected>Last 30</option>
+                        </select>
+                    </span>
+            </menu>
+            <section id="candlestickBOX_${tgtTKR.tkr}" style="justify-content:center;
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;
+                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
+
+                <header class="expanderROW">
+                        <span class="expanderTITLE">Candlestick:</span>
+                        <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
+                    </header>
+
                 <article id="candlestickFRAME_${tgtTKR.tkr}" class="dynamicCandleStick" style="justify-content:center;
-                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
+                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
                     <i>Loading...</i>
                 </article>
+            
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                     margin-top: 0;padding: 1em 0 0 0;">
                     <span>
@@ -1372,12 +1425,9 @@ const init_BOOKZ_TABZ = ()=>{
                         margin-right: 0.5em;"></div>
                         <span style="font-size:0.444em;">PROFITnLOSS</span>
                     </span>
-                    <span>
-                        <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
-                            <option value="true" selected>Last 30</option>
-                        </select>
-                    </span>
                 </menu>
+
+            </section>
                 <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
                 border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;margin: 1em auto;">
                     <header class="expanderROW">
