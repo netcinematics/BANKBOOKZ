@@ -562,12 +562,10 @@ function DYNA_SELECTOR_Change(e){
     init_DYNA_CHART_Candle(chartELEM);
     // DYNAMIC SELECTOR BEHAVIOR:
     const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
-    debugger;
     if(TGTymt==='Last 30' || TGTymt==='All Time'){
         all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
         return;
     }    
-    debugger;
     const currentSELECTORZ_TXT = all_TITLES_TXT.innerText;
     const currentSELECTORZ = all_TITLES_TXT.children;
     const newSELECTORZ = [TGTymt];//default selection
@@ -582,7 +580,6 @@ function DYNA_SELECTOR_Change(e){
         //     continue;
         // }
         if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
-            debugger;
             // newSELECTORZ.shift();//remove first
             continue;
         }
@@ -600,7 +597,7 @@ function DYNA_SELECTOR_Change(e){
     if(newSELECTORZ.length>1){
         let wrappedDATA = newSELECTORZ.map( (e,i)=>{
             if(i===0){return  `<span class="defaultTXT">${e}</span>`}
-            return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT()">x</button> </span>`;
+            return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT(event)">x</button> </span>`;
         } ) 
         all_TITLES_TXT.innerHTML = wrappedDATA.join('')
     } else {
@@ -918,8 +915,12 @@ function getCandleSeriesDATA(aTKR){
 }
 //*******END GET DATA for - DYNA CHART***********
 //*******Delete selector for - DYNA CHART***********
-function delete_SELECTOR_TXT(){
-    debugger;
+function delete_SELECTOR_TXT(e){
+    let TGTtkr = e.target.parentElement.parentElement.id.split('_')[1]
+    const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
+    let defaultTXT = all_TITLES_TXT.children[0].innerText;
+    all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${defaultTXT}</span>`
+    // debugger;
 }
 //*******END Delete selector for - DYNA CHART***********
 
