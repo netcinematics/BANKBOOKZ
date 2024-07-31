@@ -14,10 +14,11 @@
         <script src="./data/default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
         <script  > //****************LOAD-CUSTOM-DATA-MODULE******************
             console.log("Imported Data:")
-            console.log(`TRADES:${default_raw_trade_data.length}`)
+            // console.log(`RAW TRADES:${default_raw_trade_data.length}`)
+            console.log(`MONTH TRADES:${Object.keys(default_TRADE_DATA_MAP_Monthly).length}`)
             console.log(`TICKRS, BTC(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['BTC']).length}`)
             console.log(`TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`)
-            console.log(`BTC_TXNZ: MONTH${Object.keys(default_BTC_TRADEZ).length}`);
+            // console.log(`BTC_TXNZ: MONTH${Object.keys(default_BTC_TRADEZ).length}`);
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
         <!-- <script type="text/javascript"
             src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script> -->
@@ -91,7 +92,7 @@
     .deleteTXT{font-size: 0.666em;margin: 0 0 0 1em;padding: 0.222em 0.222em 0.222em 0.444em;
         display: flex;
     }
-    .defaultTXT{font-size:0.777em}
+    .defaultTXT{font-size:0.888em}
     .delTXTBTN{color: aqua;background: #000033;border: solid 1px seagreen;width: 1em;
         border-radius: 50%;box-shadow: 1px 1px 1px teal;cursor: pointer;height: 1.222em;
         font-size: 1em;display: flex;justify-content: center;align-items: center;
@@ -339,9 +340,6 @@
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin-bottom: 1em;">
-                <!-- <select id="tickr_SELECTOR_YMT" class="chartSELECTOR">
-                    <option value="true" selected>...</option>
-                </select> -->
                 <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">OVERWRITE TKR MONTH</button>
             </footer>   
         </article>        
@@ -358,9 +356,6 @@
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin:1em 0;">
-                <!-- <select id="trade_SELECTOR_YMT" class="chartSELECTOR">
-                    <option value="true" selected>...</option>
-                </select> -->
                 <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">OVERWRITE MONTH TRADES</button>
             </footer>   
         </article>        
@@ -372,31 +367,7 @@
 let bankbookz_DB=null;
 const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     bankbookz_DB = { 
-            TRADE_TXNZ_YMT:{//default_BTC_TRADEZ,
-        
-            "2020_1_ETH":[ //Monthly trade data
-                {"tkr":"ETH","type":"SELL","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_ETH",
-                    "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-                {"tkr":"ETH","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_ETH",
-                    "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-            ],
-            "2020_1_BTC":[ //Monthly trade data
-                {"tkr":"BTC","type":"SELL","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                    "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                    "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-            ],
-            "2024_7_BTC":[ //Monthly trade data
-                {"tkr":"BTC","type":"SELL","mode":"Limit","ymd":"2024_7_4","ymtID":"2024_7_BTC",
-                    "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-                {"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2024_7_6","ymtID":"2024_7_BTC",
-                    "amt":"111","shares":"0.0014","price":"64,444.44","role":""},
-            ],
-        },
-        // TICKR_DATA_MAP_Monthly:{
-        //     "BTC":{"2024_07_BTC":[]},
-        //     "ETH":{"2024_07_ETH":[]},
-        // },
+        TRADE_TXNZ_YMT: default_TRADE_DATA_MAP_Monthly,
         TICKR_DATA_MAP_Monthly : default_TICKR_DATA_MAP_Monthly,
         TICKR_LIST:[//{name:'XMPL',lastLoadYMD:''},
             {tkr:'BTC',lastLoadYMD:''},{tkr:'ETH',lastLoadYMD:''}
@@ -413,13 +384,13 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
     try{
         bankbookz_DB = (localStorage.bankbookz_DB)?
         JSON.parse( localStorage.bankbookz_DB ):null;
-        bankbookz_DB = null; //DEV: load mock data for TEST
+        // bankbookz_DB = null; //DEV: load mock data for TEST
         if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
 function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
-    // console.log('SAVED BANKBOOKZ DB.')
-    // localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+    console.log('SAVED BANKBOOKZ DB.')
+    localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
 }
 </script><!--***********************END LOCAL DB*********************-->
 <script  >// *************APP UTILITIES*********************
@@ -481,16 +452,9 @@ function fillout_YMT_KEYS(ymtArr,TGTymt){
         }
         if(foundEnd){break;}
     }
-
-return cumulativeSet;
+    return cumulativeSet;
 }
-
 //********************END YMT - CUSTOM DATA MANIPULATION*************
-//TEST RUNNER
-// const ymdSet = ["2024_3_A", "2024_1_A", "2024_02_A"];
-// const ymdSet =  ["2024_03_A", "2024_1_A", "2024_02_A", "2023_1_A", "2022_2_A"];
-// const result_array = sort_YMT_KEYS(ymdSet);
-// console.log(result_array);
 //---*************CUSTOM CHART_SELECTOR------------------
 function getDataSelector(e){
     let TGT = e.target;
@@ -510,11 +474,10 @@ let Dyna_Chart_CandleStick; //for modular tools. //TODO. candlesticks[]
 function init_DYNA_CHART_Candle(tgtELEM){
     const chartOptions = {width:400,height:300,
         layout:{textColor:'steelblue',
-            fontSize:10,
-            fontFamily:'sans-serif',//'Roboto',
-            // fontBoldWeight: 800,
+            fontSize:9,
+            fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
             background:{type:'solid',color:'#000000'} },
-        grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } },
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         crosshair:{mode:LightweightCharts.CrosshairMode.Normal,vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
     }
@@ -546,7 +509,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
 }; //END INIT DYNA_CHART - candle *****************************************
 function resize_DYNA_CHART_Candle(elem){
     let frame = document.getElementById('BOOK_VIEW');
-    let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-40:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
+    let maxWidth = (frame.offsetWidth>800)?777:(frame.offsetWidth<400)?frame.offsetWidth-10:frame.offsetWidth-20;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;
     if(maxWidth<100 || maxHeight<50){return}
     elem.resize(maxWidth, maxHeight);
@@ -555,7 +518,6 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+tkr)
     if(!selectELEM){debugger;}
     selectELEM.innerHTML = '';
-    // selectElement.multiple = true;
     selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)}); 
     const option1 = document.createElement("option");
     option1.text = "Last 30";
@@ -607,7 +569,7 @@ function DYNA_SELECTOR_Change(e){
         if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
             continue;
         }
-        newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])
+        newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])//trim deletebtn
     }
 
     if(newSELECTORZ.length>1){
@@ -665,94 +627,119 @@ window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
 //*******GET DATA for - DYNA CHART***********
 function getMarker_TRADE_DATA(aTKR){
     let tradeMarkerData = [];
-        // debugger;
-        let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
-        if(!monthlySELECTOR && aTKR){
-            monthlySELECTOR = 'Last 30'; //DEFAULT
-            bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
-        }
-        if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
-            let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-            let tradeSET=[],markerOBJ={},monthKEY,displayVal;
-            let dayCNT = 0,tkrTAG,txnObj;
-            ymtKEYS = sort_YMT_KEYS(ymtKEYS);
-            ymtKEYS.reverse(); //oldest first.
-            for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
-                monthKEY = ymtKEYS[i];
-                tkrTAG = monthKEY.split("_")[2]
-                if(tkrTAG!=aTKR){continue}
-                tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
-                for(var ii=0; ii<tradeSET.length;ii++){
-                    dayCNT++;
-                    if(dayCNT>30){break;}
-                    markerOBJ={};
-                    markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
-                    markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                    markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
-                    markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
-                    displayVal = Math.trunc(markerOBJ.value)
-                    markerOBJ.text = `${displayVal}`;
-                    markerOBJ.shape = "circle";
-                    markerOBJ.size = 0.444;
-                    tradeMarkerData.push(markerOBJ);
-                }
-            }  
-            return tradeMarkerData;
-        } else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
-            let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-            let tradeSET=[],markerOBJ={},monthKEY,displayVal;
-            let dayCNT = 0,tkrTAG,txnObj;
-            ymtKEYS = sort_YMT_KEYS(ymtKEYS);
-            ymtKEYS.reverse(); //oldest first.
-            for(var i = 0; i< ymtKEYS.length; i++){ //ALL TIME data LOOP.
-                monthKEY = ymtKEYS[i];
-                tkrTAG = monthKEY.split("_")[2]
-                if(tkrTAG!=aTKR){continue}
-                tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
-                for(var ii=0; ii<tradeSET.length;ii++){
-                    markerOBJ={};
-                    markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
-                    markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                    markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
-                    markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
-                    displayVal = Math.trunc(markerOBJ.value)
-                    markerOBJ.text = `${displayVal}`;
-                    markerOBJ.shape = "circle";
-                    markerOBJ.size = 0.444;
-                    tradeMarkerData.push(markerOBJ);
-                }
-            }  
-            return tradeMarkerData; 
-        }
-        else if (monthlySELECTOR.indexOf('_')>-1) {  //RETURN MONTH MARKERS.
-            let tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR];
-            if(!tradeSET){console.log('No Monthly Data'); return [];}
-
-                for(var ii=0; ii<tradeSET.length;ii++){ //MONTHLY TXN data LOOP.
-                    markerOBJ={};
-                    markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
-                    markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                    markerOBJ.position = (tradeSET[ii].type==='BUY')?"aboveBar":"belowBar";
-                    markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
-                    displayVal = Math.trunc(markerOBJ.value)
-                    markerOBJ.text = `${displayVal}`;
-                    markerOBJ.shape = "circle";
-                    markerOBJ.size = 0.444;
-                    tradeMarkerData.push(markerOBJ);
-                }
-                return tradeMarkerData;             
-            // }  
-        } 
-        
-        tradeMarkerData = [
-            {"time":'2024-7-1',"position":"aboveBar","color":"#ff8400","shape":"circle","text":"D","size":4},
-            {"time":'2024-7-4',"position":"belowBar","color":"#e91e63","shape":"arrowUp","text":"Buy @ 42"},
-            {"time":'2024-7-6',"position":"belowBar","color":"#e91e63","shape":"circle","text":"Buy @ 44",size:4},
-            {"time":'2024-7-8',"position":"aboveBar","color":"#219644","shape":"arrowDown","text":"Sell @ 75"},
-            {"time":'2024-7-14',"position":"aboveBar","color":"#219644","shape":"arrowDown","text":"Sell @ 77"}
-        ];        
-
+    let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
+    if(!monthlySELECTOR && aTKR){
+        monthlySELECTOR = 'Last 30'; //DEFAULT
+        bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
+    }
+    const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${aTKR}`);
+    const currentSELECTORZ = selector_TITLE_TXT.children;
+    if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+        let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+        let tradeSET=[],markerOBJ={},monthKEY,displayVal;
+        let dayCNT = 0,tkrTAG,txnObj;
+        ymtKEYS = sort_YMT_KEYS(ymtKEYS);
+        ymtKEYS.reverse(); //oldest first.
+        for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
+            monthKEY = ymtKEYS[i];
+            tkrTAG = monthKEY.split("_")[2]
+            if(tkrTAG!=aTKR){continue}
+            tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+            for(var ii=0; ii<tradeSET.length;ii++){
+                dayCNT++;
+                if(dayCNT>30){break;}
+                markerOBJ={};
+                markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                markerOBJ.value = tradeSET[ii].amt;
+                // markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                // markerOBJ.position = "inBar";
+                markerOBJ.color = (tradeSET[ii].type==='BUY')?"#2a2afc":"purple";
+                markerOBJ.position = (tradeSET[ii].type==='BUY')?"belowBar":"aboveBar";
+                // markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+                displayVal = Math.trunc(markerOBJ.value)
+                markerOBJ.text = `${displayVal}`;
+                // markerOBJ.shape = "circle";
+                // markerOBJ.size = 0.111;
+                // markerOBJ.size = 0.444;
+                tradeMarkerData.push(markerOBJ);
+            }
+        }  
         return tradeMarkerData;
+    } else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
+        let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+        let tradeSET=[],markerOBJ={},monthKEY,displayVal;
+        let dayCNT = 0,tkrTAG,txnObj;
+        ymtKEYS = sort_YMT_KEYS(ymtKEYS);
+        ymtKEYS.reverse(); //oldest first.
+        for(var i = 0; i< ymtKEYS.length; i++){ //ALL TIME data LOOP.
+            monthKEY = ymtKEYS[i];
+            tkrTAG = monthKEY.split("_")[2]
+            if(tkrTAG!=aTKR){continue}
+            tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
+            for(var ii=0; ii<tradeSET.length;ii++){
+                markerOBJ={};
+                markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                markerOBJ.value = tradeSET[ii].amt;
+                // markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                // markerOBJ.position = "inBar";
+                markerOBJ.color = (tradeSET[ii].type==='BUY')?"#2a2afc":"purple";                    
+                markerOBJ.position = (tradeSET[ii].type==='BUY')?"belowBar":"aboveBar";
+                // markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+                displayVal = Math.trunc(markerOBJ.value)
+                markerOBJ.text = `${displayVal}`;
+                // markerOBJ.shape = "circle";
+                // markerOBJ.size = 0.111;
+                tradeMarkerData.push(markerOBJ);
+            }
+        }  
+        return tradeMarkerData; 
+    }
+    else if (currentSELECTORZ.length>1) {  //RETURN MULTIPLE MONTH MARKERS.
+        let moTGT,tradeSET;
+        for(var i = 0; i< currentSELECTORZ.length; i++){ //multi month
+            moTGT = currentSELECTORZ[i].innerText.split('\nx')[0];//trim delete btn
+            tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[moTGT];
+            if(!tradeSET){console.log(`No Monthly Data ${moTGT}`); continue;}
+            for(var ii=0; ii<tradeSET.length;ii++){ //MONTHLY TXN data LOOP.
+                markerOBJ={};
+                markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+                markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                markerOBJ.value = tradeSET[ii].amt;
+                // markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+                // markerOBJ.position = "inBar";
+                markerOBJ.color = (tradeSET[ii].type==='BUY')?"#2a2afc":"purple";
+                markerOBJ.position = (tradeSET[ii].type==='BUY')?"belowBar":"aboveBar";
+                // markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+                displayVal = Math.trunc(markerOBJ.value)
+                markerOBJ.text = `${displayVal}`;
+                // markerOBJ.shape = "circle";
+                // markerOBJ.size = 0.111;
+                tradeMarkerData.push(markerOBJ);
+            }            
+        }
+        return tradeMarkerData;
+    } else if (monthlySELECTOR.indexOf('_')>-1) {  //RETURN SINGLE MONTH MARKERS.
+        let tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR];
+        if(!tradeSET){console.log('No Monthly Data'); return [];}
+
+        for(var ii=0; ii<tradeSET.length;ii++){ //MONTHLY TXN data LOOP.
+            markerOBJ={};
+            markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
+            markerOBJ.value = tradeSET[ii].amt;
+            // markerOBJ.value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
+            // markerOBJ.position = "inBar";
+            markerOBJ.color = (tradeSET[ii].type==='BUY')?"#2a2afc":"purple";
+            markerOBJ.position = (tradeSET[ii].type==='BUY')?"belowBar":"aboveBar";
+            // markerOBJ.color = (tradeSET[ii].type==='BUY')?"#219644":"#e91e63";
+            displayVal = Math.trunc(markerOBJ.value)
+            markerOBJ.text = `${displayVal}`;
+            // markerOBJ.shape = "circle";
+            // markerOBJ.size = 0.111;
+            tradeMarkerData.push(markerOBJ);
+        }
+        return tradeMarkerData;             
+    } 
+    return tradeMarkerData;
 }
 function getArea_TRADE_DATA(aTKR){
     let areaSeriesDATA = [];
@@ -882,7 +869,7 @@ function getCandleSeriesDATA(aTKR){
     if(monthlySelectors.length>1){ //Multiple Month Load Logic.
         let ymtKey,revArr=[];
         for(var i=0; i<monthlySelectors.length;i++){
-            ymtKey = monthlySelectors[i].innerText.split('\nx')[0];
+            ymtKey = monthlySelectors[i].innerText.split('\nx')[0];//trim deletebtn
             revArr = new Array(...bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][ymtKey])
             revArr.reverse();
             candleSeriesDATA.push(...revArr)
@@ -926,7 +913,14 @@ function delete_SELECTOR_TXT(e){
     const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
     let defaultTXT = selector_TITLE_TXT.children[0].innerText;
     selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${defaultTXT}</span>`
-    // debugger;
+    //Reset combo selector
+    let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+TGTtkr)   
+    selectELEM.value = defaultTXT;
+    //Reset selector map.
+    bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = defaultTXT;
+    //DYNA - init chart.
+    let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
+    init_DYNA_CHART_Candle(chartELEM);  
 }
 //*******END Delete selector for - DYNA CHART***********
 
@@ -1217,16 +1211,6 @@ function renderTRADEData(datatgt){
 }
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
-// function import_BTNClick(importtype){
-//     if(importtype==='trades'){
-//         save_TradeClick(); //this is save trade edit btn click.
-//     }else if (importtype==='tkr'){
-//         save_TickerClick(); //This is save tkr edit btn click.
-//     }else if (importtype==='imports'){
-//         import_TradeClick(); //this is IMPORT btn click, not save.
-//     }
-// }
-
 let save_TradeClick = ()=>{
     let render_TRADE_DATA = document.getElementById('render_TRADE_DATA');
         let YMT_id, ymdSTR,clearTRADEMap={'YMT_id':true};
@@ -1315,12 +1299,11 @@ function import_TradeClick(){
             }
             if(!txnFound){ //NEW RECORD
                 newCNT++;
-                // debugger;
                 bankbookz_DB.TRADE_TXNZ_YMT[YMT_id].push(txnOBJ);
             }
         }
         console.log(`IMPORTS; NEW recs:${newCNT}, SKIP Dupes:${dupeCNT}, `) 
-        console.log(`Untracked transactions: ${untrackedCNT}`) 
+        console.log(`Untracked transactions: ${untrackedCNT}`)
         save_BANKBOOKZ_DB();
     } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
 }
@@ -1397,7 +1380,7 @@ const init_BOOKZ_TABZ = ()=>{
             <menu style="display: flex;margin-right:3.333%;padding-left:2.222%;align-items: center;margin-bottom: 0.555em;">
                 <article id="candlestickTITLES_${tgtTKR.tkr}" 
                     style="justify-content:flex-start;flex:1; display:flex;flex-wrap: wrap;
-                    width:98%;padding: 0.444em;color: limegreen;"></article>
+                    width:98%;padding:0 0.444em 0 0.444em;color: limegreen;"></article>
                 <span>
                         <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
                             <option value="true" selected>Last 30</option>
@@ -1421,14 +1404,14 @@ const init_BOOKZ_TABZ = ()=>{
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                     margin-top: 0;padding: 1em 0 0 0;">
                     <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                        <div style="background:blue;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                         margin-right: 0.5em;"></div>
-                        <span style="font-size:0.444em;">PRICE</span>
+                        <span style="font-size:0.666em;color:royalblue">BUY</span>
                     </span>
                     <span>
-                        <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                        <div style="background:purple;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                         margin-right: 0.5em;"></div>
-                        <span style="font-size:0.444em;">PROFITnLOSS</span>
+                        <span style="font-size:0.666em;color:rebeccapurple">SELL</span>
                     </span>
                 </menu>
 

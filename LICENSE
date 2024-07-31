@@ -1,6 +1,6 @@
 MIT License with conditions.
 
-Copyright (c) 2024 spazefalcon, NetCinematics.
+Copyright (c) 2024 NetCinematics.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,29 @@ SOFTWARE.
 
 CONDITIONS:
 
-A. BANKBOOKZ (tm) NetCinematics 2024.
+A. BANKBOOKZ (tm) NetCinematics 2024. 
+    As of July 1, 2024 APACHE LICENSE, VERSION 2.0
+    Copyright 2024 NetCinematics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.    
 
 B. Not financial advice, must abide any AI regulation.
 
-C. Does not confirm profits. Projections are mathmatic.
+C. Does not guarantee profits. Projections are mathmatic.
 
-D. This software is OPEN-SOURCE (MIT) as a basis,
+D. This software is OPEN-SOURCE as a basis,
  for eventual closed source iterations with addional
- ai, data visualization, and various algorithmic features.
+ ai, data visualization, and various algorithmic features as a service.
 
 E. Original personal_ledger_system.
 
