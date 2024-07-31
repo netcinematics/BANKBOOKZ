@@ -91,6 +91,7 @@
     .deleteTXT{font-size: 0.666em;margin: 0 0 0 1em;padding: 0.222em 0.222em 0.222em 0.444em;
         display: flex;
     }
+    .defaultTXT{font-size:0.777em}
     .delTXTBTN{color: aqua;background: #000033;border: solid 1px seagreen;width: 1em;
         border-radius: 50%;box-shadow: 1px 1px 1px teal;cursor: pointer;height: 1.222em;
         font-size: 1em;display: flex;justify-content: center;align-items: center;
@@ -439,27 +440,57 @@ function MINMAX(TGT, setState){ //setState optional to force expand or collapse,
     }
 }
 //*************************************************END MINMAX***********
-// function order_YMD_KEYS(ymdSet) {
-//   return ymdSet.sort((a, b) => {
-//     const aParts = a.split('_');
-//     const bParts = b.split('_');
-//     return parseInt(aParts[1]) - parseInt(bParts[1]);
-//   });
-// }
-function order_YMD_KEYS(ymdSet) {
-  return ymdSet.sort((a, b) => {
-    const aParts = a.split('_');
-    const bParts = b.split('_');
-
-    // Compare years first
-    if (aParts[0] !== bParts[0]) {
+//*******************************YMT - CUSTOM DATA MANIPULATION*************
+function sort_YMT_KEYS(ymtSet) {
+    return ymtSet.sort((a, b) => {
+        const aParts = a.split('_');
+        const bParts = b.split('_');
+        if (aParts[0] !== bParts[0]) { //compare years
       return parseInt(aParts[0]) - parseInt(bParts[0]);
     }
-
-    // If years are equal, compare months
-    return parseInt(aParts[1]) - parseInt(bParts[1]);
+    return parseInt(aParts[1]) - parseInt(bParts[1]);//compare months
   });
 }
+function fillout_YMT_KEYS(ymtArr,TGTymt){ 
+    ymtArr = sort_YMT_KEYS(ymtArr) //expects sort_YMT_KEYS
+    const cumulativeSet = [];
+    const ymtSet = new Set(ymtArr)
+    const yearSet = new Set(ymtArr.map(item => item.split('_')[0]));
+    const monthSet = new Set(ymtArr.map(item => item.split('_')[1]));
+    const yearsArr = Array.from(yearSet);
+    const tkr = ymtArr[0].split('_')[2];
+    let tgtYMT='',year,foundStart=false,foundEnd=false;;
+    let lastItem = ymtArr[ymtArr.length-1]
+    for (let yrIDX = 0; yrIDX <= yearsArr.length; yrIDX++) { // Adjust year range as needed
+        year = yearsArr[yrIDX];
+        for (let month = 1; month <= 12; month++) {
+            tgtYMT = `${year}_${month}_${tkr}`;
+            if (ymtSet.has(tgtYMT)) {
+                foundStart = true;
+                cumulativeSet.push(tgtYMT);
+                if(tgtYMT===lastItem || tgtYMT===TGTymt){
+                    foundEnd=true;
+                }
+            } else if(foundStart) { //cumulate till end.
+                cumulativeSet.push(tgtYMT); 
+            } 
+            if (cumulativeSet.length>=12 || foundEnd){ 
+                foundEnd=true; //hardstop 12 end not found
+                break;
+            }
+        }
+        if(foundEnd){break;}
+    }
+
+return cumulativeSet;
+}
+
+//********************END YMT - CUSTOM DATA MANIPULATION*************
+//TEST RUNNER
+// const ymdSet = ["2024_3_A", "2024_1_A", "2024_02_A"];
+// const ymdSet =  ["2024_03_A", "2024_1_A", "2024_02_A", "2023_1_A", "2022_2_A"];
+// const result_array = sort_YMT_KEYS(ymdSet);
+// console.log(result_array);
 //---*************CUSTOM CHART_SELECTOR------------------
 function getDataSelector(e){
     let TGT = e.target;
@@ -547,9 +578,9 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     }
     selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
     //SET TEXT SELECTOR TITLES
-    const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${tkr}`);
-    // all_TITLES_TXT.innerText = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
-    all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]}</span>`;
+    const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${tkr}`);
+    // selector_TITLE_TXT.innerText = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
+    selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]}</span>`;
 }
 function DYNA_SELECTOR_Change(e){
     let TGTymt = e.target.value;
@@ -557,63 +588,41 @@ function DYNA_SELECTOR_Change(e){
     let TGTtkr = TGTID.split("_")[3]
     bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = TGTymt;
     save_BANKBOOKZ_DB();
-    //DYNA - DYNAMIC LOOKUP MECHANISM - pretty nice.
-    let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
-    init_DYNA_CHART_Candle(chartELEM);
-    // DYNAMIC SELECTOR BEHAVIOR:
-    const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
+    // DYNAMIC SELECTOR BEHAVIOR **************************************:
+    const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
     if(TGTymt==='Last 30' || TGTymt==='All Time'){
-        all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
+        selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
+        let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
+        init_DYNA_CHART_Candle(chartELEM);          
         return;
     }    
-    const currentSELECTORZ_TXT = all_TITLES_TXT.innerText;
-    const currentSELECTORZ = all_TITLES_TXT.children;
-    const newSELECTORZ = [TGTymt];//default selection
+    const currentSELECTORZ_TXT = selector_TITLE_TXT.innerText;
+    const currentSELECTORZ = selector_TITLE_TXT.children;
+    let newSELECTORZ = [TGTymt];//default selection
     for(var f=0;f<currentSELECTORZ.length;f++){
         if(currentSELECTORZ_TXT.indexOf('Last 30')>-1 ||
         currentSELECTORZ_TXT.indexOf('All Time')>-1){
             break;
-            // continue;
         }
-        // if(currentSELECTORZ[f]===TGTymt){//remove
-        //     newSELECTORZ.shift();//remove first
-        //     continue;
-        // }
         if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
-            // newSELECTORZ.shift();//remove first
             continue;
         }
-        // else if(currentSELECTORZ[f].indexOf('_')>-1){
-            // newSELECTORZ.push(currentSELECTORZ[f])
-            // }
-            // debugger;
-        newSELECTORZ.push(currentSELECTORZ[f].innerText)
-
-        // newSELECTORZ.push(`<span class="deleteTXT">${currentSELECTORZ[f]} <button class="delTXTBTN">x</button> </span>`)
+        newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])
     }
-    // if(!newSELECTORZ.length){
-    //     all_TITLES_TXT.innerText = `Last 30 - ${TGTtkr}`;
-    // }else{
+
     if(newSELECTORZ.length>1){
+        newSELECTORZ = fillout_YMT_KEYS(newSELECTORZ,TGTymt)
         let wrappedDATA = newSELECTORZ.map( (e,i)=>{
             if(i===0){return  `<span class="defaultTXT">${e}</span>`}
             return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT(event)">x</button> </span>`;
         } ) 
-        all_TITLES_TXT.innerHTML = wrappedDATA.join('')
+        selector_TITLE_TXT.innerHTML = wrappedDATA.join('')
     } else {
-        all_TITLES_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
-    }
-    // else if (newSELECTORZ.indexOf('_'>-1)) {
-    //     all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
-    // }else {
-    //     all_TITLES_TXT.innerHTML = newSELECTORZ.join('')
-    // }
-    // }
-    //USE CASES:
-    //1. 'loading' - falls through only renders selection
-    //2. 'Last 30' & 'All Time' - only renders selection.
-    //3. New _ - add to newselectorz and join.
-    //4. OLD _ - remove from newselectors and join.
+        selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
+    } //END DYNAMIC SELECTOR BEHAVIOR
+    //DYNA - init chart.
+    let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
+    init_DYNA_CHART_Candle(chartELEM);    
 }
 //*************************************************END DYNA CHART CHART***********
 
@@ -662,18 +671,11 @@ function getMarker_TRADE_DATA(aTKR){
             monthlySELECTOR = 'Last 30'; //DEFAULT
             bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
         }
-
-            // debugger;
-            // // const ymdSet = ["2024_3_A", "2024_1_A", "2024_02_A"];
-            // const ymdSet =  ["2024_03_A", "2024_1_A", "2024_02_A", "2023_1_A", "2022_2_A"];
-            // const result_array = order_YMD_KEYS(ymdSet);
-            // console.log(result_array);
-
         if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
             let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
             let tradeSET=[],markerOBJ={},monthKEY,displayVal;
             let dayCNT = 0,tkrTAG,txnObj;
-            ymtKEYS = order_YMD_KEYS(ymtKEYS);
+            ymtKEYS = sort_YMT_KEYS(ymtKEYS);
             ymtKEYS.reverse(); //oldest first.
             for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
                 monthKEY = ymtKEYS[i];
@@ -700,7 +702,7 @@ function getMarker_TRADE_DATA(aTKR){
             let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
             let tradeSET=[],markerOBJ={},monthKEY,displayVal;
             let dayCNT = 0,tkrTAG,txnObj;
-            ymtKEYS = order_YMD_KEYS(ymtKEYS);
+            ymtKEYS = sort_YMT_KEYS(ymtKEYS);
             ymtKEYS.reverse(); //oldest first.
             for(var i = 0; i< ymtKEYS.length; i++){ //ALL TIME data LOOP.
                 monthKEY = ymtKEYS[i];
@@ -726,18 +728,6 @@ function getMarker_TRADE_DATA(aTKR){
             let tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR];
             if(!tradeSET){console.log('No Monthly Data'); return [];}
 
-            // let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-            // let tradeSET=[],markerOBJ={},monthKEY,displayVal;
-            // let dayCNT = 0,tkrTAG,txnObj;
-            // ymtKEYS = order_YMD_KEYS(ymtKEYS);
-            // ymtKEYS.reverse(); //oldest first.
-            
-            // for(var i = 0; i< rec.length; i++){ 
-            //     monthKEY = ymtKEYS[i];
-            //     tkrTAG = monthKEY.split("_")[2]
-            //     if(tkrTAG!=aTKR){continue}
-            //     debugger;
-            //     tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
                 for(var ii=0; ii<tradeSET.length;ii++){ //MONTHLY TXN data LOOP.
                     markerOBJ={};
                     markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
@@ -876,12 +866,28 @@ function getArea_TRADE_DATA(aTKR){
 }
 function getCandleSeriesDATA(aTKR){
     let candleSeriesDATA = [];
-    let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
+    let monthlySelectors = [];
+    const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${aTKR}`);
+    let monthlySELECTOR = '';
+    if(!selector_TITLE_TXT || !selector_TITLE_TXT.innerText){
+        bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]; //init default saved. 
+    }else{
+        monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
+        monthlySelectors = Array(...selector_TITLE_TXT.children);
+    }
     if(!monthlySELECTOR && aTKR){
         monthlySELECTOR = 'Last 30';
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
-    if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+    if(monthlySelectors.length>1){ //Multiple Month Load Logic.
+        let ymtKey,revArr=[];
+        for(var i=0; i<monthlySelectors.length;i++){
+            ymtKey = monthlySelectors[i].innerText.split('\nx')[0];
+            revArr = new Array(...bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][ymtKey])
+            revArr.reverse();
+            candleSeriesDATA.push(...revArr)
+        }
+    }else if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
         let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         let dayCNT = 0;
@@ -917,9 +923,9 @@ function getCandleSeriesDATA(aTKR){
 //*******Delete selector for - DYNA CHART***********
 function delete_SELECTOR_TXT(e){
     let TGTtkr = e.target.parentElement.parentElement.id.split('_')[1]
-    const all_TITLES_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
-    let defaultTXT = all_TITLES_TXT.children[0].innerText;
-    all_TITLES_TXT.innerHTML = `<span class="defaultTXT">${defaultTXT}</span>`
+    const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
+    let defaultTXT = selector_TITLE_TXT.children[0].innerText;
+    selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${defaultTXT}</span>`
     // debugger;
 }
 //*******END Delete selector for - DYNA CHART***********
@@ -1390,10 +1396,8 @@ const init_BOOKZ_TABZ = ()=>{
                 </header>
             <menu style="display: flex;margin-right:3.333%;padding-left:2.222%;align-items: center;margin-bottom: 0.555em;">
                 <article id="candlestickTITLES_${tgtTKR.tkr}" 
-                    style="justify-content:flex-start;flex:1; display:flex;
-                    width:98%;padding: 0.444em;color: limegreen;">
-                    <i>Loading...</i>
-                </article>
+                    style="justify-content:flex-start;flex:1; display:flex;flex-wrap: wrap;
+                    width:98%;padding: 0.444em;color: limegreen;"></article>
                 <span>
                         <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
                             <option value="true" selected>Last 30</option>
