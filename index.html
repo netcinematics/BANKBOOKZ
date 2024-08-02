@@ -22,7 +22,7 @@
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
         <!-- <script type="text/javascript"
             src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script> -->
-        <script type="text/javascript" src="./module/derivative_lwc.js"></script>
+        <script type="text/javascript" src="./module/derivative_lwc_2.js"></script>
 
 
         
@@ -120,7 +120,7 @@
         padding: 0.666%;}
     .chartBTN:hover{color:aqua;background:black;}
     .chartSELECTOR {background:black; color:steelblue;border-radius: 10px;border: 1px solid aqua;
-        padding: 0.333%;font-size: 1em;height: 1.444em;}
+        padding:0.333% 0.444em 0.333% 0;font-size: 1em;height: 1.444em;text-align:right;}
     .chartSELECTOR:hover{color:aqua;background:black;}
     .chartSELECTOR:focus {border-color: teal;
     }/* focus border */
@@ -516,12 +516,11 @@ function resize_DYNA_CHART_Candle(elem){
 }
 function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+tkr)
-    if(!selectELEM){debugger;}
     selectELEM.innerHTML = '';
     selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)}); 
     const option1 = document.createElement("option");
-    option1.text = "Last 30";
-    option1.value = "Last 30"; 
+    option1.text = "Last 33";
+    option1.value = "Last 33"; 
     selectELEM.appendChild(option1);
     const option2 = document.createElement("option");
     option2.text = "All Time";
@@ -536,7 +535,7 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
         selectELEM.appendChild(dynaOption);
     }
     if(!bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]){ //save selection
-        bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = 'Last 30'; //default 
+        bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = 'Last 33'; //default 
     }
     selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
     //SET TEXT SELECTOR TITLES
@@ -552,7 +551,7 @@ function DYNA_SELECTOR_Change(e){
     save_BANKBOOKZ_DB();
     // DYNAMIC SELECTOR BEHAVIOR **************************************:
     const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
-    if(TGTymt==='Last 30' || TGTymt==='All Time'){
+    if(TGTymt==='Last 33' || TGTymt==='All Time'){
         selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
         let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
         init_DYNA_CHART_Candle(chartELEM);          
@@ -562,7 +561,7 @@ function DYNA_SELECTOR_Change(e){
     const currentSELECTORZ = selector_TITLE_TXT.children;
     let newSELECTORZ = [TGTymt];//default selection
     for(var f=0;f<currentSELECTORZ.length;f++){
-        if(currentSELECTORZ_TXT.indexOf('Last 30')>-1 ||
+        if(currentSELECTORZ_TXT.indexOf('Last 33')>-1 ||
         currentSELECTORZ_TXT.indexOf('All Time')>-1){
             break;
         }
@@ -629,25 +628,25 @@ function getMarker_TRADE_DATA(aTKR){
     let tradeMarkerData = [];
     let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
     if(!monthlySELECTOR && aTKR){
-        monthlySELECTOR = 'Last 30'; //DEFAULT
+        monthlySELECTOR = 'Last 33'; //DEFAULT
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
     const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${aTKR}`);
     const currentSELECTORZ = selector_TITLE_TXT.children;
-    if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+    if(monthlySELECTOR==='Last 33'){ //Last 33 days of tickrs
         let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
         let tradeSET=[],markerOBJ={},monthKEY,displayVal;
         let dayCNT = 0,tkrTAG,txnObj;
         ymtKEYS = sort_YMT_KEYS(ymtKEYS);
         ymtKEYS.reverse(); //oldest first.
-        for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
+        for(var i = 0; i< ymtKEYS.length && dayCNT<34; i++){ //Last 33 days
             monthKEY = ymtKEYS[i];
             tkrTAG = monthKEY.split("_")[2]
             if(tkrTAG!=aTKR){continue}
             tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
             for(var ii=0; ii<tradeSET.length;ii++){
                 dayCNT++;
-                if(dayCNT>30){break;}
+                if(dayCNT>33){break;}
                 markerOBJ={};
                 markerOBJ.time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
                 markerOBJ.value = tradeSET[ii].amt;
@@ -745,22 +744,22 @@ function getArea_TRADE_DATA(aTKR){
     let areaSeriesDATA = [];
     let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
     if(!monthlySELECTOR && aTKR){
-        monthlySELECTOR = 'Last 30';
+        monthlySELECTOR = 'Last 33';
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
-    if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+    if(monthlySELECTOR==='Last 33'){ //Last 33 days of tickrs
         let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
         let tradeSET=[],monthKEY;
         let dayCNT = 0,tkrTAG,txnObj;
         ymtKEYS.reverse(); //oldest first.
-        for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
+        for(var i = 0; i< ymtKEYS.length && dayCNT<34; i++){ //Last 33 days
             monthKEY = ymtKEYS[i];
             tkrTAG = monthKEY.split("_")[2]
             if(tkrTAG!=aTKR){continue}
             tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
             for(var ii=0; ii<tradeSET.length;ii++){
                 dayCNT++;
-                if(dayCNT>30){break;}
+                if(dayCNT>33){break;}
                 tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
                 tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
                 areaSeriesDATA.push(tradeSET[ii]);
@@ -794,61 +793,7 @@ function getArea_TRADE_DATA(aTKR){
         { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
         { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
     ]        
-        // console.log('SELECTED',monthlySELECTOR)
-        // areaSeriesDATA.push(...bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR]);
-        // areaSeriesDATA.reverse(); 
     }
-    // return areaSeriesDATA;    
-//     let areaSeriesDATA = [];
-//     let ymtKeys = Object.keys( bankbookz_DB.TRADE_TXNZ_YMT );
-//     let tradeSET,tradeItem,ymt_id,tkrTAG, selector;
-//     debugger;
-//     for(var i=0; i< ymtKeys.length;i++){
-//         ymt_id = ymtKeys[i];
-//         tkrTAG = ymt_id.split("_")[2]
-//         selector = bankbookz_DB.METASTATE.monthlySELECTORMap[tkrTAG]
-//         if(tkrTAG!=aTKR){continue}
-//         if(selector==='Last 30'){
-//             debugger;
-//         }else if(selector==='All Time'){
-//             debugger;
-//         }else if(selector) {
-//             debugger;
-//         }
-        
-//     }
-// debugger;
-
-
-    // let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
-    //     let txnSET=[],monthKEY,txnItem;
-    //     for(var i = 0; i< ymtKEYS.length; i++){ //last 30 days
-    //         monthKEY = ymtKEYS[i];
-    //         txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthKEY]
-    //         for(var ii=0; ii<txnSET.length;ii++){
-    //             candleSeriesDATA.push(txnSET[ii]);
-    //         }
-    //     } 
-
-
-    // let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-    // let dataSTR = '',txnSET,txnItem,tkrTAG='';
-    // render_TRADE_DATA.innerHTML=''; //blank out
-    // for(var i=0; i<monthKEYS.length;i++){
-    //     moKEY = monthKEYS[i];
-    //     tkrTAG = moKEY.split("_")[2]
-    //     if(tkrTAG!=datatgt){continue}
-    //     txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
-    //     dataSTR += `# Month:${moKEY} --->\n`;
-    //     for(var ii=0; ii< txnSET.length;ii++){
-    //         txnItem = txnSET[ii]
-    //         itemSTR = JSON.stringify(txnItem)+'\n';
-    //         dataSTR += itemSTR;
-    //     }
-    //     dataSTR += `# -----END-MONTH------->\n\n`;        
-    // }  
-
-
     return areaSeriesDATA;    
 }
 function getCandleSeriesDATA(aTKR){
@@ -863,7 +808,7 @@ function getCandleSeriesDATA(aTKR){
         monthlySelectors = Array(...selector_TITLE_TXT.children);
     }
     if(!monthlySELECTOR && aTKR){
-        monthlySELECTOR = 'Last 30';
+        monthlySELECTOR = 'Last 33';
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
     if(monthlySelectors.length>1){ //Multiple Month Load Logic.
@@ -874,16 +819,16 @@ function getCandleSeriesDATA(aTKR){
             revArr.reverse();
             candleSeriesDATA.push(...revArr)
         }
-    }else if(monthlySELECTOR==='Last 30'){ //LAST 30 days of tickrs
+    }else if(monthlySELECTOR==='Last 33'){ //Last 33 days of tickrs
         let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         let dayCNT = 0;
-        for(var i = 0; i< ymtKEYS.length && dayCNT<31; i++){ //last 30 days
+        for(var i = 0; i< ymtKEYS.length && dayCNT<34; i++){ //Last 33 days
             monthKEY = ymtKEYS[i];
             txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthKEY]
             for(var ii=0; ii<txnSET.length;ii++){
                 dayCNT++;
-                if(dayCNT>30){break;}
+                if(dayCNT>33){break;}
                 candleSeriesDATA.push(txnSET[ii]);
             }
         }  
@@ -891,7 +836,7 @@ function getCandleSeriesDATA(aTKR){
     }else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
         let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
-        for(var i = 0; i< ymtKEYS.length; i++){ //last 30 days
+        for(var i = 0; i< ymtKEYS.length; i++){ //Last 33 days
             monthKEY = ymtKEYS[i];
             txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthKEY]
             for(var ii=0; ii<txnSET.length;ii++){
@@ -1017,8 +962,8 @@ window.addEventListener('resize', () => {
 // dateTXTStam.innerHTML = new Date().getFullYear();
 const currentDate = new Date();
 const yearNUM = currentDate.getFullYear();
-const monthNUM = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
-const dayNUM = currentDate.getDate().toString().padStart(2, '0');
+const monthNUM = (currentDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+const dayNUM = currentDate.getDate().toString();//.padStart(2, '0');
 const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
 // **** END DATES *****************ENDDATES*********************************
 const screenHeight = window.innerHeight;
@@ -1383,7 +1328,7 @@ const init_BOOKZ_TABZ = ()=>{
                     width:98%;padding:0 0.444em 0 0.444em;color: limegreen;"></article>
                 <span>
                         <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
-                            <option value="true" selected>Last 30</option>
+                            <option value="true" selected>Last 33</option>
                         </select>
                     </span>
             </menu>
@@ -1629,7 +1574,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     tickDaily_TV.reverse();//align arrays, chronologically, else chart error.
     for (const aTicker of tickDaily_TV) {
         ymd = aTicker.time.replace(/-/g, "_");
-        ym = ymd.split("_")[0] +"_"+ ymd.split("_")[1];
+        ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
         YMT = ym + '_' + aTicker.tkr //for sub rec 
         ymdt = ymd +'_'+ aTicker.tkr;
         tkrREC = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr];
@@ -1666,7 +1611,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
     border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;
     margin:1em 1% 1em 1%;">
-        API:<input id="keyINPUT"  type="new-password" placeholder="api_key" 
+        AA_API:<input id="keyINPUT"  type="new-password" placeholder="api_key" 
         style="margin-left: 1em; background:#233453;
         border-radius: 10px 0px 0px 10px;"></input>
         <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
@@ -1674,7 +1619,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     </section>  
     <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
     <button id="latestBtn1" class="blackBTN" style="margin:1em 1% 1em 1%;"
-        onclick="getCrypto_Loop()">getPrices🔄</button>
+        onclick="getCrypto_Loop()">get Prices🔄</button>
 </footer>
 <!--***************************** END STOCK API INPUT******************-->
 <!--***************************** OVERLAY TREND LINES******************-->

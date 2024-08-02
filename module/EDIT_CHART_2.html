@@ -23,10 +23,10 @@
 			}
 		</style>
 		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
-		<link rel="modulepreload" crossorigin href="./lwc.prod.js">
+		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
 		<link rel="modulepreload" crossorigin href="./sample-data.js">
 		<link rel="modulepreload" crossorigin href="./plugin-base.js">
-		<link rel="modulepreload" crossorigin href="./positions.js">
+		<link rel="modulepreload" crossorigin href="./positions.js"> -->
 		<link rel="stylesheet" href="./lwc.css">
 	</head>
 	<body style="background:black;">
@@ -38,23 +38,17 @@
 		</div>		
 		<div id="toolbar" class="column"></div>
 		<div id="chart"></div>
-    <!-- ***********LEVEL LINES  -->
+    <!-- ***********DRAW CHART MODULE  -->
 <script type="module">
-    // import "./rect_1.js"
-    import {DrawChart_Class as DrawChart_Class} from "./rect_1.js";  
-    
-    // const Draw_Chart_1 = f("chart", {
-    //     autoSize: !0
-    // })
-    // const DrawChart_Series = Draw_Chart_1.addLineSeries()
-    // const mockData = getMockData();
-    // DrawChart_Series.setData(mockData);
-    // new DrawMaster_Class(Draw_Chart_1,DrawChart_Series,document.querySelector("#toolbar"),{
-    //     showLabels: !1
-    // });
-    // import {P as lwcprod} from "./lwc.prod.js"; //required for module.
-    // import {StructLine_Class as StructLine_Class} from "./STRUCTLINES.js";   
-		
+    import {P as lwcprod} from "./lwc.prod.js"; //required for module.
+    import {DrawChart_Class as DrawChart_Class} from "./DRAWCHART_1.js";  
+    import {g as getMockData} from "./sample-data.js";
+    const Draw_Chart_1 = lwcprod("chart", { autoSize: !0 })
+    const DrawChart_Series = Draw_Chart_1.addLineSeries()
+    const mockData = getMockData();
+    DrawChart_Series.setData(mockData);
+    new DrawChart_Class(Draw_Chart_1,DrawChart_Series,
+        document.querySelector("#toolbar"),{ showLabels:true});
 </script>
 	</body>
 </html>

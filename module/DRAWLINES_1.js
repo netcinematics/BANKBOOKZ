@@ -78,7 +78,7 @@ class LineRender_Class {
 const lineOptions = {width:2,showLabels:true,lineColor:"rgb(255, 69, 44)", //AVG ORANGE
     labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
 };
-class TrendLine_Class { //chartElem,lwc,EndPoint,StartPoint
+class DrawLine_Class { //chartElem,lwc,EndPoint,StartPoint
     constructor(elem, lwc, endpt, strtpt, s) {
         makeMember(this, "_chart");
         makeMember(this, "_series");
@@ -122,4 +122,4 @@ class TrendLine_Class { //chartElem,lwc,EndPoint,StartPoint
     }
 }
 
-export {TrendLine_Class as TrendLine_Class};
+export {DrawLine_Class as DrawLine_Class};

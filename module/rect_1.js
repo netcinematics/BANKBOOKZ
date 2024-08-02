@@ -8,13 +8,9 @@ var m = (o,t,e)=>t in o ? x(o, t, {
 var i = (o,t,e)=>(m(o, typeof t != "symbol" ? t + "" : t, e),
 e);
 import {L as v, P as f} from "./lwc.prod.js";
-import {g as C} from "./sample-data.js";
+import {g as getMockData} from "./sample-data.js";
 import {e as a, P} from "./plugin-base.js";
 import {a as l} from "./positions.js";
-// import {L as v, P as f} from "./lightweight-charts.production-72079ca6.js";
-// import {g as C} from "./sample-data-c7d89ab8.js";
-// import {e as a, P} from "./plugin-base-a12dadc8.js";
-// import {a as l} from "./positions-0a54307c.js";
 class b {
     constructor(t, e, s) {
         i(this, "_p1");
@@ -250,7 +246,7 @@ class L extends u {
         this.requestUpdate()
     }
 }
-class D {
+class DrawChart_Class {
     constructor(t, e, s, r) {
         i(this, "_chart");
         i(this, "_series");
@@ -375,12 +371,14 @@ class D {
         this._drawingsToolbarContainer.appendChild(e)
     }
 }
-const d = window.chart = f("chart", {
+const Draw_Chart_1 = f("chart", {
     autoSize: !0
 })
-  , w = d.addLineSeries()
-  , S = C();
-w.setData(S);
-new D(d,w,document.querySelector("#toolbar"),{
+const DrawChart_Series = Draw_Chart_1.addLineSeries()
+const mockData = getMockData();
+DrawChart_Series.setData(mockData);
+new DrawChart_Class(Draw_Chart_1,DrawChart_Series,document.querySelector("#toolbar"),{
     showLabels: !1
 });
+
+export {DrawChart_Class as DrawChart_Class};

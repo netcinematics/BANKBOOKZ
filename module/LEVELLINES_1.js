@@ -21,7 +21,7 @@ const C = {
   , m = new Path2D("M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z")
   , w = new Path2D("M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z")
   , L = 20;
-class b {
+class LineDraw_Class {
     constructor() {
         o(this, "_data", [])
     }
@@ -79,12 +79,12 @@ class b {
         this._data = t
     }
 }
-class T {
+class LineRender_Class {
     constructor(t) {
         o(this, "_source");
         o(this, "_renderer");
         this._source = t,
-        this._renderer = new b
+        this._renderer = new LineDraw_Class
     }
     renderer() {
         return this._renderer
@@ -124,13 +124,13 @@ class T {
         this._renderer.update(Alert_Data)
     }
 }
-class V extends lwc_base {
+class LineRenderBase_Class extends lwc_base {
     constructor(i) {
         super();
         o(this, "_source");
         o(this, "_views");
         this._source = i,
-        this._views = [new T(this._source)]
+        this._views = [new LineRender_Class(this._source)]
     }
     requestUpdate() {
         super.requestUpdate()
@@ -175,7 +175,7 @@ class LevelLine_Class {
             ...C,
             ...i
         },
-        this._primitive = new V(this),
+        this._primitive = new LineRenderBase_Class(this),
         this._series.attachPrimitive(this._primitive),
         this._dataChangedHandler = this._dataChanged.bind(this),
         this._series.subscribeDataChanged(this._dataChangedHandler);

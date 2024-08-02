@@ -2,9 +2,9 @@ var objprops = Object.defineProperty;
 var typeset = (a,t,i)=>t in a ? objprops(a, t, {
     enumerable: !0, configurable: !0, writable: !0, value: i}) : a[t] = i;
 var makeMember = (a,t,i)=>(typeset(a, typeof t != "symbol" ? t + "" : t, i),i);
-import {P as lwcprod} from "./lwc.prod.js";
-import {g as getRandomDataSet} from "./sample-data.js";
-class LineDraw_Class {
+// import {P as lwcprod} from "./lwc.prod.js";
+// import {g as getRandomDataSet} from "./sample-data.js";
+class LineClass {
     constructor(p1, p2, txt1, txt2, opts) {
         makeMember(this, "_p1");
         makeMember(this, "_p2");
@@ -30,7 +30,7 @@ class LineDraw_Class {
             ctx.strokeStyle = this._options.lineColor,
             ctx.lineDashOffset = 0,
             ctx.beginPath(),
-            ctx.setLineDash([6, 8]),
+            ctx.setLineDash([2, 5]), //DOTTED
             ctx.lineCap = "round",
             ctx.moveTo(o, s),
             ctx.lineTo(r, h),
@@ -54,7 +54,7 @@ class LineDraw_Class {
         t.context.fillText(i, e + r * 2 - p, o)
     }
 }
-class LineRender_Class {
+class PaneViews {
     constructor(parent) {
         makeMember(this, "_source");
         makeMember(this, "_p1", { x: null,  y: null });
@@ -72,13 +72,13 @@ class LineRender_Class {
         this._p2 = { x: r,  y: e  }
     }
     renderer() {
-        return new LineDraw_Class(this._p1,this._p2,"" + this._source._p1.price.toFixed(1),"" + this._source._p2.price.toFixed(1),this._source._options)
+        return new LineClass(this._p1,this._p2,"" + this._source._p1.price.toFixed(1),"" + this._source._p2.price.toFixed(1),this._source._options)
     }
 }
-const lineOptions = {width:2,showLabels:true,lineColor:"rgb(255, 69, 44)", //AVG ORANGE
+const defaultLineOptions = {width:2,showLabels:true,lineColor:"rgb(255, 69, 44)", //AVG ORANGE
     labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
 };
-class TrendLine_Class { //chartElem,lwc,EndPoint,StartPoint
+class MonthLine_Class { //chartElem,lwc,EndPoint,StartPoint
     constructor(elem, lwc, endpt, strtpt, s) {
         makeMember(this, "_chart");
         makeMember(this, "_series");
@@ -95,10 +95,10 @@ class TrendLine_Class { //chartElem,lwc,EndPoint,StartPoint
         this._minPrice = Math.min(this._p1.price, this._p2.price),
         this._maxPrice = Math.max(this._p1.price, this._p2.price),
         this._options = {
-            ...lineOptions,
+            ...defaultLineOptions,
             ...s
         },
-        this._paneViews = [new LineRender_Class(this)]
+        this._paneViews = [new PaneViews(this)]
     }
     autoscaleInfo(t, i) {
         const e = this._pointIndex(this._p1)
@@ -122,4 +122,4 @@ class TrendLine_Class { //chartElem,lwc,EndPoint,StartPoint
     }
 }
 
-export {TrendLine_Class as TrendLine_Class};
+export {MonthLine_Class as MonthLine_Class};
