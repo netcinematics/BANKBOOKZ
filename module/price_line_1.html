@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>PriceLine Example</title>
+		
+		<style>
+			#chart {
+				border-top-left-radius: 0px;
+				border-top-right-radius: 0px;
+			}
+		</style>
+		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
+		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+		<link rel="modulepreload" crossorigin href="./sample-data.js">
+		<link rel="modulepreload" crossorigin href="./plugin-base.js">
+		<link rel="modulepreload" crossorigin href="./positions.js"> -->
+		<link rel="stylesheet" href="./lwc.css">
+	</head>
+	<body style="background:black;">
+		<div id="description">
+			<h1 style="color:steelblue;">PriceLine</h1>
+			<p style="color:limegreen;">
+				Hover over chart, and click PRICE + label.
+			</p>
+		</div>		
+		<div id="chart"></div>
+    <!-- ***********DRAW CHART MODULE  -->
+<script type="module">
+    import "./SETPRICELINE_1.js"
+    // import "./vert_1.js"
+    import {P as lwcprod} from "./lwc.prod.js"; //required for module.
+    import {SetPriceLine_Class as SetPriceLine_Class} from "./SETPRICELINE_1.js";  
+    import {g as getMockData} from "./sample-data.js";
+
+    const priceChart = lwcprod("chart", { autoSize:!0, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    const priceSeries = priceChart.addLineSeries()
+    const data = getMockData();
+    priceSeries.setData(data);
+    new SetPriceLine_Class(priceChart,priceSeries,{ color: "steelblue"});
+
+    priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+
+</script>
+</body>
+</html>

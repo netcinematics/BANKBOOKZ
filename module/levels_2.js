@@ -31,7 +31,6 @@ class b {
         }
         ),
         t.useMediaCoordinateSpace(s=>{
-            debugger;
             const ctx = s.context;
             ctx.lineWidth = 2;
             this._data.forEach(alertRecord=>{  //DRAW ALERT ON CTX

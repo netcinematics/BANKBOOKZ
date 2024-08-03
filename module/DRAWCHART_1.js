@@ -227,7 +227,7 @@ class Rect_View extends plugBase2 {
         this.requestUpdate()
     }
 }
-class L extends Rect_View {
+class Preview_Rect extends Rect_View {
     constructor(t, e, s={}) {
         super(t, e, s),
         this._options.fillColor = this._options.previewFillColor
@@ -296,21 +296,24 @@ class DrawChart_Class {
         return this._drawing
     }
     drawVertLine(event){
-        debugger;
+        // debugger;
+        // this.stopDrawing()
+        /*******************************double click draw delay *************** */
         let startPt = {price:0,time:event.time};//{x:event.point.x,y:event.point.y+100}
         let endPt = {price:0,time:event.time};//{x:event.point.x,y:event.point.y-10}
         event.seriesData.forEach((e)=>{
             startPt.price = e.value+100;
             endPt.price = e.value-100;
         })
-        // const lineOptions_BTM = {width:2,showLabels:true,lineColor:"rgb(255, 0, 88)",
-        //     labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
-        // };        
-        // const newVert = new DrawLine_Class(this._chart,this._series,
-        //     startPt,endPt,lineOptions_BTM);
-        // this._vertlines.push(newVert),
-        // pluginBase(this._series).attachPrimitive(newVert) 
-
+        const lineOptions_VERT = {width:2,showLabels:true,lineColor:"rgb(255, 0, 88)",
+            labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
+        };        
+        const newVert = new DrawLine_Class(this._chart,this._series,
+            startPt,endPt,lineOptions_VERT);
+        this._vertlines.push(newVert);
+        console.log('attach')
+        pluginBase(this._series).attachPrimitive(newVert) 
+        /*******************************double click draw delay ***************/
         // function drawLineOnChart(chart, price1, price2, time1, time2, lineColor) {
             // Get the price scale instance
             // const priceScale = this._chart.priceScale();
@@ -339,16 +342,35 @@ class DrawChart_Class {
 
     }
     drawHorzLine(event){
-        debugger;
+        // debugger;
+        /*******************************15 second draw delay *************** */
+        let startPt = {price:0,time:event.time};
+        let endPt = {price:0,time:event.time+55500};
+        event.seriesData.forEach((e)=>{
+            startPt.price = e.value;
+            endPt.price = e.value;
+        })
+        // debugger;
+        const lineOptions_HORZ = {width:2,showLabels:true,lineColor:"rgb(55, 0, 188)",
+            labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
+        };        
+        const newHorz = new DrawLine_Class(this._chart,this._series,
+            startPt,endPt,lineOptions_HORZ);
+        this._horzlines.push(newHorz);
+        console.log('attachH')
+        pluginBase(this._series).attachPrimitive(newHorz) 
+        /*******************************15 second draw delay ***************/        
     }
     _onClick(event) {  //Anytime CHART IS CLICKED.   console.log('Clicked Chart')
         if(this._drawVert){
             this.drawVertLine(event);
             this._drawVert = false;
+            return;
         }
         if(this._drawHorz){
-            this.drawHorzLine();
-            this._drawVert = false;
+            this.drawHorzLine(event);
+            this._drawHorz = false;
+            return;
         }
         if (!this._drawing || !event.point || !event.time || !this._series){ return; }
         const e = this._series.coordinateToPrice(event.point.y);
@@ -383,7 +405,7 @@ class DrawChart_Class {
         pluginBase(this._series).detachPrimitive(t)
     }
     _addPreviewRectangle(t) {
-        this._previewRectangle = new L(t,t,{
+        this._previewRectangle = new Preview_Rect(t,t,{
             ...this._defaultRectOptions
         }),
         pluginBase(this._series).attachPrimitive(this._previewRectangle)

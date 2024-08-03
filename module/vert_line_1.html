@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vert Example</title>
+		
+		<style>
+			#chart {
+				border-top-left-radius: 0px;
+				border-top-right-radius: 0px;
+			}
+		</style>
+		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
+		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+		<link rel="modulepreload" crossorigin href="./sample-data.js">
+		<link rel="modulepreload" crossorigin href="./plugin-base.js">
+		<link rel="modulepreload" crossorigin href="./positions.js"> -->
+		<link rel="stylesheet" href="./lwc.css">
+	</head>
+	<body style="background:black;">
+		<div id="description">
+			<h1 style="color:steelblue;">VertLine</h1>
+			<p style="color:limegreen;">
+				Vertical markers with time label.
+			</p>
+		</div>		
+		<div id="chart"></div>
+    <!-- ***********DRAW CHART MODULE  -->
+<script type="module">
+    // import "./vert_1.js"
+    import {P as lwcprod} from "./lwc.prod.js"; //required for module.
+    import {VLineOverlay_Class as VLineOverlay_Class} from "./VERTLINE_1.js";  
+    import {g as getMockData} from "./sample-data.js";
+    const lineChart = lwcprod("chart", {autoSize: !0})
+    const lineSeries = lineChart.addLineSeries()
+    const data = getMockData();
+    lineSeries.setData(data);
+    const vl1 = new VLineOverlay_Class(lineChart,lineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
+    lineSeries.attachPrimitive(vl1);
+    const vl2 = new VLineOverlay_Class(lineChart,lineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
+    lineSeries.attachPrimitive(vl2);    
+</script>
+</body>
+</html>

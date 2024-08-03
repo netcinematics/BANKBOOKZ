@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MONTH Example</title>
+    <!-- <script type="module" crossorigin src="./line_1.js"></script> -->
+    <!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+    <link rel="modulepreload" crossorigin href="./plugin-base.js">
+    <link rel="modulepreload" crossorigin href="./positions.js"> -->
+    <!-- <link rel="modulepreload" crossorigin href="./trendlines.js"> -->
+    <link rel="stylesheet" href="./lwc.css">
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">MonthLine Modules</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- Example of Monthly Vline and Price Trend lines,<br>- 1st class modules. ~:)</p>
+    </div>    
+    <div id="monthline_chart" style="height:20em;"></div>
+<script type="module">
+    import {P as lwcprod} from "./lwc.prod.js";
+    import {g as getRandomDataSet} from "./sample-data.js";
+    import {MonthTrendLines_Class as MonthTrendLines_Class} from "./MONTHLINES_2.js";
+    const vLineChart = lwcprod("monthline_chart", { autoSize:!0, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    const lwc_MonthLineSeries = vLineChart.addLineSeries()
+    const  dataSet = getRandomDataSet();
+    lwc_MonthLineSeries.setData(dataSet);
+    //**************************************** DRAW MONTH LINES ********************
+    let MonthStartDates = []
+    dataSet.forEach(data => {
+        const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
+        if (tgtDate.getDate() === 1) {
+            const yearNUM = tgtDate.getFullYear();
+            const monthNUM = (tgtDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+            const dayNUM = tgtDate.getDate().toString();//.padStart(2, '0');
+            const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+            // console.log('Found 1st Day of Month.',current_ymd);
+            MonthStartDates.push(data)
+        }
+    });
+    let Num_Month_Crop=12;
+    if(MonthStartDates.length>Num_Month_Crop){ //CROP LAST Num of MONTHS.
+        MonthStartDates = MonthStartDates.splice(MonthStartDates.length-Num_Month_Crop,Num_Month_Crop)
+    }
+    let vLine, dItem;
+    for(var ii=0;ii<MonthStartDates.length;ii++){
+        dItem = MonthStartDates[ii];
+        vLine = new MonthTrendLines_Class(vLineChart,lwc_MonthLineSeries,
+            dItem.time,dItem.value,
+            {showLabel: !1,color: "steelblue",width: 1 });
+        lwc_MonthLineSeries.attachPrimitive(vLine);
+    }
+</script>
+</body>
+</html>

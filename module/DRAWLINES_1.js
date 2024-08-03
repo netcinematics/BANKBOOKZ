@@ -30,7 +30,7 @@ class LineDraw_Class {
             ctx.strokeStyle = this._options.lineColor,
             ctx.lineDashOffset = 0,
             ctx.beginPath(),
-            ctx.setLineDash([6, 8]),
+            ctx.setLineDash([6, 8]), //Dashed
             ctx.lineCap = "round",
             ctx.moveTo(o, s),
             ctx.lineTo(r, h),
