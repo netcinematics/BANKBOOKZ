@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vert Example</title>
+		<title>Structs Example</title>
 		
 		<style>
 			#chart {
@@ -21,33 +21,33 @@
 	</head>
 	<body style="background:black;">
 		<div id="description">
-			<h1 style="color:steelblue;">VertLine</h1>
+			<h1 style="color:steelblue;">Structure Lines</h1>
 			<p style="color:limegreen;">
-				Vertical markers with time label.
+				Longpress or Hover, to set struct lines.
 			</p>
 		</div>		
 		<div id="chart"></div>
     <!-- ***********DRAW CHART MODULE  -->
 <script type="module">
+    // import "./SETPRICELINE_1.js"
     // import "./vert_1.js"
-    
-    // import {P as lwcprod} from "./lwc_dev_deriv_4.2.js"; //required for module.
-    // import {P as lwcprod} from "./lwc.prod.js"; //required for module.
-    import {VLineOverlay_Class as VLineOverlay_Class} from "./VERTLINE_1.js";  
+    import {P as lwcprod} from "./lwc.prod.js"; //required for module.
+    import {SetPriceLine_Class as SetPriceLine_Class} from "./SETPRICELINE_3.js";  
     import {g as getMockData} from "./sample-data.js";
-    // const lineChart = lwcprod("chart", { autoSize:!0, 
-    const lineChart = LightweightCharts.createChart("chart", { autoSize:!0, 
+
+    const priceChart = LightweightCharts.createChart("chart", { autoSize:!0, 
+    // const priceChart = lwcprod("chart", { autoSize:!0, 
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         allowShiftVisibleRangeOnWhitespaceReplacement:!0
     })
-    const lineSeries = lineChart.addLineSeries()
+    const priceSeries = priceChart.addLineSeries()
     const data = getMockData();
-    lineSeries.setData(data);
-    const vl1 = new VLineOverlay_Class(lineChart,lineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
-    lineSeries.attachPrimitive(vl1);
-    const vl2 = new VLineOverlay_Class(lineChart,lineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
-    lineSeries.attachPrimitive(vl2);    
+    priceSeries.setData(data);
+    let structs = new SetPriceLine_Class(priceChart,priceSeries,{ color: "steelblue"});
+    let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    structs.setPricelines([{price: 444, line:line}])
+
 </script>
 </body>
 </html>

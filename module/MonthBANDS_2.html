@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MONTH Example</title>
+    <title>Bands Example</title>
     <!-- <script type="module" crossorigin src="./line_1.js"></script> -->
     <!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
     <link rel="modulepreload" crossorigin href="./plugin-base.js">
@@ -13,23 +13,31 @@
     <link rel="stylesheet" href="./lwc.css">
 </head>
 <body style="background:black;margin-right:2em;">
-    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">Month Trend Modules</h1>
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">MonthTrend Modules</h1>
         <p style="color:limegreen;margin:1em 0 1em 4em;">- Example of Monthly Vline and Price Trend lines,<br>- 1st class modules. ~:)</p>
     </div>    
-    <div id="monthline_chart" style="height:20em;"></div>
+    <div id="bands_chart" style="height:20em;"></div>
 <script type="module">
-    // import {P as lwcprod} from "./lwc.prod.js";
-    import {g as getRandomDataSet} from "./sample-data.js";
-    import {MonthTrendLines_Class as MonthTrendLines_Class} from "./MONTHLINES_2.js";
-    const vLineChart = LightweightCharts.createChart("monthline_chart", { autoSize:!0, 
+    // import "./bands_1.js"
+    import {BandsChart_Class as BandsChart_Class} from "./BANDLINES_2.js";
+    import {g as getMockData} from "./sample-data.js";
+    const LineChart = LightweightCharts.createChart("bands_chart", { autoSize:!0, 
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
         allowShiftVisibleRangeOnWhitespaceReplacement:!0
     })
-    const lwc_MonthLineSeries = vLineChart.addLineSeries()
-    const  dataSet = getRandomDataSet();
-    lwc_MonthLineSeries.setData(dataSet);
-    //**************************************** DRAW MONTH LINES ********************
+    const lineSeries = LineChart.addLineSeries()
+    const dataSet = getMockData();
+    lineSeries.setData(dataSet);
+    const BandsChart = new BandsChart_Class;
+    lineSeries.attachPrimitive(BandsChart);
+
+    // import {P as lwcprod} from "./lwc.prod.js";
+    // import {g as getRandomDataSet} from "./sample-data.js";
+    import {MonthTrendLines_Class as MonthTrendLines_Class} from "./MONTHLINES_2.js";
+
+    // //**************************************** DRAW MONTH LINES ********************
     let MonthStartDates = []
     dataSet.forEach(data => {
         const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
@@ -49,10 +57,10 @@
     let vLine, dItem;
     for(var ii=0;ii<MonthStartDates.length;ii++){
         dItem = MonthStartDates[ii];
-        vLine = new MonthTrendLines_Class(vLineChart,lwc_MonthLineSeries,
+        vLine = new MonthTrendLines_Class(LineChart,lineSeries,
             dItem.time,dItem.value,
             {showLabel: !1,color: "steelblue",width: 1 });
-        lwc_MonthLineSeries.attachPrimitive(vLine);
+        lineSeries.attachPrimitive(vLine);
     }
 </script>
 </body>

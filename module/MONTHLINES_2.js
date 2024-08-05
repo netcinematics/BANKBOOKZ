@@ -10,9 +10,9 @@ e);
 // import {V as p} from "./lightweight-charts.production-7ee7078d.js";
 // import {g as w} from "./sample-data-c7d89ab8.js";
 // import {p as m} from "./positions-0a54307c.js";
-import {P as lwcprod} from "./lwc.prod.js";
-import {g as getMockData} from "./sample-data.js";
-import {p as m} from "./positions.js";
+// import {P as lwcprod} from "./lwc.prod.js";
+// import {g as getMockData} from "./sample-data.js";
+// import {p as m} from "./positions.js";
 
 class VLineDraw_Class {
     constructor(x,y,e) {

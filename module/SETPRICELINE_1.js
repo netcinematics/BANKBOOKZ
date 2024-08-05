@@ -76,7 +76,7 @@ class PriceLinePane_Class extends plugBase {
     constructor(i) {
         super();
         addMember(this, "_paneViews");
-        addMember(this, "_data", {visible: !1,hovered: !1,timeScaleWidth: 0,
+        addMember(this, "_data", {visible:!1,hovered:!1,timeScaleWidth:0,
             crosshairLabelColor: "#000000",crosshairColor: "#ffffff",
             lineColor: "#000000",hoverColor: "#777777"
         });
@@ -95,7 +95,7 @@ class PriceLinePane_Class extends plugBase {
     }
     showAddLabel(i, e) {
         const n = this.chart.options().crosshair.horzLine.labelBackgroundColor;
-        this._data = {visible: !0,price: i,hovered: e,
+        this._data = {visible:!0,price: i,hovered: e,
             timeScaleWidth: this.chart.timeScale().width(),
             crosshairColor: n, crosshairLabelColor: "#FFFFFF",
             lineColor: this._source.currentLineColor(),
@@ -148,7 +148,8 @@ class SetPriceLine_Class {
     _onClick(t) {
         const i = this._getMousePrice(t)
         const e = this._distanceFromRightScale(t);
-        i === null || e === null || e > h || !this._series || this._series.createPriceLine({
+        i === null || e === null || e > h || !this._series || 
+        this._series.createPriceLine({
             price: i,
             color: this._options.color,
             lineStyle: m.Dashed

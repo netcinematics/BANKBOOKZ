@@ -10,8 +10,9 @@ e);
 // import {V as p} from "./lightweight-charts.production-7ee7078d.js";
 // import {g as w} from "./sample-data-c7d89ab8.js";
 // import {p as m} from "./positions-0a54307c.js";
-import {P as lwcprod} from "./lwc.prod.js";
-import {g as w} from "./sample-data.js";
+// import {P as lwcprod} from "./lwc.prod.js";
+// import {g as w} from "./sample-data.js";
+import {P as plugBase} from "./plugin-base.js";
 import {p as m} from "./positions.js";
 
 class VLineDraw_Class {
@@ -49,8 +50,9 @@ class VLineRender_Class {
         return new VLineDraw_Class(this._x,this._options)
     }
 }
-class VLinePane_Class {
+class VLinePane_Class {// extends plugBase {
     constructor(t, e) {
+        // super();
         i(this, "_source");
         i(this, "_x", null);
         i(this, "_options");

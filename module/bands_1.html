@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bands Example</title>
+    <!-- <script type="module" crossorigin src="./line_1.js"></script> -->
+    <!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+    <link rel="modulepreload" crossorigin href="./plugin-base.js">
+    <link rel="modulepreload" crossorigin href="./positions.js"> -->
+    <!-- <link rel="modulepreload" crossorigin href="./trendlines.js"> -->
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+    <link rel="stylesheet" href="./lwc.css">
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">MonthLine Modules</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- Example of Monthly Vline and Price Trend lines,<br>- 1st class modules. ~:)</p>
+    </div>    
+    <div id="bands_chart" style="height:20em;"></div>
+<script type="module">
+    // import "./bands_1.js"
+    import {BandsChart_Class as BandsChart_Class} from "./BANDLINES_1.js";
+    import {g as getMockData} from "./sample-data.js";
+    const BandsChart = LightweightCharts.createChart("bands_chart", { autoSize:!0, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    const f = BandsChart.addLineSeries()
+    const v = getMockData();
+    f.setData(v);
+    const y = new BandsChart_Class;
+    f.attachPrimitive(y);
+
+</script>
+</body>
+</html>
