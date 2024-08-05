@@ -353,22 +353,22 @@ class DrawChart_Class {
         ),
         this._drawingsToolbarContainer.appendChild(t),
         this._toolbarButton = t;
-        const e = document.createElement("input");
-        e.type = "color",
-        e.value = "#C83264",
-        e.style.width = "24px",
-        e.style.height = "20px",
-        e.style.border = "none",
-        e.style.padding = "0px",
-        e.style.backgroundColor = "transparent",
-        e.addEventListener("change", ()=>{
-            const s = e.value;
+        const colorPicker = document.createElement("input");
+        colorPicker.type = "color",
+        colorPicker.value = "#C83264",
+        colorPicker.style.width = "24px",
+        colorPicker.style.height = "20px",
+        colorPicker.style.border = "none",
+        colorPicker.style.padding = "0px",
+        colorPicker.style.backgroundColor = "transparent",
+        colorPicker.addEventListener("change", ()=>{
+            const s = colorPicker.value;
             this._defaultOptions.fillColor = s + "CC",
             this._defaultOptions.previewFillColor = s + "77",
             this._defaultOptions.labelColor = s
         }
         ),
-        this._drawingsToolbarContainer.appendChild(e)
+        this._drawingsToolbarContainer.appendChild(colorPicker)
     }
 }
 const Draw_Chart_1 = f("chart", {

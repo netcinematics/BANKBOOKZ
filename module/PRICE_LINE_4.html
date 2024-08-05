@@ -25,16 +25,21 @@
 			<p style="color:limegreen;">
 				Longpress or Hover, to set struct lines.
 			</p>
-		</div>		
+		</div>	
 		<div id="chart"></div>
+		<div id="lineEditor" style="border:solid 1px steelblue;visibility:hidden;
+            position:absolute;z-index:11;
+            background:darkslategrey;border-radius:13px;">
+            <span>---</span><input type="color" value = "#003264"/>
+            <span onclick="((event) => {
+                event.target.parentElement.style.visibility = 'hidden'
+            })(event)">x</span>
+        </div>
     <!-- ***********DRAW CHART MODULE  -->
 <script type="module">
-    // import {P as lwcprod} from "./lwc.prod.js"; //required for module.
     import {SetPriceLine_Class as SetPriceLine_Class} from "./SETPRICELINE_4.js";  
     import {g as getMockData} from "./sample-data.js";
-
     const priceChart = LightweightCharts.createChart("chart", { autoSize:!0, 
-    // const priceChart = lwcprod("chart", { autoSize:!0, 
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         allowShiftVisibleRangeOnWhitespaceReplacement:!0
