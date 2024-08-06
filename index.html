@@ -165,11 +165,15 @@
     .tkrSubBox{margin: 1%; width:92%; border:solid 1px steelblue; display: flex;justify-content: space-between;
         border-radius:18px;padding: 0 3% 0 3%; align-items: center; flex-wrap: wrap;flex-direction:column;
     } 
-    .tkrSubMenu{display: flex;justify-content: space-around; width: 97%; border: solid 1px forestgreen; border-radius: 8px;
-        box-shadow: inset -1px -1px 8px 0px rebeccapurple; margin: 0 0 1em 0.222em; 
+    .tkrMenuBox{margin: 1%; width:95%; border:solid 1px steelblue; display: flex;justify-content: space-between;
+        border-radius:18px;padding: 0 1% 0 1%; align-items: center;flex-direction:column;
     } 
+    .tkrSubMenu{display: flex;justify-content: space-around;width: 97%;border: solid 4px #02025f;border-radius: 8px;
+    box-shadow: -1px -1px 8px 0px rebeccapurple;margin: 0 0 1em 0.222em;}
     .tkrTTL{width: 100%;display: flex;align-items: center;justify-content: space-between; }
      /** END VIEW IMPLEMENTATIONS *****************************************/   
+    .BTNBOX{display: flex;width: 50px;justify-content: space-between;}
+    .tkrTXTArea{ overflow-x:visible;flex: 1 1 0;resize:horizontal;background:black;color: aqua; padding: 1em; height: 10em;}
 </style>      
 </head>
 <body class="scrollBarV">
@@ -333,7 +337,7 @@
 
         <article id="DATA_GALLERY_FRAME"  style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">TICKER DATA</header>
+            <header style="margin:1em;width: 100%;padding-left:2em;">TICKER DATA:</header>
             <section id="render_TICKR_GALLERY" style="width: 88.888%;"></section>
         </article> 
         <article id="DATA_IMPORT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
@@ -374,8 +378,10 @@
 
         <article id="DATA_TICKR_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">OVERWRITE TICKER DATA</header>
-            <section id="render_EDIT_TICKR_Frame">No Data. </section>
+            <header style="margin:1em;width: 100%;padding-left:2em;">EDIT TICKER DATA:</header>
+            <section id="render_EDIT_TICKR_Frame" class="scrollBarV" 
+                style="width: 94%;display: flex;flex-direction: column;margin: 0 2em 0 3em;
+                    background: #00010b;">No Data. </section>
             <!-- <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x:visible;flex: 1 1 0;resize:horizontal;background:black;
                color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;margin-bottom: 1em;" >
@@ -387,13 +393,15 @@
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin-bottom: 1em;">
-                <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">OVERWRITE TKR MONTH</button>
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">🌟SAVE🌟</button>
             </footer>   
         </article>        
         <article id="DATA_TRADE_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">OVERWRITE TRADE DATA</header>
-            <section id="render_EDIT_TRADE_Frame">No Data. </section>
+            <header style="margin:1em;width: 100%;padding-left:2em;">EDIT TRADE DATA:</header>
+            <section id="render_EDIT_TRADE_Frame" class="scrollBarV" 
+            style="width: 94%;display: flex;flex-direction: column;margin: 0 2em 0 3em;
+                background: #00010b;">No Data. </section>
             <!-- <textarea id="render_TRADE_DATA" class="scrollBarV txtSizer" style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background: black;color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -404,7 +412,7 @@
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin:1em 0;">
-                <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">OVERWRITE MONTH TRADES</button>
+                <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">🌟SAVE🌟</button>
             </footer>   
         </article>        
     </section><!--end DATAVIEW-->
@@ -462,6 +470,15 @@ function MINMAX_Menu(e,setState){
     let tgt = e.target;
     const CURR_STATE = tgt.innerHTML;
     let aSibling = tgt.parentElement.nextElementSibling;
+    if(CURR_STATE==='✴'||setState){ //COLLAPSE
+        aSibling.style.display = 'flex'; //required
+    } else { aSibling.style.display = 'none'; }//EXPAND (default)
+    tgt.innerHTML = (CURR_STATE==='✴'||setState) ? '✧' : '✴';
+}
+function MINMAX_SubList(e,setState){
+    let tgt = e.target;
+    const CURR_STATE = tgt.innerHTML;
+    let aSibling = tgt.parentElement.parentElement.nextElementSibling;
     if(CURR_STATE==='✴'||setState){ //COLLAPSE
         aSibling.style.display = 'flex'; //required
     } else { aSibling.style.display = 'none'; }//EXPAND (default)
@@ -1219,8 +1236,8 @@ function load_GALLERY_FRAME_DATA(){
         tkrREC = bankbookz_DB.TICKR_LIST[i];
         tkrINPUT = document.createElement('input')
         tkrINPUT.value = tkrREC.tkr;
-        tkrINPUT.readOnly = false;
-        tkrINPUT.placeholder = "ticker";
+        tkrINPUT.readOnly = true;
+        // tkrINPUT.placeholder = "ticker";
         tkrINPUT.classList.add('tkrTXT_BOX')
         tkrROW = document.createElement('article')
         tkrROW.classList.add('tkrROWZ')
@@ -1249,109 +1266,130 @@ function editDataClick(e, datatype){
     }
 }
 function renderTICKRData(datatgt){
-    //combo1
-    debugger;
-    let dataSTR = '';
-    let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
-    let moKEY,txnSET=[],txnITEM,itemSTR;
-    render_TICKR_DATA.value=''; //blank out
+    let txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]
+    if(!txnSet || txnSet.length){return}
+    let monthKEYS = Object.keys(txnSet);
+    // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
+    let moKEY,txnSET=[],txnITEM,itemSTR,subMenu;
+    render_EDIT_TICKR_Frame.innerText=''; //blank out
+    let delBTN,minmaxBTN,tkrTXT,moROW,moBOX,moDATA,BTNBOX;
+    let tkrTTL = document.createElement('header');
+    tkrTTL.classList = 'tkrTTL';
+    tkrTXT = document.createElement('span')
+    tkrTXT.innerText = datatgt;
+    tkrTXT.classList.add('tkrTXT_BOX')
+    tkrTXT.style.margin='1em 0 1em 0';
+    tkrTTL.appendChild(tkrTXT)  
+    delBTN = document.createElement('button')
+    delBTN.innerHTML = '🗑️'
+    delBTN.classList.add('blackBTN')
+    delBTN.style.margin='0 1em 0 0';
+    delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
+    tkrTTL.appendChild(delBTN)  
+    render_EDIT_TICKR_Frame.appendChild(tkrTTL)    
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
-        txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-        dataSTR += `<header> Month:${moKEY}</header>`;        
+        // txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
+        moBOX = document.createElement('section')
+        moBOX.classList.add('tkrMenuBox')
+        moROW = document.createElement('article')
+        moROW.classList.add('expanderROW')
+        moROW.style.width = "100%";
+        moROW.style.lineHeight = '0.444em';
+        tkrTXT = document.createElement('span')
+        tkrTXT.innerText = moKEY;
+        tkrTXT.style.margin='0.333em 0 0 0.444em';
+        moROW.appendChild(tkrTXT)          
+        BTNBOX = document.createElement('aside')
+        BTNBOX.classList.add('BTNBOX')
+        minmaxBTN = document.createElement('button')
+        minmaxBTN.classList.add('expanderBTN')
+        minmaxBTN.innerText = '✴';//'✧'
+        minmaxBTN.classList.add('blackBTN')
+        minmaxBTN.addEventListener("click",(event)=>{ MINMAX_SubList(event) });
+        BTNBOX.appendChild(minmaxBTN) 
+        delBTN = document.createElement('button')
+        delBTN.innerHTML = '🗑️'
+        delBTN.classList.add('blackBTN')
+        delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
+        BTNBOX.appendChild(delBTN)                    
+        moROW.appendChild(BTNBOX)                    
+        moBOX.appendChild(moROW) 
+        tkrDataFrame = document.createElement('section')
+        tkrDataFrame.id = `tkrDataFrame_${datatgt}_${moKEY}`;
+        tkrDataFrame.classList.add('tkrSubMenu')
+        tkrDataFrame.style.display = 'none' 
+        // *******************************POPULATE DATAFRAME    
+        subMenu = getSubMenu_TKRTXTArea(datatgt,moKEY);
+        // tkrDataFrame.innerHTML = subMenu;//(subMenu.length)?subMenu:'No Data.'   
+        tkrDataFrame.appendChild(subMenu);//(subMenu.length)?subMenu:'No Data.'   
+        // *******************************END DATAFRAME       
+        moBOX.appendChild(tkrDataFrame)
+        render_EDIT_TICKR_Frame.appendChild(moBOX)  
     }
-    if(dataSTR){ render_EDIT_TICKR_Frame.innerHTML = dataSTR; }
-
-
-
-    // let tkrREC = {}, tkrINPUT, tkrBOX, minmaxBTN,marginDataFrame,subMenu,tkrTTL;
-    // let MARGINZ_RENDER_FRAME = document.getElementById('MARGINZ_RENDER_FRAME');
-    // MARGINZ_RENDER_FRAME.innerHTML=''; //blank out
-    // for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
-
-        // tkrREC = bankbookz_DB.TICKR_LIST[i];
-        // tkrTTL = document.createElement('header')
-        // tkrTTL.classList = 'tkrTTL';
-        // tkrINPUT = document.createElement('input')
-        // tkrINPUT.value = tkrREC.tkr;
-        // tkrINPUT.readOnly = false;
-        // tkrINPUT.placeholder = "ticker";
-        // tkrINPUT.classList.add('tkrTXT_BOX')
-        // tkrINPUT.style.margin='1em 0 1em 0';
-        // tkrTTL.appendChild(tkrINPUT)
-        // tkrBOX = document.createElement('article')
-        // tkrBOX.classList.add('tkrSubBox')
-        // tkrBOX.classList.add('expanderROW')
-        // minmaxBTN = document.createElement('button')
-        // minmaxBTN.classList.add('expanderBTN')
-        // minmaxBTN.innerText = '✴';//'✧'
-        // minmaxBTN.classList.add('blackBTN')
-        // minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
-        // tkrTTL.appendChild(minmaxBTN)
-        // marginDataFrame = document.createElement('section')
-        // marginDataFrame.id = `marginDataFrame_${tkrREC.tkr}`;
-        // marginDataFrame.classList.add('tkrSubMenu')
-        // marginDataFrame.style.display = 'none'
-        // subMenu = getSubMenu_MarginView(tkrREC.tkr);
-        // marginDataFrame.innerHTML = (subMenu.length)?subMenu:'No Data.'
-        // tkrBOX.appendChild(tkrTTL)
-        // tkrBOX.appendChild(marginDataFrame)
-        // MARGINZ_RENDER_FRAME.appendChild(tkrBOX)  
-    // }
-
-
-    // let dataSTR = '';//,selectionz=[],aSelection,tkrTAG;
-    // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
-    // let moKEY,txnSET=[],txnITEM,itemSTR;
-    // render_EDIT_TICKR_Frame.value=''; //blank out
-    // for(var i=0; i<monthKEYS.length;i++){
-    //     moKEY = monthKEYS[i];
-    //     txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-    //     dataSTR += `# Month:${moKEY} --->\n`;
-    //     for(var ii=0; ii< txnSET.length;ii++){
-    //         txnItem = txnSET[ii]
-    //         itemSTR = JSON.stringify(txnItem)+'\n';
-    //         itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
-    //         dataSTR += itemSTR;
-    //     }
-    //     dataSTR += `# -----END-MONTH------->\n\n`;
-    // } 
-    // if(dataSTR){ render_EDIT_TICKR_Frame.value = dataSTR; }
 }
 function renderTRADEData(datatgt){
-    //combo1
-    debugger;
-    let dataSTR = '';
-    let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
-    let moKEY,txnSET=[],txnITEM,itemSTR;
-    render_TICKR_DATA.value=''; //blank out
+    let txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]
+    if(!txnSet || txnSet.length){return}
+    let monthKEYS = Object.keys(txnSet);
+    // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
+    let moKEY,txnSET=[],txnITEM,itemSTR,subMenu;
+    render_EDIT_TRADE_Frame.innerText=''; //blank out
+    let delBTN,minmaxBTN,tkrTXT,moROW,moBOX,moDATA,BTNBOX;
+    let tkrTTL = document.createElement('header');
+    tkrTTL.classList = 'tkrTTL';
+    tkrTXT = document.createElement('span')
+    tkrTXT.innerText = datatgt;
+    tkrTXT.classList.add('tkrTXT_BOX')
+    tkrTXT.style.margin='1em 0 1em 0';
+    tkrTTL.appendChild(tkrTXT)  
+    delBTN = document.createElement('button')
+    delBTN.innerHTML = '🗑️'
+    delBTN.classList.add('blackBTN')
+    delBTN.style.margin='0 1em 0 0';
+    delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
+    tkrTTL.appendChild(delBTN)  
+    render_EDIT_TRADE_Frame.appendChild(tkrTTL)    
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
         txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-        dataSTR += `<header> Month:${moKEY}</header>`;        
+        moBOX = document.createElement('section')
+        moBOX.classList.add('tkrMenuBox')
+        moBOX.style.border = '1px solid purple'
+        moROW = document.createElement('article')
+        moROW.classList.add('expanderROW')
+        moROW.style.width = "100%";
+        moROW.style.lineHeight = '0.444em';
+        tkrTXT = document.createElement('span')
+        tkrTXT.innerText = moKEY;
+        tkrTXT.style.margin='0.333em 0 0 0.444em';
+        moROW.appendChild(tkrTXT)          
+        BTNBOX = document.createElement('aside')
+        BTNBOX.classList.add('BTNBOX')
+        minmaxBTN = document.createElement('button')
+        minmaxBTN.classList.add('expanderBTN')
+        minmaxBTN.innerText = '✴';//'✧'
+        minmaxBTN.classList.add('blackBTN')
+        minmaxBTN.addEventListener("click",(event)=>{ MINMAX_SubList(event) });
+        BTNBOX.appendChild(minmaxBTN) 
+        delBTN = document.createElement('button')
+        delBTN.innerHTML = '🗑️'
+        delBTN.classList.add('blackBTN')
+        delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
+        BTNBOX.appendChild(delBTN)                    
+        moROW.appendChild(BTNBOX)                    
+        moBOX.appendChild(moROW) 
+        tradeDataFrame = document.createElement('section')
+        tradeDataFrame.id = `tradeDataFrame_${datatgt}_${moKEY}`;
+        tradeDataFrame.classList.add('tkrSubMenu')
+        tradeDataFrame.style.display = 'none' 
+        // *******************************POPULATE DATAFRAME    
+        subMenu = getSubMenu_TRADETXTArea(datatgt,moKEY);
+        tradeDataFrame.appendChild(subMenu);  
+        // *******************************END DATAFRAME          
+        moBOX.appendChild(tradeDataFrame)
+        render_EDIT_TRADE_Frame.appendChild(moBOX)  
     }
-    if(dataSTR){ render_EDIT_TRADE_Frame.innerHTML = dataSTR; }
-
-
-    // let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-    // let dataSTR = '',txnSET,txnItem,tkrTAG='';
-    // render_TRADE_DATA.innerHTML=''; //blank out
-    // for(var i=0; i<monthKEYS.length;i++){
-    //     moKEY = monthKEYS[i];
-    //     tkrTAG = moKEY.split("_")[2]
-    //     if(tkrTAG!=datatgt){continue}
-    //     txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
-    //     dataSTR += `# Month:${moKEY} --->\n`;
-    //     for(var ii=0; ii< txnSET.length;ii++){
-    //         txnItem = txnSET[ii]
-    //         itemSTR = JSON.stringify(txnItem)+'\n';
-    //         dataSTR += itemSTR;
-    //     }
-    //     dataSTR += `# -----END-MONTH------->\n\n`;        
-    // }  
-    // if(dataSTR){
-    //     render_TRADE_DATA.value= dataSTR;
-    // }
 }
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
@@ -1789,6 +1827,38 @@ function saveBookSelection(TGT){
 // ******************************************SUBMENU & SUBLIST views
 function getSubMenu_MarginView(tkr){
     return `<span>a</span><span>b</span>`;
+}
+function getSubMenu_TKRTXTArea(tkr,moKEY){
+    let txtValue = 'No Data.',txnSet=[];
+    let tkrTXTArea = document.createElement('textarea')
+    tkrTXTArea.id = `tkrTXTAREA_${tkr}_${moKEY}`;
+    tkrTXTArea.classList.add('scrollBarV')
+    // tkrTXTArea.classList.add('txtSizer')
+    tkrTXTArea.classList.add('tkrTXTArea')
+    txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr][moKEY];
+    if(txnSet.length){txtValue = JSON.stringify(txnSet)}
+    tkrTXTArea.value = txtValue;
+    return tkrTXTArea;
+}
+function getSubMenu_TRADETXTArea(tkr,moKEY){
+    let txtValue = 'No Data.',txnSet=[],item;
+    let tkrTXTArea = document.createElement('textarea')
+    tkrTXTArea.id = `tkrTXTAREA_${tkr}_${moKEY}`;
+    tkrTXTArea.classList.add('scrollBarV')
+    // tkrTXTArea.classList.add('txtSizer')
+    tkrTXTArea.classList.add('tkrTXTArea')
+    // debugger;
+    // txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr][moKEY];
+    txnSet = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
+    // for(var i=0;i<txnSet.length;i++){
+    //     item = txnSet[i];
+    //     if(item.tkr===tkr){//found txn
+    //         editSet.push(item)
+    //     }
+    // }
+    if(txnSet && txnSet.length){txtValue = JSON.stringify(txnSet)}
+    tkrTXTArea.value = txtValue;
+    return tkrTXTArea;
 }
 // ******************************************END VIEW METHODS**********
 // **** END VIEWS ****************************END VIEWS***************************
