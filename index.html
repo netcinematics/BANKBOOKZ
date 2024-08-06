@@ -146,14 +146,14 @@
     /** API ***************************************************************/
     #API_BOX{display:flex;border: solid 1px steelblue;
         border-radius: 13px;padding: 2px 10%;color: #022e64;align-items: center; 
-        justify-content: space-between;flex-wrap: wrap;margin: 12px auto 0 auto;
+        justify-content: space-between;flex-wrap: wrap;margin: 12px auto 1.666em auto;
     max-width: 30em;
     min-width: 50%;}
     @media only screen and (max-width: 800px) { /************* TABLET */
-        #API_BOX{margin: 8px 10% 0 10%;}
+        #API_BOX{margin: 8px 10% 1em 10%;}
     }  
     @media only screen and (max-width: 500px) { /************* PHONE */
-        #API_BOX{margin: 6px 1% 0 1%;}
+        #API_BOX{margin:0 0 1em 0; padding: 0;}
     }        
     #keyBOX{ margin:1%;border: solid 1px steelblue;font-size: 0.777em;}
     #keyINPUT:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px #233453 inset;}
@@ -174,6 +174,12 @@
         <button id="BOOK_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
         <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
     </menu>
+    <aside id="USER_MSG_BOX" style="z-index: 10;position: absolute;margin: 0 14%;display: flex;width: 66%;
+        border: solid 1px yellow;border-radius: 30px;background: black;justify-content: space-around;top: 44px;">
+        <span id="MSGIcon1" style="padding:1em;">icon1</span>
+        <span id="MSGTXT" style="padding:1em;">message</span>
+        <span id="MSGIcon2" style="padding:1em;">icon1</span>
+    </aside>
     <section id="TCKR_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
     flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
     padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
@@ -191,10 +197,13 @@
         </header>
         <hr/>
         <article id="TKR_RENDER_FRAME"></article>
-        <hr/>
-        <menu style="display: flex;justify-content: flex-end; padding-right: 2%;">
+        <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+            <span style="font-size:1em;">INFO:</span><br>
+            <span style="font-size:0.888em;">Add ticker symbol to track trades.</span><br>
+        </aside>
+        <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
             <button id="addTickBtn1" class="blackBTN" onclick="add_TKRZ_Click()">add🎇</button>
-            <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button>
+            <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
         </menu>
     </section><!-- END TCKR VIEW-->
     <section id="BANK_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
@@ -323,7 +332,26 @@
         </article> 
         <article id="DATA_IMPORT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
                 background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
-            <header style="margin:1em;width: 100%;padding-left:2em;">IMPORT TRADE DATA</header>
+            <header style="margin:1em;width: 100%;padding-left:2em;font-size:0.888em">
+                IMPORT TICKR DATA:</header>
+            <footer id="API_BOX">
+                <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
+                border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;
+                margin: 1em auto;">
+                    AA_API:<input id="keyINPUT"  type="new-password" placeholder="api_key" 
+                    style="margin-left: 1em; background:#233453;
+                    border-radius: 10px 0px 0px 10px;"></input>
+                    <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+                    border-radius: 0px 10px 10px 0px; font-size:0.777em;padding: 4px;" onclick="setAPIKEY();">SET</button>
+                </section>  
+                <div style="display: flex;align-items: center;width: 100%;justify-content: space-around;">
+                    <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
+                    <button id="latestBtn1" class="blackBTN" style="margin:1em 1% 1em 1%;"
+                        onclick="getLastPriceClick()">GET Latest Prices🔄</button>
+                </div>
+            </footer>
+            <header style="margin:1em;width: 100%;padding-left:2em;font-size:0.888em">
+                IMPORT TRADE DATA:</header>
             <textarea id="render_TRADE_IMPORT" class="scrollBarV txtSizer" style="overflow-x:visible;flex:1 1 0;resize:horizontal;background: black;color: lime;
                 width:80.888%;padding:2em;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -333,7 +361,8 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
             <footer class="main_footer">
-                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_TradeClick()">IMPORT TRADE DATA</button>
+                <button class="BTN" style="font-size:1em;margin:1em;" onclick="import_TradeClick()">
+                    IMPORT TRADE DATA</button>
             </footer>               
         </article>        
 
@@ -422,6 +451,23 @@ function MINMAX(TGT, setState){ //setState optional to force expand or collapse,
     }
 }
 //*************************************************END MINMAX***********
+//**********************************CUSTOM USERMSG***********
+const USER_MSG_BOX = document.getElementById('USER_MSG_BOX');
+const MSGIcon1 = document.getElementById('MSGIcon1');
+const MSGTXT = document.getElementById('MSGTXT');
+const MSGIcon2 = document.getElementById('MSGIcon2');
+function show_USERMSG (msg) {
+    if(!msg || !msg.txt){return}
+    let time = (msg.time)?msg.time:4000;
+    USER_MSG_BOX.style.display = "flex";
+    MSGTXT.innerText = msg.txt;
+    MSGIcon1.innerText = (msg.icon)?msg.icon:'';
+    MSGIcon2.innerText = (msg.icon)?msg.icon:'';
+    setTimeout( ()=>{ //HIDE
+        USER_MSG_BOX.style.display = "none";
+    },time)
+};show_USERMSG({txt:'Welcome',icon:'🌼',time:3000});
+//**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
     let item, itemArr,padDay,padMonth;
@@ -516,6 +562,8 @@ function init_DYNA_CHART_Candle(tgtELEM){
         // priceScale:{position: 'right',scaleMargins: {top: 0.2, bottom: 0.2 } },
     }
     let tgtTKR = tgtELEM.id.split('_')[1]; 
+    let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
+    if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
     tgtELEM.innerHTML=''; //blank out
     const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
     // CANDLESTICK-SERIES******************************************************        
@@ -523,7 +571,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
         priceScaleId: 'right', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
-    let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
+    candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //todo move this to IMPORT
     candlestickSeries.setData(candleSeriesDATA);
     let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
     if(candleSeriesSUBSELECT==='struct'){ //STRUCTURE LINES.
@@ -534,10 +582,6 @@ function init_DYNA_CHART_Candle(tgtELEM){
         tradeMarkerData = ensureOrderASC(tradeMarkerData);   //todo move this to IMPORT
         candlestickSeries.setMarkers(tradeMarkerData);        
     }
-    // let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
-    // tradeMarkerData = padTimeWithZeros(tradeMarkerData); //todo move this to IMPORT
-    // tradeMarkerData = ensureOrderASC(tradeMarkerData);   //todo move this to IMPORT
-    // candlestickSeries.setMarkers(tradeMarkerData);
     Dyna_Chart_CandleStick.timeScale().fitContent();    
     resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
@@ -546,9 +590,6 @@ function resize_DYNA_CHART_Candle(elem){
     let frame = document.getElementById('BOOK_VIEW');
     let maxWidth = (frame.offsetWidth>888)?777:(frame.offsetWidth<400)?frame.offsetWidth-60:frame.offsetWidth-100;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;    
-    // let maxWidth = (frame.offsetWidth>800)?677:(frame.offsetWidth<400)?frame.offsetWidth-100:frame.offsetWidth-200;//(frame.offsetWidth*0.1);
-    // let maxHeight = (frame.offsetWidth>800)?500:frame.offsetWidth-100;
-    console.log('RES',maxWidth,maxHeight)
     if(maxWidth<100 || maxHeight<50){return}
     elem.resize(maxWidth, maxHeight);
 }
@@ -565,13 +606,16 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     option2.text = "All Time";
     option2.value = "All Time"; 
     selectELEM.appendChild(option2);
-    let optionKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr]);
-    let dynaOption;
-    for(ymd of optionKEYS){
-        dynaOption = document.createElement("option");
-        dynaOption.text = ymd;
-        dynaOption.value = ymd; 
-        selectELEM.appendChild(dynaOption);
+    let tgtData = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr];
+    if(tgtData){ //error trap no data
+        let optionKEYS = Object.keys(tgtData);
+        let dynaOption;
+        for(ymd of optionKEYS){
+            dynaOption = document.createElement("option");
+            dynaOption.text = ymd;
+            dynaOption.value = ymd; 
+            selectELEM.appendChild(dynaOption);
+        }
     }
     if(!bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]){ //save selection
         bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = 'Last 33'; //default 
@@ -616,9 +660,8 @@ function DYNA_SELECTOR_Change(e){
     } else {
         selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
     } //END DYNAMIC SELECTOR BEHAVIOR
-    //DYNA - init chart.
     let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
-    init_DYNA_CHART_Candle(chartELEM);    
+    init_DYNA_CHART_Candle(chartELEM);    //DYNA - init chart.
 }
 //*************************************************END DYNA SELECTOR***********
 //***********************************SUB SELECTOR***********
@@ -867,16 +910,20 @@ function getArea_TRADE_DATA(aTKR){
 }
 function getCandleSeriesDATA(aTKR){
     let candleSeriesDATA = [];
+    let tgtData = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR];
+    if(!tgtData){return candleSeriesDATA} //error trap no data
+    let ymtKEYS = Object.keys(tgtData);
+    if(!ymtKEYS.length){return candleSeriesDATA}
     let monthlySelectors = [];
     const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${aTKR}`);
     let monthlySELECTOR = '';
     if(!selector_TITLE_TXT || !selector_TITLE_TXT.innerText){
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]; //init default saved. 
-    }else{
+    }else{ //init saved selection
         monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
         monthlySelectors = Array(...selector_TITLE_TXT.children);
     }
-    if(!monthlySELECTOR && aTKR){
+    if(!monthlySELECTOR && aTKR){ //Default: LOAD LAST 33 DATA
         monthlySELECTOR = 'Last 33';
         bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
     }
@@ -889,7 +936,7 @@ function getCandleSeriesDATA(aTKR){
             candleSeriesDATA.push(...revArr)
         }
     }else if(monthlySELECTOR==='Last 33'){ //Last 33 days of tickrs
-        let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
+        // let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         let dayCNT = 0;
         for(var i = 0; i< ymtKEYS.length && dayCNT<34; i++){ //Last 33 days
@@ -903,7 +950,7 @@ function getCandleSeriesDATA(aTKR){
         }  
         candleSeriesDATA.reverse();
     }else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
-        let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
+        // let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         for(var i = 0; i< ymtKEYS.length; i++){ //Last 33 days
             monthKEY = ymtKEYS[i];
@@ -1063,7 +1110,6 @@ BANK_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 BOOK_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
 BOOK_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
-// setTimeout(init_BOOKZ_TABZ,3000);
 DATA_GALLERY_FRAME.classList.remove('hiddenTab')     //TAB DEFAULT
 load_GALLERY_FRAME_DATA();
 DATA_TICKR_FRAME.classList.add('hiddenTab')     //TAB SWITCH
@@ -1343,12 +1389,56 @@ const init_TKRZ_TABZ = ()=>{
         delBTN = document.createElement('button')
         delBTN.innerHTML = '🗑️'
         delBTN.classList.add('blackBTN')
-        delBTN.addEventListener("click",(e)=>{ deleteTickerClick() });
+        delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
         tkrROW.appendChild(delBTN)
         TKR_RENDER_FRAME.appendChild(tkrROW)  
     }
 }
-const add_TKRZ_Click = ()=>{ }
+const add_TKRZ_Click = ()=>{
+    let tkrREC = {}, tkrINPUT, tkrROW;    
+    let TKR_RENDER_FRAME = document.getElementById('TKR_RENDER_FRAME');
+    tkrINPUT = document.createElement('input')
+    tkrINPUT.value = 'NEW';
+    tkrINPUT.readOnly = false;
+    tkrINPUT.classList.add('inputELEM')
+    tkrROW = document.createElement('article')
+    tkrROW.classList.add('tkrROWZ')
+    tkrROW.appendChild(tkrINPUT)
+    saveBTN = document.createElement('button')
+    saveBTN.innerHTML = 'save🌟'
+    saveBTN.classList.add('blackBTN')
+    saveBTN.addEventListener("click",(event)=>{ saveTickerClick(event) });
+    tkrROW.appendChild(saveBTN)
+    TKR_RENDER_FRAME.appendChild(tkrROW)      
+}
+function saveTickerClick(e){
+    let userTKR = e.target.previousElementSibling.value;
+    userTKR = userTKR.toUpperCase();
+    if(userTKR==='NEW'){return}
+    let item;
+    for(var i=0;i<bankbookz_DB.TICKR_LIST.length;i++){
+        item = bankbookz_DB.TICKR_LIST[i];
+        if(userTKR===item.tkr){ 
+            return; //duplicate TKR
+        }
+    }
+    bankbookz_DB.TICKR_LIST.push({tkr:userTKR, lastLoadYMD: ''})
+    save_BANKBOOKZ_DB();
+    init_TKRZ_TABZ();
+}
+function deleteTickerClick(e){
+    let userTKR = e.target.previousElementSibling.value;
+    let item;
+    for(var i=0;i<bankbookz_DB.TICKR_LIST.length;i++){
+        item = bankbookz_DB.TICKR_LIST[i];
+        if(userTKR===item.tkr){ //delete tkr
+            bankbookz_DB.TICKR_LIST.splice(i,1)
+            save_BANKBOOKZ_DB();
+            init_TKRZ_TABZ();             
+            return; 
+        }
+    }
+}
 //*********************END TKRZ- TAB - LOGIC**********************/
 //*********************BANKZ- TAB - LOGIC**********************/
 const init_BANKZ_TABZ = ()=>{
@@ -1410,7 +1500,7 @@ const init_BOOKZ_TABZ = ()=>{
                 </header>
                 <article id="candlestickFRAME_${tgtTKR.tkr}" class="dynamicCandleStick" style="justify-content:center;
                     flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
-                    <i style="font-size:0.555em;margin:0.888em;">Loading...</i>
+                    <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                 </article>
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                     margin-top: 0;padding: 1em 0 0 0;">
@@ -1440,7 +1530,7 @@ const init_BOOKZ_TABZ = ()=>{
                 </header>
                 <article id="trendsFRAME_${tgtTKR.tkr}" class="dynamicTrends" style="justify-content:center;
                     flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
-                    <i style="font-size:0.555em;margin:0.888em;">Loading...</i>
+                    <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                 </article>
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                     margin-top: 0;padding: 1em 0 0 0;">
@@ -1463,7 +1553,7 @@ const init_BOOKZ_TABZ = ()=>{
                 </header>
                 <article id="structsFRAME_${tgtTKR.tkr}" class="dynamicTrends" style="justify-content:center;
                     flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
-                    <i style="font-size:0.555em;margin:0.888em;">Loading...</i>
+                    <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                 </article>
                 <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                     margin-top: 0;padding: 1em 0 0 0;">
@@ -1564,7 +1654,7 @@ function init_BOOKZ_EXPANDER(){ //collapse all BOOKZ except expanded tabs in loc
         }
         tgtBTN = allBookz[j].children[0].children[1];
         if(expanded){
-            loadBookSelection(viewID);
+            // loadBookSelection(viewID);
             MINMAX(tgtBTN,expanded);
         }else if(!expanded){
             MINMAX(tgtBTN,expanded);
@@ -1579,14 +1669,14 @@ function expander_BOOKZ_Click(e){
     if(CURR_STATE!='✴'){//only load on expand (collapse icon)
         let viewID = TGT.parentElement.parentElement.id;
         let viewTKR = viewID.split('_')[1];    
-        loadBookSelection(viewTKR);
+        // loadBookSelection(viewTKR);
     }
 }
-function loadBookSelection(viewTKR){
-    if(viewTKR==='XMPL'){return}
-    // console.log('LOAD DATA',viewTKR)
-    //todo expand and collapse views.
-}
+// function loadBookSelection(viewTKR){
+//     if(viewTKR==='XMPL'){return}
+//     // console.log('LOAD DATA',viewTKR)
+//     //todo expand and collapse views.
+// }
 function saveBookSelection(TGT){
     let CURR_STATE = TGT.innerHTML;
     let viewID = TGT.parentElement.parentElement.id;
@@ -1626,16 +1716,92 @@ let setAPIKEY = ()=>{
         status.innerHTML='CONNECTED'
     }
 }; 
-const getCrypto_Loop = async ()=>{
-    let tkrTGT='';
-    for (const tkrREC of bankbookz_DB.TICKR_LIST){
-        tkrTGT = tkrREC.tkr;
-        console.log('Request Price Data for:',tkrTGT)
-        getCrypto_Daily(tkrTGT)
-    }
-    setTimeout(save_BANKBOOKZ_DB,3000); //todo?
+
+//***********************************************STOCK LOOP*************
+//HI-LEVEL_UTILITIES*************************
+const getLastPriceClick = async ()=>{ //loop all for last close.
+    let item,queries=[],tkrREC,tkr;
+    for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
+        tkrTGT = bankbookz_DB.TICKR_LIST[i];        
+        tkr = tkrTGT.tkr;        
+        if(getAPI_Limiter(tkr)){continue;} //CHECK LastRefreshTime
+        // if(i>=1){break;}//DEV_limiter stay below 20
+        // tkr = 'AMZN';//'NVDA';//DEV_specifier 
+        queries.push(tkr);
+   }
+   if(stock_api_key && queries.length){
+        console.log('...get stocks & crypto...')
+        await getStock_Daily(queries);
+        show_USERMSG({txt:'Data Updated',icon:'🛠️',time:3000});
+    } else {
+        show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
+   }
+   await save_BANKBOOKZ_DB();
 }
+const getStock_Daily = async (queries)=>{
+   try{
+      for(let i=0; i<queries.length;i++){
+         console.log('Query:',queries[i])
+         //CRYPTO QUERIES-----------------------------------
+         if(queries[i]==='BTC' 
+            || queries[i]==='ETH'  
+            || queries[i]==='UNI'  
+            || queries[i]==='AVAX' ){
+            console.log('GET Crypto:',queries[i])
+            await getCrypto_Daily(queries[i])
+            continue;
+         }
+         //END CRYPTO QUERIES-----------------------------------
+        await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${queries[i]}&apikey=${stock_api_key}`)
+        .then((data)=>{
+            if(data.ok){
+               return data.json();
+            } else{ debugger; }
+         }).then((tickData)=>{
+            if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+                show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
+               return;
+            }
+            if(!tickData || !tickData["Meta Data"] || !tickData["Meta Data"]["2. Symbol"] ){
+               debugger; //todo
+            }
+            let resTKR = tickData["Meta Data"]["2. Symbol"];
+            if(resTKR==='NVDA'){debugger;}
+            if(!resTKR){return;}
+            console.log('GOTCRYPTO:',resTKR)
+            const tickDaily_RAW = tickData["Time Series (Daily)"]
+            if(!tickDaily_RAW){return;}
+            const tickDaily_KEYS = Object.keys(tickDaily_RAW)             
+            const tickDaily_TV = [];
+            let obj;
+            let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
+            for (const aKey of tickDaily_KEYS) {  //FORMAT TO TRADING VIEW.
+                obj = tickDaily_RAW[aKey];
+                tickDaily_TV.push({
+                    tkr:resTKR,
+                    time: aKey,     
+                    open: parseFloat(obj["1. open"]),
+                    high: parseFloat(obj["2. high"]),    
+                    low: parseFloat(obj["3. low"]),     
+                    close: parseFloat(obj["4. close"]),    
+                    volume: Math.round( parseFloat(obj["5. volume"]) )     
+                });
+            }
+            bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
+            save_NEW_Stock_DAILY(tickDaily_TV)
+            bankbookz_DB.METASTATE.lastRefreshMap[resTKR]
+         }).catch((error)=>{
+            debugger;
+            console.log(error)
+         })
+      }
+   } catch(error) {
+        debugger;
+   }           
+}
+//********************************************END STOCK LOOP*************
 const getCrypto_Daily = async (tkrTGT)=>{
+    // if(tkrTGT==='BTC'||tkrTGT==='ETH'){console.log(`GET ${tkrTGT}`)}else{return}
     if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
     if(!stock_api_key){return}
     let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${tkrTGT}&market=USD&interval=5min&apikey=${stock_api_key}`;
@@ -1643,7 +1809,7 @@ const getCrypto_Daily = async (tkrTGT)=>{
         if(data.ok){ return data.json();} else{ console.log('err1');}
         }).then((tickResp)=>{
             let tkr = tickResp["Meta Data"]["2. Digital Currency Code"].toUpperCase();
-            console.log('SUCCESS:',tkr);
+            console.log('RESPONSE:',tkr);
             const tickDaily_RAW = tickResp["Time Series (Digital Currency Daily)"]
             const tickDaily_KEYS = Object.keys(tickDaily_RAW)             
             const tickDaily_TV = [];
@@ -1665,25 +1831,65 @@ const getCrypto_Daily = async (tkrTGT)=>{
             save_NEW_CRYPTO_DAILY(tickDaily_TV); //skip duplicates, add local storage
             let status = document.getElementById('connectStatus')
             status.innerHTML='UPDATED'
-
         }).catch((error)=>{
+            console.log('API: Daily Limit.')
             console.log('err2')
-            // showErrorMSG('🛠️ bad request')
             console.log(error)
             let status = document.getElementById('connectStatus')
             status.innerHTML='DISCONNECTED'            
     })
 }
 function getAPI_Limiter(tkr){
+    if(!bankbookz_DB.METASTATE.lastRefreshMap[tkr]){bankbookz_DB.METASTATE.lastRefreshMap[tkr]=''}
     let lastRefreshDay = bankbookz_DB.METASTATE.lastRefreshMap[tkr].split(' ')[0]
     let dailyLimit = (lastRefreshDay===`${yearNUM}-${monthNUM}-${dayNUM}`)
-    if(dailyLimit){console.log('API: Daily Limit '+lastRefreshDay)}
+    if(dailyLimit){ console.log('API: Daily Limit '+lastRefreshDay) }
     return dailyLimit;
 }
+function save_NEW_Stock_DAILY(tickDaily_TV){ 
+   let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
+    let dupeCNT=0,newCNT=0;//DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
+    tickDaily_TV.reverse();//chronologically, smallest first for LWC.
+    for (const aTicker of tickDaily_TV) {
+        ymd = aTicker.time.replace(/-/g, "_");
+        ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
+        YMT = ym + '_' + aTicker.tkr //for sub rec 
+        ymdt = ymd +'_'+ aTicker.tkr;
+        tkrREC = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr];
+        if(!tkrREC){ //ORGANIZED BY TKR, then YMT - NEW
+            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr] = {}
+            tkrREC = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr];
+        }
+        tkrYMT = tkrREC[YMT]; //GET SUB YMT
+        if(!tkrYMT){ //SUB ORGANIZE BY MONTHLY (YMT) - NEW
+            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT] = [];
+            tkrYMT = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT];
+        }
+        //CHECK FOR DUPLICATE RECORDS.
+        txnFound=false;
+        for(var ii=0;ii<tkrYMT.length;ii++){
+            txnItem = tkrYMT[ii];
+            if(!txnItem.time){continue}
+            if(aTicker.time===txnItem.time){ //DUPLICATE RECORD
+                dupeCNT++;
+                txnFound=true;
+                break;
+            } 
+        }
+        if(!txnFound){ //NEW RECORD, unshift, else chronological error.
+            newCNT++;
+            // bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].unshift(aTicker)
+            bankbookz_DB.TICKR_MAP_Monthly[aTicker.tkr][YMT].push(aTicker);
+            // debugger;
+            // bankbookz_DB.TICKR_MAP_Monthly[aTKR][YMT] = ensureOrderASC(bankbookz_DB.TICKR_MAP_Monthly[aTKR][YMT]);   //todo move this to IMPORT
+            //TODO: reverse data order across db and app? no. ASC for LWC DESC for Edit.
+        }
+    }
+    console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`)     
+}
 function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local storage
-    //DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
     let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
-    let dupeCNT=0,newCNT=0;
+    let dupeCNT=0,newCNT=0;//DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
     tickDaily_TV.reverse();//align arrays, chronologically, else chart error.
     for (const aTicker of tickDaily_TV) {
         ymd = aTicker.time.replace(/-/g, "_");
@@ -1720,8 +1926,8 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
 }
 </script><!--*****************************END STOCK DATA API******************-->
 <!--***************************** STOCK API INPUT******************-->
-<footer id="API_BOX">
-    <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
+<footer id="FOOTER_BOX">
+    <!-- <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
     border-radius: 13px;padding: 2px 6px;color: #022e64;align-items: center;
     margin:1em 1% 1em 1%;">
         AA_API:<input id="keyINPUT"  type="new-password" placeholder="api_key" 
@@ -1732,31 +1938,23 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     </section>  
     <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
     <button id="latestBtn1" class="blackBTN" style="margin:1em 1% 1em 1%;"
-        onclick="getCrypto_Loop()">get Prices🔄</button>
+        onclick="getLastPriceClick()">GET Latest Prices🔄</button> -->
+        <!-- onclick="getCrypto_Loop()">get Prices🔄</button> -->
 </footer>
 <!--***************************** END STOCK API INPUT******************-->
-<!--***************************** OVERLAY TREND LINES******************-->
+<!--***************************** XMPL CHART MODULES******************-->
 <script type="module">
-    // import {P as lwcprod} from "./module/lwc.prod.js";
     import {g as getRandomDataSet} from "./module/sample-data.js";
     import {TrendLine_Class as TrendLine_Class} from "./module/trendlines.js";
-    // const TrendLineChart_XMPL = window.chart = lwcprod("trend_line_chart_xmpl", {
     const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", {
-        width:400,height:300,
-        autoSize:false, layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } }
+        width:400,height:300,autoSize:false, layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } }
     })
     const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
     const  dataSet = getRandomDataSet();
     lwc_lineSeries.setData(dataSet);
     const len = dataSet.length;
-    const EndPoint = {
-        time: dataSet[len - 50].time,
-        price: dataSet[len - 50].value * .9
-    }
-    const StartPoint = {
-        time: dataSet[len - 5].time,
-        price: dataSet[len - 5].value * 1.1
-    }
+    const EndPoint={time: dataSet[len - 50].time,price: dataSet[len - 50].value * .9}
+    const StartPoint={time: dataSet[len - 5].time,price: dataSet[len - 5].value * 1.1}
     const trendLine1 = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,EndPoint,StartPoint);
     lwc_lineSeries.attachPrimitive(trendLine1);
     let topEND={},topSTART={};
@@ -1791,15 +1989,14 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     const trendLine_BTM = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
     lwc_lineSeries.attachPrimitive(trendLine_BTM);
 </script>
-<!--***************************** END OVERLAY LINES******************-->
+<!--***************************** END XMPL CHART MODULES******************-->
 <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
 background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
     <div style="margin-top:0;margin-bottom:0em;">
         2020 - <span id="dateTXTStamp"></span><script>
             const dateTXTStamp = document.getElementById('dateTXTStamp');
             dateTXTStamp.innerHTML = new Date().getFullYear();</script> BANKBOOKZ&#8482; by © NetCinematics llc. All rights reserved.
-            See License. DESCRIPTION: Template for Personal_Ledger_System. 
-            Generative Data Visualization for ARTIFICIAL INTELLIGENCE.
+            See Apache 2.0 License. DESCRIPTION: Template for Personal_Ledger_System. 
             Charts by <a href="https://www.tradingview.com/">Trading View</a> ♥ ~:).
     </div>
 </legal>
