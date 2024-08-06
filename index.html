@@ -62,7 +62,7 @@
     @media only screen and (max-width: 500px) { /************* PHONE */
         body{ background-color: #07000c; }
         .BTN{font-size:1em;}
-        .blackBTN{font-size:1em;}
+        .blackBTN{font-size:0.888em;}
     }
     /* ***********************************CUSTOM SCROLLBAR****************************/
     .scrollBarV {overflow-x:scroll;}
@@ -86,8 +86,8 @@
     /* CUSTOM HR ***************************HR***********************/
     hr {border-top:solid 1px steelblue; border-bottom: none; border-radius: 2px;}    
     /* CUSTOM INPUT ***************************INPUT***********************/
-    .inputELEM { border-radius: 13px;text-align: center;background: darkslategrey;
-        color: cyan;width:8em;padding: 0;font-size:0.888em;margin: 0.444em 0px;
+    .tkrTXT_BOX { border-radius: 13px;text-align: center;background: darkslategrey;
+        color: cyan;width:5em;padding: 0;font-size:0.888em;margin: 0.444em 0px;
     }
     /* END CUSTOM INPUT ***************************END INPUT***********************/
     .deleteTXT{font-size: 0.666em;margin: 0 0 0 1em;padding: 0.222em 0.222em 0.222em 0.444em;
@@ -162,7 +162,14 @@
     .tkrROWZ{margin: 1%; width:92%; border:solid 1px steelblue; display: flex;justify-content: space-between;
         border-radius:18px;padding: 0 3% 0 3%; align-items: center; flex-wrap: wrap;
     } 
-    /** END VIEW IMPLEMENTATIONS *****************************************/   
+    .tkrSubBox{margin: 1%; width:92%; border:solid 1px steelblue; display: flex;justify-content: space-between;
+        border-radius:18px;padding: 0 3% 0 3%; align-items: center; flex-wrap: wrap;flex-direction:column;
+    } 
+    .tkrSubMenu{display: flex;justify-content: space-around; width: 97%; border: solid 1px forestgreen; border-radius: 8px;
+        box-shadow: inset -1px -1px 8px 0px rebeccapurple; margin: 0 0 1em 0.222em; 
+    } 
+    .tkrTTL{width: 100%;display: flex;align-items: center;justify-content: space-between; }
+     /** END VIEW IMPLEMENTATIONS *****************************************/   
 </style>      
 </head>
 <body class="scrollBarV">
@@ -192,7 +199,6 @@
             <span class="boxTitle">
                 <span style="font-size:0.777em; color:cyan">1</span>
                 <span>TICKERS</span>
-                <!-- <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span> -->
             </span>
         </header>
         <hr/>
@@ -319,8 +325,8 @@
         <article id="DATA_MENU_FRAME">
             <menu style="display:flex;flex-wrap: wrap;font-size: 0.999em;padding-left:0; margin-top: 0.333em;
                 justify-content: space-evenly;border-bottom: 1px dashed #021d33;padding-bottom: 0.666em;">
-                <button id="GALLERY_VIEW_BTN" class="blackBTN" onclick="getDataGallery('gallery')">GALLERY</button>
-                <button id="IMPORT_VIEW_BTN" class="blackBTN" onclick="getDataGallery('import')">IMPORT</button>
+                <button id="GALLERY_VIEW_BTN" class="blackBTN" onclick="showDataGalleryView('gallery')">GALLERY</button>
+                <button id="IMPORT_VIEW_BTN" class="blackBTN" onclick="showDataGalleryView('import')">IMPORT</button>
             </menu>
             <main id="data_gallery_list"></main>
         </article>        
@@ -369,7 +375,8 @@
         <article id="DATA_TICKR_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
             <header style="margin:1em;width: 100%;padding-left:2em;">OVERWRITE TICKER DATA</header>
-            <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x:visible;flex: 1 1 0;resize:horizontal;background:black;
+            <section id="render_EDIT_TICKR_Frame">No Data. </section>
+            <!-- <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x:visible;flex: 1 1 0;resize:horizontal;background:black;
                color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;margin-bottom: 1em;" >
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
@@ -377,7 +384,7 @@
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
+                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin-bottom: 1em;">
                 <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">OVERWRITE TKR MONTH</button>
@@ -386,14 +393,15 @@
         <article id="DATA_TRADE_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
         background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
             <header style="margin:1em;width: 100%;padding-left:2em;">OVERWRITE TRADE DATA</header>
-            <textarea id="render_TRADE_DATA" class="scrollBarV txtSizer" style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background: black;color: lime;
+            <section id="render_EDIT_TRADE_Frame">No Data. </section>
+            <!-- <textarea id="render_TRADE_DATA" class="scrollBarV txtSizer" style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background: black;color: lime;
                 width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
             [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
                 "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
             {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea> 
+                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin:1em 0;">
                 <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">OVERWRITE MONTH TRADES</button>
@@ -449,6 +457,15 @@ function MINMAX(TGT, setState){ //setState optional to force expand or collapse,
         }
         TGT.innerHTML = (CURR_STATE==='✴'||setState) ? '✧' : '✴';
     }
+}
+function MINMAX_Menu(e,setState){
+    let tgt = e.target;
+    const CURR_STATE = tgt.innerHTML;
+    let aSibling = tgt.parentElement.nextElementSibling;
+    if(CURR_STATE==='✴'||setState){ //COLLAPSE
+        aSibling.style.display = 'flex'; //required
+    } else { aSibling.style.display = 'none'; }//EXPAND (default)
+    tgt.innerHTML = (CURR_STATE==='✴'||setState) ? '✧' : '✴';
 }
 //*************************************************END MINMAX***********
 //**********************************CUSTOM USERMSG***********
@@ -1101,8 +1118,10 @@ const DATA_TICKR_FRAME = document.getElementById("DATA_TICKR_FRAME");
 const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
 const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
 const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
-const render_TICKR_DATA = document.getElementById("render_TICKR_DATA");
-const render_TRADE_DATA = document.getElementById("render_TRADE_DATA");
+const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
+// const render_TICKR_DATA = document.getElementById("render_TICKR_DATA");
+const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
+// const render_TRADE_DATA = document.getElementById("render_TRADE_DATA");
 const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
 const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
 TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
@@ -1153,7 +1172,7 @@ function go_DATA_VIEW(){
     BOOK_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.remove('hiddenTab');
     DATA_VIEW_BTN.classList.add('selectedMAINBTN');
-    getDataGallery('gallery')
+    showDataGalleryView('gallery')
 }
 function remove_VIEW_SELECTED(){
     TCKR_VIEW_BTN.classList.remove('selectedMAINBTN');     
@@ -1165,7 +1184,7 @@ function remove_SUB_VIEW_SELECTED(){
     GALLERY_VIEW_BTN.classList.remove('selectedSUBBTN');     
     IMPORT_VIEW_BTN.classList.remove('selectedSUBBTN');
 }
-function getDataGallery(type){
+function showDataGalleryView(type){
     if(type==='gallery'){
         DATA_GALLERY_FRAME.classList.remove('hiddenTab');
         load_GALLERY_FRAME_DATA();     
@@ -1202,17 +1221,17 @@ function load_GALLERY_FRAME_DATA(){
         tkrINPUT.value = tkrREC.tkr;
         tkrINPUT.readOnly = false;
         tkrINPUT.placeholder = "ticker";
-        tkrINPUT.classList.add('inputELEM')
+        tkrINPUT.classList.add('tkrTXT_BOX')
         tkrROW = document.createElement('article')
         tkrROW.classList.add('tkrROWZ')
         tkrROW.appendChild(tkrINPUT)
         editBTN_TRADE = document.createElement('button')
-        editBTN_TRADE.innerHTML = 'edit TRADE'+'🎢';
+        editBTN_TRADE.innerHTML = 'Edit TRADE'+'🎢';
         editBTN_TRADE.classList.add('blackBTN')
         editBTN_TRADE.addEventListener("click",(e)=>{ editDataClick(e,'TRADE') });
         tkrROW.appendChild(editBTN_TRADE)
         editBTN_TKR = document.createElement('button')
-        editBTN_TKR.innerHTML = 'edit TKR'+'🎪';
+        editBTN_TKR.innerHTML = 'Edit TKR'+'🎪';
         editBTN_TKR.classList.add('blackBTN')
         editBTN_TKR.addEventListener("click",(e)=>{ editDataClick(e,'TKR') });
         tkrROW.appendChild(editBTN_TKR)        
@@ -1222,59 +1241,124 @@ function load_GALLERY_FRAME_DATA(){
 function editDataClick(e, datatype){
     let datatgt = e.target.parentElement.children[0].value;
     if(datatype==='TKR'){
-        getDataGallery('edittickr'); //show data panel.
+        showDataGalleryView('edittickr'); //show data panel.
         renderTICKRData(datatgt);
     }else if(datatype==='TRADE'){
-        getDataGallery('edittrade'); //show data panel.
+        showDataGalleryView('edittrade'); //show data panel.
         renderTRADEData(datatgt);
     }
 }
 function renderTICKRData(datatgt){
-    let dataSTR = '';//,selectionz=[],aSelection,tkrTAG;
+    //combo1
+    debugger;
+    let dataSTR = '';
     let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
     let moKEY,txnSET=[],txnITEM,itemSTR;
     render_TICKR_DATA.value=''; //blank out
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
         txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
-        dataSTR += `# Month:${moKEY} --->\n`;
-        for(var ii=0; ii< txnSET.length;ii++){
-            txnItem = txnSET[ii]
-            itemSTR = JSON.stringify(txnItem)+'\n';
-            itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
-            dataSTR += itemSTR;
-        }
-        dataSTR += `# -----END-MONTH------->\n\n`;
-    } 
-    if(dataSTR){ render_TICKR_DATA.value = dataSTR; }
+        dataSTR += `<header> Month:${moKEY}</header>`;        
+    }
+    if(dataSTR){ render_EDIT_TICKR_Frame.innerHTML = dataSTR; }
+
+
+
+    // let tkrREC = {}, tkrINPUT, tkrBOX, minmaxBTN,marginDataFrame,subMenu,tkrTTL;
+    // let MARGINZ_RENDER_FRAME = document.getElementById('MARGINZ_RENDER_FRAME');
+    // MARGINZ_RENDER_FRAME.innerHTML=''; //blank out
+    // for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
+
+        // tkrREC = bankbookz_DB.TICKR_LIST[i];
+        // tkrTTL = document.createElement('header')
+        // tkrTTL.classList = 'tkrTTL';
+        // tkrINPUT = document.createElement('input')
+        // tkrINPUT.value = tkrREC.tkr;
+        // tkrINPUT.readOnly = false;
+        // tkrINPUT.placeholder = "ticker";
+        // tkrINPUT.classList.add('tkrTXT_BOX')
+        // tkrINPUT.style.margin='1em 0 1em 0';
+        // tkrTTL.appendChild(tkrINPUT)
+        // tkrBOX = document.createElement('article')
+        // tkrBOX.classList.add('tkrSubBox')
+        // tkrBOX.classList.add('expanderROW')
+        // minmaxBTN = document.createElement('button')
+        // minmaxBTN.classList.add('expanderBTN')
+        // minmaxBTN.innerText = '✴';//'✧'
+        // minmaxBTN.classList.add('blackBTN')
+        // minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
+        // tkrTTL.appendChild(minmaxBTN)
+        // marginDataFrame = document.createElement('section')
+        // marginDataFrame.id = `marginDataFrame_${tkrREC.tkr}`;
+        // marginDataFrame.classList.add('tkrSubMenu')
+        // marginDataFrame.style.display = 'none'
+        // subMenu = getSubMenu_MarginView(tkrREC.tkr);
+        // marginDataFrame.innerHTML = (subMenu.length)?subMenu:'No Data.'
+        // tkrBOX.appendChild(tkrTTL)
+        // tkrBOX.appendChild(marginDataFrame)
+        // MARGINZ_RENDER_FRAME.appendChild(tkrBOX)  
+    // }
+
+
+    // let dataSTR = '';//,selectionz=[],aSelection,tkrTAG;
+    // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
+    // let moKEY,txnSET=[],txnITEM,itemSTR;
+    // render_EDIT_TICKR_Frame.value=''; //blank out
+    // for(var i=0; i<monthKEYS.length;i++){
+    //     moKEY = monthKEYS[i];
+    //     txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
+    //     dataSTR += `# Month:${moKEY} --->\n`;
+    //     for(var ii=0; ii< txnSET.length;ii++){
+    //         txnItem = txnSET[ii]
+    //         itemSTR = JSON.stringify(txnItem)+'\n';
+    //         itemSTR = itemSTR.replace(/"open"/g, " \"open\"").replace(/"close"/g, " \"close\"");
+    //         dataSTR += itemSTR;
+    //     }
+    //     dataSTR += `# -----END-MONTH------->\n\n`;
+    // } 
+    // if(dataSTR){ render_EDIT_TICKR_Frame.value = dataSTR; }
 }
 function renderTRADEData(datatgt){
-    let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-    let dataSTR = '',txnSET,txnItem,tkrTAG='';
-    render_TRADE_DATA.innerHTML=''; //blank out
+    //combo1
+    debugger;
+    let dataSTR = '';
+    let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
+    let moKEY,txnSET=[],txnITEM,itemSTR;
+    render_TICKR_DATA.value=''; //blank out
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
-        tkrTAG = moKEY.split("_")[2]
-        if(tkrTAG!=datatgt){continue}
-        txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
-        dataSTR += `# Month:${moKEY} --->\n`;
-        for(var ii=0; ii< txnSET.length;ii++){
-            txnItem = txnSET[ii]
-            itemSTR = JSON.stringify(txnItem)+'\n';
-            dataSTR += itemSTR;
-        }
-        dataSTR += `# -----END-MONTH------->\n\n`;        
-    }  
-    if(dataSTR){
-        render_TRADE_DATA.value= dataSTR;
+        txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
+        dataSTR += `<header> Month:${moKEY}</header>`;        
     }
+    if(dataSTR){ render_EDIT_TRADE_Frame.innerHTML = dataSTR; }
+
+
+    // let monthKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
+    // let dataSTR = '',txnSET,txnItem,tkrTAG='';
+    // render_TRADE_DATA.innerHTML=''; //blank out
+    // for(var i=0; i<monthKEYS.length;i++){
+    //     moKEY = monthKEYS[i];
+    //     tkrTAG = moKEY.split("_")[2]
+    //     if(tkrTAG!=datatgt){continue}
+    //     txnSET = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
+    //     dataSTR += `# Month:${moKEY} --->\n`;
+    //     for(var ii=0; ii< txnSET.length;ii++){
+    //         txnItem = txnSET[ii]
+    //         itemSTR = JSON.stringify(txnItem)+'\n';
+    //         dataSTR += itemSTR;
+    //     }
+    //     dataSTR += `# -----END-MONTH------->\n\n`;        
+    // }  
+    // if(dataSTR){
+    //     render_TRADE_DATA.value= dataSTR;
+    // }
 }
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
 let save_TradeClick = ()=>{
-    let render_TRADE_DATA = document.getElementById('render_TRADE_DATA');
+    let render_EDIT_TRADE_Frame = document.getElementById('render_EDIT_TRADE_Frame');
         let YMT_id, ymdSTR,clearTRADEMap={'YMT_id':true};
-        let inputSTR = render_TRADE_DATA.value, inputARR=[], tradeObj={};
+        let inputSTR = render_EDIT_TRADE_Frame.value, inputARR=[], tradeObj={};
         inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
         try {
             inputARR = JSON.parse('['+inputSTR+']');
@@ -1290,15 +1374,17 @@ let save_TradeClick = ()=>{
             }
             debugger;
             
-            save_BANKBOOKZ_DB();
+            // save_BANKBOOKZ_DB();
         } catch (error) {console.log('ERR: Bad data.');}// go_DATA_VIEW(); } //todo msg
     } //END IMPORT CLICK
 
     function save_TickerClick(){
-        debugger;
-        let render_TICKR_DATA = document.getElementById('render_TICKR_DATA');
+        let render_EDIT_TICKR_Frame = document.getElementById('render_EDIT_TICKR_Frame');
         let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
-        let inputSTR = render_TICKR_DATA.value, inputARR=[], tkrObj={};
+        let inputSTR = render_EDIT_TICKR_Frame.innerHTML;
+        let inputARR=[], tkrObj={};
+        debugger;
+        return;
         inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
         try {
             inputARR = JSON.parse('['+inputSTR+']');
@@ -1315,7 +1401,7 @@ let save_TradeClick = ()=>{
                 bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(tkrObj)
             }
             debugger;
-            save_BANKBOOKZ_DB();
+            // save_BANKBOOKZ_DB();
         } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
     }
 function import_TradeClick(){
@@ -1381,7 +1467,7 @@ const init_TKRZ_TABZ = ()=>{
         tkrINPUT.value = tkrREC.tkr;
         tkrINPUT.readOnly = false;
         tkrINPUT.placeholder = "ticker";
-        tkrINPUT.classList.add('inputELEM')
+        tkrINPUT.classList.add('tkrTXT_BOX')
         // tkrINPUT.style.margin='1em 0 1em 0';
         tkrROW = document.createElement('article')
         tkrROW.classList.add('tkrROWZ')
@@ -1400,7 +1486,7 @@ const add_TKRZ_Click = ()=>{
     tkrINPUT = document.createElement('input')
     tkrINPUT.value = 'NEW';
     tkrINPUT.readOnly = false;
-    tkrINPUT.classList.add('inputELEM')
+    tkrINPUT.classList.add('tkrTXT_BOX')
     tkrROW = document.createElement('article')
     tkrROW.classList.add('tkrROWZ')
     tkrROW.appendChild(tkrINPUT)
@@ -1442,26 +1528,39 @@ function deleteTickerClick(e){
 //*********************END TKRZ- TAB - LOGIC**********************/
 //*********************BANKZ- TAB - LOGIC**********************/
 const init_BANKZ_TABZ = ()=>{
-    let tkrREC = {}, tkrINPUT, tkrROW, delBTN;
+    //combo1
+    let tkrREC = {}, tkrINPUT, tkrBOX, minmaxBTN,marginDataFrame,subMenu,tkrTTL;
     let MARGINZ_RENDER_FRAME = document.getElementById('MARGINZ_RENDER_FRAME');
     MARGINZ_RENDER_FRAME.innerHTML=''; //blank out
     for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
         tkrREC = bankbookz_DB.TICKR_LIST[i];
+        tkrTTL = document.createElement('header')
+        tkrTTL.classList = 'tkrTTL';
         tkrINPUT = document.createElement('input')
         tkrINPUT.value = tkrREC.tkr;
         tkrINPUT.readOnly = false;
         tkrINPUT.placeholder = "ticker";
-        tkrINPUT.classList.add('inputELEM')
+        tkrINPUT.classList.add('tkrTXT_BOX')
         tkrINPUT.style.margin='1em 0 1em 0';
-        tkrROW = document.createElement('article')
-        tkrROW.classList.add('tkrROWZ')
-        tkrROW.appendChild(tkrINPUT)
-        delBTN = document.createElement('button')
-        delBTN.innerHTML = '🗑️'
-        delBTN.classList.add('blackBTN')
-        delBTN.addEventListener("click",(e)=>{ deleteTickerClick() });
-        tkrROW.appendChild(delBTN)
-        MARGINZ_RENDER_FRAME.appendChild(tkrROW)  
+        tkrTTL.appendChild(tkrINPUT)
+        tkrBOX = document.createElement('article')
+        tkrBOX.classList.add('tkrSubBox')
+        tkrBOX.classList.add('expanderROW')
+        minmaxBTN = document.createElement('button')
+        minmaxBTN.classList.add('expanderBTN')
+        minmaxBTN.innerText = '✴';//'✧'
+        minmaxBTN.classList.add('blackBTN')
+        minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
+        tkrTTL.appendChild(minmaxBTN)
+        marginDataFrame = document.createElement('section')
+        marginDataFrame.id = `marginDataFrame_${tkrREC.tkr}`;
+        marginDataFrame.classList.add('tkrSubMenu')
+        marginDataFrame.style.display = 'none'
+        subMenu = getSubMenu_MarginView(tkrREC.tkr);
+        marginDataFrame.innerHTML = (subMenu.length)?subMenu:'No Data.'
+        tkrBOX.appendChild(tkrTTL)
+        tkrBOX.appendChild(marginDataFrame)
+        MARGINZ_RENDER_FRAME.appendChild(tkrBOX)  
     }
 }
 // const add_BANKZ_Click = ()=>{ }
@@ -1654,7 +1753,6 @@ function init_BOOKZ_EXPANDER(){ //collapse all BOOKZ except expanded tabs in loc
         }
         tgtBTN = allBookz[j].children[0].children[1];
         if(expanded){
-            // loadBookSelection(viewID);
             MINMAX(tgtBTN,expanded);
         }else if(!expanded){
             MINMAX(tgtBTN,expanded);
@@ -1669,14 +1767,8 @@ function expander_BOOKZ_Click(e){
     if(CURR_STATE!='✴'){//only load on expand (collapse icon)
         let viewID = TGT.parentElement.parentElement.id;
         let viewTKR = viewID.split('_')[1];    
-        // loadBookSelection(viewTKR);
     }
 }
-// function loadBookSelection(viewTKR){
-//     if(viewTKR==='XMPL'){return}
-//     // console.log('LOAD DATA',viewTKR)
-//     //todo expand and collapse views.
-// }
 function saveBookSelection(TGT){
     let CURR_STATE = TGT.innerHTML;
     let viewID = TGT.parentElement.parentElement.id;
@@ -1693,6 +1785,10 @@ function saveBookSelection(TGT){
             save_BANKBOOKZ_DB();
         }
     }
+}
+// ******************************************SUBMENU & SUBLIST views
+function getSubMenu_MarginView(tkr){
+    return `<span>a</span><span>b</span>`;
 }
 // ******************************************END VIEW METHODS**********
 // **** END VIEWS ****************************END VIEWS***************************
