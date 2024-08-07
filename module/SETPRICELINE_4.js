@@ -69,7 +69,8 @@ class PriceLineDraw_Class {
                     ctx.roundRect(btnW2.position+marginOffset, btnH2.position, btnW2.length, btnH2.length, roundEdges2);
                     ctx.fill();                    
                 } else {
-                    ctx.fillStyle = this._data.hoverColor;
+                    // ctx.fillStyle = this._data.hoverColor;
+                    ctx.fillStyle = "#04013e";
                     ctx.beginPath();
                     ctx.roundRect(btnW.position, btnH.position, btnW.length, btnH.length, roundEdges)
                     ctx.fill();
@@ -117,7 +118,7 @@ class PriceLineRenderer_Class extends PriceLineUpdate_Class {
             textColor: this._data.crosshairLabelColor,
             leftX: 0, // rightX: this._data.timeScaleWidth,
             visibleDel:this._data.visibleDel,
-            hoverColor: this._data.hoverColor,hovered: this._data.hovered ?? !1
+            // hoverColor: this._data.hoverColor,hovered: this._data.hovered ?? !1
         })
     }
     zOrder() { return "top" }
@@ -126,9 +127,13 @@ class PriceLinePane_Class extends plugBase {
     constructor(i) {
         super();
         addMember(this, "_paneViews");
-        addMember(this, "_data", {visible:!1,hovered:!1,timeScaleWidth:0,
+        addMember(this, "_data", {visible:!1,
+            // hovered:!1,
+            timeScaleWidth:0,
             crosshairLabelColor: "#020202",crosshairColor: "#ffffff",
-            lineColor: "#090909",hoverColor: "#777777",visibleDel:false
+            lineColor: "#090909",
+            // hoverColor: "#777777",
+            visibleDel:false
         });
         addMember(this, "_source");
         this._paneViews = [new PriceLineRenderer_Class(this._data)],
@@ -145,22 +150,24 @@ class PriceLinePane_Class extends plugBase {
     }
     showAddLabel(i, e) {
         const n = this.chart.options().crosshair.horzLine.labelBackgroundColor;
-        this._data = {visible:!0,price: i,visibleDel:false,hovered: e,
+        this._data = {visible:!0,price: i,visibleDel:false,
+            // hovered: e,
             timeScaleWidth: this.chart.timeScale().width(),
             crosshairColor: n, crosshairLabelColor: "#FFFFFF",
             lineColor: this._source.currentLineColor(),
-            hoverColor: this._source.currentHoverColor()
+            // hoverColor: this._source.currentHoverColor()
         },
         this.updateAllViews(),
         this.requestUpdate()
     }
     showDeleteLabel(i, e) {
         const n = this.chart.options().crosshair.horzLine.labelBackgroundColor;
-        this._data = {visible:!0,price: i,visibleDel:true,hovered: e,
+        this._data = {visible:!0,price: i,visibleDel:true,
+            // hovered: e,
             timeScaleWidth: this.chart.timeScale().width(),
             crosshairColor: n, crosshairLabelColor: "#FFFFFF",
             lineColor: this._source.currentLineColor(),
-            hoverColor: this._source.currentHoverColor()
+            // hoverColor: this._source.currentHoverColor()
         },
         this.updateAllViews(),
         this.requestUpdate()
@@ -176,7 +183,9 @@ class PriceLinePane_Class extends plugBase {
         return false
     }
 }
-const priceline_Default_Options = {color: "#888888",hoverColor: "#777777",limitToOne:!0};
+const priceline_Default_Options = {color: "#888888",
+// hoverColor: "#777777",
+limitToOne:!0};
 class SetPriceLine_Class {
     constructor(chart, series, opts) {
         addMember(this, "_chart");
@@ -201,7 +210,7 @@ class SetPriceLine_Class {
         this._setCrosshairMode()
     }
     currentLineColor() { return this._options.color }
-    currentHoverColor() { return this._options.hoverColor }
+    // currentHoverColor() { return this._options.hoverColor }
     _setCrosshairMode() {
         if (!this._chart)
             throw new Error("Unable to change crosshair mode because the chart instance is undefined");
@@ -216,6 +225,8 @@ class SetPriceLine_Class {
     }
     _onClick(t) {
         const mousePrice = this._getMousePrice(t)
+        let editor = document.getElementById('lineEditor')
+        editor.setAttribute('datapt',mousePrice); //set editor state
         // const aMargin = this._distanceFromRightScale(t);
         const aMargin = this._distanceFromLeftScale(t);
         if(aMargin>=marginOffset){ //Click Edit Line

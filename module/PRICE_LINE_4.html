@@ -10,6 +10,11 @@
 				border-top-left-radius: 0px;
 				border-top-right-radius: 0px;
 			}
+            .editorBTN{
+                color:aqua;    font-size: 0.666em;
+                padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
+                border-radius: 44%;margin-left: 1em;cursor: pointer;                
+            }
 		</style>
 		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
 		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
@@ -27,13 +32,29 @@
 			</p>
 		</div>	
 		<div id="chart"></div>
-		<div id="lineEditor" style="border:solid 1px steelblue;visibility:hidden;
-            position:absolute;z-index:11;
-            background:darkslategrey;border-radius:13px;">
-            <span>---</span><input type="color" value = "#003264"/>
+		<div id="lineEditor" dataPt="none" style="border:solid 1px steelblue;visibility:hidden;
+            position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
+            padding: 0.222em 0.666em 0.222em 0.666em;    box-shadow: inset 1px 3px 8px blue;
+            display: flex;justify-content: space-between; align-items: center; width: 250px;">
+            <span><span class="editorBTN" onclick="((event)=>{
+                let linePrice = event.target.parentElement.parentElement.getAttribute('datapt')
+                if(linePrice==='none'){return}
+                setLinePrice(linePrice,{size:'sml'})
+                  })(event)">sm</span>
+                  <span class="editorBTN" onclick="((event)=>{
+
+                    let linePrice = event.target.parentElement.parentElement.getAttribute('datapt')
+                    debugger;
+                    if(linePrice==='none'){return}
+                    structs.setPricelines([{price: 666, line:line}])
+                    // setLinePrice(linePrice,{size:'med'})
+                  })(event)">med</span>
+                  <span class="editorBTN" onclick="medLine(event)">lrg</span></span>
+            <input type="color" value = "#003264" style="border: 1px solid blueviolet;border-radius: 44px; background: black;"/>
             <span onclick="((event) => {
                 event.target.parentElement.style.visibility = 'hidden'
-            })(event)">x</span>
+            })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; box-shadow: inset -2px 0px 2px steelblue;
+                border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
         </div>
     <!-- ***********DRAW CHART MODULE  -->
 <script type="module">
@@ -50,7 +71,17 @@
     let structs = new SetPriceLine_Class(priceChart,priceSeries,{ color: "steelblue"});
     let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
     structs.setPricelines([{price: 444, line:line}])
+    function medLine(e){
+        debugger;
+//         ((event)=>{
 
+// let linePrice = event.target.parentElement.parentElement.getAttribute('datapt')
+// if(linePrice==='none'){return}
+// structs.setPricelines([{price: 666, line:line}])
+// setLinePrice(linePrice,{size:'lrg'})
+// })(event)
+
+    }
 </script>
 </body>
 </html>

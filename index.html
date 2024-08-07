@@ -185,11 +185,13 @@
         <button id="BOOK_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_BOOK_VIEW()">BOOKZ</button>
         <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
     </menu>
-    <aside id="USER_MSG_BOX" style="z-index: 10;position: absolute;margin: 0 14%;display: flex;width: 66%;
-        border: solid 1px yellow;border-radius: 30px;background: black;justify-content: space-around;top: 44px;">
-        <span id="MSGIcon1" style="padding:1em;">icon1</span>
-        <span id="MSGTXT" style="padding:1em;">message</span>
-        <span id="MSGIcon2" style="padding:1em;">icon1</span>
+    <aside id="USER_MSG_BOX" style="z-index:10;position: absolute;margin: 0 14%;display: flex;width: 66%;
+        border: solid 1px yellow;border-radius: 30px;background: black;justify-content: space-around;top:88px;">
+        <span style="margin: 1em;border: 1px solid orange;border-radius: 44px;box-shadow: 1px 1px 15px orange;">
+            <span id="MSGIcon1" style="padding:1em;">icon1</span>
+            <span id="MSGTXT" style="padding:1em;">message</span>
+            <span id="MSGIcon2" style="padding:1em;">icon1</span>
+        </span>
     </aside>
     <section id="TCKR_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
     flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
@@ -497,10 +499,32 @@ function show_USERMSG (msg) {
     MSGTXT.innerText = msg.txt;
     MSGIcon1.innerText = (msg.icon)?msg.icon:'';
     MSGIcon2.innerText = (msg.icon)?msg.icon:'';
+    // setTimeout( ()=>{ //HIDE
+    //     USER_MSG_BOX.style.display = "none";
+    // },time)
     setTimeout( ()=>{ //HIDE
-        USER_MSG_BOX.style.display = "none";
-    },time)
-};show_USERMSG({txt:'Welcome',icon:'🌼',time:3000});
+        USER_MSG_BOX.style.opacity = 0.99;
+        setTimeout( ()=>{ //HIDE
+            USER_MSG_BOX.style.opacity = 0.88;
+            setTimeout( ()=>{ //HIDE
+                USER_MSG_BOX.style.opacity = 0.66;
+                setTimeout( ()=>{ //HIDE
+                    USER_MSG_BOX.style.opacity = 0.44;
+                    setTimeout( ()=>{ //HIDE
+                        USER_MSG_BOX.style.opacity = 0.11;
+                        setTimeout( ()=>{ //HIDE
+                            USER_MSG_BOX.style.opacity = 0;
+                            setTimeout( ()=>{ //HIDE
+                                USER_MSG_BOX.style.display = "none";
+                                USER_MSG_BOX.style.opacity = 1;
+                            },111)  
+                        },111)  
+                    },111) 
+                },111)                 
+            },222)                 
+        },222)        
+    },2000) //TODO: interpolate on and off.
+};show_USERMSG({txt:'Welcome!',icon:'🌼',time:2000});
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -508,8 +532,8 @@ function padTimeWithZeros(arr){ //sadly 01 format is standard
     for(var i=0; i<arr.length; i++){
         item = arr[i];
         itemArr = item.time.split('-')
-        padMonth = itemArr[1].padStart(2, '0'); ;
-        padDay = itemArr[2].padStart(2, '0'); ;
+        padMonth = itemArr[1].padStart(2, '0'); 
+        padDay = itemArr[2].padStart(2, '0'); 
         item.time=`${itemArr[0]}-${padMonth}-${padDay}`
     }
     return arr;
@@ -605,6 +629,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
         priceScaleId: 'right', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
+    // debugger;
     candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //todo move this to IMPORT
     candlestickSeries.setData(candleSeriesDATA);
     let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
@@ -612,6 +637,7 @@ function init_DYNA_CHART_Candle(tgtELEM){
 
     }else{ //TRADE_MARKERS
         let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
+        // debugger;
         tradeMarkerData = padTimeWithZeros(tradeMarkerData); //todo move this to IMPORT
         tradeMarkerData = ensureOrderASC(tradeMarkerData);   //todo move this to IMPORT
         candlestickSeries.setMarkers(tradeMarkerData);        
@@ -643,6 +669,7 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     let tgtData = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr];
     if(tgtData){ //error trap no data
         let optionKEYS = Object.keys(tgtData);
+        optionKEYS.reverse();//DESC opposite of LWC
         let dynaOption;
         for(ymd of optionKEYS){
             dynaOption = document.createElement("option");
@@ -973,6 +1000,7 @@ function getCandleSeriesDATA(aTKR){
         // let ymtKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR]);
         let txnSET=[],monthKEY,txnItem;
         let dayCNT = 0;
+        ymtKEYS.reverse(); //Not LWC order DESC.
         for(var i = 0; i< ymtKEYS.length && dayCNT<34; i++){ //Last 33 days
             monthKEY = ymtKEYS[i];
             txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][monthKEY]
@@ -1136,9 +1164,7 @@ const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
 const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
 const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
 const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
-// const render_TICKR_DATA = document.getElementById("render_TICKR_DATA");
 const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
-// const render_TRADE_DATA = document.getElementById("render_TRADE_DATA");
 const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
 const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
 TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
@@ -1267,6 +1293,7 @@ function editDataClick(e, datatype){
 }
 function renderTICKRData(datatgt){
     let txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]
+    // txnSet = ensureOrderASC(txnSet)
     if(!txnSet || txnSet.length){return}
     let monthKEYS = Object.keys(txnSet);
     // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
@@ -1280,12 +1307,12 @@ function renderTICKRData(datatgt){
     tkrTXT.classList.add('tkrTXT_BOX')
     tkrTXT.style.margin='1em 0 1em 0';
     tkrTTL.appendChild(tkrTXT)  
-    delBTN = document.createElement('button')
-    delBTN.innerHTML = '🗑️'
-    delBTN.classList.add('blackBTN')
-    delBTN.style.margin='0 1em 0 0';
-    delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
-    tkrTTL.appendChild(delBTN)  
+    // delBTN = document.createElement('button')
+    // delBTN.innerHTML = '🗑️'
+    // delBTN.classList.add('blackBTN')
+    // delBTN.style.margin='0 1em 0 0';
+    // delBTN.addEventListener("click",(event)=>{ deleteTickerMaster(event) });
+    // tkrTTL.appendChild(delBTN)  
     render_EDIT_TICKR_Frame.appendChild(tkrTTL)    
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
@@ -1311,7 +1338,7 @@ function renderTICKRData(datatgt){
         delBTN = document.createElement('button')
         delBTN.innerHTML = '🗑️'
         delBTN.classList.add('blackBTN')
-        delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
+        delBTN.addEventListener("click",(event)=>{ deleteTickerSubList(event) });
         BTNBOX.appendChild(delBTN)                    
         moROW.appendChild(BTNBOX)                    
         moBOX.appendChild(moROW) 
@@ -1329,11 +1356,10 @@ function renderTICKRData(datatgt){
     }
 }
 function renderTRADEData(datatgt){
-    let txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]
-    if(!txnSet || txnSet.length){return}
-    let monthKEYS = Object.keys(txnSet);
-    // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
-    let moKEY,txnSET=[],txnITEM,itemSTR,subMenu;
+    let txnYMTs = bankbookz_DB.TRADE_TXNZ_YMT;
+    let monthKEYS = Object.keys(txnYMTs);
+    let moKEY,tkr,tradeMonthData=[],txnSET=[],txnITEM,itemSTR,subMenu;
+    // ************************************TOP LINE************
     render_EDIT_TRADE_Frame.innerText=''; //blank out
     let delBTN,minmaxBTN,tkrTXT,moROW,moBOX,moDATA,BTNBOX;
     let tkrTTL = document.createElement('header');
@@ -1343,16 +1369,18 @@ function renderTRADEData(datatgt){
     tkrTXT.classList.add('tkrTXT_BOX')
     tkrTXT.style.margin='1em 0 1em 0';
     tkrTTL.appendChild(tkrTXT)  
-    delBTN = document.createElement('button')
-    delBTN.innerHTML = '🗑️'
-    delBTN.classList.add('blackBTN')
-    delBTN.style.margin='0 1em 0 0';
-    delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
-    tkrTTL.appendChild(delBTN)  
+    // delBTN = document.createElement('button')
+    // delBTN.innerHTML = '🗑️'
+    // delBTN.classList.add('blackBTN')
+    // delBTN.style.margin='0 1em 0 0';
+    // delBTN.addEventListener("click",(event)=>{ deleteTradeMaster(event) });
+    // tkrTTL.appendChild(delBTN)  
     render_EDIT_TRADE_Frame.appendChild(tkrTTL)    
+    // ************************************END TOP LINE*****
     for(var i=0; i<monthKEYS.length;i++){
         moKEY = monthKEYS[i];
-        txnSET = bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt][moKEY];
+        tkr = moKEY.split('_')[2]
+        if(datatgt!=tkr){continue}
         moBOX = document.createElement('section')
         moBOX.classList.add('tkrMenuBox')
         moBOX.style.border = '1px solid purple'
@@ -1375,7 +1403,7 @@ function renderTRADEData(datatgt){
         delBTN = document.createElement('button')
         delBTN.innerHTML = '🗑️'
         delBTN.classList.add('blackBTN')
-        delBTN.addEventListener("click",(event)=>{ deleteTickerClick(event) });
+        delBTN.addEventListener("click",(event)=>{ deleteTradeSubList(event) });
         BTNBOX.appendChild(delBTN)                    
         moROW.appendChild(BTNBOX)                    
         moBOX.appendChild(moROW) 
@@ -1394,53 +1422,56 @@ function renderTRADEData(datatgt){
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
 let save_TradeClick = ()=>{
-    let render_EDIT_TRADE_Frame = document.getElementById('render_EDIT_TRADE_Frame');
-        let YMT_id, ymdSTR,clearTRADEMap={'YMT_id':true};
-        let inputSTR = render_EDIT_TRADE_Frame.value, inputARR=[], tradeObj={};
-        inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
-        try {
-            inputARR = JSON.parse('['+inputSTR+']');
-            //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
-            for(var i=0; i<inputARR.length;i++){
-                tradeObj = inputARR[i];
-                YMT_id = tradeObj.ymtID;
-                if(!clearTRADEMap[YMT_id]){ //clear MONTH data for OVERRIDE
-                    clearTRADEMap[YMT_id] = true; //clear out MONTH... system.
-                    bankbookz_DB.TRADE_TXNZ_YMT[YMT_id] = []
-                }
-                bankbookz_DB.TRADE_TXNZ_YMT[YMT_id].push(tradeObj);
-            }
-            debugger;
-            
-            // save_BANKBOOKZ_DB();
-        } catch (error) {console.log('ERR: Bad data.');}// go_DATA_VIEW(); } //todo msg
-    } //END IMPORT CLICK
+    save_BANKBOOKZ_DB();
+    show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
+    // let render_EDIT_TRADE_Frame = document.getElementById('render_EDIT_TRADE_Frame');
+    //     let YMT_id, ymdSTR,clearTRADEMap={'YMT_id':true};
+    //     let inputSTR = render_EDIT_TRADE_Frame.value, inputARR=[], tradeObj={};
+    //     inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
+    //     try {
+    //         inputARR = JSON.parse('['+inputSTR+']');
+    //         //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
+    //         for(var i=0; i<inputARR.length;i++){
+    //             tradeObj = inputARR[i];
+    //             YMT_id = tradeObj.ymtID;
+    //             if(!clearTRADEMap[YMT_id]){ //clear MONTH data for OVERRIDE
+    //                 clearTRADEMap[YMT_id] = true; //clear out MONTH... system.
+    //                 bankbookz_DB.TRADE_TXNZ_YMT[YMT_id] = []
+    //             }
+    //             bankbookz_DB.TRADE_TXNZ_YMT[YMT_id].push(tradeObj);
+    //         }
+    //         debugger;
+    //         // save_BANKBOOKZ_DB();
+    //     } catch (error) {console.log('ERR: Bad data.');}// go_DATA_VIEW(); } //todo msg
+    } //END  CLICK
 
     function save_TickerClick(){
-        let render_EDIT_TICKR_Frame = document.getElementById('render_EDIT_TICKR_Frame');
-        let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
-        let inputSTR = render_EDIT_TICKR_Frame.innerHTML;
-        let inputARR=[], tkrObj={};
-        debugger;
-        return;
-        inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
-        try {
-            inputARR = JSON.parse('['+inputSTR+']');
-            //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
-            for(var i=0; i<inputARR.length;i++){
-                tkrObj = inputARR[i];
-                tkrSTR = tkrObj.tkr;
-                ymdARR = tkrObj.time.split("-")
-                YMT_id = ymdARR[0]+"_"+ymdARR[1]+"_"+tkrSTR;
-                if(!clearDataMap[YMT_id]){ //clear MONTH data for OVERRIDE
-                    clearDataMap[YMT_id] = true;
-                    bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id] = [];
-                }
-                bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(tkrObj)
-            }
-            debugger;
-            // save_BANKBOOKZ_DB();
-        } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
+        save_BANKBOOKZ_DB();
+        show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
+        // let render_EDIT_TICKR_Frame = document.getElementById('render_EDIT_TICKR_Frame');
+        // let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
+        // let inputSTR = render_EDIT_TICKR_Frame.innerHTML;
+        // let inputARR=[], tkrObj={};
+        // debugger;
+        // return;
+        // inputSTR = inputSTR.replace(/#(.*?)--->/g, '').replace(/\n/g,'').replace(/}{/g,'},{')
+        // try {
+        //     inputARR = JSON.parse('['+inputSTR+']');
+        //     //INPUT DATA: for each TXN, find tkr, find YMT, blank out, add.
+        //     for(var i=0; i<inputARR.length;i++){
+        //         tkrObj = inputARR[i];
+        //         tkrSTR = tkrObj.tkr;
+        //         ymdARR = tkrObj.time.split("-")
+        //         YMT_id = ymdARR[0]+"_"+ymdARR[1]+"_"+tkrSTR;
+        //         if(!clearDataMap[YMT_id]){ //clear MONTH data for OVERRIDE
+        //             clearDataMap[YMT_id] = true;
+        //             bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id] = [];
+        //         }
+        //         bankbookz_DB.TICKR_DATA_MAP_Monthly[tkrSTR][YMT_id].push(tkrObj)
+        //     }
+        //     debugger;
+        //     // save_BANKBOOKZ_DB();
+        // } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
     }
 function import_TradeClick(){
     let render_TRADE_IMPORT = document.getElementById('render_TRADE_IMPORT');
@@ -1535,35 +1566,6 @@ const add_TKRZ_Click = ()=>{
     tkrROW.appendChild(saveBTN)
     TKR_RENDER_FRAME.appendChild(tkrROW)      
 }
-function saveTickerClick(e){
-    let userTKR = e.target.previousElementSibling.value;
-    userTKR = userTKR.toUpperCase();
-    if(userTKR==='NEW'){return}
-    let item;
-    for(var i=0;i<bankbookz_DB.TICKR_LIST.length;i++){
-        item = bankbookz_DB.TICKR_LIST[i];
-        if(userTKR===item.tkr){ 
-            return; //duplicate TKR
-        }
-    }
-    bankbookz_DB.TICKR_LIST.push({tkr:userTKR, lastLoadYMD: ''})
-    save_BANKBOOKZ_DB();
-    init_TKRZ_TABZ();
-}
-function deleteTickerClick(e){
-    let userTKR = e.target.previousElementSibling.value;
-    let item;
-    for(var i=0;i<bankbookz_DB.TICKR_LIST.length;i++){
-        item = bankbookz_DB.TICKR_LIST[i];
-        if(userTKR===item.tkr){ //delete tkr
-            bankbookz_DB.TICKR_LIST.splice(i,1)
-            save_BANKBOOKZ_DB();
-            init_TKRZ_TABZ();             
-            return; 
-        }
-    }
-}
-//*********************END TKRZ- TAB - LOGIC**********************/
 //*********************BANKZ- TAB - LOGIC**********************/
 const init_BANKZ_TABZ = ()=>{
     //combo1
@@ -1588,6 +1590,7 @@ const init_BANKZ_TABZ = ()=>{
         minmaxBTN.classList.add('expanderBTN')
         minmaxBTN.innerText = '✴';//'✧'
         minmaxBTN.classList.add('blackBTN')
+        minmaxBTN.style.paddingLeft = '0.222em'
         minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
         tkrTTL.appendChild(minmaxBTN)
         marginDataFrame = document.createElement('section')
@@ -1601,7 +1604,6 @@ const init_BANKZ_TABZ = ()=>{
         MARGINZ_RENDER_FRAME.appendChild(tkrBOX)  
     }
 }
-// const add_BANKZ_Click = ()=>{ }
 //*********************END BANKZ- TAB - LOGIC**********************/
 </script><!--*******************************END VIEW structure LOGIC-->
 <script  >  //*********************BOOKZ-LOGIC**********************/
@@ -1807,6 +1809,7 @@ function expander_BOOKZ_Click(e){
         let viewTKR = viewID.split('_')[1];    
     }
 }
+//***********************************************************SAVE-BTNS********
 function saveBookSelection(TGT){
     let CURR_STATE = TGT.innerHTML;
     let viewID = TGT.parentElement.parentElement.id;
@@ -1824,6 +1827,60 @@ function saveBookSelection(TGT){
         }
     }
 }
+function saveTickerClick(e){
+    let userTKR = e.target.previousElementSibling.value;
+    userTKR = userTKR.toUpperCase();
+    if(userTKR==='NEW'){return}
+    let item;
+    for(var i=0;i<bankbookz_DB.TICKR_LIST.length;i++){
+        item = bankbookz_DB.TICKR_LIST[i];
+        if(userTKR===item.tkr){ 
+            return; //duplicate TKR
+        }
+    }
+    bankbookz_DB.TICKR_LIST.push({tkr:userTKR, lastLoadYMD: ''})
+    save_BANKBOOKZ_DB();
+    init_TKRZ_TABZ();
+}
+//**************************************************ENDSAVE BTNS****************
+//********************************DELETE BTNS*********************************
+function deleteTickerMaster(e){ debugger;}
+function deleteTickerSubList(e){
+    // debugger;
+    let moYMT = e.target.parentElement.previousElementSibling.innerText
+    if(!moYMT){return}
+    let tkr = moYMT.split('_')[2];
+    if(!tkr){return}
+    let dataSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr][moYMT];
+    if(!dataSet){return}
+    delete bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr][moYMT];
+    e.target.parentElement.parentElement.parentElement.remove();   
+    save_BANKBOOKZ_DB();      
+}
+function deleteTradeMaster(e){ debugger;}
+function deleteTradeSubList(e){
+    let moYMT = e.target.parentElement.previousElementSibling.innerText
+    if(!moYMT){return}
+    let dataSet = bankbookz_DB.TRADE_TXNZ_YMT[moYMT];
+    if(!dataSet){return}
+    delete bankbookz_DB.TRADE_TXNZ_YMT[moYMT];
+    e.target.parentElement.parentElement.parentElement.remove();   
+    save_BANKBOOKZ_DB();       
+}
+function deleteTickerClick(e){
+    let userTKR = e.target.previousElementSibling.value;
+    let item;
+    for(var i=0;i<bankbookz_DB.TICKR_LIST.length;i++){
+        item = bankbookz_DB.TICKR_LIST[i];
+        if(userTKR===item.tkr){ //delete tkr
+            bankbookz_DB.TICKR_LIST.splice(i,1)
+            save_BANKBOOKZ_DB();
+            init_TKRZ_TABZ();             
+            return; 
+        }
+    }
+}
+//*********************END DELETEBTNS**********************/
 // ******************************************SUBMENU & SUBLIST views
 function getSubMenu_MarginView(tkr){
     return `<span>a</span><span>b</span>`;
@@ -1845,17 +1902,8 @@ function getSubMenu_TRADETXTArea(tkr,moKEY){
     let tkrTXTArea = document.createElement('textarea')
     tkrTXTArea.id = `tkrTXTAREA_${tkr}_${moKEY}`;
     tkrTXTArea.classList.add('scrollBarV')
-    // tkrTXTArea.classList.add('txtSizer')
     tkrTXTArea.classList.add('tkrTXTArea')
-    // debugger;
-    // txnSet = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr][moKEY];
     txnSet = bankbookz_DB.TRADE_TXNZ_YMT[moKEY];
-    // for(var i=0;i<txnSet.length;i++){
-    //     item = txnSet[i];
-    //     if(item.tkr===tkr){//found txn
-    //         editSet.push(item)
-    //     }
-    // }
     if(txnSet && txnSet.length){txtValue = JSON.stringify(txnSet)}
     tkrTXTArea.value = txtValue;
     return tkrTXTArea;
@@ -1890,9 +1938,9 @@ const getLastPriceClick = async ()=>{ //loop all for last close.
     for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
         tkrTGT = bankbookz_DB.TICKR_LIST[i];        
         tkr = tkrTGT.tkr;        
-        if(getAPI_Limiter(tkr)){continue;} //CHECK LastRefreshTime
-        // if(i>=1){break;}//DEV_limiter stay below 20
-        // tkr = 'AMZN';//'NVDA';//DEV_specifier 
+        // if(getAPI_Limiter(tkr)){continue;} //CHECK LastRefreshTime
+        if(i>=1){break;}//DEV_limiter stay below 20
+        tkr = 'NVDA';//'NVDA';//DEV_specifier 
         queries.push(tkr);
    }
    if(stock_api_key && queries.length){
@@ -1918,7 +1966,8 @@ const getStock_Daily = async (queries)=>{
             continue;
          }
          //END CRYPTO QUERIES-----------------------------------
-        await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${queries[i]}&apikey=${stock_api_key}`)
+        // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${queries[i]}&apikey=${stock_api_key}`)
+        await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
         .then((data)=>{
             if(data.ok){
                return data.json();
@@ -1934,10 +1983,14 @@ const getStock_Daily = async (queries)=>{
             let resTKR = tickData["Meta Data"]["2. Symbol"];
             if(resTKR==='NVDA'){debugger;}
             if(!resTKR){return;}
-            console.log('GOTCRYPTO:',resTKR)
-            const tickDaily_RAW = tickData["Time Series (Daily)"]
+            console.log('GOT_STOCK:',resTKR)
+            // const tickDaily_RAW = tickData["Time Series (Daily)"]
+            const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
             if(!tickDaily_RAW){return;}
-            const tickDaily_KEYS = Object.keys(tickDaily_RAW)             
+            let tickDaily_KEYS = Object.keys(tickDaily_RAW)     
+            let reduceData = 50; //too much data reduce from 2000 to 200.
+            tickDaily_KEYS = tickDaily_KEYS.splice(0,reduceData)        
+            tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.
             const tickDaily_TV = [];
             let obj;
             let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
@@ -1967,8 +2020,8 @@ const getStock_Daily = async (queries)=>{
 }
 //********************************************END STOCK LOOP*************
 const getCrypto_Daily = async (tkrTGT)=>{
-    // if(tkrTGT==='BTC'||tkrTGT==='ETH'){console.log(`GET ${tkrTGT}`)}else{return}
-    if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
+    if(tkrTGT==='BTC'||tkrTGT==='ETH'){ debugger; };//console.log(`GET ${tkrTGT}`)}else{return}
+    // if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
     if(!stock_api_key){return}
     let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${tkrTGT}&market=USD&interval=5min&apikey=${stock_api_key}`;
     fetch(url).then((data)=>{
@@ -1999,7 +2052,6 @@ const getCrypto_Daily = async (tkrTGT)=>{
             status.innerHTML='UPDATED'
         }).catch((error)=>{
             console.log('API: Daily Limit.')
-            console.log('err2')
             console.log(error)
             let status = document.getElementById('connectStatus')
             status.innerHTML='DISCONNECTED'            
@@ -2015,16 +2067,18 @@ function getAPI_Limiter(tkr){
 function save_NEW_Stock_DAILY(tickDaily_TV){ 
    let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
     let dupeCNT=0,newCNT=0;//DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
-    tickDaily_TV.reverse();//chronologically, smallest first for LWC.
+    // tickDaily_TV.reverse();//chronologically, smallest first for LWC.
     for (const aTicker of tickDaily_TV) {
         ymd = aTicker.time.replace(/-/g, "_");
-        ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
+        // ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
+        ym = ymd.split("_")[0] +"_"+ymd.split("_")[1].padStart(2, '0');//add padding.
         YMT = ym + '_' + aTicker.tkr //for sub rec 
-        ymdt = ymd +'_'+ aTicker.tkr;
+        // ymdt = ymd +'_'+ aTicker.tkr;
         tkrREC = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr];
         if(!tkrREC){ //ORGANIZED BY TKR, then YMT - NEW
             bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr] = {}
             tkrREC = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr];
+            console.log('CREATED TKR Record:',aTicker.tkr)
         }
         tkrYMT = tkrREC[YMT]; //GET SUB YMT
         if(!tkrYMT){ //SUB ORGANIZE BY MONTHLY (YMT) - NEW
@@ -2045,23 +2099,25 @@ function save_NEW_Stock_DAILY(tickDaily_TV){
         if(!txnFound){ //NEW RECORD, unshift, else chronological error.
             newCNT++;
             // bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].unshift(aTicker)
-            bankbookz_DB.TICKR_MAP_Monthly[aTicker.tkr][YMT].push(aTicker);
-            // debugger;
-            // bankbookz_DB.TICKR_MAP_Monthly[aTKR][YMT] = ensureOrderASC(bankbookz_DB.TICKR_MAP_Monthly[aTKR][YMT]);   //todo move this to IMPORT
+            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].push(aTicker); //ORDERED for LWC.
+            // bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][YMT] = ensureOrderASC(bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR][YMT]);   //todo move this to IMPORT
             //TODO: reverse data order across db and app? no. ASC for LWC DESC for Edit.
         }
     }
+    debugger;
     console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`)     
 }
 function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local storage
     let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
     let dupeCNT=0,newCNT=0;//DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
-    tickDaily_TV.reverse();//align arrays, chronologically, else chart error.
+    debugger;
+    // tickDaily_TV.reverse();//align arrays, chronologically, else chart error.
     for (const aTicker of tickDaily_TV) {
         ymd = aTicker.time.replace(/-/g, "_");
-        ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
+        // ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
+        ym = ymd.split("_")[0] +"_"+ymd.split("_")[1].padStart(2, '0');//add padding.
         YMT = ym + '_' + aTicker.tkr //for sub rec 
-        ymdt = ymd +'_'+ aTicker.tkr;
+        // ymdt = ymd +'_'+ aTicker.tkr;
         tkrREC = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr];
         if(!tkrREC){ //ORGANIZED BY TKR, then YMT - NEW
             bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr] = {}
@@ -2071,6 +2127,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
         if(!tkrYMT){ //SUB ORGANIZE BY MONTHLY (YMT) - NEW
             bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT] = [];
             tkrYMT = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT];
+            console.log('CREATED TKR Record:',aTicker.tkr)
         }
         //CHECK FOR DUPLICATE RECORDS.
         txnFound=false;
@@ -2085,9 +2142,11 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
         }
         if(!txnFound){ //NEW RECORD, unshift, else chronological error.
             newCNT++
-            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].unshift(aTicker)
+            // bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].unshift(aTicker)
+            bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].push(aTicker); //ORDERED for LWC.
         }
     }
+    debugger;
     console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`) 
 }
 </script><!--*****************************END STOCK DATA API******************-->
