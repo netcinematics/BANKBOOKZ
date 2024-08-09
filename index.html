@@ -395,7 +395,7 @@
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin-bottom: 1em;">
-                <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">🌟SAVE🌟</button>
+                <!-- <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">🌟SAVE🌟</button> -->
             </footer>   
         </article>        
         <article id="DATA_TRADE_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
@@ -414,11 +414,11 @@
                 "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin:1em 0;">
-                <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">🌟SAVE🌟</button>
+                <!-- <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">🌟SAVE🌟</button> -->
             </footer>   
         </article>        
     </section><!--end DATAVIEW-->
-<script  >// *************LOCAL_DB*********************
+<script>// *************LOCAL_DB*********************
 /*************************************************************\
  * bankbookz_DB - ability to save monthly data in localstorage
 \*************************************************************/
@@ -428,7 +428,8 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
         TRADE_TXNZ_YMT: default_TRADE_DATA_MAP_Monthly,
         TICKR_DATA_MAP_Monthly : default_TICKR_DATA_MAP_Monthly,
         TICKR_LIST:[//{name:'XMPL',lastLoadYMD:''},
-            {tkr:'BTC',lastLoadYMD:''},{tkr:'ETH',lastLoadYMD:''}
+            {tkr:'BTC',lastLoadYMD:''},{tkr:'ETH',lastLoadYMD:''},
+            {tkr:'AMZN',lastLoadYMD:''},{tkr:'NVDA',lastLoadYMD:''},
         ],
         METASTATE:{ 
             BOOKZ_EXPANDER:['BTC'], //multiple expansion.
@@ -542,7 +543,6 @@ function ensureOrderASC(timeArray){ //time array for markers must be ASC.
     const orderedData = timeArray.sort((a, b) => {
         const [yearA, monthA, dayA] = a.time.split('-');
         const [yearB, monthB, dayB] = b.time.split('-');
-
         if (yearA !== yearB) return yearA - yearB;
         if (monthA !== monthB) return monthA - monthB;
         return dayA - dayB;
@@ -562,7 +562,7 @@ function sort_YMT_KEYS(ymtSet) {
   });
 }
 function fillout_YMT_KEYS(ymtArr,TGTymt){ //skipped months, added.
-    ymtArr = sort_YMT_KEYS(ymtArr) //expects sort_YMT_KEYS
+    ymtArr = sort_YMT_KEYS(ymtArr) //Required ASC for LWC
     const cumulativeSet = [];
     const ymtSet = new Set(ymtArr)
     const yearSet = new Set(ymtArr.map(item => item.split('_')[0]));
@@ -574,7 +574,8 @@ function fillout_YMT_KEYS(ymtArr,TGTymt){ //skipped months, added.
     for (let yrIDX = 0; yrIDX <= yearsArr.length; yrIDX++) { // Adjust year range as needed
         year = yearsArr[yrIDX];
         for (let month = 1; month <= 12; month++) {
-            tgtYMT = `${year}_${month}_${tkr}`;
+            // tgtYMT = `${year}_${month}_${tkr}`;//unpadded
+            tgtYMT = `${year}_${month.toString().padStart(2, '0')}_${tkr}`;//Pad Month
             if (ymtSet.has(tgtYMT)) {
                 foundStart = true;
                 cumulativeSet.push(tgtYMT);
@@ -629,17 +630,15 @@ function init_DYNA_CHART_Candle(tgtELEM){
         priceScaleId: 'right', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
-    // debugger;
-    candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //todo move this to IMPORT
+    candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
     candlestickSeries.setData(candleSeriesDATA);
     let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
     if(candleSeriesSUBSELECT==='struct'){ //STRUCTURE LINES.
 
     }else{ //TRADE_MARKERS
         let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
-        // debugger;
-        tradeMarkerData = padTimeWithZeros(tradeMarkerData); //todo move this to IMPORT
-        tradeMarkerData = ensureOrderASC(tradeMarkerData);   //todo move this to IMPORT
+        tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo
+        tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo
         candlestickSeries.setMarkers(tradeMarkerData);        
     }
     Dyna_Chart_CandleStick.timeScale().fitContent();    
@@ -711,14 +710,14 @@ function DYNA_SELECTOR_Change(e){
         }
         newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])//trim deletebtn
     }
-    if(newSELECTORZ.length>1){
+    if(newSELECTORZ.length>1){ //VIEW MULTIPLE MONTHS
         newSELECTORZ = fillout_YMT_KEYS(newSELECTORZ,TGTymt)
         let wrappedDATA = newSELECTORZ.map( (e,i)=>{
             if(i===0){return  `<span class="defaultTXT">${e}</span>`}
             return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT(event)">x</button> </span>`;
         } ) 
         selector_TITLE_TXT.innerHTML = wrappedDATA.join('')
-    } else {
+    } else { //VIEW SINGULAR MONTH.
         selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
     } //END DYNAMIC SELECTOR BEHAVIOR
     let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
@@ -1296,6 +1295,7 @@ function renderTICKRData(datatgt){
     // txnSet = ensureOrderASC(txnSet)
     if(!txnSet || txnSet.length){return}
     let monthKEYS = Object.keys(txnSet);
+    monthKEYS.reverse(); //DESC, for non LWC sort.
     // let monthKEYS = Object.keys(bankbookz_DB.TICKR_DATA_MAP_Monthly[datatgt]);
     let moKEY,txnSET=[],txnITEM,itemSTR,subMenu;
     render_EDIT_TICKR_Frame.innerText=''; //blank out
@@ -1421,9 +1421,9 @@ function renderTRADEData(datatgt){
 }
 //--------------------------------------END DATA fns----------------------------------
 //---------------------------------IMPORT fns----------------------------------
-let save_TradeClick = ()=>{
-    save_BANKBOOKZ_DB();
-    show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
+// let save_TradeClick = ()=>{
+//     save_BANKBOOKZ_DB();
+//     show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
     // let render_EDIT_TRADE_Frame = document.getElementById('render_EDIT_TRADE_Frame');
     //     let YMT_id, ymdSTR,clearTRADEMap={'YMT_id':true};
     //     let inputSTR = render_EDIT_TRADE_Frame.value, inputARR=[], tradeObj={};
@@ -1443,11 +1443,11 @@ let save_TradeClick = ()=>{
     //         debugger;
     //         // save_BANKBOOKZ_DB();
     //     } catch (error) {console.log('ERR: Bad data.');}// go_DATA_VIEW(); } //todo msg
-    } //END  CLICK
+    // } //END  CLICK
 
-    function save_TickerClick(){
-        save_BANKBOOKZ_DB();
-        show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
+    // function save_TickerClick(){
+    //     save_BANKBOOKZ_DB();
+    //     show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
         // let render_EDIT_TICKR_Frame = document.getElementById('render_EDIT_TICKR_Frame');
         // let tkrSTR, YMT_id, ymdSTR,clearDataMap={'YMT_id':true};
         // let inputSTR = render_EDIT_TICKR_Frame.innerHTML;
@@ -1472,7 +1472,7 @@ let save_TradeClick = ()=>{
         //     debugger;
         //     // save_BANKBOOKZ_DB();
         // } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
-    }
+    // }
 function import_TradeClick(){
     let render_TRADE_IMPORT = document.getElementById('render_TRADE_IMPORT');
     let tkrSTR, YMT_id, txnSET=[],txnItem, dupeCNT=0, newCNT=0,txnFound=false;//, ymdSTR,clearDataMap={'YMT_id':true};
@@ -1519,6 +1519,9 @@ function import_TradeClick(){
         }
         console.log(`IMPORTS; NEW recs:${newCNT}, SKIP Dupes:${dupeCNT}, `) 
         console.log(`Untracked transactions: ${untrackedCNT}`)
+        let default_DATA = JSON.stringify(bankbookz_DB.TRADE_TXNZ_YMT);//COPY TO default_data : default_TRADE_DATA_MAP_Monthly
+        // debugger;
+        show_USERMSG({txt:'Data Imported',icon:'🛠️',time:2000});
         save_BANKBOOKZ_DB();
     } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
 }
@@ -1930,7 +1933,6 @@ let setAPIKEY = ()=>{
         status.innerHTML='CONNECTED'
     }
 }; 
-
 //***********************************************STOCK LOOP*************
 //HI-LEVEL_UTILITIES*************************
 const getLastPriceClick = async ()=>{ //loop all for last close.
@@ -1938,21 +1940,22 @@ const getLastPriceClick = async ()=>{ //loop all for last close.
     for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
         tkrTGT = bankbookz_DB.TICKR_LIST[i];        
         tkr = tkrTGT.tkr;        
-        // if(getAPI_Limiter(tkr)){continue;} //CHECK LastRefreshTime
-        if(i>=1){break;}//DEV_limiter stay below 20
-        tkr = 'NVDA';//'NVDA';//DEV_specifier 
+        if(getAPI_Limiter(tkr)){continue;} //CHECK LastRefreshTime
+        // if(i>=1){break;}//DEV_limiter stay below 20
+        // tkr = 'AMZN';//'NVDA';//DEV_specifier 
         queries.push(tkr);
    }
    if(stock_api_key && queries.length){
         console.log('...get stocks & crypto...')
-        await getStock_Daily(queries);
+        await call_Various_Stock_API(queries);
         show_USERMSG({txt:'Data Updated',icon:'🛠️',time:3000});
     } else {
         show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
    }
+   console.log('SAVED NEW DATA')
    await save_BANKBOOKZ_DB();
 }
-const getStock_Daily = async (queries)=>{
+const call_Various_Stock_API = async (queries)=>{
    try{
       for(let i=0; i<queries.length;i++){
          console.log('Query:',queries[i])
@@ -1964,55 +1967,61 @@ const getStock_Daily = async (queries)=>{
             console.log('GET Crypto:',queries[i])
             await getCrypto_Daily(queries[i])
             continue;
+            //END CRYPTO QUERIES-----------------------------------
+         }else if(queries[i]==='NVDA'){ //ADJUSTED WEEKLY STOCKS.
+            await getStock_Weekly_Adjusted(queries[i]);
+            continue;
+         } else{
+            await getCrypto_Daily(queries[i])
+            continue;
          }
-         //END CRYPTO QUERIES-----------------------------------
         // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${queries[i]}&apikey=${stock_api_key}`)
-        await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
-        .then((data)=>{
-            if(data.ok){
-               return data.json();
-            } else{ debugger; }
-         }).then((tickData)=>{
-            if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
-                show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
-               return;
-            }
-            if(!tickData || !tickData["Meta Data"] || !tickData["Meta Data"]["2. Symbol"] ){
-               debugger; //todo
-            }
-            let resTKR = tickData["Meta Data"]["2. Symbol"];
-            if(resTKR==='NVDA'){debugger;}
-            if(!resTKR){return;}
-            console.log('GOT_STOCK:',resTKR)
-            // const tickDaily_RAW = tickData["Time Series (Daily)"]
-            const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
-            if(!tickDaily_RAW){return;}
-            let tickDaily_KEYS = Object.keys(tickDaily_RAW)     
-            let reduceData = 50; //too much data reduce from 2000 to 200.
-            tickDaily_KEYS = tickDaily_KEYS.splice(0,reduceData)        
-            tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.
-            const tickDaily_TV = [];
-            let obj;
-            let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
-            for (const aKey of tickDaily_KEYS) {  //FORMAT TO TRADING VIEW.
-                obj = tickDaily_RAW[aKey];
-                tickDaily_TV.push({
-                    tkr:resTKR,
-                    time: aKey,     
-                    open: parseFloat(obj["1. open"]),
-                    high: parseFloat(obj["2. high"]),    
-                    low: parseFloat(obj["3. low"]),     
-                    close: parseFloat(obj["4. close"]),    
-                    volume: Math.round( parseFloat(obj["5. volume"]) )     
-                });
-            }
-            bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
-            save_NEW_Stock_DAILY(tickDaily_TV)
-            bankbookz_DB.METASTATE.lastRefreshMap[resTKR]
-         }).catch((error)=>{
-            debugger;
-            console.log(error)
-         })
+        // // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
+        // .then((data)=>{
+        //     if(data.ok){
+        //        return data.json();
+        //     } else{ debugger; }
+        //  }).then((tickData)=>{
+        //     if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+        //         show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
+        //        return;
+        //     }
+        //     if(!tickData || !tickData["Meta Data"] || !tickData["Meta Data"]["2. Symbol"] ){
+        //        debugger; //todo
+        //     }
+        //     let resTKR = tickData["Meta Data"]["2. Symbol"];
+        //     // if(resTKR==='NVDA'){debugger;}
+        //     if(!resTKR){return;}
+        //     console.log('GOT_STOCK:',resTKR)
+        //     const tickDaily_RAW = tickData["Time Series (Daily)"]
+        //     // const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
+        //     if(!tickDaily_RAW){return;}
+        //     let tickDaily_KEYS = Object.keys(tickDaily_RAW)     
+        //     // let reduceData = 50; //too much data reduce from 2000 to 200.
+        //     // tickDaily_KEYS = tickDaily_KEYS.splice(0,reduceData)        
+        //     tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.
+        //     const tickDaily_TV = [];
+        //     let obj;
+        //     let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
+        //     for (const aKey of tickDaily_KEYS) {  //FORMAT TO TRADING VIEW.
+        //         obj = tickDaily_RAW[aKey];
+        //         tickDaily_TV.push({
+        //             tkr:resTKR,
+        //             time: aKey,     
+        //             open: parseFloat(obj["1. open"]),
+        //             high: parseFloat(obj["2. high"]),    
+        //             low: parseFloat(obj["3. low"]),     
+        //             close: parseFloat(obj["4. close"]),    
+        //             volume: Math.round( parseFloat(obj["5. volume"]) )     
+        //         });
+        //     }
+        //     bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
+        //     save_NEW_Stock_DAILY(tickDaily_TV)
+        //     bankbookz_DB.METASTATE.lastRefreshMap[resTKR]
+        // }).catch((error)=>{
+        //     debugger;
+        //     console.log(error)
+        // })
       }
    } catch(error) {
         debugger;
@@ -2020,17 +2029,18 @@ const getStock_Daily = async (queries)=>{
 }
 //********************************************END STOCK LOOP*************
 const getCrypto_Daily = async (tkrTGT)=>{
-    if(tkrTGT==='BTC'||tkrTGT==='ETH'){ debugger; };//console.log(`GET ${tkrTGT}`)}else{return}
+    // if(tkrTGT==='BTC'||tkrTGT==='ETH'){ debugger; };//console.log(`GET ${tkrTGT}`)}else{return}
     // if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
     if(!stock_api_key){return}
     let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${tkrTGT}&market=USD&interval=5min&apikey=${stock_api_key}`;
-    fetch(url).then((data)=>{
+    await fetch(url).then((data)=>{
         if(data.ok){ return data.json();} else{ console.log('err1');}
         }).then((tickResp)=>{
             let tkr = tickResp["Meta Data"]["2. Digital Currency Code"].toUpperCase();
             console.log('RESPONSE:',tkr);
             const tickDaily_RAW = tickResp["Time Series (Digital Currency Daily)"]
-            const tickDaily_KEYS = Object.keys(tickDaily_RAW)             
+            const tickDaily_KEYS = Object.keys(tickDaily_RAW)   
+            tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.          
             const tickDaily_TV = [];
             let obj;
             let lastRefreshTime = tickResp["Meta Data"]["6. Last Refreshed"];
@@ -2057,6 +2067,105 @@ const getCrypto_Daily = async (tkrTGT)=>{
             status.innerHTML='DISCONNECTED'            
     })
 }
+const getStock_Daily = async (tkr)=>{
+    await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${tkr}&apikey=${stock_api_key}`)
+    // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
+    .then((data)=>{
+        if(data.ok){
+            return data.json();
+        } else{ debugger; }
+        }).then((tickData)=>{
+        if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+            show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
+            return;
+        }
+        if(!tickData || !tickData["Meta Data"] || !tickData["Meta Data"]["2. Symbol"] ){
+            debugger; //todo
+        }
+        let resTKR = tickData["Meta Data"]["2. Symbol"];
+        // if(resTKR==='NVDA'){debugger;}
+        if(!resTKR){return;}
+        console.log('GOT_STOCK:',resTKR)
+        const tickDaily_RAW = tickData["Time Series (Daily)"]
+        // const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
+        if(!tickDaily_RAW){return;}
+        let tickDaily_KEYS = Object.keys(tickDaily_RAW)     
+        // let reduceData = 50; //too much data reduce from 2000 to 200.
+        // tickDaily_KEYS = tickDaily_KEYS.splice(0,reduceData)        
+        tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.
+        const tickDaily_TV = [];
+        let obj;
+        let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
+        for (const aKey of tickDaily_KEYS) {  //FORMAT TO TRADING VIEW.
+            obj = tickDaily_RAW[aKey];
+            tickDaily_TV.push({
+                tkr:resTKR,
+                time: aKey,     
+                open: parseFloat(obj["1. open"]),
+                high: parseFloat(obj["2. high"]),    
+                low: parseFloat(obj["3. low"]),     
+                close: parseFloat(obj["4. close"]),    
+                volume: Math.round( parseFloat(obj["5. volume"]) )     
+            });
+        }
+        bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
+        save_NEW_Stock_DAILY(tickDaily_TV)
+        bankbookz_DB.METASTATE.lastRefreshMap[resTKR]
+    }).catch((error)=>{
+        debugger;
+        console.log(error)
+    })
+}
+const  getStock_Weekly_Adjusted = async(tkr)=>{
+    await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${tkr}&apikey=${stock_api_key}`)
+    // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
+    .then((data)=>{
+        if(data.ok){
+            return data.json();
+        } else{ debugger; }
+        }).then((tickData)=>{
+        if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+            show_USERMSG({txt:'Daily Limit',icon:'⚠️'})
+            return;
+        }
+        if(!tickData || !tickData["Meta Data"] || !tickData["Meta Data"]["2. Symbol"] ){
+            debugger; //todo
+        }
+        let resTKR = tickData["Meta Data"]["2. Symbol"];
+        // if(resTKR==='NVDA'){debugger;}
+        if(!resTKR){return;}
+        console.log('GOT_STOCK:',resTKR)
+        // const tickDaily_RAW = tickData["Time Series (Daily)"]
+        const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
+        if(!tickDaily_RAW){return;}
+        let tickDaily_KEYS = Object.keys(tickDaily_RAW)     
+        let reduceData = 50; //too much data reduce from 2000 to 200.
+        tickDaily_KEYS = tickDaily_KEYS.splice(0,reduceData)        
+        tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.
+        const tickDaily_TV = [];
+        let obj;
+        let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
+        for (const aKey of tickDaily_KEYS) {  //FORMAT TO TRADING VIEW.
+            obj = tickDaily_RAW[aKey];
+            tickDaily_TV.push({
+                tkr:resTKR,
+                time: aKey,     
+                open: parseFloat(obj["1. open"]),
+                high: parseFloat(obj["2. high"]),    
+                low: parseFloat(obj["3. low"]),     
+                close: parseFloat(obj["4. close"]),    
+                volume: Math.round( parseFloat(obj["5. volume"]) )     
+            });
+        }
+        bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
+        save_NEW_Stock_DAILY(tickDaily_TV)
+        bankbookz_DB.METASTATE.lastRefreshMap[resTKR]
+    }).catch((error)=>{
+        debugger;
+        console.log(error)
+    })
+}
+//******************************************************END API****************
 function getAPI_Limiter(tkr){
     if(!bankbookz_DB.METASTATE.lastRefreshMap[tkr]){bankbookz_DB.METASTATE.lastRefreshMap[tkr]=''}
     let lastRefreshDay = bankbookz_DB.METASTATE.lastRefreshMap[tkr].split(' ')[0]
@@ -2104,14 +2213,12 @@ function save_NEW_Stock_DAILY(tickDaily_TV){
             //TODO: reverse data order across db and app? no. ASC for LWC DESC for Edit.
         }
     }
-    debugger;
     console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`)     
 }
 function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local storage
     let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
     let dupeCNT=0,newCNT=0;//DEDUPE:iterate localstorage, if same rec, continue, else, add rec.
-    debugger;
-    // tickDaily_TV.reverse();//align arrays, chronologically, else chart error.
+    // tickDaily_TV.reverse();//Sort ASC, else LWC error.
     for (const aTicker of tickDaily_TV) {
         ymd = aTicker.time.replace(/-/g, "_");
         // ym = ymd.split("_")[0] +"_"+ parseInt(ymd.split("_")[1]);//remove padding.
@@ -2146,7 +2253,6 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
             bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].push(aTicker); //ORDERED for LWC.
         }
     }
-    debugger;
     console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`) 
 }
 </script><!--*****************************END STOCK DATA API******************-->

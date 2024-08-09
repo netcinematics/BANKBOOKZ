@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Structs Example</title>
+		<title>Edit Structs</title>
 		
 		<style>
 			#chart {
@@ -26,9 +26,9 @@
 	</head>
 	<body style="background:black;">
 		<div id="description">
-			<h1 style="color:steelblue;">Structure Lines</h1>
+			<h1 style="color:steelblue;">Structure Line EDITOR</h1>
 			<p style="color:limegreen;">
-				Longpress or Hover, to set struct lines.
+				EDIT Structural lines, width, color. Hover, or Longpress to access Line Editor on mobile.
 			</p>
 		</div>	
 		<div id="chart"></div>
@@ -36,24 +36,23 @@
             position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
             padding: 0.222em 0.666em 0.222em 0.666em;    box-shadow: inset 1px 3px 8px blue;
             display: flex;justify-content: space-between; align-items: center; width: 250px;">
-            <span><span class="editorBTN" onclick="((event)=>{
-                let linePrice = event.target.parentElement.parentElement.getAttribute('datapt')
-                if(linePrice==='none'){return}
-                setLinePrice(linePrice,{size:'sml'})
-                  })(event)">sm</span>
-                  <span class="editorBTN" onclick="((event)=>{
+            <span><span class="editorBTN"  onclick="smlLine(event)">sml</span>
+                  <span class="editorBTN"  onclick="medLine(event)">med</span>
+                <!-- </span>onclick="((event)=>{
 
                     let linePrice = event.target.parentElement.parentElement.getAttribute('datapt')
                     debugger;
                     if(linePrice==='none'){return}
                     structs.setPricelines([{price: 666, line:line}])
                     // setLinePrice(linePrice,{size:'med'})
-                  })(event)">med</span>
-                  <span class="editorBTN" onclick="medLine(event)">lrg</span></span>
-            <input type="color" value = "#003264" style="border: 1px solid blueviolet;border-radius: 44px; background: black;"/>
+                  })(event)">med</span> -->
+                  <span class="editorBTN" onclick="lrgLine(event)">lrg</span></span>
+            <input type="color" value = "#003264" style="border: 1px solid blueviolet;border-radius: 44px; background: black;"
+            onchange="setLineColor(event)"/>
             <span onclick="((event) => {
                 event.target.parentElement.style.visibility = 'hidden'
-            })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; box-shadow: inset -2px 0px 2px steelblue;
+            })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+            box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
                 border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
         </div>
     <!-- ***********DRAW CHART MODULE  -->
@@ -69,18 +68,30 @@
     const data = getMockData();
     priceSeries.setData(data);
     let structs = new SetPriceLine_Class(priceChart,priceSeries,{ color: "steelblue"});
+    // -- EXAMPLE--------------------------------------------------
     let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
     structs.setPricelines([{price: 444, line:line}])
-    function medLine(e){
-        debugger;
-//         ((event)=>{
-
-// let linePrice = event.target.parentElement.parentElement.getAttribute('datapt')
-// if(linePrice==='none'){return}
-// structs.setPricelines([{price: 666, line:line}])
-// setLinePrice(linePrice,{size:'lrg'})
-// })(event)
-
+    //-----------------------------------------------LINE EDITOR---------
+    window.smlLine = (event) => {
+        let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,size:'sml' });
+    }    
+    window.medLine = (event) => {
+        let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,size:'med' });
+    }
+    window.lrgLine = (event) => {
+        let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,size:'lrg' });
+    }
+    window.setLineColor = (event) => {
+        let lineColor = event.target.value;
+        let linePrice = Math.round(event.target.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,color:lineColor});
     }
 </script>
 </body>

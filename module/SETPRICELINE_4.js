@@ -14,13 +14,13 @@ const rawSymbol1 = "M7.5,7.5 m -7,0 a 7,7 0 1,0 14,0 a 7,7 0 1,0 -14,0 M4 7.5H11
 const symbol1 = new Path2D(rawSymbol1)
 // const magicToken15 = 15;
 class PriceLineUpdate_Class {
-    constructor(t) {
+    constructor(data) {
         addMember(this, "_y", 0);
         addMember(this, "_data");
-        this._data = t
+        this._data = data
     }
-    update(t, i) {
-        if (this._data = t,
+    update(data, i) {
+        if (this._data = data,
         !this._data.price) {
             this._y = -1e4;
             return
@@ -29,9 +29,9 @@ class PriceLineUpdate_Class {
     }
 }
 class PriceLineDraw_Class {
-    constructor(t) {
+    constructor(data) {
         addMember(this, "_data");
-        this._data = t
+        this._data = data
     }
     draw(t) {
         if(this._data.visible ){
@@ -59,7 +59,7 @@ class PriceLineDraw_Class {
                 // }
 
                 if(this._data.visibleDel){
-                    ctx.fillStyle = "crimson";
+                    // ctx.fillStyle = "crimson";
                     //BTN2
                     const btnW2 = g(this._data.leftX + marginOffset + 1, this._data.leftX + 1, i.horizontalPixelRatio)
                     const btnH2 = L(this._data.y, i.verticalPixelRatio, marginOffset);
@@ -89,7 +89,7 @@ class PriceLineDraw_Class {
                 ctx.scale(1, 1),
                 ctx.strokeStyle = this._data.textColor,
                 ctx.lineWidth = 1;
-                if(this._data.visibleDel){// Draw the X
+                if(this._data.visibleDel){//Draw X BTN.
                     ctx.beginPath();
                     ctx.moveTo(2, 2);
                     ctx.lineTo(12, 12);
@@ -111,7 +111,7 @@ class PriceLineDraw_Class {
         }
     }
 }
-class PriceLineRenderer_Class extends PriceLineUpdate_Class {
+class EditBtnRenderer_Class extends PriceLineUpdate_Class {
     renderer() {
         const t = this._data.crosshairColor;
         return new PriceLineDraw_Class({visible: this._data.visible,y: this._y,color: t,
@@ -123,7 +123,7 @@ class PriceLineRenderer_Class extends PriceLineUpdate_Class {
     }
     zOrder() { return "top" }
 }
-class PriceLinePane_Class extends plugBase {
+class EditBtn_Class extends plugBase {
     constructor(i) {
         super();
         addMember(this, "_paneViews");
@@ -136,7 +136,7 @@ class PriceLinePane_Class extends plugBase {
             visibleDel:false
         });
         addMember(this, "_source");
-        this._paneViews = [new PriceLineRenderer_Class(this._data)],
+        this._paneViews = [new EditBtnRenderer_Class(this._data)],
         this._source = i
     }
     updateAllViews() {
@@ -205,7 +205,7 @@ class SetPriceLine_Class {
         },
         this._chart.subscribeClick(this._clickHandler),
         this._chart.subscribeCrosshairMove(this._moveHandler),
-        this._labelButtonPrimitive = new PriceLinePane_Class(this),
+        this._labelButtonPrimitive = new EditBtn_Class(this),
         series.attachPrimitive(this._labelButtonPrimitive),
         this._setCrosshairMode()
     }
@@ -225,26 +225,18 @@ class SetPriceLine_Class {
     }
     _onClick(t) {
         const mousePrice = this._getMousePrice(t)
-        let editor = document.getElementById('lineEditor')
-        editor.setAttribute('datapt',mousePrice); //set editor state
-        // const aMargin = this._distanceFromRightScale(t);
         const aMargin = this._distanceFromLeftScale(t);
-        if(aMargin>=marginOffset){ //Click Edit Line
-            // setTimeout(this._showLineEditPane,3000)
+        if(aMargin>=marginOffset){ //*********************CLICK EDIT LINE */
             showLineEditMenu(t,mousePrice);
             return;
         }
         let line;
-        // if(mousePrice === null || aMargin === null || aMargin > marginOffset || !this._series){return}
         if(mousePrice === null || aMargin === null || !this._series){return}
         if(this._labelButtonPrimitive._deleteLineCheck()){
-
             for(var i=0;i<this._pricelines.length;i++){
                 line = this._pricelines[i];
-                if(Math.round(line.price)===Math.round(mousePrice)//with buffer
-                || Math.round(line.price) < Math.round(mousePrice+12)
-                && Math.round(line.price) > Math.round(mousePrice-12)
-                ){
+                if( priceWithinBuffer(line.price,mousePrice)
+                ){ //FOUND ITEM WITH BUFFER and DELETE.
                     this._series.removePriceLine(this._pricelines[i].line)
                     this._pricelines.splice(i,1);
                     break;
@@ -252,22 +244,15 @@ class SetPriceLine_Class {
             }    
             this._labelButtonPrimitive.hideAddLabel();
         } else { //New priceline
-            let newLine = this._series.createPriceLine({price: mousePrice, color: this._options.color, lineStyle: 2/*Dashed*/ // lineStyle: m.Dashed
-            })
+            let newLine = this._series.createPriceLine({price: mousePrice, color: this._options.color, 
+                lineStyle:LightweightCharts.LineStyle.Dotted, lineSize:1}) 
             this._pricelines.push({price:Math.round(mousePrice),line:newLine})
-
         }
-        // this._pricelines.push({price:Math.round(mousePrice)})
-        // this._series.createPriceLine({price: mousePrice, color: this._options.color, lineStyle: 2/*Dashed*/ // lineStyle: m.Dashed
-        // })
     }
     _onMouseMove(t) {
         const mousePrice = this._getMousePrice(t)
-        // const rMargin = this._distanceFromRightScale(t);
         const aMargin = this._distanceFromLeftScale(t);
-        // const showZone = 18;
         if (mousePrice === null || aMargin === null ){//|| aMargin > marginOffset * showZone) {
-            // this._labelButtonPrimitive.hideAddLabel(); //No need to hide.
             return
         }
         if(this.hoverLine(mousePrice)){ //DELETE LINE
@@ -275,15 +260,12 @@ class SetPriceLine_Class {
         }else{ //ADD NEW LINE
             this._labelButtonPrimitive.showAddLabel(mousePrice, aMargin < marginOffset)
         }
-        // this._labelButtonPrimitive.showAddLabel(i, e < h) //original
     }
     hoverLine(mousePrice){
         let item;
         for(var i=0; i< this._pricelines.length;i++){
             item = this._pricelines[i];
-            if( Math.round(item.price) === Math.round(mousePrice) //with buffer
-                || Math.round(item.price) < Math.round(mousePrice+12)
-                && Math.round(item.price) > Math.round(mousePrice-12)
+            if( priceWithinBuffer(item.price,mousePrice)
             ){  return true; } //found line
         }    
         return false;
@@ -293,26 +275,57 @@ class SetPriceLine_Class {
     }
     _distanceFromLeftScale(t) {
         if (!t.point || !this._chart){ return null; }
-        // const chartWidth = this._chart.timeScale().width();
         return Math.abs(t.point.x)
-        // return Math.abs(chartWidth - t.point.x)
     }
-    // _distanceFromRightScale(t) {
-    //     if (!t.point || !this._chart)
-    //         return null;
-    //     const i = this._chart.timeScale().width();
-    //     return Math.abs(i - t.point.x)
-    // }
-    // _showLineEditPane(){
-    //     debugger;
-    // }    
     setPricelines(priceLineArr){
         try{ this._pricelines.push(...priceLineArr)
         } catch (e){ console.log('Param expects array')  }
     }
+    editPriceLine(config){
+        let item,opts={},lw=1,ls=LightweightCharts.LineStyle.Dotted;
+        for(var i=0;i<this._pricelines.length;i++){
+            item = this._pricelines[i];
+            if( priceWithinBuffer(item.price,config.price)
+            ){  //found price to edit with selection buffer;
+                opts.price = Math.round(item.price);
+                if(config.size){
+                    if(config.size==='lrg'){
+                        lw=2;
+                        ls=LightweightCharts.LineStyle.Dashed;
+                    }else if (config.size==='med'){
+                        lw=1;
+                        ls=LightweightCharts.LineStyle.Dashed;
+                    }else{
+                        lw=1;
+                        ls=LightweightCharts.LineStyle.Dotted;
+                    } //'sml' default.
+                    if(item.line){ //UPDATE LINE attributes
+                        item.line.applyOptions({ lineWidth: lw, lineStyle: ls });
+                    } 
+                }
+                if(config.color){
+                    if(item.line){ //UPDATE LINE attributes
+                        item.line.applyOptions({ color:config.color });
+                    } 
+                }
+            } else{
+                console.log('NOT FOUND',config.price)
+            }
+        }
+    }
+}
+function priceWithinBuffer(itemPrice,mousePrice){
+    let maxTop = Math.round(itemPrice + (itemPrice*0.05) );
+    let maxBtm = Math.round(itemPrice - (itemPrice*0.05) );
+  
+    let foundPrice = false;
+    if(mousePrice<maxTop && mousePrice>maxBtm){foundPrice=true;}
+    return foundPrice;
 }
 function showLineEditMenu(e, mousePrice){
     const lineEditor = document.getElementById('lineEditor')
+    lineEditor.setAttribute('datapt',mousePrice); //set editor state
+    console.log('SetMousePrice',mousePrice)
     lineEditor.style.visibility='visible';
     lineEditor.style.top=e.sourceEvent.clientY+22+'px';
     lineEditor.style.left=e.sourceEvent.clientX+22+'px';
