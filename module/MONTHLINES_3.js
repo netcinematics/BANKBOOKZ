@@ -1,12 +1,6 @@
 var _ = Object.defineProperty;
-var u = (s,t,e)=>t in s ? _(s, t, {
-    enumerable: !0,
-    configurable: !0,
-    writable: !0,
-    value: e
-}) : s[t] = e;
-var addMember = (s,t,e)=>(u(s, typeof t != "symbol" ? t + "" : t, e),
-e);
+var u = (s,t,e)=>t in s ? _(s, t, { enumerable: !0, configurable: !0, writable: !0, value: e}) : s[t] = e;
+var addMember = (s,t,e)=>(u(s, typeof t != "symbol" ? t + "" : t, e),e);
 // import {V as p} from "./lightweight-charts.production-7ee7078d.js";
 // import {g as w} from "./sample-data-c7d89ab8.js";
 // import {p as m} from "./positions-0a54307c.js";
@@ -26,12 +20,7 @@ class VLineDraw_Class {
     draw(t) {
         t.useBitmapCoordinateSpace(e=>{
             if (this._x === null){ return; }
-            // debugger;
-            // if (this._y === null){ return; }
             const ctx = e.context
-            // const rect = m(this._x, e.horizontalPixelRatio, this._options.width);
-            // ctx.fillStyle = this._options.color,
-            // ctx.fillRect(rect.position, 0, rect.length, e.bitmapSize.height)
             // ******************************DRAW MONTH LINES****************
             const p1x = this._x;
             const p1y = 1;
@@ -109,9 +98,7 @@ class VLineRender_Class {
         this._x = t.timeToCoordinate(this._source._time)
         this._y = this._source._series.priceToCoordinate(this._source._price);
     }
-    renderer() {
-        return new VLineDraw_Class(this._x,this._y,this._options)
-    }
+    renderer() { return new VLineDraw_Class(this._x,this._y,this._options) }
 }
 class VLinePane_Class {
     constructor(t, e) {
@@ -125,28 +112,15 @@ class VLinePane_Class {
         const t = this._source._chart.timeScale();
         this._x = t.timeToCoordinate(this._source._time)
     }
-    visible() {
-        return this._options.showLabel
-    }
-    tickVisible() {
-        return this._options.showLabel
-    }
-    coordinate() {
-        return this._x ?? 0
-    }
-    text() {
-        return this._options.labelText
-    }
-    textColor() {
-        return this._options.labelTextColor
-    }
-    backColor() {
-        return this._options.labelBackgroundColor
-    }
+    visible() { return this._options.showLabel }
+    tickVisible() { return this._options.showLabel }
+    coordinate() { return this._x ?? 0   }
+    text() { return this._options.labelText  }
+    textColor() { return this._options.labelTextColor  }
+    backColor() { return this._options.labelBackgroundColor }
 }
 const vline_Default_Options = {
-    color: "green",labelText: "",width: 3,labelBackgroundColor: "green",labelTextColor: "white",
-    showLabel: !1
+    color: "green",labelText: "",width: 3,labelBackgroundColor: "green",labelTextColor: "white", showLabel: !1
 };
 class MonthTrendLines_Class {
     constructor(chart, series, timeVal, priceVal, usrOpts) {
@@ -168,16 +142,13 @@ class MonthTrendLines_Class {
         this._paneViews.forEach(t=>t.update()),
         this._timeAxisViews.forEach(t=>t.update())
     }
-    timeAxisViews() {
-        return this._timeAxisViews
-    }
-    paneViews() {
-        return this._paneViews
-    }
+    timeAxisViews() { return this._timeAxisViews }
+    paneViews() { return this._paneViews }
 }
 
 export {MonthTrendLines_Class as MonthTrendLines_Class};
 
+// EXAMPLE:-----------------------------------------------
 // const lineChart = lwcprod("chart", {autoSize: !0})
 // const lineSeries = lineChart.addLineSeries()
 // const data = getMockData();

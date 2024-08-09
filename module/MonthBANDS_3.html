@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bands Example</title>
+    <title>Band Volume</title>
     <!-- <script type="module" crossorigin src="./line_1.js"></script> -->
     <!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
     <link rel="modulepreload" crossorigin href="./plugin-base.js">
@@ -32,13 +32,10 @@
     lineSeries.setData(dataSet);
     const BandsChart = new BandsChart_Class;
     lineSeries.attachPrimitive(BandsChart);
-
     // import {P as lwcprod} from "./lwc.prod.js";
     // import {g as getRandomDataSet} from "./sample-data.js";
+    //**************************************** DRAW MONTH LINES ********************
     import {MonthTrendLines_Class as MonthTrendLines_Class} from "./MONTHLINES_3.js";
-
-    // //**************************************** DRAW MONTH LINES ********************
-    // ******************************VOLUME-SERIES*******************************
     let MonthStartDates = []
     dataSet.forEach(data => {
         const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
@@ -65,79 +62,15 @@
     }
 //*********************************************************VOLUME SERIES*******
     const volumeSeries = LineChart.addHistogramSeries({
-    color: '#26a69a',
-    priceFormat: {
-        type: 'volume',
-    },
-    priceScaleId: '', // set as an overlay by setting a blank priceScaleId
-    // set the positioning of the volume series
-    scaleMargins: {
-        top: 0.7, // highest point of the series will be 70% away from the top
-        bottom: 0,
-    },
-});
-volumeSeries.priceScale().applyOptions({
-    scaleMargins: {
-        top: 0.7, // highest point of the series will be 70% away from the top
-        bottom: 0,
-    },
-});
+        color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '', // set as an overlay by setting a blank priceScaleId
+        scaleMargins: { top: 0.7, // highest point of the series will be 70% away from the top
+            bottom: 0 },
+    });
+    volumeSeries.priceScale().applyOptions({
+        scaleMargins: { top: 0.7, // highest point of the series will be 70% away from the top
+            bottom: 0 },
+    });
 volumeSeries.setData([
-    // { time: '2018-10-19', value: 19103293.00, color: '#26a69a' },
-    // { time: '2018-10-22', value: 21737523.00, color: '#26a69a' },
-    // { time: '2018-10-23', value: 29328713.00, color: '#26a69a' },
-    // { time: '2018-10-24', value: 37435638.00, color: '#26a69a' },
-    // { time: '2018-10-25', value: 25269995.00, color: '#ef5350' },
-    // { time: '2018-10-26', value: 24973311.00, color: '#ef5350' },
-    // { time: '2018-10-29', value: 22103692.00, color: '#26a69a' },
-    // { time: '2018-10-30', value: 25231199.00, color: '#26a69a' },
-    // { time: '2018-10-31', value: 24214427.00, color: '#ef5350' },
-    // { time: '2018-11-01', value: 22533201.00, color: '#ef5350' },
-    // { time: '2018-11-02', value: 14734412.00, color: '#26a69a' },
-    // { time: '2018-11-05', value: 12733842.00, color: '#26a69a' },
-    // { time: '2018-11-06', value: 12371207.00, color: '#26a69a' },
-    // { time: '2018-11-07', value: 14891287.00, color: '#26a69a' },
-    // { time: '2018-11-08', value: 12482392.00, color: '#26a69a' },
-    // { time: '2018-11-09', value: 17365762.00, color: '#26a69a' },
-    // { time: '2018-11-12', value: 13236769.00, color: '#26a69a' },
-    // { time: '2018-11-13', value: 13047907.00, color: '#ef5350' },
-    // { time: '2018-11-14', value: 18288710.00, color: '#26a69a' },
-    // { time: '2018-11-15', value: 17147123.00, color: '#26a69a' },
-    // { time: '2018-11-16', value: 19470986.00, color: '#26a69a' },
-    // { time: '2018-11-19', value: 18405731.00, color: '#26a69a' },
-    // { time: '2018-11-20', value: 22028957.00, color: '#ef5350' },
-    // { time: '2018-11-21', value: 18482233.00, color: '#ef5350' },
-    // { time: '2018-11-23', value: 7009050.00, color: '#ef5350' },
-    // { time: '2018-11-26', value: 12308876.00, color: '#26a69a' },
-    // { time: '2018-11-27', value: 14118867.00, color: '#26a69a' },
-    // { time: '2018-11-28', value: 18662989.00, color: '#ef5350' },
-    // { time: '2018-11-29', value: 14763658.00, color: '#ef5350' },
-    // { time: '2018-11-30', value: 31142818.00, color: '#26a69a' },
-    // { time: '2018-12-03', value: 27795428.00, color: '#ef5350' },
-    // { time: '2018-12-04', value: 21727411.00, color: '#ef5350' },
-    // { time: '2018-12-06', value: 26880429.00, color: '#ef5350' },
-    // { time: '2018-12-07', value: 16948126.00, color: '#ef5350' },
-    // { time: '2018-12-10', value: 16603356.00, color: '#26a69a' },
-    // { time: '2018-12-11', value: 14991438.00, color: '#26a69a' },
-    // { time: '2018-12-12', value: 18892182.00, color: '#ef5350' },
-    // { time: '2018-12-13', value: 15454706.00, color: '#ef5350' },
-    // { time: '2018-12-14', value: 13960870.00, color: '#ef5350' },
-    // { time: '2018-12-17', value: 18902523.00, color: '#ef5350' },
-    // { time: '2018-12-18', value: 18895777.00, color: '#ef5350' },
-    // { time: '2018-12-19', value: 20968473.00, color: '#26a69a' },
-    // { time: '2018-12-20', value: 26897008.00, color: '#ef5350' },
-    // { time: '2018-12-21', value: 55413082.00, color: '#ef5350' },
-    // { time: '2018-12-24', value: 15077207.00, color: '#ef5350' },
-    // { time: '2018-12-26', value: 17970539.00, color: '#26a69a' },
-    // { time: '2018-12-27', value: 17530977.00, color: '#26a69a' },
-    // { time: '2018-12-28', value: 14771641.00, color: '#26a69a' },
-    // { time: '2018-12-31', value: 15331758.00, color: '#26a69a' },
-    // { time: '2019-01-02', value: 13969691.00, color: '#ef5350' },
-    // { time: '2019-01-03', value: 19245411.00, color: '#26a69a' },
-    // { time: '2019-01-04', value: 17035848.00, color: '#26a69a' },
-    // { time: '2019-01-07', value: 16348982.00, color: '#26a69a' },
-    // { time: '2019-01-08', value: 21425008.00, color: '#26a69a' },
-    // { time: '2019-01-09', value: 18136000.00, color: '#ef5350' },
     { time: '2019-01-10', value: 14259910.00, color: '#26a69a' },
     { time: '2019-01-11', value: 15801548.00, color: '#26a69a' },
     { time: '2019-01-14', value: 11342293.00, color: '#26a69a' },
@@ -233,7 +166,7 @@ volumeSeries.setData([
     { time: '2019-05-23', value: 11707083.00, color: '#ef5350' },
     { time: '2019-05-24', value: 8755506.00, color: '#26a69a' },
     { time: '2019-05-28', value: 3097125.00, color: '#26a69a' },
-]);
+ ]);
 //***********************************END VOLUME SERIES
 </script>
 </body>

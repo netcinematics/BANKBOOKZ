@@ -76,7 +76,7 @@ class LineRender_Class {
     }
 }
 const lineOptions = {width:2,showLabels:true,lineColor:"rgb(255, 69, 44)", //AVG ORANGE
-    labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
+    labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"
 };
 class TrendLine_Class { //chartElem,lwc,EndPoint,StartPoint
     constructor(elem, lwc, endpt, strtpt, s) {

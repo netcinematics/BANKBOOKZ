@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Edit Structs</title>
+		
+		<style>
+			#struct-chart {
+				border-top-left-radius: 0px;
+				border-top-right-radius: 0px;
+			}
+            .editorBTN{
+                color:aqua;    font-size: 0.666em;
+                padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
+                border-radius: 44%;margin-left: 1em;cursor: pointer;                
+            }
+		</style>
+		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
+		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+		<link rel="modulepreload" crossorigin href="./sample-data.js">
+		<link rel="modulepreload" crossorigin href="./plugin-base.js">
+		<link rel="modulepreload" crossorigin href="./positions.js"> -->
+        <script src="./lwc_dev_deriv_4.2.js"></script>
+		<link rel="stylesheet" href="./lwc.css">
+	</head>
+	<body style="background:black;">
+		<div id="description">
+			<h1 style="color:steelblue;">Structure Line EDITOR</h1>
+			<p style="color:limegreen;">
+				EDIT Structural lines, width, color. Hover, or Longpress to access Line Editor on mobile.
+			</p>
+		</div>	
+		<div id="struct-chart" style="display: flex;justify-content: center;"></div>
+		<div id="lineEditor" dataPt="none" style="border:solid 1px steelblue;visibility:hidden;
+            position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
+            padding: 0.222em 0.666em 0.222em 0.666em;    box-shadow: inset 1px 3px 8px blue;
+            display: flex;justify-content: space-between; align-items: center; width: 250px;">
+            <span><span class="editorBTN"  onclick="smlLine(event)">sml</span>
+                  <span class="editorBTN"  onclick="medLine(event)">med</span>
+                  <span class="editorBTN" onclick="lrgLine(event)">lrg</span></span>
+            <input type="color" value = "#003264" style="border: 1px solid blueviolet;border-radius: 44px; background: black;"
+            onchange="setLineColor(event)"/>
+            <span onclick="((event) => {
+                event.target.parentElement.style.visibility = 'hidden'
+            })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+            box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
+                border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
+        </div>
+<script type="module">//*******************************EDIT - LINE - STRUCTURE
+    import {SetPriceLine_Class as SetPriceLine_Class} from "./SETPRICELINE_5.js";  
+    import {g as getMockData} from "./sample-data.js";
+    const priceChart = LightweightCharts.createChart("struct-chart", { width:400, height:300,autoSize:false, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    const priceSeries = priceChart.addLineSeries()
+    const data = getMockData();
+    priceSeries.setData(data);
+    let structs = new SetPriceLine_Class(priceChart,priceSeries,{ color: "steelblue"});
+    // -- EXAMPLE--------------------------------------------------
+    let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    structs.setPricelines([{price: 444, line:line}])
+    //-----------------------------------------------LINE EDITOR---------
+    window.smlLine = (event) => {
+        let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,size:'sml' });
+    }    
+    window.medLine = (event) => {
+        let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,size:'med' });
+    }
+    window.lrgLine = (event) => {
+        let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,size:'lrg' });
+    }
+    window.setLineColor = (event) => {
+        let lineColor = event.target.value;
+        let linePrice = Math.round(event.target.parentElement.getAttribute('datapt') );
+        console.log('Editing:',linePrice)
+        structs.editPriceLine({ price: linePrice,color:lineColor});
+    }
+</script>
+</body>
+</html>
