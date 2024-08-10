@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bands Example</title>
+    <!-- <script type="module" crossorigin src="./line_1.js"></script> -->
+    <!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+    <link rel="modulepreload" crossorigin href="./plugin-base.js">
+    <link rel="modulepreload" crossorigin href="./positions.js"> -->
+    <!-- <link rel="modulepreload" crossorigin href="./trendlines.js"> -->
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+    <link rel="stylesheet" href="./lwc.css">
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">Moving Averages</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- Various moving averages,<br>- 1st class modules. ~:)</p>
+    </div>    
+    <div id="ma_chart" style="height:20em;margin-left:3em;"></div>
+<script type="module">
+import {calcMA,getFakeData} from "./moving_average_1.js";
+const chartOptions={layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
+const chart = LightweightCharts.createChart(document.getElementById('ma_chart'), chartOptions);
+const barData = getFakeData(500);
+const maData20 = calcMA(barData, 20);
+const maData120 = calcMA(barData, 100);
+const maData200 = calcMA(barData, 200);
+const maSeries20 = chart.addLineSeries({ color: 'yellow', lineWidth:2});
+const maSeries120 = chart.addLineSeries({ color: 'purple', lineWidth:2});
+const maSeries200 = chart.addLineSeries({ color: 'limegreen', lineWidth:2});
+maSeries20.setData(maData20);
+maSeries120.setData(maData120);
+maSeries200.setData(maData200);
+const candlestickSeries = chart.addCandlestickSeries({ upColor: '#26a69a',downColor: '#ef5350',
+    borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+candlestickSeries.setData(barData);
+</script>
+</body>
+</html>
