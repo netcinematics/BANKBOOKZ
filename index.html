@@ -139,7 +139,56 @@
     } /* focused item */
     .subSELECTOR:focus-visible{outline-color: teal;
     } /* focused item */
-    /**  *************************END SELECTOR**************************************/      
+    /**  *************************END SELECTOR**************************************/   
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 0px solid blue;
+    border-radius: 44%;
+    background-color: black;
+    cursor: pointer;
+    border: 2px solid purple;
+  background-color: #000;
+  color:aqua;
+  margin-left: 2em;
+}
+input[type="checkbox"]:after {
+  border: 2px solid #0fd05f;
+  border-radius: 3px;
+  background-color: #000;
+  border-radius: 44%;
+  /* width: 2px; */
+  /* min-width:2em; */
+  color:aqua;
+  width: 20px;
+  padding:0 0.111em 0 0.111em;
+  margin: -1px 0 0 -1px;
+  /* margin-left: 2em; */
+    /* height: 20px; */
+}
+input[type="checkbox"]:checked {
+    width: 20px;
+    /* min-width:2em; */
+  /* background-color: blue; */
+  content: '\2714'; /* Checkmark character */
+  border: 2px solid #0fd05f;
+  border-radius: 44%;
+  background-color: #000;
+  color:aqua;
+}   
+input[type="checkbox"]:checked:after {
+    width: 20px;
+    /* min-width:2em; */
+  background-color: blue;
+  content: '\2714'; /* Checkmark character */
+  border: 2px solid #0fd05f;
+  border-radius: 44%;
+  background-color: #000;
+  color:aqua;
+}   
     /** CUSTOM TV CHARTS *********************CHARTS******************************************/    
     .tv-lightweight-charts{ margin: 1em 0 1em 0; border-radius:13px;}
     /** END  TV CHARTS *************************CHARTS**************************************/   
@@ -276,16 +325,16 @@
                 </span>
             </menu>
             <article id="candelstickFRAME_XMPL" style="justify-content:center;
-                flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;width:98%">
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
             </article>
-            <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
-            border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;align-self:center;">
+            <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+                border-radius: 13px;margin: 0.444em 0;display: flex;border: solid 1px teal;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">PnL:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
                 </header>
-                <article id="baselineFRAME_XMPL" style="justify-content: center;
-                flex:1; display:flex;">
+                <article id="baselineFRAME_XMPL" style="justify-content: center;margin: 0.222em 0;
+                 display:flex; height:10em;">
                 </article>
                 <header style="font-size: 0.888em;margin-bottom:1em;display:flex;justify-content: space-between; padding: 2em 3em 0 2em">
                     <span>
@@ -309,21 +358,21 @@
                 </header>                  
             </section>            
             <menu id="trend_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height: 22em;">
                 <header class="expanderTITLE">Trends:</header>
                 <section id="trend_line_chart_xmpl" style="display: flex;justify-content: center;height: 20em;"></section>
             </menu>
             
             <menu id="bands_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
+                border-radius: 13px; flex:1; display:flex; margin: 0.444em 0;height: 22em;">
                 <header class="expanderTITLE">Bands:</header>
                 <section id="xmpl_bands_chart" style="display: flex;justify-content: center;height: 20em;"></section>
             </menu>
 
             <menu id="structs_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
+                border-radius: 13px; flex:1; display:flex; margin: 0.444em 0;height: 24em;">
                 <header class="expanderTITLE">Structs:</header>
-                <div id="xmpl-struct-chart" style="display: flex;justify-content: center;height:20em;"></div>
+                <div id="xmpl_struct_chart" style="display: flex;justify-content: center;height:22em;"></div>
                 <div id="lineEditor" dataPt="none" style="border:solid 1px steelblue;visibility:hidden;
                     position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
                     padding: 0.222em 0.666em 0.222em 0.666em;    box-shadow: inset 1px 3px 8px blue;
@@ -339,29 +388,12 @@
                     box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
                         border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
                 </div>
-
-
             </menu>
-
-            <!-- <menu id="selectorFRAME_XMPL" class="FRAME" style="align-items: center;
-                border-radius: 13px; flex:1; display:flex; width:82.222%;margin: 0.666em auto;">
-                <select style="max-height:2em;margin: 0 1em;" class="chartSELECTOR"
-                    onclick="getDataSelector(event.target)">
-                    <option value="true" selected>2024_10_NVDA</option>
-                    <option value="false">2023_11_AMZN</option>
-                    <option value="false">2022_20_COIN</option>
-                </select>
-                <aside id="selectorVIEW_XMPL" style="border: solid 1px steelblue;border-radius: 13px;
-                    padding: 1%;flex: 1"> </aside>
+            <menu id="avgs_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height: 22em;">
+                <header class="expanderTITLE">Averages:</header>
+                <div id="xmpl_avgs_chart" style="display: flex;justify-content: center;height:20em;"></div>
             </menu>
-            <menu id="dataFRAME_XMPL" class="FRAME" style="justify-content: center;
-                border-radius: 13px; flex:1; display:flex;flex-direction: column;">
-                <header class="expanderROW">
-                    <span class="expanderTITLE">METADATA:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
-                </header>
-                <section style="display:none;">...</section>
-            </menu> -->
         </section><!--***********************************************end BOOKFRAME-->     
     </section><!--end BOOKVIEW-->
 
@@ -658,7 +690,7 @@ function getDataSelector(e){
 <script  >// ********************MAIN DYNAMIC CHART**********************
 let DYNA_CHART_CANDLES = []; //for screen resize
 function init_DYNA_CHART_Candle(tgtELEM){
-    const chartOptions = {width:400,height:300,
+    const chartOptions = {width:400,height:300,autoSize:false,
         layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
             background:{type:'solid',color:'#000000'} },
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
@@ -789,7 +821,7 @@ function getCandleSubSELECT(tgtTKR){
 //******DYNA CHART - BASELINE*****************************************
 let DYNA_CHART_BASELINES = []; //for screen resize
 function init_DYNA_CHART_Baseline(tgtELEM){
-    const chartOptions = { width:300,height:100,
+    const chartOptions = { width:300,height:100,  autoSize:true,
         layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
     };
@@ -799,28 +831,28 @@ function init_DYNA_CHART_Baseline(tgtELEM){
     const data = [{ value: 1, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
     baselineSeries.setData(data);
     Dyna_Chart_Baseline.timeScale().fitContent();
-    resize_DYNA_CHART_Baseline(Dyna_Chart_Baseline);
+    // resize_DYNA_CHART_Baseline(Dyna_Chart_Baseline);
     DYNA_CHART_BASELINES.push(Dyna_Chart_Baseline); //for screen resize    
 }; //END INIT DYNA_CHART - baseline
-function resize_DYNA_CHART_Baseline(elem){
-    let frame = document.getElementsByClassName('dynamicBaseline')[0]
-    let maxWidth = (frame.offsetWidth>700)?700:(frame.offsetWidth<700)?frame.offsetWidth-40:frame.offsetWidth-60;//(frame.offsetWidth*0.1);
-    let maxHeight = 100;//(frame.offsetWidth>800)?600:frame.offsetWidth-200;  
-    if(maxWidth<100){return}
-    elem.resize(maxWidth, maxHeight);
-}; 
+// function resize_DYNA_CHART_Baseline(elem){
+//     let frame = document.getElementsByClassName('dynamicBaseline')[0]
+//     let maxWidth = (frame.offsetWidth>700)?700:(frame.offsetWidth<700)?frame.offsetWidth-40:frame.offsetWidth-60;//(frame.offsetWidth*0.1);
+//     let maxHeight = 100;//(frame.offsetWidth>800)?600:frame.offsetWidth-200;  
+//     if(maxWidth<100){return}
+//     elem.resize(maxWidth, maxHeight);
+// }; 
 //*************************************************END DYNA-CHART BASELINE***********
 //******************************SCREEN RESIZE - DYNA CHART***********
-window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
-    for(var j=0; j<DYNA_CHART_CANDLES.length;j++){
-        tgtTKR = DYNA_CHART_CANDLES[j];
-        resize_DYNA_CHART_Candle(tgtTKR)
-    }  
-    for(var j=0; j<DYNA_CHART_BASELINES.length;j++){
-        tgtTKR = DYNA_CHART_BASELINES[j];
-        resize_DYNA_CHART_Baseline(tgtTKR)
-    }  
-});
+// window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
+//     for(var j=0; j<DYNA_CHART_CANDLES.length;j++){
+//         tgtTKR = DYNA_CHART_CANDLES[j];
+//         resize_DYNA_CHART_Candle(tgtTKR)
+//     }  
+//     for(var j=0; j<DYNA_CHART_BASELINES.length;j++){
+//         tgtTKR = DYNA_CHART_BASELINES[j];
+//         resize_DYNA_CHART_Baseline(tgtTKR)
+//     }  
+// });
 //******************************SCREEN RESIZE - DYNA CHART***********
 //*******GET DATA for - DYNA CHART***********
 function getMarker_TRADE_DATA(aTKR){
@@ -904,6 +936,7 @@ function getMarker_TRADE_DATA(aTKR){
     }
     else if (currentSELECTORZ.length>1) {  //RETURN MULTIPLE MONTH MARKERS.
         let moTGT,tradeSET;
+        // debugger;
         for(var i = 0; i< currentSELECTORZ.length; i++){ //multi month
             moTGT = currentSELECTORZ[i].innerText.split('\nx')[0];//trim delete btn
             tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[moTGT];
@@ -932,6 +965,7 @@ function getMarker_TRADE_DATA(aTKR){
         }
         return tradeMarkerData;
     } else if (monthlySELECTOR.indexOf('_')>-1) {  //RETURN SINGLE MONTH MARKERS.
+        // debugger;
         let tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthlySELECTOR];
         if(!tradeSET){console.log('No Monthly Data'); return [];}
 
@@ -1124,14 +1158,10 @@ function initCandleChart_XMPL(){
     ]);
     //END: AREA-SERIES******************************************************        
     // CANDLESTICK-SERIES******************************************************        
-    const candlestickSeries = CandlestickChart1.addCandlestickSeries({
-        priceScaleId: 'left',
-        layout: { textColor: 'steelblue', 
+    const candlestickSeries = CandlestickChart1.addCandlestickSeries({ //width: 600, height: 300, 
+        priceScaleId: 'left',layout: { textColor: 'steelblue',autoSize:false,
         background: { type: 'solid', color: '#000000' } }  ,
-        wickUpColor: "#26a69a",
-        upColor: "#26a69a",
-        wickDownColor: "rgb(225, 50, 85)",
-        downColor: "rgb(225, 50, 85)",
+        wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
     candlestickSeries.setData([
         {time: '2018-12-22', open: 7511.16, high: 8211.84, low: 3611.16, close: 4511.72 },{time: '2018-12-23', open: 4511.12, high: 5311.90, low: 4511.12, close: 4811.09 },
@@ -1154,7 +1184,7 @@ function resizeCandlestickChart1(){
 //*************************************************MAIN BASELINE CHART***********
 let BaselineChart_XMPL;
 function initBaselineChart_XMPL(){
-    const chartOptions = { 
+    const chartOptions = {  width: 400, height: 300, autoSize:true,
         layout: { textColor: 'white', background: { type: 'solid', color: 'black' } },
         grid: { vertLines: { color: "#222" }, horzLines: { color: "#282828" } }, 
     };
@@ -1165,19 +1195,19 @@ function initBaselineChart_XMPL(){
     BaselineChart_XMPL.timeScale().fitContent();
 }; initBaselineChart_XMPL(); 
 
-function resizeBaselineChart_XMPL(){
-    let frame = document.getElementById('baselineFRAME_XMPL');
-    let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
-    let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
-    if(maxWidth<100){return}
-    BaselineChart_XMPL.resize(maxWidth, maxHeight);
-}; resizeBaselineChart_XMPL();
+// function resizeBaselineChart_XMPL(){
+//     let frame = document.getElementById('baselineFRAME_XMPL');
+//     let maxWidth = (frame.offsetWidth>800)?700:(frame.offsetWidth<400)?frame.offsetWidth-0:frame.offsetWidth-80;//(frame.offsetWidth*0.1);
+//     let maxHeight = 100;//(frame.offsetWidth>800)?300:frame.offsetWidth-300;
+//     if(maxWidth<100){return}
+//     BaselineChart_XMPL.resize(maxWidth, maxHeight);
+// }; resizeBaselineChart_XMPL();
 //*************************************************END MAIN BASELINE CHART***********
 //**EVENT-HANDLERS*****************************************************
-window.addEventListener('resize', () => {
-    resizeCandlestickChart1();
-    resizeBaselineChart_XMPL();
-});
+// window.addEventListener('resize', () => {
+    // resizeCandlestickChart1();
+    // resizeBaselineChart_XMPL();
+// });
 //**END EVENT-HANDLERS*****************************************************
 </script><!--****************************************END CHART IMPLEMENTATION-->
 <script  > //*********************MAIN_APP**************************
@@ -1712,17 +1742,40 @@ const init_BOOKZ_TABZ = ()=>{
                 </menu>
             </section>
             <section id="trendsBOX_${tgtTKR.tkr}" style="justify-content:center;
-                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.444em 0.666em 0.444em 0.666em;
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
                 flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">Trends:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;flex-direction: column;">
-                    <article id="trendsFRAME_${tgtTKR.tkr}" class="dynamicTrends" style="justify-content:center;
+                    <article id="trendzFRAME_${tgtTKR.tkr}" class="dynamicTrends" style="justify-content:center;
                         flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
                         <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                     </article>
+
+                    <menu style="justify-content: center;border-radius: 13px; display: flex; margin-top: 0;
+                        padding: 1em 0 0 0; height: 4em; flex-wrap: wrap; ">
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="linez_opt_${tgtTKR.tkr}">
+                        <label for="linez_opt">linez</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="candlez_opt_${tgtTKR.tkr}">
+                        <label for="candlez_opt">candlez</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="avgz_opt_${tgtTKR.tkr}">
+                        <label for="avgz_opt">avgz</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="volz_opt_${tgtTKR.tkr}">
+                        <label for="volz_opt">volz</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="3dz_opt_${tgtTKR.tkr}">
+                        <label for="3dz_opt">3dz</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="greenband_opt_${tgtTKR.tkr}">
+                        <label for="greenband_opt">gband</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="bollz_opt_${tgtTKR.tkr}">
+                        <label for="bollz_opt">boll's</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="cci_opt_${tgtTKR.tkr}">
+                        <label for="cci_opt">cci</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="mom_opt_${tgtTKR.tkr}">
+                        <label for="mom_opt">mom</label>
+                    </menu>
+
                     <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
                         margin-top: 0;padding: 1em 0 0 0;">
                         <span><div style="background:blue;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
@@ -1737,10 +1790,10 @@ const init_BOOKZ_TABZ = ()=>{
                 </section>
             </section>
             <section id="structsBOX_${tgtTKR.tkr}" style="justify-content:center;
-                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.444em 0.666em 0.444em 0.666em;
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
                 flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
                 <header class="expanderROW">
-                    <span class="expanderTITLE">Structs:</span>
+                    <span class="expanderTITLE">Draw:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;flex-direction: column;">
@@ -1749,10 +1802,9 @@ const init_BOOKZ_TABZ = ()=>{
                         <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                     </article>
                     <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
-                        margin-top: 0;padding: 1em 0 0 0;">
                         <span><div style="background:blue;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                            margin-right: 0.5em;"></div>
-                            <span style="font-size:0.666em;color:royalblue">BUY</span>
+                        margin-right: 0.5em;"></div>
+                        <span style="font-size:0.666em;color:royalblue">BUY</span>
                         </span>
                         <span><div style="background:purple;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                             margin-right: 0.5em;"></div>
@@ -1761,49 +1813,53 @@ const init_BOOKZ_TABZ = ()=>{
                     </menu>
                 </section>
             </section>
+
             <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
-            border-radius: 13px; flex:1; display:flex;border:solid 1px teal;width:90%;margin: 1em auto;">
+            border-radius:22.222px;  display:flex;border:solid 1px teal;padding: 0.222em 0.888em 0.222em 0.888em;
+            margin: 0.222em 0 0.222em 0;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">PnL:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none; flex-direction:column;">
-                <article id="baselineFRAME_${tgtTKR.tkr}" class="dynamicBaseline" style="display:flex;justify-content:center;flex:1;">
-                </article>
-                <footer style="font-size:0.888em;margin-bottom:1em;display:flex;
-                    justify-content:space-between; padding: 0em 3em 0 2em">
-                    <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                        margin-right: 0.5em;"></div>
-                        <span style="font-size:0.666em;">BANK:</span>
-                        <span style="font-size:0.666em;">444</span>
-                    </span>                        
-                    <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                        margin-right: 0.5em;"></div>
-                        <span style="font-size:0.666em;">BOOK:</span>
-                        <span style="font-size:0.666em;">1,234</span>
-                    </span>
-                    <span>
-                        <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                        margin-right: 0.5em;"></div>                        
-                        <span style="font-size:0.666em;margin-top: 0.333em;color:steelblue">NET(PnL):</span>
-                        <span style="font-size:0.666em;">234</span>
-                    </span>
+                    <article id="baselineFRAME_${tgtTKR.tkr}" class="dynamicBaseline" style="display:flex;justify-content:center;flex:1;">
+                    </article>
+                    <footer style="font-size:0.888em;margin-bottom:1em;display:flex;
+                        justify-content:space-between; padding: 0em 3em 0 2em">
+                        <span>
+                            <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;">BANK:</span>
+                            <span style="font-size:0.666em;">444</span>
+                        </span>                        
+                        <span>
+                            <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;">BOOK:</span>
+                            <span style="font-size:0.666em;">1,234</span>
+                        </span>
+                        <span>
+                            <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>                        
+                            <span style="font-size:0.666em;margin-top: 0.333em;color:steelblue">NET(PnL):</span>
+                            <span style="font-size:0.666em;">234</span>
+                        </span>
+                    </footer>                  
+                </section>            
+            </section> 
 
-                </footer>                  
-            </section>            
-            </section>            
-                <menu id="dataFRAME_${tgtTKR.tkr}" class="FRAME" style="justify-content: center;border: 1px solid purple;
-    box-shadow: 1px 1px 8px purple;
-                    border-radius: 13px; flex:1; display:flex;flex-direction: column;padding-top: 0.111em;padding-bottom: 0.222em;">
-                    <header class="expanderROW">
-                        <span class="expanderTITLE">METADATA:</span>
-                        <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
-                    </header>
-                    <section style="display:none;">...</section>
-                </menu>
-            </section><!--end BOOKFRAME-->         
+            <menu id="dataFRAME_${tgtTKR.tkr}" class="FRAME" 
+            style="justify-content: center;border: 1px solid purple;
+    margin: 0.222em 0 0.222em 0;padding: 0.222em 0.888em 0.222em 0.888em; box-shadow: 1px 1px 8px purple;
+                border-radius: 22.222px; display:flex;flex-direction: column;">
+                <header class="expanderROW">
+                    <span class="expanderTITLE">METADATA:</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
+                </header>
+                <section style="display:none;">...</section>
+            </menu>
+
+        </section><!--end BOOKFRAME-->         
         `;
         BOOKZ_RENDER_FRAME.innerHTML += bookFrame_Model; 
     }//END BUILD LOOP
@@ -1820,13 +1876,13 @@ function render_ALL_BOOKZ_CHARTZ(){
         tgt_Candle = All_DynaCandles[i];
         init_DYNA_CHART_Candle(tgt_Candle);
     }
-    let tgt_Baseline; //Render all BASELINE DYNA_CHARTZ
-    const All_Dynabaselines = document.getElementsByClassName('dynamicBaseline')
-    DYNA_CHART_BASELINES = []; //blank out. for screen resize
-    for(var j=0; j<All_Dynabaselines.length;j++){
-        tgt_Baseline = All_Dynabaselines[j];
-        init_DYNA_CHART_Baseline(tgt_Baseline);
-    }  
+    // let tgt_Baseline; //Render all BASELINE DYNA_CHARTZ
+    // const All_Dynabaselines = document.getElementsByClassName('dynamicBaseline')
+    // DYNA_CHART_BASELINES = []; //blank out. for screen resize
+    // for(var j=0; j<All_Dynabaselines.length;j++){
+    //     tgt_Baseline = All_Dynabaselines[j];
+    //     init_DYNA_CHART_Baseline(tgt_Baseline);
+    // }  
 }
 function render_ALL_DYNA_SELECTORZ(){
     let tgtTKR;
@@ -1967,9 +2023,176 @@ function getSubMenu_TRADETXTArea(tkr,moKEY){
     return tkrTXTArea;
 }
 // ******************************************END VIEW METHODS**********
-// **** END VIEWS ****************************END VIEWS***************************
+
 </script><!--*****************************END MAIN_APP******************-->
-<script  >/****************************************CRYPTO OHLCV API***********/
+<script type="module">
+// *****************************************CHECKBOX METHODS**********
+import {BandsChart_Class as BandsChart_Class} from "./module/BANDLINES_3.js";
+import {g as getMockData} from "./module/sample-data.js";
+
+function init_Trendz_CHART(tkr){
+    let checkz = get_Checked(tkr);
+    // let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
+
+    const TrendzChart = LightweightCharts.createChart(`trendzFRAME_${tkr}`, { 
+        width:400,height:300,autoSize:false, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:true
+    })
+    const lineSeries = TrendzChart.addLineSeries()
+    const bands_DataSet = getMockData();
+    lineSeries.setData(bands_DataSet);
+//     const BandsChart = new BandsChart_Class;
+//     lineSeries.attachPrimitive(BandsChart);
+// //**************************************** DRAW MONTH LINES ********************
+//    import {MonthTrendLines_Class as MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
+//     let MonthStartDates = []
+//     bands_DataSet.forEach(data => {
+//         const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
+//         if (tgtDate.getDate() === 1) { //Found 1st Day of Month.
+//             const yearNUM = tgtDate.getFullYear();
+//             const monthNUM = (tgtDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+//             const dayNUM = tgtDate.getDate().toString();//.padStart(2, '0');
+//             const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+//             MonthStartDates.push(data)
+//         }
+//     });
+//     let Num_Month_Crop=12;
+//     if(MonthStartDates.length>Num_Month_Crop){ //CROP LAST Num of MONTHS.
+//         MonthStartDates = MonthStartDates.splice(MonthStartDates.length-Num_Month_Crop,Num_Month_Crop)
+//     }
+//     let vLine, dItem;
+//     for(var ii=0;ii<MonthStartDates.length;ii++){
+//         dItem = MonthStartDates[ii];
+//         vLine = new MonthTrendLines_Class(LineChart,lineSeries,
+//             dItem.time,dItem.value,
+//             {showLabel: !1,color: "steelblue",width: 1 });
+//         lineSeries.attachPrimitive(vLine);
+//     } 
+// //-------------------------------------------------------------------
+// //*********************************************************VOLUME SERIES*******
+// const volumeSeries = LineChart.addHistogramSeries({
+//         color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '', // set as an overlay by setting a blank priceScaleId
+//         scaleMargins: { top: 0.7, bottom: 0 } //70%off top
+//     });
+//     volumeSeries.priceScale().applyOptions({
+//         scaleMargins: { top: 0.7, bottom: 0 } //70% off top
+//     });
+// volumeSeries.setData([
+//     { time: '2019-01-10', value: 14259910.00, color: '#26a69a' },{ time: '2019-01-11', value: 15801548.00, color: '#26a69a' }, { time: '2019-01-14', value: 11342293.00, color: '#26a69a' },    
+//     { time: '2019-01-15', value: 10074386.00, color: '#26a69a' }]);
+
+
+    if(checkz.linez_opt){
+        
+    }
+    if(checkz.candlez_opt){
+
+    }
+    if(checkz.avgz_opt){
+
+    }
+    if(checkz.volz_opt){
+
+    }
+    if(checkz.a3dz_opt){
+
+    }
+    if(checkz.greenband_opt){
+
+    }
+    if(checkz.bollz_opt){
+
+    }
+    if(checkz.cci_opt){
+
+    }
+    if(checkz.mom_opt){
+
+    }
+    
+
+    // EXAMPLE CANDLE
+    // const chartOptions = {width:400,height:300,autoSize:false,
+    //     layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
+    //         background:{type:'solid',color:'#000000'} },
+    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+    //     crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
+    //         vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
+    //     // rightPriceScale:{visible:false},leftPriceScale:{visible:true},
+    //     // priceScale:{position: 'right',scaleMargins: {top: 0.2, bottom: 0.2 } },
+    // }
+    // let tgtTKR = tgtELEM.id.split('_')[1]; 
+    // let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
+    // if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
+    // tgtELEM.innerHTML=''; //blank out
+    // const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
+    // // CANDLESTICK-SERIES******************************************************        
+    // const candlestickSeries = Dyna_Chart_CandleStick.addCandlestickSeries({
+    //     priceScaleId: 'right', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
+    //     wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
+    // });
+    // candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
+    // candlestickSeries.setData(candleSeriesDATA);
+    // let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
+    // if(candleSeriesSUBSELECT==='struct'){ //STRUCTURE LINES.
+
+    // }else{ //TRADE_MARKERS
+    //     let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
+    //     tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo
+    //     tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo
+    //     candlestickSeries.setMarkers(tradeMarkerData);        
+    // }
+    // Dyna_Chart_CandleStick.timeScale().fitContent();    
+    // resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
+    // DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
+
+}//END TRENDZ INIT
+function init_Trendz_CHECKBOXES(){
+    const checkboxes = document.querySelectorAll('.Trendz_CHECKBOX');
+    let elemID;
+    checkboxes.forEach(checkbox => {
+        elemID = checkbox.id.split('_')[2]
+        checkbox.addEventListener('change', (event) => {
+            const isChecked = event.target.checked;
+            const tkr = event.target.id.split('_')[2];
+            if(!tkr){return}
+            console.log(`${tkr} Checkbox ${checkbox.id} is ${isChecked ? 'checked' : 'unchecked'}`);
+            debugger;
+            init_Trendz_CHART(tkr); //refresh
+        });
+        init_Trendz_CHART(elemID);//default chart
+    });
+}; init_Trendz_CHECKBOXES();
+function get_Checked(tkr){
+    if(!tkr){return}
+    let linezElem = document.getElementById(`linez_opt_${tkr}`);
+    let candlezElem = document.getElementById(`candlez_opt_${tkr}`);
+    let avgzElem = document.getElementById(`avgz_opt_${tkr}`);
+    let volzElem = document.getElementById(`volz_opt_${tkr}`);
+    let a3dzElem = document.getElementById(`3dz_opt_${tkr}`);
+    let greenbandElem = document.getElementById(`greenband_opt_${tkr}`);
+    let bollzElem = document.getElementById(`bollz_opt_${tkr}`);
+    let cciElem = document.getElementById(`cci_opt_${tkr}`);
+    let momElem = document.getElementById(`mom_opt_${tkr}`);
+    let checked_selection = {
+        linez_opt: linezElem.checked,
+        candlez_opt: candlezElem.checked,
+        avgz_opt: avgzElem.checked,
+        volz_opt: volzElem.checked,
+        a3dz_opt: a3dzElem.checked,
+        greenband: greenbandElem.checked,
+        bollz_opt: bollzElem.checked,
+        cci_opt: cciElem.checked,
+        mom_opt: momElem.checked
+    }
+    return checked_selection;
+}
+// ********************************END CHECKBOXES***************************
+</script>
+<script>/****************************************CRYPTO OHLCV API***********/
 let stock_api_key = null;//API_KEY - set in local storage.
 let init_api_key = ()=>{
    if(localStorage.stock_api_key){
@@ -2334,8 +2557,11 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
 <script type="module">
     import {g as getRandomDataSet} from "./module/sample-data.js";
     import {TrendLine_Class as TrendLine_Class} from "./module/trendlines.js";
-    const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", {
-        width:400,height:300,autoSize:false, layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } }
+    const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
+        {width:400,height:300, autoSize:true, 
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } 
+        }, allowShiftVisibleRangeOnWhitespaceReplacement:true
     })
     const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
     const  dataSet = getRandomDataSet();
@@ -2381,11 +2607,12 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     //-------------------------------------------GREEN BAND LINE 1---------------
     import {BandsChart_Class as BandsChart_Class} from "./module/BANDLINES_3.js";
     import {g as getMockData} from "./module/sample-data.js";
-    const LineChart = LightweightCharts.createChart("xmpl_bands_chart", { width:400,height:300,autoSize:false, 
+    const LineChart = LightweightCharts.createChart("xmpl_bands_chart", { 
+        width:400,height:300,autoSize:true, 
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
-        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+        allowShiftVisibleRangeOnWhitespaceReplacement:true
     })
     const lineSeries = LineChart.addLineSeries()
     const bands_DataSet = getMockData();
@@ -2454,10 +2681,42 @@ volumeSeries.setData([
  //---------------------------------END VOLUME SERIES---------------------   
 </script>
 
+<script type="module">//*******************************MOVING AVERAGES
+import {calcMA,getFakeData} from "./module/MO_AVGS_3.js";
+const chartOptions={ width:400, height:300,autoSize:true,
+    grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+    layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
+const chart = LightweightCharts.createChart(document.getElementById('xmpl_avgs_chart'), chartOptions);
+const barData = getFakeData(500);
+const maData20 = calcMA(barData, 20);
+const maData120 = calcMA(barData, 100);
+const maData200 = calcMA(barData, 200);
+const maSeries20 = chart.addLineSeries({ color: 'yellow', lineWidth:2});
+const maSeries120 = chart.addLineSeries({ color: 'purple', lineWidth:2});
+const maSeries200 = chart.addLineSeries({ color: 'limegreen', lineWidth:2});
+maSeries20.setData(maData20);
+maSeries120.setData(maData120);
+maSeries200.setData(maData200);
+const candlestickSeries = chart.addCandlestickSeries({ upColor: '#26a69a',downColor: '#ef5350',
+    borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+candlestickSeries.setData(barData);
+// 
+    // import {SetPriceLine_Class as SetPriceLine_Class} from "./module/SETPRICELINE_5.js";  
+    // import {g as getMockData} from "./module/sample-data.js";
+    // const priceChart = LightweightCharts.createChart("xmpl_struct_chart", { width:400, height:300,autoSize:false, 
+    //     layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+    //     allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    // })
+    // const priceSeries = priceChart.addLineSeries()
+    // const data = getMockData();
+    // priceSeries.setData(data);
+</script> 
 <script type="module">//*******************************EDIT - LINE - STRUCTURE
     import {SetPriceLine_Class as SetPriceLine_Class} from "./module/SETPRICELINE_5.js";  
     import {g as getMockData} from "./module/sample-data.js";
-    const priceChart = LightweightCharts.createChart("xmpl-struct-chart", { width:400, height:300,autoSize:false, 
+    const priceChart = LightweightCharts.createChart("xmpl_struct_chart", { 
+        width:400, height:300,autoSize:true, 
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         allowShiftVisibleRangeOnWhitespaceReplacement:!0
@@ -2467,8 +2726,15 @@ volumeSeries.setData([
     priceSeries.setData(data);
     let structs = new SetPriceLine_Class(priceChart,priceSeries,{ color: "steelblue"});
     // -- EXAMPLE--------------------------------------------------
-    let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
-    structs.setPricelines([{price: 444, line:line}])
+    let line1 = priceSeries.createPriceLine({ price: 333, color: 'lime'})
+    let line2 = priceSeries.createPriceLine({ price: 444, color: 'purple' })
+    let line3 = priceSeries.createPriceLine({ price: 555, color: 'blue' })
+    line1.applyOptions({ lineWidth: 3, lineStyle: LightweightCharts.LineStyle.Dashed });
+    line2.applyOptions({ lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed });
+    line3.applyOptions({ lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dotted });
+    structs.setPricelines([{price: 333, line:line1}])
+    structs.setPricelines([{price: 444, line:line2}])
+    structs.setPricelines([{price: 555, line:line3}])
     //-----------------------------------------------LINE EDITOR---------
     window.smlLine = (event) => {
         let linePrice = Math.round(event.target.parentElement.parentElement.getAttribute('datapt') );
