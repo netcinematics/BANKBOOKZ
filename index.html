@@ -255,10 +255,7 @@ input[type="checkbox"]:checked:after {
     flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
     padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
     box-shadow: inset 1px 1px 11px 0px cyan;"/> 
-    
-        <!--style="flex:1;border-radius: 13px; border: solid 1px steelblue; 
-        box-shadow: inset 1px 1px 11px 0px cyan; padding:2%;padding-top: 3%;padding-left:4%; 
-        max-width:50em;color: cyan;line-height:1.666em;">-->
+
         <header class="mainTitle expanderROW">
             <span class="boxTitle">
                 <span style="font-size:0.777em; color:cyan">1</span>
@@ -280,9 +277,7 @@ input[type="checkbox"]:checked:after {
     flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
     padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
     box-shadow: inset 1px 1px 11px 0px #00ffa5;"/> 
-        <!-- style="flex: 1;border-radius: 13px;border: solid 1px steelblue;box-shadow: inset 1px 1px 11px 0px #00ffa5;
-            padding: 2%;padding-top: 3%;padding-left: 4%;max-width:50em; color: cyan;line-height: 1.666em;"
-            >-->
+
         <article class="mainTitle expanderROW">
             <span class="boxTitle" style="width:100%;">
                 <span></span><span style="font-size:0.777em; color:cyan">2</span>
@@ -301,9 +296,7 @@ input[type="checkbox"]:checked:after {
         flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
         padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
         box-shadow:inset 1px 3px 13px 0px steelblue;"/>
-        <!-- border:solid 1px steelblue;justify-content: center;flex-direction: column;
-        border-radius: 13px;display:flex; padding:3%;flex:1;
-        box-shadow:inset 1px 3px 13px 0px steelblue;max-width:50em;"> -->
+
         <article id="BOOKZ_RENDER_FRAME"></article>
         <hr> 
         <section id="BOOKFRAME_XMPL" class="BOOKFRAME_Item">
@@ -456,15 +449,6 @@ input[type="checkbox"]:checked:after {
             <section id="render_EDIT_TICKR_Frame" class="scrollBarV" 
                 style="width: 94%;display: flex;flex-direction: column;margin: 0 2em 0 3em;
                     background: #00010b;">No Data. </section>
-            <!-- <textarea id="render_TICKR_DATA" class="scrollBarV txtSizer"style="overflow-x:visible;flex: 1 1 0;resize:horizontal;background:black;
-               color: lime;
-                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;margin-bottom: 1em;" >
-            [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
-            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin-bottom: 1em;">
                 <!-- <button class="BTN" style="font-size:1em;margin:1em;" onclick="save_TickerClick()">🌟SAVE🌟</button> -->
@@ -476,17 +460,8 @@ input[type="checkbox"]:checked:after {
             <section id="render_EDIT_TRADE_Frame" class="scrollBarV" 
             style="width: 94%;display: flex;flex-direction: column;margin: 0 2em 0 3em;
                 background: #00010b;">No Data. </section>
-            <!-- <textarea id="render_TRADE_DATA" class="scrollBarV txtSizer" style="overflow-x: visible;flex: 1 1 0;resize:horizontal;background: black;color: lime;
-                width:80.888%;padding: 4%;border-radius: 13px;box-shadow: 0px 0px 8px purple;">
-            [{"tkr":"BTC","type":"BUY","mode":"Limit","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"111","shares":"0.0017","price":"64,428.71","role":""},
-            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"22","shares":"0.0003","price":"66,402.48","role":""},
-            {"tkr":"BTC","type":"BUY","mode":"Market","ymd":"2020_4_3","ymtID":"2020_4_BTC",
-                "amt":"44","shares":"0.0007","price":"66,058.39","role":""}]</textarea>  -->
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin:1em 0;">
-                <!-- <button class="BTN" style="font-size:1em;" onclick="save_TradeClick()">🌟SAVE🌟</button> -->
             </footer>   
         </article>        
     </section><!--end DATAVIEW-->
@@ -696,8 +671,8 @@ function init_DYNA_CHART_Candle(tgtELEM){
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
             vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
-        // rightPriceScale:{visible:false},leftPriceScale:{visible:true},
-        // priceScale:{position: 'right',scaleMargins: {top: 0.2, bottom: 0.2 } },
+        // rightPriceScale:{visible:true},//leftPriceScale:{visible:true},
+        // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
     }
     let tgtTKR = tgtELEM.id.split('_')[1]; 
     let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
@@ -721,15 +696,15 @@ function init_DYNA_CHART_Candle(tgtELEM){
         candlestickSeries.setMarkers(tradeMarkerData);        
     }
     Dyna_Chart_CandleStick.timeScale().fitContent();    
-    resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
+    resize_BIG_CHART(Dyna_Chart_CandleStick);
     DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
 }; //END INIT DYNA_CHART - candle *****************************************
-function resize_DYNA_CHART_Candle(elem){
+function resize_BIG_CHART(elem){
     let frame = document.getElementById('BOOK_VIEW');
-    let maxWidth = (frame.offsetWidth>888)?777:(frame.offsetWidth<400)?frame.offsetWidth-60:frame.offsetWidth-100;//(frame.offsetWidth*0.1);
+    let maxWidth = (frame.offsetWidth>888)?744:(frame.offsetWidth<400)?frame.offsetWidth-60:frame.offsetWidth-100;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;    
     if(maxWidth<100 || maxHeight<50){return}
-    elem.resize(maxWidth, maxHeight);
+    elem.resize(maxWidth-100, maxHeight);
 }
 /*********************************************DYNA_SELECTOR**********************/
 function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
@@ -765,6 +740,7 @@ function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
     selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]}</span>`;
 }
 function DYNA_SELECTOR_Change(e){
+    // debugger;
     let TGTymt = e.target.value;
     let TGTID = e.target.id;
     let TGTtkr = TGTID.split("_")[3]
@@ -774,34 +750,43 @@ function DYNA_SELECTOR_Change(e){
     const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
     if(TGTymt==='Last 33' || TGTymt==='All Time'){
         selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
-        let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
-        init_DYNA_CHART_Candle(chartELEM);          
-        return;
-    }    
-    const currentSELECTORZ_TXT = selector_TITLE_TXT.innerText;
-    const currentSELECTORZ = selector_TITLE_TXT.children;
-    let newSELECTORZ = [TGTymt];//default selection
-    for(var f=0;f<currentSELECTORZ.length;f++){
-        if(currentSELECTORZ_TXT.indexOf('Last 33')>-1 ||
-        currentSELECTORZ_TXT.indexOf('All Time')>-1){ break; }
-        if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
-            continue;
+        // let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
+        // init_DYNA_CHART_Candle(chartELEM);          
+        // return;
+    }  else {
+        const currentSELECTORZ_TXT = selector_TITLE_TXT.innerText;
+        const currentSELECTORZ = selector_TITLE_TXT.children;
+        let newSELECTORZ = [TGTymt];//default selection
+        for(var f=0;f<currentSELECTORZ.length;f++){
+            if(currentSELECTORZ_TXT.indexOf('Last 33')>-1 ||
+            currentSELECTORZ_TXT.indexOf('All Time')>-1){ break; }
+            if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
+                continue;
+            }
+            newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])//trim deletebtn
         }
-        newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])//trim deletebtn
+        if(newSELECTORZ.length>1){ //VIEW MULTIPLE MONTHS
+            newSELECTORZ = fillout_YMT_KEYS(newSELECTORZ,TGTymt)
+            let wrappedDATA = newSELECTORZ.map( (e,i)=>{
+                if(i===0){return  `<span class="defaultTXT">${e}</span>`}
+                return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT(event)">x</button> </span>`;
+            } ) 
+            selector_TITLE_TXT.innerHTML = wrappedDATA.join('')
+        } else { //VIEW SINGULAR MONTH.
+            selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
+        } //END DYNAMIC SELECTOR BEHAVIOR
     }
-    if(newSELECTORZ.length>1){ //VIEW MULTIPLE MONTHS
-        newSELECTORZ = fillout_YMT_KEYS(newSELECTORZ,TGTymt)
-        let wrappedDATA = newSELECTORZ.map( (e,i)=>{
-            if(i===0){return  `<span class="defaultTXT">${e}</span>`}
-            return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT(event)">x</button> </span>`;
-        } ) 
-        selector_TITLE_TXT.innerHTML = wrappedDATA.join('')
-    } else { //VIEW SINGULAR MONTH.
-        selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
-    } //END DYNAMIC SELECTOR BEHAVIOR
-    let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
-    init_DYNA_CHART_Candle(chartELEM);    //DYNA - init chart.
+    init_All_Charts_by_TKR(TGTtkr)
+    // let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
+    // init_DYNA_CHART_Candle(chartELEM);    //DYNA - init chart.
 }
+function init_All_Charts_by_TKR (tkr){
+    let candleELEM = document.getElementById(`candlestickFRAME_${tkr}`)
+    init_DYNA_CHART_Candle(candleELEM);    //DYNA - init chart.
+    let trendzELEM = document.getElementById(`trendzFRAME_${tkr}`)
+    init_Trendz_CHART(tkr);    //init TRENDZ chart.
+}
+
 //*************************************************END DYNA SELECTOR***********
 //***********************************SUB SELECTOR***********
 function init_SUB_SELECTORS(tkr){ //assign click handlers
@@ -846,7 +831,7 @@ function init_DYNA_CHART_Baseline(tgtELEM){
 // window.addEventListener('resize', () => { //for SCREEN RESIZE - CANDLE CHARTS
 //     for(var j=0; j<DYNA_CHART_CANDLES.length;j++){
 //         tgtTKR = DYNA_CHART_CANDLES[j];
-//         resize_DYNA_CHART_Candle(tgtTKR)
+//         resize_BIG_CHART(tgtTKR)
 //     }  
 //     for(var j=0; j<DYNA_CHART_BASELINES.length;j++){
 //         tgtTKR = DYNA_CHART_BASELINES[j];
@@ -993,62 +978,6 @@ function getMarker_TRADE_DATA(aTKR){
     } 
     return tradeMarkerData;
 }
-function getArea_TRADE_DATA(aTKR){
-    let areaSeriesDATA = [];
-    let monthlySELECTOR = bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR];
-    if(!monthlySELECTOR && aTKR){
-        monthlySELECTOR = 'Last 33';
-        bankbookz_DB.METASTATE.monthlySELECTORMap[aTKR]=monthlySELECTOR;
-    }
-    if(monthlySELECTOR==='Last 33'){ //Last 33 days of tickrs
-        let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-        let tradeSET=[],monthKEY;
-        let dayCNT = 0,tkrTAG,txnObj;
-        ymtKEYS.reverse(); //oldest first.
-        for(var i = 0; i< ymtKEYS.length && dayCNT<34; i++){ //Last 33 days
-            monthKEY = ymtKEYS[i];
-            tkrTAG = monthKEY.split("_")[2]
-            if(tkrTAG!=aTKR){continue}
-            tradeSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
-            for(var ii=0; ii<tradeSET.length;ii++){
-                dayCNT++;
-                if(dayCNT>33){break;}
-                tradeSET[ii].time = tradeSET[ii].ymd.replace(/_/g,'-'); //for charts.
-                tradeSET[ii].value = parseFloat(tradeSET[ii].price.replace(/,/g,'') );
-                areaSeriesDATA.push(tradeSET[ii]);
-            }
-        }  
-    }else if (monthlySELECTOR==='All Time') { //load all data for tkrs.
-        areaSeriesDATA = [
-        { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
-        { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
-        { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
-        { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
-        { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
-    ]        
-        // let ymtKEYS = Object.keys(bankbookz_DB.TRADE_TXNZ_YMT);
-        // let txnSET=[],monthKEY,txnItem;
-        // for(var i = 0; i< ymtKEYS.length; i++){ //all time
-        //     monthKEY = ymtKEYS[i];
-        //     tkrTAG = monthKEY.split("_")[2]
-        //     if(tkrTAG!=aTKR){continue}
-        //     txnSET = bankbookz_DB.TRADE_TXNZ_YMT[monthKEY]
-        //     for(var ii=0; ii<txnSET.length;ii++){
-        //         areaSeriesDATA.push(txnSET[ii]);
-        //     }
-        // }  
-        // areaSeriesDATA.reverse();        
-    }else {
-        areaSeriesDATA = [
-        { time: '2024-7-2', value: 66232.51 },{ time: '2024-7-3', value: 65331.11 },
-        { time: '2024-7-4', value: 64227.02 },{ time: '2024-7-5', value: 64327.32 },
-        { time: '2024-7-6', value: 65225.17 },{ time: '2024-7-7', value: 64328.89 },
-        { time: '2024-7-8', value: 65225.46 },{ time: '2024-7-9', value: 66323.92 },
-        { time: '2024-7-10', value: 67222.68 },{ time: '2024-7-11', value: 68322.67 },
-    ]        
-    }
-    return areaSeriesDATA;    
-}
 function getCandleSeriesDATA(aTKR){
     let candleSeriesDATA = [];
     let tgtData = bankbookz_DB.TICKR_DATA_MAP_Monthly[aTKR];
@@ -1108,6 +1037,49 @@ function getCandleSeriesDATA(aTKR){
         candleSeriesDATA.reverse(); 
     }
     return candleSeriesDATA;
+}
+// function convertToLineData(dataSet){
+function getLineSeriesMETADATA(dataSet){
+    let lastRec = null,strdDEV=0,DEVTGT=2.444;
+    dataSet = ensureOrderASC(dataSet);   //IMPORT ASC
+    dataSet = dataSet.map( (datarec,i) => { //compute VALUE for Line Charts.
+            if(datarec.high && datarec.low){ //SET CANDLE AVERAGE value for LINE CHART.
+                datarec.value = Math.round( (datarec.high + datarec.low) / 2 );
+            }
+            //SET VOLUME AVERAGE for advanced VOLUME COLORING.
+            datarec.volAVG=(i===0) ? Math.round(datarec.volume) : Math.round( (lastRec.volAVG+datarec.volume) / 2 );
+            strdDEV = datarec.volAVG/DEVTGT;
+            // console.log("VOL:",datarec.volume,"AVG:",datarec.volAVG)
+            datarec.lastClose = (lastRec) ? lastRec.close : 0;
+            if(datarec.close && datarec.lastClose){ //SET VOLUME COLORING.
+                if(datarec.close>datarec.lastClose){
+                    datarec.volColor='darkgreen';
+                }else{
+                    datarec.volColor='crimson';
+                }
+            }else{
+                datarec.volColor='grey';
+            }
+            if( i > 4 ){ //ADD RUNNING AVERAGE VOL by standard deviation
+                if(datarec.volume > datarec.volAVG+strdDEV){
+                    // console.log('MAX case',datarec.volume, datarec.volAVG+strdDEV)
+                    datarec.volColor=(datarec.volColor==='darkgreen')?'limegreen':'red';
+                } else if (datarec.volume < datarec.volAVG-strdDEV){
+                    // console.log('MIN case',datarec.volume, datarec.volAVG-strdDEV)
+                    datarec.volColor=(datarec.volColor==='crimson')?'darkred':'limegreen'; 
+                }
+            }
+        lastRec = datarec;
+        return datarec;
+     } )
+     return dataSet;
+}
+function getVOL_METADATA(dataSet){ //reduce set to color and time, vol ops.
+    let volColor=''; //REQUIRED DATA TRANSFORM FOR lwc volume data set.
+    dataSet =  dataSet.map( (rec,i)=>{
+        return { time:rec.time, value:rec.volume, color: rec.volColor  }
+    })
+    return dataSet;
 }
 //*******END GET DATA for - DYNA CHART***********
 //*******Delete selector for - DYNA CHART***********
@@ -1749,31 +1721,31 @@ const init_BOOKZ_TABZ = ()=>{
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;flex-direction: column;">
-                    <article id="trendzFRAME_${tgtTKR.tkr}" class="dynamicTrends" style="justify-content:center;
-                        flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+                    <article id="trendzFRAME_${tgtTKR.tkr}" style="justify-content:center;height: 20em;
+                        display:flex;flex:1;border:solid 1px steelblue;border-radius:22.222px;padding: 0.222em 0.444em 1em 0.444em;">
                         <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                     </article>
 
                     <menu style="justify-content: center;border-radius: 13px; display: flex; margin-top: 0;
                         padding: 1em 0 0 0; height: 4em; flex-wrap: wrap; ">
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="linez_opt_${tgtTKR.tkr}">
+                        <!--<input type="checkbox" class="Trendz_CHECKBOX" id="linez_opt_${tgtTKR.tkr}">
                         <label for="linez_opt">linez</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="candlez_opt_${tgtTKR.tkr}">
-                        <label for="candlez_opt">candlez</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="avgz_opt_${tgtTKR.tkr}">
-                        <label for="avgz_opt">avgz</label>
+                        <label for="candlez_opt">candlez</label>-->
                         <input type="checkbox" class="Trendz_CHECKBOX" id="volz_opt_${tgtTKR.tkr}">
                         <label for="volz_opt">volz</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="3dz_opt_${tgtTKR.tkr}">
-                        <label for="3dz_opt">3dz</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="greenband_opt_${tgtTKR.tkr}">
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="avgz_opt_${tgtTKR.tkr}">
+                        <label for="avgz_opt">avgz</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="moavg_opt_${tgtTKR.tkr}">
+                        <label for="moavg_opt_${tgtTKR.tkr}">moavg</label>
+                        <!-- <input type="checkbox" class="Trendz_CHECKBOX" id="greenband_opt_${tgtTKR.tkr}">
                         <label for="greenband_opt">gband</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="bollz_opt_${tgtTKR.tkr}">
                         <label for="bollz_opt">boll's</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="cci_opt_${tgtTKR.tkr}">
                         <label for="cci_opt">cci</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="mom_opt_${tgtTKR.tkr}">
-                        <label for="mom_opt">mom</label>
+                        <label for="mom_opt">mom</label>-->
                     </menu>
 
                     <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
@@ -2027,105 +1999,29 @@ function getSubMenu_TRADETXTArea(tkr,moKEY){
 </script><!--*****************************END MAIN_APP******************-->
 <script type="module">
 // *****************************************CHECKBOX METHODS**********
-import {BandsChart_Class as BandsChart_Class} from "./module/BANDLINES_3.js";
+// import {BandsChart_Class as BandsChart_Class} from "./module/BANDLINES_3.js"; //greenband
+import {TrendLine_Class} from "./module/TRENDLINES.js";
+import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";//3dmo
+import {calcMA,getFakeData} from "./module/MO_AVGS_3.js"; //calc move avgs.
 import {g as getMockData} from "./module/sample-data.js";
 
-function init_Trendz_CHART(tkr){
+window.init_Trendz_CHART = (tkr) => {
     let checkz = get_Checked(tkr);
-    // let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
-
+    let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
+    tgt_Chart.innerHTML = ''; //blank out frame.
     const TrendzChart = LightweightCharts.createChart(`trendzFRAME_${tkr}`, { 
-        width:400,height:300,autoSize:false, 
-        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        width:555,height:333, autoSize:false, 
+        timeScale: { timeVisible: false, secondsVisible: false  },
+        layout: {textColor:'aqua',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
-        allowShiftVisibleRangeOnWhitespaceReplacement:true
+        // allowShiftVisibleRangeOnWhitespaceReplacement:true
     })
-    const lineSeries = TrendzChart.addLineSeries()
-    const bands_DataSet = getMockData();
-    lineSeries.setData(bands_DataSet);
-//     const BandsChart = new BandsChart_Class;
-//     lineSeries.attachPrimitive(BandsChart);
-// //**************************************** DRAW MONTH LINES ********************
-//    import {MonthTrendLines_Class as MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
-//     let MonthStartDates = []
-//     bands_DataSet.forEach(data => {
-//         const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
-//         if (tgtDate.getDate() === 1) { //Found 1st Day of Month.
-//             const yearNUM = tgtDate.getFullYear();
-//             const monthNUM = (tgtDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
-//             const dayNUM = tgtDate.getDate().toString();//.padStart(2, '0');
-//             const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
-//             MonthStartDates.push(data)
-//         }
-//     });
-//     let Num_Month_Crop=12;
-//     if(MonthStartDates.length>Num_Month_Crop){ //CROP LAST Num of MONTHS.
-//         MonthStartDates = MonthStartDates.splice(MonthStartDates.length-Num_Month_Crop,Num_Month_Crop)
-//     }
-//     let vLine, dItem;
-//     for(var ii=0;ii<MonthStartDates.length;ii++){
-//         dItem = MonthStartDates[ii];
-//         vLine = new MonthTrendLines_Class(LineChart,lineSeries,
-//             dItem.time,dItem.value,
-//             {showLabel: !1,color: "steelblue",width: 1 });
-//         lineSeries.attachPrimitive(vLine);
-//     } 
-// //-------------------------------------------------------------------
-// //*********************************************************VOLUME SERIES*******
-// const volumeSeries = LineChart.addHistogramSeries({
-//         color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '', // set as an overlay by setting a blank priceScaleId
-//         scaleMargins: { top: 0.7, bottom: 0 } //70%off top
-//     });
-//     volumeSeries.priceScale().applyOptions({
-//         scaleMargins: { top: 0.7, bottom: 0 } //70% off top
-//     });
-// volumeSeries.setData([
-//     { time: '2019-01-10', value: 14259910.00, color: '#26a69a' },{ time: '2019-01-11', value: 15801548.00, color: '#26a69a' }, { time: '2019-01-14', value: 11342293.00, color: '#26a69a' },    
-//     { time: '2019-01-15', value: 10074386.00, color: '#26a69a' }]);
 
 
-    if(checkz.linez_opt){
-        
-    }
-    if(checkz.candlez_opt){
-
-    }
-    if(checkz.avgz_opt){
-
-    }
-    if(checkz.volz_opt){
-
-    }
-    if(checkz.a3dz_opt){
-
-    }
-    if(checkz.greenband_opt){
-
-    }
-    if(checkz.bollz_opt){
-
-    }
-    if(checkz.cci_opt){
-
-    }
-    if(checkz.mom_opt){
-
-    }
-    
-
-    // EXAMPLE CANDLE
-    // const chartOptions = {width:400,height:300,autoSize:false,
-    //     layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
-    //         background:{type:'solid',color:'#000000'} },
-    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-    //     crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
-    //         vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
-    //     // rightPriceScale:{visible:false},leftPriceScale:{visible:true},
-    //     // priceScale:{position: 'right',scaleMargins: {top: 0.2, bottom: 0.2 } },
-    // }
-    // let tgtTKR = tgtELEM.id.split('_')[1]; 
-    // let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
+    let candleSeriesDATA = getCandleSeriesDATA(tkr);
+    let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA); //todo moved to import
+    // let lineSeriesMETADATA = convertToLineData(candleSeriesDATA); //todo moved to import
     // if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
     // tgtELEM.innerHTML=''; //blank out
     // const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
@@ -2136,57 +2032,160 @@ function init_Trendz_CHART(tkr){
     // });
     // candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
     // candlestickSeries.setData(candleSeriesDATA);
-    // let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
-    // if(candleSeriesSUBSELECT==='struct'){ //STRUCTURE LINES.
 
-    // }else{ //TRADE_MARKERS
-    //     let tradeMarkerData = getMarker_TRADE_DATA(tgtTKR);
-    //     tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo
-    //     tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo
-    //     candlestickSeries.setMarkers(tradeMarkerData);        
+
+
+
+    const lineSeries = TrendzChart.addLineSeries({ color: 'aqua' })
+    // const bands_DataSet = getMockData();
+    // lineSeries.setData(bands_DataSet);
+    // lineSeries.setData(candleSeriesDATA);
+    // lineSeriesMETADATA = ensureOrderASC(lineSeriesMETADATA);   //IMPORT ASC - todo
+    lineSeries.setData(lineSeriesMETADATA);
+//     const BandsChart = new BandsChart_Class;
+//     lineSeries.attachPrimitive(BandsChart);
+
+
+
+    // if(checkz.linez_opt){
+        
     // }
-    // Dyna_Chart_CandleStick.timeScale().fitContent();    
-    // resize_DYNA_CHART_Candle(Dyna_Chart_CandleStick);
-    // DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
+    // if(checkz.candlez_opt){
 
-}//END TRENDZ INIT
+    // }
+    if(checkz.avgz_opt){
+        //---------------------------------------------------- MO AVGZ - 
+        const ma_Data_1 = calcMA(lineSeriesMETADATA, 10);
+        const ma_Data_2 = calcMA(lineSeriesMETADATA, 20);
+        const ma_Data_3 = calcMA(lineSeriesMETADATA, 30);
+        const ma_Series_1 = TrendzChart.addLineSeries({ color: 'steelblue', lineWidth:2});
+        const ma_Series_2 = TrendzChart.addLineSeries({ color: 'purple', lineWidth:2});
+        const ma_Series_3 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2});
+        ma_Series_1.setData(ma_Data_1);
+        ma_Series_2.setData(ma_Data_2);
+        ma_Series_3.setData(ma_Data_3);
+        //----------------------------------------------------END MO AVGZ
+    }
+    if(checkz.volz_opt){
+        //*********************************************************VOLUME SERIES*******
+        const volumeSeries = TrendzChart.addHistogramSeries({
+                color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '', // set as an overlay by setting a blank priceScaleId
+                scaleMargins: { top: 0.7, bottom: 0 } //70%off top
+            });
+            volumeSeries.priceScale().applyOptions({
+                scaleMargins: { top: 0.7, bottom: 0 } //70% off top
+            });
+        volumeSeries.setData( getVOL_METADATA(lineSeriesMETADATA) );
+        // volumeSeries.setData(lineSeriesMETADATA);
+        // volumeSeries.setData([
+        //     { time: '2019-01-10', value: 14259910.00, color: '#26a69a' },{ time: '2019-01-11', value: 15801548.00, color: '#26a69a' }, { time: '2019-01-14', value: 11342293.00, color: '#26a69a' },    
+        //     { time: '2019-01-15', value: 10074386.00, color: '#26a69a' },{ time: '2019-01-16', value: 10084386.00, color: '#26a69a' },
+        //     { time: '2020-01-15', value: 10074386.00, color: '#26a69a' },{ time: '2020-01-16', value: 10084386.00, color: '#26a69a' },
+        //     { time: '2021-01-15', value: 10074386.00, color: '#26a69a' },{ time: '2021-01-16', value: 10084386.00, color: '#26a69a' },
+        //     { time: '2022-01-15', value: 10074386.00, color: '#26a69a' },{ time: '2022-01-16', value: 10084386.00, color: '#26a69a' },
+        //     { time: '2023-01-15', value: 10074386.00, color: '#26a69a' },{ time: '2023-01-16', value: 10084386.00, color: '#26a69a' },
+        //     { time: '2024-01-15', value: 10074386.00, color: '#26a69a' },{ time: '2024-01-16', value: 10084386.00, color: '#26a69a' },
+        // ]);
+        //**********************************END VOLUME SERIES*********************************
+    }
+    if(checkz.moavg_opt){ //************ DRAW MONTH LINES ********************
+        let MonthStartDates = [],dateArr=[];
+        lineSeriesMETADATA.forEach(data => {
+            dateArr = data.time.split('-')
+            if ("1"===parseInt(dateArr[2])+'') { //Found 1st Day of Month.
+                const tgtDate = new Date(dateArr[0],dateArr[1],dateArr[2])
+                const yearNUM = tgtDate.getFullYear();
+                const monthNUM = (tgtDate.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
+                const dayNUM = tgtDate.getDate().toString().padStart(2, '0');
+                const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+                MonthStartDates.push(data)
+            }
+        });
+        let Num_Month_Crop=4; //CROP LAST Num of MONTHS.Dont need all.
+        if(MonthStartDates.length>Num_Month_Crop){
+            MonthStartDates = MonthStartDates.splice(MonthStartDates.length-Num_Month_Crop,Num_Month_Crop)
+        }
+        let vLine, dItem; //****************************DRAW UP_DWN_MID LINES.
+        for(var ii=0;ii<MonthStartDates.length;ii++){
+            dItem = MonthStartDates[ii];
+            vLine = new MonthTrendLines_Class(TrendzChart,lineSeries,
+                dItem.time,dItem.value,
+                {showLabel: !1,color: "steelblue",width: 1 });
+            lineSeries.attachPrimitive(vLine);
+        } 
+        //************************************DRAW Month to Month lines.
+        let avgLine, moItem,StartPt,EndPt; //****************************DRAW UP_DWN_MID LINES.
+        for(var ii=0;ii<MonthStartDates.length;ii++){
+            moItem = MonthStartDates[ii];
+            if(ii===0){
+                StartPt = {time:moItem.time,price:moItem.value} 
+                continue;
+            }
+            EndPt={time:moItem.time,price: moItem.value}
+            avgLine = new TrendLine_Class(TrendzChart,lineSeries,EndPt,StartPt);
+            lineSeries.attachPrimitive(avgLine);
+            StartPt = {time:moItem.time,price:moItem.value} ;
+        } 
+     //-------------------------------------------------------------------
+    }
+    // if(checkz.greenband_opt){
+
+    // }
+    // if(checkz.bollz_opt){
+
+    // }
+    // if(checkz.cci_opt){
+
+    // }
+    // if(checkz.mom_opt){
+
+    // }
+    
+    TrendzChart.timeScale().fitContent(); 
+    resize_BIG_CHART(TrendzChart);
+    
+
+}//END TREND INIT - individual chart
+function init_Trendz_CHARTS(){ //INIT ALL TRENDZ CHARTS.
+    const tkrSet = bankbookz_DB.TICKR_LIST;
+    let elem;
+    tkrSet.forEach(tkr => {
+        init_Trendz_CHART(tkr.tkr);//default chart
+    })
+}; init_Trendz_CHARTS();
 function init_Trendz_CHECKBOXES(){
     const checkboxes = document.querySelectorAll('.Trendz_CHECKBOX');
-    let elemID;
     checkboxes.forEach(checkbox => {
-        elemID = checkbox.id.split('_')[2]
         checkbox.addEventListener('change', (event) => {
             const isChecked = event.target.checked;
             const tkr = event.target.id.split('_')[2];
             if(!tkr){return}
             console.log(`${tkr} Checkbox ${checkbox.id} is ${isChecked ? 'checked' : 'unchecked'}`);
-            debugger;
             init_Trendz_CHART(tkr); //refresh
         });
-        init_Trendz_CHART(elemID);//default chart
     });
 }; init_Trendz_CHECKBOXES();
 function get_Checked(tkr){
     if(!tkr){return}
-    let linezElem = document.getElementById(`linez_opt_${tkr}`);
-    let candlezElem = document.getElementById(`candlez_opt_${tkr}`);
+    // let linezElem = document.getElementById(`linez_opt_${tkr}`);
+    // let candlezElem = document.getElementById(`candlez_opt_${tkr}`);
     let avgzElem = document.getElementById(`avgz_opt_${tkr}`);
     let volzElem = document.getElementById(`volz_opt_${tkr}`);
-    let a3dzElem = document.getElementById(`3dz_opt_${tkr}`);
-    let greenbandElem = document.getElementById(`greenband_opt_${tkr}`);
-    let bollzElem = document.getElementById(`bollz_opt_${tkr}`);
-    let cciElem = document.getElementById(`cci_opt_${tkr}`);
-    let momElem = document.getElementById(`mom_opt_${tkr}`);
+    let moavgElem = document.getElementById(`moavg_opt_${tkr}`);
+    // let greenbandElem = document.getElementById(`greenband_opt_${tkr}`);
+    // let bollzElem = document.getElementById(`bollz_opt_${tkr}`);
+    // let cciElem = document.getElementById(`cci_opt_${tkr}`);
+    // let momElem = document.getElementById(`mom_opt_${tkr}`);
     let checked_selection = {
-        linez_opt: linezElem.checked,
-        candlez_opt: candlezElem.checked,
+        // linez_opt: linezElem.checked,
+        // candlez_opt: candlezElem.checked,
         avgz_opt: avgzElem.checked,
         volz_opt: volzElem.checked,
-        a3dz_opt: a3dzElem.checked,
-        greenband: greenbandElem.checked,
-        bollz_opt: bollzElem.checked,
-        cci_opt: cciElem.checked,
-        mom_opt: momElem.checked
+        moavg_opt: moavgElem.checked,
+        // greenband: greenbandElem.checked,
+        // bollz_opt: bollzElem.checked,
+        // cci_opt: cciElem.checked,
+        // mom_opt: momElem.checked
     }
     return checked_selection;
 }
@@ -2331,7 +2330,8 @@ const getCrypto_Daily = async (tkrTGT)=>{
                     high: parseFloat(obj["2. high"]),    
                     low: parseFloat(obj["3. low"]),     
                     close: parseFloat(obj["4. close"]),    
-                    volume: Math.round( parseFloat(obj["5. volume"]) )     
+                    volume: Math.round( parseFloat(obj["5. volume"]) ),
+                    value:  parseFloat(obj["2. high"]) + parseFloat(obj["3. low"]) / 2,  
                 });
             }
             bankbookz_DB.METASTATE.lastRefreshMap[tkr] = lastRefreshTime;
@@ -2383,7 +2383,8 @@ const getStock_Daily = async (tkr)=>{
                 high: parseFloat(obj["2. high"]),    
                 low: parseFloat(obj["3. low"]),     
                 close: parseFloat(obj["4. close"]),    
-                volume: Math.round( parseFloat(obj["5. volume"]) )     
+                volume: Math.round( parseFloat(obj["5. volume"]) ) ,
+                value:  parseFloat(obj["2. high"]) + parseFloat(obj["3. low"]) / 2,    
             });
         }
         bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
@@ -2556,7 +2557,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
 <!--***************************** XMPL CHART MODULES******************-->
 <script type="module">
     import {g as getRandomDataSet} from "./module/sample-data.js";
-    import {TrendLine_Class as TrendLine_Class} from "./module/trendlines.js";
+    import {TrendLine_Class} from "./module/trendlines.js";
     const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
         {width:400,height:300, autoSize:true, 
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
@@ -2605,7 +2606,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
 </script>
 <script type="module">
     //-------------------------------------------GREEN BAND LINE 1---------------
-    import {BandsChart_Class as BandsChart_Class} from "./module/BANDLINES_3.js";
+    import {BandsChart_Class} from "./module/BANDLINES_3.js";
     import {g as getMockData} from "./module/sample-data.js";
     const LineChart = LightweightCharts.createChart("xmpl_bands_chart", { 
         width:400,height:300,autoSize:true, 
@@ -2620,7 +2621,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     const BandsChart = new BandsChart_Class;
     lineSeries.attachPrimitive(BandsChart);
 //**************************************** DRAW MONTH LINES ********************
-   import {MonthTrendLines_Class as MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
+   import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
     let MonthStartDates = []
     bands_DataSet.forEach(data => {
         const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
@@ -2681,39 +2682,29 @@ volumeSeries.setData([
  //---------------------------------END VOLUME SERIES---------------------   
 </script>
 
-<script type="module">//*******************************MOVING AVERAGES
+<script type="module">//*******************************MOVING AVERAGES XMPL
 import {calcMA,getFakeData} from "./module/MO_AVGS_3.js";
 const chartOptions={ width:400, height:300,autoSize:true,
     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
     layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
 const chart = LightweightCharts.createChart(document.getElementById('xmpl_avgs_chart'), chartOptions);
 const barData = getFakeData(500);
-const maData20 = calcMA(barData, 20);
+const ma_Data_1 = calcMA(barData, 20);
 const maData120 = calcMA(barData, 100);
-const maData200 = calcMA(barData, 200);
-const maSeries20 = chart.addLineSeries({ color: 'yellow', lineWidth:2});
-const maSeries120 = chart.addLineSeries({ color: 'purple', lineWidth:2});
-const maSeries200 = chart.addLineSeries({ color: 'limegreen', lineWidth:2});
-maSeries20.setData(maData20);
-maSeries120.setData(maData120);
-maSeries200.setData(maData200);
+const ma_Data_10 = calcMA(barData, 200);
+const ma_Series_1 = chart.addLineSeries({ color: 'yellow', lineWidth:2});
+const ma_Series_2 = chart.addLineSeries({ color: 'purple', lineWidth:2});
+const ma_Series_3 = chart.addLineSeries({ color: 'limegreen', lineWidth:2});
+ma_Series_1.setData(ma_Data_1);
+ma_Series_2.setData(maData120);
+ma_Series_3.setData(ma_Data_10);
 const candlestickSeries = chart.addCandlestickSeries({ upColor: '#26a69a',downColor: '#ef5350',
     borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
 candlestickSeries.setData(barData);
-// 
-    // import {SetPriceLine_Class as SetPriceLine_Class} from "./module/SETPRICELINE_5.js";  
-    // import {g as getMockData} from "./module/sample-data.js";
-    // const priceChart = LightweightCharts.createChart("xmpl_struct_chart", { width:400, height:300,autoSize:false, 
-    //     layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
-    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-    //     allowShiftVisibleRangeOnWhitespaceReplacement:!0
-    // })
-    // const priceSeries = priceChart.addLineSeries()
-    // const data = getMockData();
-    // priceSeries.setData(data);
+//----------------------------------------------------END MO AVGZ - XMPL
 </script> 
 <script type="module">//*******************************EDIT - LINE - STRUCTURE
-    import {SetPriceLine_Class as SetPriceLine_Class} from "./module/SETPRICELINE_5.js";  
+    import {SetPriceLine_Class} from "./module/SETPRICELINE_5.js";  
     import {g as getMockData} from "./module/sample-data.js";
     const priceChart = LightweightCharts.createChart("xmpl_struct_chart", { 
         width:400, height:300,autoSize:true, 

@@ -49,7 +49,7 @@
             topEND.price = EndPoint.price+10;
             topSTART.time = StartPoint.time;
             topSTART.price = StartPoint.price+200;
-            const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
+            const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 244, 88)",
                 labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
             };            
             const trendLineTOP = new TrendLine_Class(chartElem,lwc_lineSeries,topEND,topSTART,lineOptions_TOP);
@@ -59,9 +59,8 @@
             midEND.price = EndPoint.price-10;
             midSTART.time = StartPoint.time;
             midSTART.price = EndPoint.price-10;
-
             
-            const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
+            const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 244)",
                 labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue",
                 // LineStyle:'Dotted'
             };
@@ -75,7 +74,7 @@
             btmSTART.time = StartPoint.time;
             btmSTART.price = StartPoint.price-200;
 
-            const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
+            const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(244, 0, 88)",
                 labelBackgroundColor: "rgba(255, 255, 255, 0.85)", labelTextColor: "steelblue"
             };
             const trendLine_BTM = new TrendLine_Class(chartElem,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
