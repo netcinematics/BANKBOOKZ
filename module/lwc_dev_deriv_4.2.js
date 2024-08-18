@@ -4,6 +4,7 @@
  * Copyright (c) 2024 TradingView, Inc.
  * Licensed under Apache License 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
+//4.2.0 from https://www.unpkg.com/browse/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.development.js
 (function () {
     'use strict';
 
