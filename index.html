@@ -140,55 +140,21 @@
     .subSELECTOR:focus-visible{outline-color: teal;
     } /* focused item */
     /**  *************************END SELECTOR**************************************/   
-input[type="checkbox"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 0px solid blue;
-    border-radius: 44%;
-    background-color: black;
-    cursor: pointer;
-    border: 2px solid purple;
-  background-color: #000;
-  color:aqua;
-  margin-left: 2em;
-}
-input[type="checkbox"]:after {
-  border: 2px solid #0fd05f;
-  border-radius: 3px;
-  background-color: #000;
-  border-radius: 44%;
-  /* width: 2px; */
-  /* min-width:2em; */
-  color:aqua;
-  width: 20px;
-  padding:0 0.111em 0 0.111em;
-  margin: -1px 0 0 -1px;
-  /* margin-left: 2em; */
-    /* height: 20px; */
-}
-input[type="checkbox"]:checked {
-    width: 20px;
-    /* min-width:2em; */
-  /* background-color: blue; */
-  content: '\2714'; /* Checkmark character */
-  border: 2px solid #0fd05f;
-  border-radius: 44%;
-  background-color: #000;
-  color:aqua;
-}   
-input[type="checkbox"]:checked:after {
-    width: 20px;
-    /* min-width:2em; */
-  background-color: blue;
-  content: '\2714'; /* Checkmark character */
-  border: 2px solid #0fd05f;
-  border-radius: 44%;
-  background-color: #000;
-  color:aqua;
-}   
+/*******************************CUSTOM -CHECKBOXES******************************/
+    input[type="checkbox"] { -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        width: 20px;height: 20px;border: 0px solid blue;border-radius: 44%;background-color: black;
+        cursor: pointer;border: 2px solid purple;background-color: #000;color:aqua;margin-left: 2em;
+    }
+    input[type="checkbox"]:after { border: 2px solid #0fd05f;border-radius: 3px;background-color: #000;
+        border-radius: 44%;color:aqua;width: 20px;padding:0 0.111em 0 0.111em;margin: -1px 0 0 -1px;
+    }
+    input[type="checkbox"]:checked { content: '\2714'; /* Checkmark character */
+        width: 20px;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
+    }   
+    input[type="checkbox"]:checked:after { content: '\2714'; /* Checkmark character */
+        width: 20px;background-color: blue;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
+    }
+ /*******************************END CUSTOM -CHECKBOXES******************************/   
     /** CUSTOM TV CHARTS *********************CHARTS******************************************/    
     .tv-lightweight-charts{ margin: 1em 0 1em 0; border-radius:13px;}
     /** END  TV CHARTS *************************CHARTS**************************************/   
@@ -374,45 +340,56 @@ input[type="checkbox"]:checked:after {
             </menu>
             <!--********************RSI, CCI, MOM ********************************************************-->
             <menu id="xmpl_RSI_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
                 <header class="expanderTITLE">SPY RSI:</header>
                 <div id="xmpl_RSI_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <menu id="xmpl_CCI_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
                 <header class="expanderTITLE">SPY CCI:</header>
                 <div id="xmpl_CCI_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <menu id="xmpl_MOM_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
                 <header class="expanderTITLE">SPY MOM:</header>
                 <div id="xmpl_MOM_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <!--********************MACD, STOCH, BBANDS ********************************************************-->
             <menu id="xmpl_MACD_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:14em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:16em;">
                 <header class="expanderTITLE">SPY MACD:</header>
                 <div id="xmpl_MACD_SPY" style="display: flex;justify-content: center;height:12em;"></div>
             </menu>
             <menu id="xmpl_BOLL_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:14em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:16em;">
                 <header class="expanderTITLE">SPY BOLL:</header>
                 <div id="xmpl_BOLL_SPY" style="display: flex;justify-content: center;height:12em;"></div>
             </menu>
             <menu id="xmpl_STOCH_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
                 <header class="expanderTITLE">SPY STOCH:</header>
                 <div id="xmpl_STOCH_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <menu id="xmpl_STOCRSI_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
                 <header class="expanderTITLE">SPY STOCH_RSI:</header>
                 <div id="xmpl_STOCRSI_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
+            <!--- ***********************IV, SENTIMENT, SALES************************************************************-->
             <menu id="xmpl_HISTORIV_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
-                <header class="expanderTITLE">Implied Volatility:</header>
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                <header class="expanderTITLE">IV (Implied Volatility):</header>
                 <div id="xmpl_HISTORIV_SPY" style="display: flex;justify-content: center;height:8em;"></div>
+            </menu>            
+            <menu id="xmpl_SENTIMENTZ_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                <header class="expanderTITLE">US SENTIMENT:</header>
+                <div id="xmpl_SENTIMENTZ" style="display: flex;justify-content: center;height:8em;"></div>
+            </menu>            
+            <menu id="xmpl_SALEZ_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                <header class="expanderTITLE">US SALES:</header>
+                <div id="xmpl_RETAIL_SALEZ" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>            
         </section><!--***********************************************end BOOKFRAME-->     
     </section><!--end BOOKVIEW-->
@@ -455,7 +432,7 @@ input[type="checkbox"]:checked:after {
                 <div style="display: flex;align-items: center;width: 100%;justify-content: space-around;">
                     <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
                     <button id="latestBtn1" class="blackBTN" style="margin:1em 1% 1em 1%;"
-                        onclick="getLastPriceClick()">GET Latest Prices🔄</button>
+                        onclick="getLastPriceClick()">GET Latest TKR Prices🔄</button>
                 </div>
             </footer>
             <header style="margin:1em;width: 100%;padding-left:2em;font-size:0.888em">
@@ -508,6 +485,7 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
         TICKR_LIST:[
             {tkr:'BTC',lastLoadYMD:''},{tkr:'ETH',lastLoadYMD:''},
             {tkr:'AMZN',lastLoadYMD:''},{tkr:'NVDA',lastLoadYMD:''},
+            {tkr:'SPY',lastLoadYMD:''},//{tkr:'QQQ',lastLoadYMD:''},
         ],
         METASTATE:{ 
             BOOKZ_EXPANDER:['BTC'], //multiple expansion.
@@ -1554,7 +1532,6 @@ function renderTRADEData(datatgt){
         // } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
     // }
 function import_TradeClick(){
-    debugger;
     let render_TRADE_IMPORT = document.getElementById('render_TRADE_IMPORT');
     let tkrSTR, YMT_id, txnSET=[],txnItem, dupeCNT=0, newCNT=0,txnFound=false;//, ymdSTR,clearDataMap={'YMT_id':true};
     let inputSTR = render_TRADE_IMPORT.value, inputARR=[], txnOBJ={};
@@ -1602,7 +1579,11 @@ function import_TradeClick(){
         let default_DATA = JSON.stringify(bankbookz_DB.TRADE_TXNZ_YMT);//COPY TO default_data : default_TRADE_DATA_MAP_Monthly
         show_USERMSG({txt:'Data Imported',icon:'🛠️',time:2000});
         save_BANKBOOKZ_DB();
-    } catch (error) {console.log('ERR: Bad data.'); go_DATA_VIEW(); }
+        go_DATA_VIEW();
+    } catch (error) {
+        show_USERMSG({txt:'Bad Import Data',icon:'⚠️',time:2000});
+        console.log('ERR: Bad data.'); go_DATA_VIEW(); 
+    }
 }
 function logData(type){
     if(type==='tkr'){
@@ -1724,7 +1705,8 @@ const init_BOOKZ_TABZ = ()=>{
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0 0 0.222em 0;
                 flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
                 <header class="expanderROW">
-                    <span class="expanderTITLE">Candles:</span>
+                    <span class="expanderTITLE">
+                        TRADES:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
                 </header>
                 <article id="candlestickFRAME_${tgtTKR.tkr}" class="dynamicCandleStick" style="justify-content:center;
@@ -1754,7 +1736,8 @@ const init_BOOKZ_TABZ = ()=>{
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
                 flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
                 <header class="expanderROW">
-                    <span class="expanderTITLE">Trends:</span>
+                    <span class="expanderTITLE">
+                        TRENDS:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;flex-direction: column;">
@@ -1765,24 +1748,12 @@ const init_BOOKZ_TABZ = ()=>{
 
                     <menu style="justify-content: center;border-radius: 13px; display: flex; margin-top: 0;
                         padding: 1em 0 0 0; height: 4em; flex-wrap: wrap; ">
-                        <!--<input type="checkbox" class="Trendz_CHECKBOX" id="linez_opt_${tgtTKR.tkr}">
-                        <label for="linez_opt">linez</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="candlez_opt_${tgtTKR.tkr}">
-                        <label for="candlez_opt">candlez</label>-->
                         <input type="checkbox" class="Trendz_CHECKBOX" id="volz_opt_${tgtTKR.tkr}">
                         <label for="volz_opt">volz</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="avgz_opt_${tgtTKR.tkr}">
                         <label for="avgz_opt">avgz</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="moavg_opt_${tgtTKR.tkr}">
                         <label for="moavg_opt_${tgtTKR.tkr}">moavg</label>
-                        <!-- <input type="checkbox" class="Trendz_CHECKBOX" id="greenband_opt_${tgtTKR.tkr}">
-                        <label for="greenband_opt">gband</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="bollz_opt_${tgtTKR.tkr}">
-                        <label for="bollz_opt">boll's</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="cci_opt_${tgtTKR.tkr}">
-                        <label for="cci_opt">cci</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="mom_opt_${tgtTKR.tkr}">
-                        <label for="mom_opt">mom</label>-->
                     </menu>
 
                     <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
@@ -1798,15 +1769,69 @@ const init_BOOKZ_TABZ = ()=>{
                     </menu>
                 </section>
             </section>
-            <section id="structsBOX_${tgtTKR.tkr}" style="justify-content:center;
+
+            <section id="momentumBOX_${tgtTKR.tkr}" style="justify-content:center;
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
                 flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
                 <header class="expanderROW">
-                    <span class="expanderTITLE">Draw:</span>
+                    <span class="expanderTITLE">
+                        MOMENTUM:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;flex-direction: column;">
-                    <article id="structsFRAME_${tgtTKR.tkr}" class="dynamicTrends" style="justify-content:center;
+                    <article id="momentumFRAME_${tgtTKR.tkr}" style="justify-content:center;
+                        flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+                        <i style="font-size:0.555em;margin:0.888em;">No data.</i>
+                    </article>
+                    <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
+                        <span><div style="background:blue;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                        margin-right: 0.5em;"></div>
+                        <span style="font-size:0.666em;color:royalblue">BUY</span>
+                        </span>
+                        <span><div style="background:purple;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;color:rebeccapurple">SELL</span>
+                        </span>
+                    </menu>
+                </section>
+            </section>
+
+            <section id="drawBOX_${tgtTKR.tkr}" style="justify-content:center;
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
+                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
+                <header class="expanderROW">
+                    <span class="expanderTITLE">
+                        DRAW:</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
+                </header>
+                <section style="display:none;flex-direction: column;">
+                    <article id="drawFRAME_${tgtTKR.tkr}" style="justify-content:center;
+                        flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+                        <i style="font-size:0.555em;margin:0.888em;">No data.</i>
+                    </article>
+                    <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
+                        <span><div style="background:blue;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                        margin-right: 0.5em;"></div>
+                        <span style="font-size:0.666em;color:royalblue">BUY</span>
+                        </span>
+                        <span><div style="background:purple;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                            margin-right: 0.5em;"></div>
+                            <span style="font-size:0.666em;color:rebeccapurple">SELL</span>
+                        </span>
+                    </menu>
+                </section>
+            </section>
+
+            <section id="advancedBOX_${tgtTKR.tkr}" style="justify-content:center;
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
+                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
+                <header class="expanderROW">
+                    <span class="expanderTITLE">
+                        ADVANCED:</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
+                </header>
+                <section style="display:none;flex-direction: column;">
+                    <article id="advancedFRAME_${tgtTKR.tkr}" style="justify-content:center;
                         flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
                         <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                     </article>
@@ -1824,10 +1849,11 @@ const init_BOOKZ_TABZ = ()=>{
             </section>
 
             <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
-            border-radius:22.222px;  display:flex;border:solid 1px teal;padding: 0.222em 0.888em 0.222em 0.888em;
-            margin: 0.222em 0 0.222em 0;">
+                border-radius:22.222px;  display:flex;border:solid 1px teal;padding: 0.222em 0.888em 0.222em 0.888em;
+                margin: 0.222em 0 0.222em 0;">
                 <header class="expanderROW">
-                    <span class="expanderTITLE">PnL:</span>
+                    <span class="expanderTITLE">
+                        PnL:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none; flex-direction:column;">
@@ -1856,17 +1882,6 @@ const init_BOOKZ_TABZ = ()=>{
                     </footer>                  
                 </section>            
             </section> 
-
-            <menu id="dataFRAME_${tgtTKR.tkr}" class="FRAME" 
-            style="justify-content: center;border: 1px solid purple;
-    margin: 0.222em 0 0.222em 0;padding: 0.222em 0.888em 0.222em 0.888em; box-shadow: 1px 1px 8px purple;
-                border-radius: 22.222px; display:flex;flex-direction: column;">
-                <header class="expanderROW">
-                    <span class="expanderTITLE">METADATA:</span>
-                    <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
-                </header>
-                <section style="display:none;">...</section>
-            </menu>
 
         </section><!--end BOOKFRAME-->         
         `;
@@ -2043,7 +2058,7 @@ import {calcMA,getFakeData} from "./module/MO_AVGS_3.js"; //calc move avgs.
 import {g as getMockData} from "./module/sample-data.js";
 
 window.init_Trendz_CHART = (tkr) => {
-    let checkz = get_Checked(tkr);
+    let checkz = get_Trendz_Checked(tkr);
     let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
     tgt_Chart.innerHTML = ''; //blank out frame.
     const TrendzChart = LightweightCharts.createChart(`trendzFRAME_${tkr}`, { 
@@ -2202,7 +2217,7 @@ function init_Trendz_CHECKBOXES(){
         });
     });
 }; init_Trendz_CHECKBOXES();
-function get_Checked(tkr){
+function get_Trendz_Checked(tkr){
     if(!tkr){return}
     // let linezElem = document.getElementById(`linez_opt_${tkr}`);
     // let candlezElem = document.getElementById(`candlez_opt_${tkr}`);
@@ -2272,23 +2287,24 @@ const getLastPriceClick = async ()=>{ //loop all for last close.
 const call_Various_Stock_API = async (queries)=>{
    try{
       for(let i=0; i<queries.length;i++){
-         console.log('Query:',queries[i])
+        //  console.log('Query:',queries[i])
          //CRYPTO QUERIES-----------------------------------
          if(queries[i]==='BTC' 
             || queries[i]==='ETH'  
             || queries[i]==='UNI'  
             || queries[i]==='AVAX' ){
-            console.log('GET Crypto:',queries[i])
+            console.log('GET Crypto:',queries[i]);
             await getCrypto_Daily(queries[i])
             continue;
             //END CRYPTO QUERIES-----------------------------------
-         }else if(queries[i]==='NVDA'){ //ADJUSTED WEEKLY STOCKS.
+         }else if(queries[i]==='NVDA' 
+            || queries[i]==='MSTR'){ //ADJUSTED WEEKLY STOCKS.
+            console.log('GET Weekly Adjusted:',queries[i]);
             await getStock_Weekly_Adjusted(queries[i]);
             continue;
-         } else{
-            debugger; //shouldnt happen getStock_Daily ???
-
-            await getCrypto_Daily(queries[i])
+         } else { //All Other Stock Requests.
+            console.log('GET Stock:',queries[i]);
+            await getStock_Daily(queries[i])
             continue;
          }
       }
@@ -2299,14 +2315,13 @@ const call_Various_Stock_API = async (queries)=>{
 //********************************************END STOCK LOOP*************
 const getCrypto_Daily = async (tkrTGT)=>{
     // if(tkrTGT==='BTC'||tkrTGT==='ETH'){ debugger; };//console.log(`GET ${tkrTGT}`)}else{return}
-    // if(getAPI_Limiter(tkrTGT)){return} //CHECK LastRefreshTime
     if(!stock_api_key){return}
     let url = `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${tkrTGT}&market=USD&interval=5min&apikey=${stock_api_key}`;
     await fetch(url).then((data)=>{
         if(data.ok){ return data.json();} else{ console.log('err1');}
         }).then((tickResp)=>{
             let tkr = tickResp["Meta Data"]["2. Digital Currency Code"].toUpperCase();
-            console.log('RESPONSE:',tkr);
+            // console.log('RESPONSE:',tkr);
             const tickDaily_RAW = tickResp["Time Series (Digital Currency Daily)"]
             const tickDaily_KEYS = Object.keys(tickDaily_RAW)   
             tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.          
@@ -2526,7 +2541,7 @@ function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local stora
     }
     console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`) 
 }
-/**********************************************************************RSI, CCI, MOM, ETC****************/
+/**********************************************************************RSI, CCI, MOM****************/
 const getRSI = async (tkr) => {
     await fetch(`https://www.alphavantage.co/query?function=RSI&symbol=${tkr}&interval=daily&time_period=10&series_type=open&apikey=${stock_api_key}`)
     .then((data)=>{
@@ -2834,6 +2849,7 @@ function render_BOLL(tkr,BOLLData){
     BOLL_Series_lo.setData(loSET);
 }; render_BOLL('SPY')
 //---------------------------END BOLL
+/****************************************END MACD, STOCH, BOLL, ****************/
 //******************************************STOCH:***************
 const getSTOCH = async (tkr) => { //STOCHASTIC OSCILLATOR.
     await fetch(`https://www.alphavantage.co/query?function=STOCH&symbol=${tkr}&interval=daily&apikey=${stock_api_key}`)
@@ -3031,7 +3047,153 @@ function render_HISTORIV(tkr,HISTORIVData){
     HISTORIV_Series_IV.setData(dSET);
 }; render_HISTORIV('SPY')
 //---------------------------END HISTORIV
-/****************************************END MACD, STOCH, BOLL, ****************/
+//******************************************HISTORIV:***************
+const getSENTIMENTZ = async () => { //SENTIMENTZA.
+    // tickers=COIN,CRYPTO:BTC,FOREX:USD
+    //topics=technology,blockchain
+    let tkrz = 'BTC,NVDA';
+    let topicz = 'technology,blockchain'
+               //https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=AAPL&apikey=demo'
+    await fetch(`https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=AAPL&apikey=${stock_api_key}`)
+    // await fetch(`https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${tkrz}&topics=${topicz}&apikey=${stock_api_key}`)
+    .then((data)=>{                                                  //TODO Many TICKERS. also topics
+        if(data.ok){
+            return data.json();
+        } else{ debugger; }
+        }).then((tickData)=>{
+            debugger;
+            if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+                show_USERMSG({txt:'Daily Limit',icon:'⚠️'});  return;            }
+        //     if(!tickData || !tickData.endpoint || !tickData.data ){
+        //         debugger;            } //error handling
+        let sentimentz = {
+            definition:tickData.sentiment_score_definition,
+            relevance:tickData.relevance_score_definition,
+            data:tickData.feed
+        }
+        render_SENTIMENTZ(sentimentz)
+        // // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
+        // // save_NEW_Stock_DAILY(tickDaily_TV)            
+        });
+}; //getSENTIMENTZ();
+function render_SENTIMENTZ(sentimentz){
+
+    sentimentz = {
+        "definition":"x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat_Bullish; x >= 0.35: Bullish","relevance":"0 < x <= 1, with a higher score indicating higher relevance.",
+        "data":[
+            {"title":"Epic Games Mobile Store Goes Live In Europe, CEO Says 'Apple Had To Be Challenged' - Alphabet  ( NASDAQ:GOOGL ) ",
+    }]}
+
+    // debugger;
+    let sentElem = document.getElementById(`xmpl_SENTIMENTZ`)
+    sentElem.innerHTML = `<section>Sentiments:
+          ${sentimentz.definition} <br>
+          ${sentimentz.relevance}
+          </section>
+    `;
+    let item, elem;
+    for(var i=0; i<sentimentz.data.length;i++){
+        item = sentimentz.data[i];
+        // elem = sentElem.appendChild('article');
+        // elem.innerHTML = `${item.title} <br><hr><br>${item.overall_sentiment_label}`;
+    }
+// authors: ['Franca Quarneti']
+// banner_image: "https://cdn.benzinga.com/files/images/story/2024/08/16/January-16--2024--Brazil--In-This-Photo-.jpeg?width=1200&height=800&fit=crop"
+// category_within_source: "General"
+// overall_sentiment_label: "Neutral"
+// overall_sentiment_score: 0.073984
+// source: "Benzinga"
+// source_domain: "www.benzinga.com"
+// summary: "Epic Games has officially introduced its mobile store, marking a significant development in the ongoing tension between the company and tech giants Apple Inc AAPL and Alphabet Inc's GOOGL Google."
+// ticker_sentiment: 
+//     relevance_score:"0.05654"
+//     ticker: "MSFT"
+//     ticker_sentiment_label: "Neutral"
+//     ticker_sentiment_score: "0.127936"
+// time_published: "20240816T183216"
+// title: "Epic Games Mobile Store Goes Live In Europe, CEO Says 'Apple Had To Be Challenged' - Alphabet  ( NASDAQ:GOOGL ) "
+// topics: [{…}]
+// url:
+
+    
+
+}; render_SENTIMENTZ();
+//---------------------------END SENTIMENTZ
+//******************************************SALEZ:***************
+const getSALEZ = async () => { //SALEZ OSCILLATOR.
+                //https://www.alphavantage.co/query?function=RETAIL_SALES&apikey=demo
+    await fetch(`https://www.alphavantage.co/query?function=RETAIL_SALES&apikey=${stock_api_key}`)
+    .then((data)=>{
+        if(data.ok){
+            return data.json();
+        } else{ debugger; }
+        }).then((tickData)=>{
+            debugger;
+            if(tickData.Information && tickData.Information.indexOf('Thank you')===0){
+                show_USERMSG({txt:'Daily Limit',icon:'⚠️'});  return;            }
+            if(!tickData || !tickData.data ){
+                debugger;            } //error handling
+            let resTKR = tickData.name;
+            if(!resTKR){return;}
+            console.log('GOT_SALEZ:',resTKR);
+            let SALEZ_RAW_Data = tickData.data;
+            if(!SALEZ_RAW_Data){return;}
+        //     let SALEZ_KEYS = Object.keys(SALEZ_RAW_Data)     
+        let reduceData = 12; //too much data reduce from 391 to 12 months.
+        SALEZ_RAW_Data = SALEZ_RAW_Data.splice(0,reduceData)    //SPLICE MOST RECENT.    
+        
+// date:"2024-07-01"
+// value: "627510.0"
+        SALEZ_RAW_Data.reverse(); //CONFIRM: earliest ASC for LWC.
+        //     const SALEZ_TV = [];
+        //     let obj;
+        // // let lastRefreshTime = tickData["Meta Data"]["3. Last Refreshed"];
+        // for (const aKey of SALEZ_KEYS) {  //FORMAT TO TRADING VIEW.
+        //     obj = SALEZ_RAW_Data[aKey];
+        //     SALEZ_TV.push({
+        //         tkr:resTKR,
+        //         time:aKey,
+        //         SlowD:parseFloat(obj.SlowD),
+        //         SlowK:parseFloat(obj.SlowK)
+        //     });
+        // }
+        // debugger;
+        render_SALEZ(SALEZ_RAW_Data)
+        // // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
+        // // save_NEW_Stock_DAILY(tickDaily_TV)            
+        });
+}; //getSALEZ();
+function render_SALEZ(salesData){
+
+
+//   let SALES_DATA = [{"date":"2023-08-01","value":"624457.0"},{"date":"2023-09-01","value":"589258.0"},{"date":"2023-10-01","value":"604435.0"},{"date":"2023-11-01","value":"619189.0"},{"date":"2023-12-01","value":"668957.0"},{"date":"2024-01-01","value":"552441.0"},{"date":"2024-02-01","value":"555528.0"},{"date":"2024-03-01","value":"609462.0"},{"date":"2024-04-01","value":"605419.0"},{"date":"2024-05-01","value":"643843.0"},{"date":"2024-06-01","value":"604742.0"},{"date":"2024-07-01","value":"627510.0"}];
+
+    const data = [
+        { time: "2024-06-01", value: 527510.0 },
+        { time: "2024-07-01", value: 627510.0 },
+        { time: "2024-08-01", value: 727510.0 },
+        { time: "2024-09-01", value: 827510.0 },
+    ];
+
+    const chart = LightweightCharts.createChart(document.getElementById('xmpl_RETAIL_SALEZ'), 
+    // {
+        // width: 800, height: 400, layout: { backgroundColor: '#000000' }
+        {width:400,height:300, autoSize:true, 
+            grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+            layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } 
+        }
+    });
+
+
+    // const barSeries = chart.addBarSeries({upColor:'rgba(255,88, 44, 1)',downColor:'rgba(0, 255, 44, 1)',wickColor:'rgba(127, 127, 127, 1)'});
+    let lineSeries = chart.addLineSeries({ color: 'aqua' })
+    lineSeries.setData(data);
+
+
+
+}; render_SALEZ()
+//---------------------------END SALEZ
+/****************************************END STOCH, IV SALES SENTIMENT, ****************/
 </script><!--*****************************END STOCK DATA API******************-->
 <footer id="FOOTER_BOX">
     <!-- <section id="keyBOX" style="display:flex;border: solid 1px steelblue;
