@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>TradeSpot</title>
+		
+		<style>
+			#chart {
+				border-top-left-radius: 0px;
+				border-top-right-radius: 0px;
+			}
+		</style>
+		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
+		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+		<link rel="modulepreload" crossorigin href="./sample-data.js">
+		<link rel="modulepreload" crossorigin href="./plugin-base.js">
+		<link rel="modulepreload" crossorigin href="./positions.js"> -->
+        <script src="./lwc_dev_deriv_4.2.js"></script>
+		<link rel="stylesheet" href="./lwc.css">
+	</head>
+	<body style="background:black;">
+		<div id="description">
+			<h1 style="color:steelblue;">TradeSpot</h1>
+			<p style="color:limegreen;">
+				Mark Price point.
+			</p>
+		</div>		
+		<div id="trends_chart" style="height:20em;"></div>
+	<script type="module">
+		import {P as lwcprod} from "./lwc.prod.js";
+		import {g as getRandomDataSet} from "./sample-data.js";
+		import {TradeSpot_Class as TradeSpot_Class} from "./TRADESPOT_2.js";
+		const chartElem = lwcprod("trends_chart", { autoSize:!0, 
+			layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+			grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+			allowShiftVisibleRangeOnWhitespaceReplacement:!0
+		})
+		const lwc_TrendSeries = chartElem.addLineSeries()
+		const  dataSet = getRandomDataSet();
+		lwc_TrendSeries.setData(dataSet);
+		const len = dataSet.length;
+		const EndPoint = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
+		const StartPoint = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
+		// debugger;
+		const TrendLine_Chart = new TradeSpot_Class(chartElem,lwc_TrendSeries,EndPoint,StartPoint);
+		lwc_TrendSeries.attachPrimitive(TrendLine_Chart);
+		let topEND={},topSTART={};
+		topEND.time = EndPoint.time;
+		topEND.price = EndPoint.price+10;
+		topSTART.time = StartPoint.time;
+		topSTART.price = StartPoint.price+200;
+		const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
+			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
+		};            
+		const trendLineTOP = new TradeSpot_Class(chartElem,lwc_TrendSeries,topEND,topSTART,lineOptions_TOP);
+		lwc_TrendSeries.attachPrimitive(trendLineTOP);
+		let midEND={},midSTART={};
+		midEND.time = EndPoint.time;
+		midEND.price = EndPoint.price-10;
+		midSTART.time = StartPoint.time;
+		midSTART.price = EndPoint.price-10; 
+		const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
+			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue", // LineStyle:'Dotted'
+		};
+		const trendLine_MID = new TradeSpot_Class(chartElem,lwc_TrendSeries,midEND,midSTART,lineOptions_MID);
+		lwc_TrendSeries.attachPrimitive(trendLine_MID);
+		let btmEND={},btmSTART={};
+		btmEND.time = EndPoint.time;
+		btmEND.price = EndPoint.price-10;
+		btmSTART.time = StartPoint.time;
+		btmSTART.price = StartPoint.price-200;
+		const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
+			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
+		};
+		const trendLine_BTM = new TradeSpot_Class(chartElem,lwc_TrendSeries,btmEND,btmSTART,lineOptions_BTM);
+		lwc_TrendSeries.attachPrimitive(trendLine_BTM);
+	</script>
+
+
+
+    <!-- ***********DRAW CHART MODULE  -->
+<!--script type="module">
+    // import "./vert_1.js"
+    
+    // import {P as lwcprod} from "./lwc_dev_deriv_4.2.js"; //required for module.
+    // import {P as lwcprod} from "./lwc.prod.js"; //required for module.
+    // import {VLineOverlay_Class as VLineOverlay_Class} from "./VERTLINE_1.js";  
+    import {VLineOverlay_Class as VLineOverlay_Class} from "./TRADESPOT_2.js";  
+    import {g as getMockData} from "./sample-data.js";
+    // const lineChart = lwcprod("chart", { autoSize:!0, 
+	let elemChart = document.getElementById('tradespot_xmpl')
+	// debugger;
+    // const lineChart = LightweightCharts.createChart(elemChart, { autoSize:!0, 
+    const lineChart = LightweightCharts.createChart("chart", { autoSize:!0, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    const lineSeries = lineChart.addLineSeries()
+    const data = getMockData();
+    lineSeries.setData(data);
+    const vl1 = new VLineOverlay_Class(lineChart,lineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
+    lineSeries.attachPrimitive(vl1);
+    const vl2 = new VLineOverlay_Class(lineChart,lineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
+    lineSeries.attachPrimitive(vl2);    
+</script-->
+</body>
+</html>
