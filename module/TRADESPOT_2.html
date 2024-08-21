@@ -10,6 +10,14 @@
 				border-top-left-radius: 0px;
 				border-top-right-radius: 0px;
 			}
+            /* EXCELLENT COLOR SET - FOR RED/GREEN-SCALE.
+                "rgb(0, 255, 88)",  //BRIGHTGRN    UPLRG
+                "rgb(0, 255, 88)", //LIMEGREEN     UPMED
+                "rgb(0, 144, 188)", //TEAL         UPSML       
+                "rgb(255, 69, 44)", //BURNTORNG    DWNSML
+                "rgb(255, 0, 88)",  //RED          DWNMED
+                "rgb(88, 1, 1)",     //DEEPCRMSN   DWNLRG
+            */
 		</style>
 		<!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
 		<!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
@@ -28,53 +36,66 @@
 		</div>		
 		<div id="trends_chart" style="height:20em;"></div>
 	<script type="module">
-		import {P as lwcprod} from "./lwc.prod.js";
+		// import {P as createChart} from "./lwc.prod.js";
 		import {g as getRandomDataSet} from "./sample-data.js";
 		import {TradeSpot_Class as TradeSpot_Class} from "./TRADESPOT_2.js";
-		const chartElem = lwcprod("trends_chart", { autoSize:!0, 
+		const chartElem = LightweightCharts.createChart("trends_chart", { autoSize:!0, 
 			layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
 			grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
 			allowShiftVisibleRangeOnWhitespaceReplacement:!0
 		})
-		const lwc_TrendSeries = chartElem.addLineSeries()
+		const trendSpot_Series = chartElem.addLineSeries()
 		const  dataSet = getRandomDataSet();
-		lwc_TrendSeries.setData(dataSet);
+		trendSpot_Series.setData(dataSet);
 		const len = dataSet.length;
-		const EndPoint = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
-		const StartPoint = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
+		const StrtPt1 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
+		const EndPt1 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
+		const StrtPt2 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value +50 }
+		const EndPt2 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value +50 }
+		const StrtPt3 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value -50 }
+		const EndPt3 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value -50 }
 		// debugger;
-		const tradeSpot_Chart = new TradeSpot_Class(chartElem,lwc_TrendSeries,EndPoint,StartPoint);
-		lwc_TrendSeries.attachPrimitive(tradeSpot_Chart);
+
+		const tradeSpot_MARK_1 = new TradeSpot_Class(chartElem,trendSpot_Series,EndPt1,StrtPt1,{
+            lineColor:"rgb(88, 1, 1)",     //DEEPCRMSN
+        }); trendSpot_Series.attachPrimitive(tradeSpot_MARK_1);
+		const tradeSpot_MARK_2 = new TradeSpot_Class(chartElem,trendSpot_Series,EndPt2,StrtPt2,{
+            lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+        }); trendSpot_Series.attachPrimitive(tradeSpot_MARK_2);
+		const tradeSpot_MARK_3 = new TradeSpot_Class(chartElem,trendSpot_Series,EndPt3,StrtPt3,{
+            lineColor:"rgb(255, 69, 44)", //BURNTORNG
+        }); trendSpot_Series.attachPrimitive(tradeSpot_MARK_3);
+
 		let topEND={},topSTART={};
-		topEND.time = EndPoint.time;
-		topEND.price = EndPoint.price+10;
-		topSTART.time = StartPoint.time;
-		topSTART.price = StartPoint.price+200;
-		const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
+		topEND.time = EndPt1.time;
+		topEND.price = EndPt1.price+10;
+		topSTART.time = StrtPt1.time;
+		topSTART.price = StrtPt1.price+200;
+		const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)", //LIME
 			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
 		};            
-		const tradeSpotTOP = new TradeSpot_Class(chartElem,lwc_TrendSeries,topEND,topSTART,lineOptions_TOP);
-		lwc_TrendSeries.attachPrimitive(tradeSpotTOP);
+		const tradeSpotTOP = new TradeSpot_Class(chartElem,trendSpot_Series,topEND,topSTART,lineOptions_TOP);
+		trendSpot_Series.attachPrimitive(tradeSpotTOP);
 		let midEND={},midSTART={};
-		midEND.time = EndPoint.time;
-		midEND.price = EndPoint.price-10;
-		midSTART.time = StartPoint.time;
-		midSTART.price = EndPoint.price-10; 
-		const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
-			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue", // LineStyle:'Dotted'
+		midEND.time = EndPt1.time;
+		midEND.price = EndPt1.price-10;
+		midSTART.time = StrtPt1.time;
+		midSTART.price = EndPt1.price-20; 
+		const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)", //TEAL
+			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue", 
 		};
-		const tradeSpot_MID = new TradeSpot_Class(chartElem,lwc_TrendSeries,midEND,midSTART,lineOptions_MID);
-		lwc_TrendSeries.attachPrimitive(tradeSpot_MID);
+		const tradeSpot_MID = new TradeSpot_Class(chartElem,trendSpot_Series,midEND,midSTART,lineOptions_MID);
+		trendSpot_Series.attachPrimitive(tradeSpot_MID);
 		let btmEND={},btmSTART={};
-		btmEND.time = EndPoint.time;
-		btmEND.price = EndPoint.price-10;
-		btmSTART.time = StartPoint.time;
-		btmSTART.price = StartPoint.price-200;
-		const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
+		btmEND.time = EndPt1.time;
+		btmEND.price = EndPt1.price-30;
+		btmSTART.time = StrtPt1.time;
+		btmSTART.price = StrtPt1.price-200;
+		const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",  //RED
 			labelBackgroundColor: "rgba(0, 0, 0, 0.85)", labelTextColor: "steelblue"
 		};
-		const tradeSpot_BTM = new TradeSpot_Class(chartElem,lwc_TrendSeries,btmEND,btmSTART,lineOptions_BTM);
-		lwc_TrendSeries.attachPrimitive(tradeSpot_BTM);
+		const tradeSpot_BTM = new TradeSpot_Class(chartElem,trendSpot_Series,btmEND,btmSTART,lineOptions_BTM);
+		trendSpot_Series.attachPrimitive(tradeSpot_BTM);
 	</script>
 
 
