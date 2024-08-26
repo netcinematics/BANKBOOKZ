@@ -33,28 +33,29 @@ class PointDraw_Class {
             
             // ctx.setLineDash([6, 8])
             // ctx.strokeStyle = "rgb(88, 1, 144)"; //Deeppurple
+            let scale = 0;
             if(this._type==='+'){  //sml, big, lrg
                 //----------------------------//DRAW-PLUS sign
                 ctx.beginPath();
                 ctx.lineCap = "round";
-                ctx.moveTo(p1x+4, p1y);        
-                ctx.lineTo(p1x-4, p1y);
-                ctx.moveTo(p1x, p1y+4);        
-                ctx.lineTo(p1x, p1y-4);
+                ctx.moveTo(p1x+4+scale, p1y);        
+                ctx.lineTo(p1x-4+scale, p1y);
+                ctx.moveTo(p1x, p1y+4+scale);        
+                ctx.lineTo(p1x, p1y-4+scale);
                 ctx.stroke();
             }
             else if (this._type==='X'){
                 //------------------------------   //DRAW-X
                 ctx.beginPath();
                 ctx.strokeStyle = this._options.lineColor;
-                ctx.moveTo(p1x+4, p1y+4);     
-                ctx.lineTo(p1x-4, p1y-4);
-                ctx.moveTo(p1x+4, p1y-4);
-                ctx.lineTo(p1x-4, p1y+4);
+                ctx.moveTo(p1x+4+scale, p1y+4+scale);     
+                ctx.lineTo(p1x-4+scale, p1y-4+scale);
+                ctx.moveTo(p1x+4+scale, p1y-4+scale);
+                ctx.lineTo(p1x-4+scale, p1y+4+scale);
                 ctx.stroke();
             }
             else{
-                console.log('no type found')
+                // console.log('no type found')
                 //------------------------------   //DRAW-SQUARE
                 ctx.beginPath();
                 ctx.strokeStyle = this._options.lineColor;
