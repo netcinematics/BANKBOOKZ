@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TXTSpot</title>
+    
+    <style>
+    .editorBTN{color:aqua;font-size: 0.666em;padding:0.444em 0.666em 0.444em 0.666em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;user-select: none;
+    }
+    .blackBTN.selectedSUBBTN{color:cyan;box-shadow: inset 1px 1px 12px 0px blue;border:solid 1px teal;}
+    /* BTN **********************************BTN**************************/
+    /* .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
+        cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;} */
+    .blackBTN{border-radius: 13px;background:black;cursor: pointer;font-size: 0.777em;
+        color: aqua;line-height:1;box-shadow:1px 1px 1px aqua;padding: 0.555% 1% 0.555% 1%;}
+    /**************RESPONSIVE BTN *******************/
+    /* .BTN:hover{border:1px solid steelblue; color:purple}
+    .BTN:active{border:1px solid lime; color:green} */
+    .blackBTN:hover{border:1px solid lime;  background:black;  color:green}
+    .blackBTN:active{border:1px solid steelblue;  background:black; color:purple}
+    @media only screen and (max-width: 800px) { /************* TABLET */
+        body{  background-color: #00070d;}
+        .BTN{font-size:1.111em;}
+        /* .blackBTN{font-size:0.999em;} */
+    }  
+    @media only screen and (max-width: 500px) { /************* PHONE */
+        body{ background-color: #07000c; }
+        .BTN{font-size:1em;}
+        .blackBTN{font-size:0.888em;}
+    }    
+        /* EXCELLENT COLOR SET - FOR RED/GREEN-SCALE.
+            "rgb(0, 255, 88)",  //BRIGHTGRN    UPLRG
+            "rgb(0, 255, 88)", //LIMEGREEN     UPMED
+            "rgb(0, 144, 188)", //TEAL         UPSML     
+            "rgb(88, 1, 144)"; //Deeppurple    NEUTRL  
+            "rgb(255, 69, 44)", //BURNTORNG    DWNSML
+            "rgb(255, 0, 88)",  //RED          DWNMED
+            "rgb(188, 1, 1)",     //DEEPCRMSN   DWNLRG
+        */
+    </style>
+    <!-- <script type="module" crossorigin src="./rect_1.js"></script> -->
+    <!-- <link rel="modulepreload" crossorigin href="./lwc.prod.js">
+    <link rel="modulepreload" crossorigin href="./sample-data.js">
+    <link rel="modulepreload" crossorigin href="./plugin-base.js">
+    <link rel="modulepreload" crossorigin href="./positions.js"> -->
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+    <link rel="stylesheet" href="./lwc.css">
+</head>
+<body style="background:black;">
+    <div id="description">
+        <h1 style="color:steelblue;">TXTSpot</h1>
+        <p style="color:limegreen;">
+            Mark Price point.
+        </p>
+    </div>	
+    <menu><button id="editTXTBTN"  class="blackBTN"onclick="editTXTPoint(event)">SET_TXT</button></menu>	
+    <div id="xmpl_spotz_chart" style="height:20em;"></div>
+
+    <aside id="txtPointEditor" pricePT="600.3465866099519" style="border: 1px solid steelblue;
+    visibility: visible;position: absolute;z-index: 11;color: aqua;line-height:2em;
+    background: rgb(4, 1, 62);border-radius: 13px;padding: 0.222em 0.222em;width:280px;
+    box-shadow: blue 1px 3px 8px inset;display: flex;justify-content: space-between;
+    align-items: flex-start;top: 337px;left: 10%;flex-direction: column;">
+    <menu style="display: flex;width: 100%;justify-content: space-around;padding-left: 0;line-height: 1em;">
+   <span>TXT:</span><input id="txtEditInput" style="width:6em;border-radius: 13px;background: blueviolet;
+        color: aqua;text-align: center;">
+       <span onclick="((event) => {
+           event.target.parentElement.parentElement.style.visibility = 'hidden'
+       })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+       box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
+           border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
+   </menu>
+   
+       <span>
+            <span class="editorBTN" onclick="symbolClick(event)">OVRBO&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">OVRSO&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">VOLUP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">VOLDN&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">GAPUP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">GAPDN&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">JMPUP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">JMPDN&nbsp;</span>
+
+            <span class="editorBTN" onclick="symbolClick(event)">BRKUP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">BRKDN</span>
+            <span class="editorBTN" onclick="symbolClick(event)">CROSUP</span>
+            <span class="editorBTN" onclick="symbolClick(event)">CROSDN</span>
+
+            <span class="editorBTN" onclick="symbolClick(event)">DIXUP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">DIXDN&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">10YRUP</span>
+            <span class="editorBTN" onclick="symbolClick(event)">10YRDN</span>
+
+            <span class="editorBTN" onclick="symbolClick(event)">VIXUP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">VIXDN&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">WEDGE&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">DIVRG&nbsp;</span>
+
+            <span class="editorBTN" onclick="symbolClick(event)">&nbsp;ATH&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">&nbsp;NEWLO&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">BREVEN</span>
+            <span class="editorBTN" onclick="symbolClick(event)">CRASH&nbsp;</span>
+
+            <span class="editorBTN" onclick="symbolClick(event)">&nbsp;5%UP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">&nbsp;5%DN&nbsp;</span>
+
+            <span class="editorBTN" onclick="symbolClick(event)">&nbsp;10%UP&nbsp;</span>
+            <span class="editorBTN" onclick="symbolClick(event)">&nbsp;10%DN&nbsp;</span>
+
+
+
+        </span>
+
+        <span style="width:100%;display:flex;justify-content:space-around;margin:1em 0;">
+            <input type="color" value="#003264" style="border: 1px solid blueviolet;border-radius: 44px; background: black;" onchange="setTXTColor(event)">
+            <button style="visibility:inherit;width: 5em; text-align: center;" class="blackBTN" onclick="clickTXTSAVE(event)">SET_TXT</button>
+            <button style="visibility:inherit;width: 2em; text-align: center;" class="blackBTN" onclick="clickTXTDELETE(event)">🗑️</button>
+        </span>
+   </aside>
+
+
+<script type="module">
+    window.editTXTPoint = (e) => {
+    if(!window.editingTXT){
+        window.settingTXTPoint=true;
+        e.target.innerText = 'CLICK_CHART';
+    } else {
+        e.target.innerText = 'SET_TXT';
+        window.settingTXTPoint=false
+    }
+
+}
+
+window.symbolClick = (e)=>{
+    let symbolTXT = e.target.innerText.trim(' ');
+    let editTXT = document.getElementById('txtEditInput')
+    editTXT.value = symbolTXT;
+}
+window.clickTXTDELETE = (e)=>{
+    debugger;
+}
+
+
+import {TXTSpot_Class} from "./TXT_SPOT_1.js";
+import {g as getRandomDataSet} from "./sample-data.js";
+let xmplSymbol_Chart;
+let xmplSymbol_Series;
+window.clickTXTSAVE = (e)=>{
+    let txtEditor = document.getElementById('txtPointEditor')
+    txtPointEditor.style.visibility='hidden';
+    let editTXTElem = document.getElementById('txtEditInput');
+    let editTXT = editTXTElem.value;
+    let pricePT = txtPointEditor.getAttribute('pricePT');
+    let timeUTC = txtPointEditor.getAttribute('timePT');
+    // const timeDate = new Date(timeUTC * 1000); // Convert to milliseconds
+    // let timePT = `${timeDate.getFullYear()}-${(timeDate.getMonth() + 1).toString().padStart(2,'0')}-${timeDate.getDate().toString().padStart(2, '0')}`;
+
+
+//     function formatDate(timestamp) {
+//   const date = new Date(timestamp * 1000); // Convert timestamp to milliseconds
+//   const year = date.getFullYear();
+//   const month = (date.getMonth() + 1).toString().padStart(2,'0');
+//   const day = date.getDate().toString().padStart(2, '0');
+//   return `${year}-${month}-${day}`;   
+
+// }
+
+// let time = '1553688000';
+// const formattedDate = formatDate(time);
+// console.log(formattedDate); // Output: "2019-03-26"
+
+
+
+    if(!editTXT||!pricePT||!timeUTC||!xmplSymbol_Chart||!xmplSymbol_Series){return}
+    // const MarkPt = { time: timePT, price: parseFloat(pricePT) }
+    const MarkPt = { time: parseInt(timeUTC), price: parseFloat(pricePT) }
+    const TXTSPOT_Mark1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt,
+        editTXT,{lineColor:"rgb(1, 1, 188)",     //DEEPBLUE
+    }); xmplSymbol_Series.attachPrimitive(TXTSPOT_Mark1);
+}
+
+window.setTXTColor  = (e)=>{
+    
+}
+function init_XMPL_SPOTZ(){
+
+    xmplSymbol_Chart = LightweightCharts.createChart("xmpl_spotz_chart", { autoSize:true, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    xmplSymbol_Series = xmplSymbol_Chart.addLineSeries()
+    const  dataSet = getRandomDataSet();
+    xmplSymbol_Series.setData(dataSet);
+    const len = dataSet.length;
+    const MarkPt1 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
+    const MarkPt2 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
+    const MarkPt3 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value +50 }
+    const MarkPt4 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value +50 }
+    const MarkPt5 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value -50 }
+    const MarkPt6 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value -50 }
+    const tradeSpot_MARK_1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt1,
+        "JMPUP",{lineColor:"rgb(188, 1, 1)",     //DEEPCRMSN
+    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_1);
+    const tradeSpot_MARK_2 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt2,
+        "CROSDN",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_2);
+    const tradeSpot_MARK_3 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt3,
+        "CRASH",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
+    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_3);
+    const tradeSpot_MARK_4 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt4,
+        "BREVN",{lineColor:"rgb(1, 1, 188)",     //DEEPBlue
+    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_4);
+    const tradeSpot_MARK_5 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt5,
+        "OVRBO",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_5);
+    const tradeSpot_MARK_6 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt6,
+        "OVRSO",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
+    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_6);
+
+} init_XMPL_SPOTZ();
+</script>
+</body>
+</html>

@@ -327,8 +327,8 @@ function showLineEditMenu(e, mousePrice){
     lineEditor.setAttribute('datapt',mousePrice); //set editor state
     console.log('SetMousePrice',mousePrice)
     lineEditor.style.visibility='visible';
-    lineEditor.style.top=e.sourceEvent.pageY+22+'px';
-    lineEditor.style.left=e.sourceEvent.pageX+22+'px';
+    lineEditor.style.top=e.sourceEvent.pageY+18+'px';
+    lineEditor.style.left=e.sourceEvent.pageX-28+'px';
 }
 
 export {SetPriceLine_Class as SetPriceLine_Class};
