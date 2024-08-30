@@ -61,7 +61,7 @@
     <div id="xmpl_spotz_chart" style="height:20em;"></div>
 
     <aside id="txtPointEditor" pricePT="600.3465866099519" style="border: 1px solid steelblue;
-    visibility: visible;position: absolute;z-index: 11;color: aqua;line-height:2em;
+    visibility: hidden;position: absolute;z-index: 11;color: aqua;line-height:2em;
     background: rgb(4, 1, 62);border-radius: 13px;padding: 0.222em 0.222em;width:280px;
     box-shadow: blue 1px 3px 8px inset;display: flex;justify-content: space-between;
     align-items: flex-start;top: 337px;left: 10%;flex-direction: column;">
@@ -69,7 +69,9 @@
    <span>TXT:</span><input id="txtEditInput" style="width:6em;border-radius: 13px;background: blueviolet;
         color: aqua;text-align: center;">
        <span onclick="((event) => {
-           event.target.parentElement.parentElement.style.visibility = 'hidden'
+           event.target.parentElement.parentElement.style.visibility = 'hidden';
+           let txtPointEditor = document.getElementById('txtPointEditor')
+           txtPointEditor.setAttribute('txtEditID',''); //cancel edit mode
        })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
            border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
@@ -140,9 +142,14 @@ window.symbolClick = (e)=>{
     editTXT.value = symbolTXT;
 }
 window.clickTXTDELETE = (e)=>{
-    let txtEditor = document.getElementById('txtPointEditor')
+    let txtPointEditor = document.getElementById('txtPointEditor')
     txtPointEditor.style.visibility='hidden';
-
+    let editMode = txtPointEditor.getAttribute('txtEditID');
+    if(editMode){
+        spotFactory.deleteSpot_TXT(editMode)
+    }
+    txtPointEditor.setAttribute('txtEditID',''); //reset edit mode
+        
     // if( priceTimeWithinBuffer(line.price,mousePrice)
     //             ){ //FOUND ITEM WITH BUFFER and DELETE.
     //                 this._series.removePriceLine(this._pricelines[i].line)
@@ -151,19 +158,65 @@ window.clickTXTDELETE = (e)=>{
     //             }
 }
 
-import {TXTSpot_Class} from "./TXT_SPOT_1.js";
-import {g as getRandomDataSet} from "./sample-data.js";
-let xmplSymbol_Chart;
-let xmplSymbol_Series;
+import {TXT_SPOT_FACTORY} from "./TXT_SPOT_3.js";
+import {g as getMockData} from "./sample-data.js";
+// import {g as getRandomDataSet} from "./sample-data.js";
+// let xmplSymbol_Chart;
+// let xmplSymbol_Series;
+let spotFactory;
+window.init_TXT_SPOT_FACTORY = (e)=>{
+    const priceChart = LightweightCharts.createChart("xmpl_spotz_chart", { width:400, height:300,autoSize:false, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:!0
+    })
+    const data = getMockData();
+    const priceSeries = priceChart.addLineSeries()
+    priceSeries.setData(data);
+    spotFactory = new TXT_SPOT_FACTORY(priceChart,priceSeries,{ color: "steelblue"});
+    // --CREATE TXT SPOTZ!--------------------------------------------------
+    let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    spotFactory.setPricelines([{price: 444, line:spotHLINE}])    
+
+    // let spotTXT = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    // spotFactory.createSpotTXT([{time:'',price: 444, txt:"OVRBO",color:'blue',spotElem:spotTXT}])
+    let testTime = data[data.length-1].time;
+    let spotTXT_1 = spotFactory.createSpotTXT({
+        time:testTime,price: 466,txt:"OVRBO",color:'blue'
+    })
+
+    //New priceline
+        //     let newLine = this._series.createPriceLine({price: mousePrice, color: this._options.color, 
+        //         lineStyle:LightweightCharts.LineStyle.Dotted, lineSize:1}) 
+        //     this._pricelines.push({price:Math.round(mousePrice),line:newLine})
+
+
+}; init_TXT_SPOT_FACTORY();
 window.clickTXTSAVE = (e)=>{
+
     let txtEditor = document.getElementById('txtPointEditor')
     txtPointEditor.style.visibility='hidden';
     let editTXTElem = document.getElementById('txtEditInput');
     let editTXT = editTXTElem.value;
-    let pricePT = txtPointEditor.getAttribute('pricePT');
-    let timeUTC = txtPointEditor.getAttribute('timePT');
+    let pricePT = parseFloat(txtPointEditor.getAttribute('pricePT') );
+    let timeUTC = parseFloat(txtPointEditor.getAttribute('timePT') );
     let colorPT = txtPointEditor.getAttribute('colorPT');
+    let editMode = txtPointEditor.getAttribute('txtEditID');
+    //todo
     if(!colorPT){colorPT = "steelblue"}
+    if(!editTXT||!pricePT||!timeUTC){return}
+    let spotTXT_New = spotFactory.createSpotTXT({
+        time:timeUTC,price:pricePT,txt:editTXT,color:colorPT
+    })
+
+    
+    // const MarkPt = { time: parseInt(timeUTC), price: parseFloat(pricePT) }
+    // const TXTSPOT_Mark1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt,
+    //     editTXT,{txtColor:colorPT,     //DEEPBLUE
+    // }); xmplSymbol_Series.attachPrimitive(TXTSPOT_Mark1);
+    // TXTSPOT_Mark1.updateAllViews();
+
+
     // const timeDate = new Date(timeUTC * 1000); // Convert to milliseconds
     // let timePT = `${timeDate.getFullYear()}-${(timeDate.getMonth() + 1).toString().padStart(2,'0')}-${timeDate.getDate().toString().padStart(2, '0')}`;
 
@@ -181,15 +234,13 @@ window.clickTXTSAVE = (e)=>{
 // const formattedDate = formatDate(time);
 // console.log(formattedDate); // Output: "2019-03-26"
 
-
-
-    if(!editTXT||!pricePT||!timeUTC||!xmplSymbol_Chart||!xmplSymbol_Series){return}
-    // const MarkPt = { time: timePT, price: parseFloat(pricePT) }
-    const MarkPt = { time: parseInt(timeUTC), price: parseFloat(pricePT) }
-    const TXTSPOT_Mark1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt,
-        editTXT,{txtColor:colorPT,     //DEEPBLUE
-    }); xmplSymbol_Series.attachPrimitive(TXTSPOT_Mark1);
-    TXTSPOT_Mark1.updateAllViews();
+    // if(!editTXT||!pricePT||!timeUTC||!xmplSymbol_Chart||!xmplSymbol_Series){return}
+    // // const MarkPt = { time: timePT, price: parseFloat(pricePT) }
+    // const MarkPt = { time: parseInt(timeUTC), price: parseFloat(pricePT) }
+    // const TXTSPOT_Mark1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt,
+    //     editTXT,{txtColor:colorPT,     //DEEPBLUE
+    // }); xmplSymbol_Series.attachPrimitive(TXTSPOT_Mark1);
+    // TXTSPOT_Mark1.updateAllViews();
 }
 
 window.setTXTColor  = (e)=>{
@@ -211,6 +262,14 @@ function init_XMPL_SPOTZ(){
     xmplSymbol_Series = xmplSymbol_Chart.addLineSeries()
     const  dataSet = getRandomDataSet();
     xmplSymbol_Series.setData(dataSet);
+
+    // -- EXAMPLE--------------------------------------------------
+    // let txtSpots = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,{ color: "steelblue"});
+    // let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    // txtSpots.setPricelines([{price: 444, line:line}])
+    // let spotTXT = xmplSymbol_Series.createPriceLine({ price: 444, color: 'steelblue' })
+    // txtSpots.createSpotTXT([{time:'',price: 444, txt:"OVRBO",color:'blue',node:spotTXT}])
+    //-----------------------------------------------LINE EDITOR---------
     const len = dataSet.length;
     const MarkPt1 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
     const MarkPt2 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
@@ -221,23 +280,27 @@ function init_XMPL_SPOTZ(){
     const tradeSpot_MARK_1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt1,
         "JMPUP",{lineColor:"rgb(188, 1, 1)",     //DEEPCRMSN
     }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_1);
-    const tradeSpot_MARK_2 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt2,
-        "CROSDN",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_2);
-    const tradeSpot_MARK_3 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt3,
-        "CRASH",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_3);
-    const tradeSpot_MARK_4 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt4,
-        "BREVN",{lineColor:"rgb(1, 1, 188)",     //DEEPBlue
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_4);
-    const tradeSpot_MARK_5 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt5,
-        "OVRBO",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_5);
-    const tradeSpot_MARK_6 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt6,
-        "OVRSO",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_6);
 
-} init_XMPL_SPOTZ();
+
+
+
+    // const tradeSpot_MARK_2 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt2,
+    //     "CROSDN",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_2);
+    // const tradeSpot_MARK_3 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt3,
+    //     "CRASH",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_3);
+    // const tradeSpot_MARK_4 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt4,
+    //     "BREVN",{lineColor:"rgb(1, 1, 188)",     //DEEPBlue
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_4);
+    // const tradeSpot_MARK_5 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt5,
+    //     "OVRBO",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_5);
+    // const tradeSpot_MARK_6 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt6,
+    //     "OVRSO",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_6);
+
+} //init_XMPL_SPOTZ();
 </script>
 </body>
 </html>

@@ -127,6 +127,7 @@ class TXTSpot_Class   extends plugBase { //chartElem,lwc,EndPoint,StartPoint
         addMember(this, "_txt");
         addMember(this, "_paneViews");
         addMember(this, "_options");
+        addMember(this, "_spotTXTArray");
         addMember(this, "_minPrice");
         addMember(this, "_maxPrice");
         addMember(this, "_clickHandler", t=>this._onClick(t));
@@ -134,13 +135,14 @@ class TXTSpot_Class   extends plugBase { //chartElem,lwc,EndPoint,StartPoint
         this._series = lwc,
         this._p1 = strtpt,
         this._txt = txt,
+        this._spotTXTArray =[],
         this._minPrice = Math.min(this._p1.price),
         this._maxPrice = Math.max(this._p1.price),
         // this._minPrice = Math.min(this._p1.price, this._p2.price),
         // this._maxPrice = Math.max(this._p1.price, this._p2.price),
         this._options = { ...PointOptions, ...opts },
         this._chart.subscribeClick(this._clickHandler),
-        this._paneViews = [new PointRender_Class(this)]
+        this._paneViews = [new PointRender_Class(this)];
     }
     autoscaleInfo(t, i) {
         const P1 = this._pointIndex(this._p1)
@@ -177,8 +179,94 @@ class TXTSpot_Class   extends plugBase { //chartElem,lwc,EndPoint,StartPoint
         
         // if (!t.point || !this._chart){ return null; }
         showTXTEditor(e,mousePrice,timePoint);
+
+    } //END ON_CLICK-------------------------------------------------
+    // (priceLineArr){
+        
+    createSpotTXT(spotTXTArr){
+        debugger;
+        try{ this._spotTXTArray.push(...spotTXTArr)
+        } catch (e){ console.log('Needs array parameter')  }
+        
+    }        
+    setSpotTXT(priceLineArr){
+        // try{ this._pricelines.push(...priceLineArr)
+        // } catch (e){ console.log('Param expects array')  }
+debugger;
+        // _onClick(t) {
+        //     const mousePrice = this._getMousePrice(t)
+        //     const aMargin = this._distanceFromLeftScale(t);
+        //     if(aMargin>=marginOffset){ //*********************CLICK EDIT LINE */
+        //         showLineEditMenu(t,mousePrice);
+        //         return;
+        //     }
+        //     let line;
+        //     if(mousePrice === null || aMargin === null || !this._series){return}
+        //     if(this._labelButtonPrimitive._deleteLineCheck()){
+        //         for(var i=0;i<this._pricelines.length;i++){
+        //             line = this._pricelines[i];
+        //             if( priceWithinBuffer(line.price,mousePrice)
+        //             ){ //FOUND ITEM WITH BUFFER and DELETE.
+        //                 this._series.removePriceLine(this._pricelines[i].line)
+        //                 this._pricelines.splice(i,1);
+        //                 break;
+        //             }
+        //         }    
+        //         this._labelButtonPrimitive.hideAddLabel();
+        //     } else { //New priceline
+        //         let newLine = this._series.createPriceLine({price: mousePrice, color: this._options.color, 
+        //             lineStyle:LightweightCharts.LineStyle.Dotted, lineSize:1}) 
+        //         this._pricelines.push({price:Math.round(mousePrice),line:newLine})
+        //     }
+        // }
+
+    }    
+    // editPriceLine(config){
+    editSpotTXT(config){
+
+        // hoverLine(mousePrice){
+        //     let item;
+        //     for(var i=0; i< this._pricelines.length;i++){
+        //         item = this._pricelines[i];
+        //         if( priceWithinBuffer(item.price,mousePrice)
+        //         ){  return true; } //found line
+        //     }    
+        //     return false;
+        // }
+
+
+        debugger;
+        // let item,opts={},lw=1,ls=LightweightCharts.LineStyle.Dotted;
+        // for(var i=0;i<this._pricelines.length;i++){
+        //     item = this._pricelines[i];
+        //     if( priceWithinBuffer(item.price,config.price)
+        //     ){  //found price to edit with selection buffer;
+        //         opts.price = Math.round(item.price);
+        //         if(config.size){
+        //             if(config.size==='lrg'){ lw=2;
+        //                 ls=LightweightCharts.LineStyle.Dashed;
+        //             }else if (config.size==='med'){ lw=1;
+        //                 ls=LightweightCharts.LineStyle.Dashed;
+        //             }else{ lw=1;
+        //                 ls=LightweightCharts.LineStyle.Dotted;
+        //             } //'sml' default.
+        //             if(item.line){ //UPDATE LINE attributes
+        //                 item.line.applyOptions({ lineWidth: lw, lineStyle: ls });
+        //             } 
+        //         }
+        //         if(config.color){
+        //             if(item.line){ //UPDATE LINE attributes
+        //                 item.line.applyOptions({ color:config.color });
+        //             } 
+        //         }
+        //     } else{
+        //         console.log('NOT FOUND',config.price)
+        //     }
+        // }
     }
 }
+
+
 
 function showTXTEditor(e, mousePrice,timePoint){
     const txtPointEditor = document.getElementById('txtPointEditor')

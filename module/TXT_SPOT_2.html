@@ -151,7 +151,7 @@ window.clickTXTDELETE = (e)=>{
     //             }
 }
 
-import {TXTSpot_Class} from "./TXT_SPOT_1.js";
+import {TXTSpot_Class} from "./TXT_SPOT_2.js";
 import {g as getRandomDataSet} from "./sample-data.js";
 let xmplSymbol_Chart;
 let xmplSymbol_Series;
@@ -211,6 +211,14 @@ function init_XMPL_SPOTZ(){
     xmplSymbol_Series = xmplSymbol_Chart.addLineSeries()
     const  dataSet = getRandomDataSet();
     xmplSymbol_Series.setData(dataSet);
+
+    // -- EXAMPLE--------------------------------------------------
+    // let txtSpots = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,{ color: "steelblue"});
+    // let line = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    // txtSpots.setPricelines([{price: 444, line:line}])
+    // let spotTXT = xmplSymbol_Series.createPriceLine({ price: 444, color: 'steelblue' })
+    // txtSpots.createSpotTXT([{time:'',price: 444, txt:"OVRBO",color:'blue',node:spotTXT}])
+    //-----------------------------------------------LINE EDITOR---------
     const len = dataSet.length;
     const MarkPt1 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
     const MarkPt2 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
@@ -221,21 +229,25 @@ function init_XMPL_SPOTZ(){
     const tradeSpot_MARK_1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt1,
         "JMPUP",{lineColor:"rgb(188, 1, 1)",     //DEEPCRMSN
     }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_1);
-    const tradeSpot_MARK_2 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt2,
-        "CROSDN",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_2);
-    const tradeSpot_MARK_3 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt3,
-        "CRASH",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_3);
-    const tradeSpot_MARK_4 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt4,
-        "BREVN",{lineColor:"rgb(1, 1, 188)",     //DEEPBlue
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_4);
-    const tradeSpot_MARK_5 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt5,
-        "OVRBO",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_5);
-    const tradeSpot_MARK_6 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt6,
-        "OVRSO",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
-    }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_6);
+
+
+
+
+    // const tradeSpot_MARK_2 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt2,
+    //     "CROSDN",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_2);
+    // const tradeSpot_MARK_3 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt3,
+    //     "CRASH",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_3);
+    // const tradeSpot_MARK_4 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt4,
+    //     "BREVN",{lineColor:"rgb(1, 1, 188)",     //DEEPBlue
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_4);
+    // const tradeSpot_MARK_5 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt5,
+    //     "OVRBO",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_5);
+    // const tradeSpot_MARK_6 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt6,
+    //     "OVRSO",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
+    // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_6);
 
 } init_XMPL_SPOTZ();
 </script>
