@@ -68,9 +68,9 @@
         <button id="editRECTBTN" style="margin:0 1em;" class="blackBTN"onclick="editBTN_Click(event)">RECT</button>
         <button id="editTRENDBTN" style="margin:0 1em;" class="blackBTN"onclick="editBTN_Click(event)">TREND</button>
     </menu>	
+    <div id="MAIN_RENDER_FRAME"></div>
     <div id="xmpl_DRAW_chart" ></div>
-    <div id="xmpl_spotz_chart" ></div>
-    <!-- <div id="xmpl_spotz_chart" style="height:20em;"></div> -->
+    <!-- <div id="xmpl_spotz_chart" ></div> -->
 
     <aside id="TXT_SPOT_EDITOR" style="border: 1px solid steelblue;
     visibility: hidden;position: absolute;z-index: 11;color: aqua;line-height:2em;
@@ -154,32 +154,181 @@ box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
     border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
 </aside>
 
+<script>// *************LOCAL_DB_PATTERN*********************
+/*************************************************************\
+ * DB_DRAWCHART - ability to save monthly data in localstorage
+\*************************************************************/
+let DB_DRAWCHART=null;
+const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
+    DB_DRAWCHART = { 
+        DRAW_DATA_Monthly_YMT:{'2024_04_SPY':[ //new
+            {tkr:'SPY',type:'vline',color:'blue',size:'lrg',time:''},
+        ]},
+        TICKR_LIST:[
+            {tkr:'SPY',lastLoadYMD:''},
+            {tkr:'BTC',lastLoadYMD:''}
+        ],
+        METASTATE:{ 
+            monthlySELECTORMap:{'BTC':'All Time'},
+            drawEditMode:'' //new
+        } 
+    }
+    save_DB_DRAWCHART(); //save to local storage
+}
+const DB_DRAWCHART_init=()=>{ //READ from LOCAL STORAGE
+    try{
+        DB_DRAWCHART = (localStorage.DB_DRAWCHART)?
+        JSON.parse( localStorage.DB_DRAWCHART ):null;
+        DB_DRAWCHART = null; //DEV: load mock data for TEST
+        if(!DB_DRAWCHART){ DB_DRAWCHART_LOAD_MOCK_DATA(); }
+    } catch(e){ DB_DRAWCHART_LOAD_MOCK_DATA(); }
+}; DB_DRAWCHART_init();
+function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
+    // console.log('SAVED DRAWCHART DB.')
+    // localStorage.DB_DRAWCHART = JSON.stringify(DB_DRAWCHART); //SAVE to LOCAL STORAGE 
+}
+</script><!--***********************END LOCAL DB*********************-->
+<script type="module">
+function init_MAIN_RENDER_FRAMES(){
+    let MAIN_RENDER_FRAME = document.getElementById('MAIN_RENDER_FRAME');
+    MAIN_RENDER_FRAME.innerHTML=''; //blank out
+    let bookFrame_Model = ``, tgtTKR={};
+    for(var i=0; i< DB_DRAWCHART.TICKR_LIST.length; i++){
+        tgtTKR = DB_DRAWCHART.TICKR_LIST[i];
+        bookFrame_Model = `
+        <section id="BOOKFRAME_${tgtTKR.tkr}" class="BOOKFRAME_Item">
+                <header class="mainTitle expanderROW">
+                    <span>${tgtTKR.tkr}</span>
+                    <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
+                </header>
+            <menu style="display: flex;margin-right:3.333%;padding-left:2.222%;align-items: center;margin-bottom: 0.555em;">
+                <article id="drawchartTITLES_${tgtTKR.tkr}" 
+                    style="justify-content:flex-start;flex:1; display:flex;flex-wrap: wrap;
+                    width:98%;padding:0 0.444em 0 0.444em;color: limegreen;"></article>
+                <span>
+                        <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
+                            <option value="true" selected>Last 33</option>
+                        </select>
+                    </span>
+            </menu>
+            <section id="drawchartBOX_${tgtTKR.tkr}" style="justify-content:center;
+                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0 0 0.222em 0;
+                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
+                <header class="expanderROW">
+                    <span class="expanderTITLE">
+                        ${tgtTKR.tkr}_TRADES:</span>
+                    <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
+                </header>
+                <article id="drawchartFRAME_${tgtTKR.tkr}" class="dynamicDrawChart" style="justify-content:center;
+                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+                    <i style="font-size:0.555em;margin:0.888em;">No data.</i>
+                </article>
+            </section>
+        </section>`;
+        MAIN_RENDER_FRAME.innerHTML += bookFrame_Model; 
+    } //END RENDER LOOP
+    setTimeout(render_ALL_DRAW_CHARTZ,444);
+};init_MAIN_RENDER_FRAMES();
+function render_ALL_DRAW_CHARTZ(){
+    let elem,tgtTKR; //Render all drawchart DYNA_CHARTZ
+    // const All_DrawChart_Elems = document.getElementsByClassName('dynamicDrawChart')
+    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
+debugger;
+    // let monthData = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];//todo
+    for(var i=0; i< DB_DRAWCHART.TICKR_LIST.length; i++){
+        tgtTKR = DB_DRAWCHART.TICKR_LIST[i].tkr;
+    // init_DYNA_DRAWCHART(monthData)
+    // for(var i=0; i<All_DrawChart_Elems.length;i++){ //render all charts.
+    //     elem = All_DrawChart_Elems[i];
+        init_DYNA_DRAWCHART(tgtTKR);
+    }
+    // // let tgt_Candle,tgtTKR; //Render all CANDLESTICK DYNA_CHARTZ
+    // const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
+    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
+    // for(var i=0; i<All_DynaCandles.length;i++){
+    //     tgt_Candle = All_DynaCandles[i];
+    //     init_DYNA_CHART_Candle(tgt_Candle);
+    // }
+}
+// function init_DYNA_DRAWCHART(tgtELEM){
+    import {TXT_SPOT_EDITOR} from "./TXTSPOT_EDITOR_3.js";
+    import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
+    import {g as getMockData} from "./sample-data.js";
+function init_DYNA_DRAWCHART(tgtTKR){
+
+    let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(`drawchartFRAME_${tgtTKR}`,{
+        autoSize:true, height:300,
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:true
+    })
+    const data = getMockData();
+    let DYNA_DRAWCHART_LineSeries = DYNA_DRAWCHART_LineChart.addLineSeries()
+    // const priceSeries = priceChart.addLineSeries()
+    DYNA_DRAWCHART_LineSeries.setData(data);
+    // priceSeries.setData(data);
+    window.SPOTTXT_Editor_1 = new TXT_SPOT_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
+    // window.SPOTTXT_Editor_1 = new TXT_SPOT_EDITOR(priceChart,priceSeries,{ color: "steelblue"});
+    // --CREATE TXT SPOTZ!--------------------------------------------------
+    let testTime = data[data.length-10].time;
+    let spotTXT_1 = SPOTTXT_Editor_1.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
+    // -- CREATE VLINE------------------------------
+    // const vl1 = new VERTLINE_EDITOR(priceChart,priceSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
+    const vl1 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
+    DYNA_DRAWCHART_LineSeries.attachPrimitive(vl1);
+    // priceSeries.attachPrimitive(vl1);
+    const vl2 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
+    DYNA_DRAWCHART_LineSeries.attachPrimitive(vl2);
+    //--- CREATE HLINE--------------------------------
+    // let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
+    // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
+
+    // const chartOptions = {width:400,height:300,autoSize:false,
+    //     layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
+    //         background:{type:'solid',color:'#000000'} },
+    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+    //     crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
+    //         vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
+    //     // rightPriceScale:{visible:true},//leftPriceScale:{visible:true},
+    //     // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
+    // }
+    // let tradeMarkerData = [];
+    // let tgtTKR = tgtELEM.id.split('_')[1]; 
+    // let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
+    // if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
+    // tgtELEM.innerHTML=''; //blank out
+    // const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
+    // // CANDLESTICK-SERIES******************************************************        
+    // const candlestickSeries = Dyna_Chart_CandleStick.addCandlestickSeries({
+    //     priceScaleId: 'right', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
+    //     wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
+    // });
+    // candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
+    // candlestickSeries.setData(candleSeriesDATA);
+    // let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
+    // if(candleSeriesSUBSELECT==='none'){ //STRUCTURE LINES.
+
+    // }else if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
+    //     let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
+    //     tradeMarkerData = getMarker_TRADE_DATA(tgtTKR,startDate);
+    //     tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo
+    //     tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo
+    //     candlestickSeries.setMarkers(tradeMarkerData);        
+    // }
+
+    // if(window.render_TRADESPOTS){  //TODO init issue.  //CANDLESTICK TRADESPOTS
+    //     console.log('Render TRADESPOTS for CANDLES')
+    //     window.render_TRADESPOTS(Dyna_Chart_CandleStick,tradeMarkerData,candlestickSeries)
+    // }
+
+    // Dyna_Chart_CandleStick.timeScale().fitContent();    
+    // resize_BIG_CHART(Dyna_Chart_CandleStick);
+    // DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
+
+}; //END INIT DYNA_CHART - DRAWCHART *****************************************
+</script>
+
 <script type="module"> ///----------------------------UI MENU MODULE----------------
-// import {TXT_SPOT_FACTORY} from "./TXT_SPOT_3.js";
-// import {TXT_SPOT_FACTORY} from "./SPOTTXT_Factory_2.js";
-// import {g as getMockData} from "./sample-data.js";
-// let spotFactory_xmpl;
-// window.init_TXT_SPOT_FACTORY = (e)=>{
-//     const priceChart = LightweightCharts.createChart("xmpl_spotz_chart", {
-//     //  width:400, height:300,autoSize:false, 
-//         autoSize:true, height:300,
-//         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
-//         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-//         allowShiftVisibleRangeOnWhitespaceReplacement:true
-//     })
-//     const data = getMockData();
-//     const priceSeries = priceChart.addLineSeries()
-//     priceSeries.setData(data);
-//     spotFactory_xmpl = new TXT_SPOT_FACTORY(priceChart,priceSeries,{ color: "steelblue"});
-//     // --CREATE TXT SPOTZ!--------------------------------------------------
-//     let testTime = data[data.length-10].time;
-//     let spotTXT_1 = spotFactory_xmpl.createSpotTXT({
-//         time:testTime,price: 466,txt:"OVRBO",color:'blue'
-//     })
-//     //--- CREATE LINE--------------------------------
-//     // let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
-//     // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
-// }; init_TXT_SPOT_FACTORY();
 
 window.clickTXTSAVE = (e)=>{
     let TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR')
@@ -283,7 +432,7 @@ window.set_VLine_Color = (e)=>{
     let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
     VLINE_EDITOR.setAttribute('colorPT',lineColor);
 }
-import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_2.js";    //todo VERTLINE  
+import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
 window.DRAW_VLINE_SET = [];
 window.set_VLINE_Click = (e)=>{
     let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
@@ -313,78 +462,18 @@ window.clickVLineDELETE = (e)=>{
     }
     VLINE_EDITOR.setAttribute('editIDX',-1); //reset edit mode
 }
-// function init_XMPL_SPOTZ(){
-//     xmplSymbol_Chart = LightweightCharts.createChart("xmpl_spotz_chart", { autoSize:true, 
-//         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
-//         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-//         allowShiftVisibleRangeOnWhitespaceReplacement:!0
-//     })
-//     xmplSymbol_Series = xmplSymbol_Chart.addLineSeries()
-//     const  dataSet = getRandomDataSet();
-//     xmplSymbol_Series.setData(dataSet);
-//     //-----------------------------------------------LINE EDITOR---------
-//     const len = dataSet.length;
-//     const MarkPt1 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value * 1.1 }
-//     const MarkPt2 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value * .9 }
-//     const MarkPt3 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value +50 }
-//     const MarkPt4 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value +50 }
-//     const MarkPt5 = { time: dataSet[len - 5].time, price: dataSet[len - 5].value -50 }
-//     const MarkPt6 = { time: dataSet[len - 50].time, price: dataSet[len - 50].value -50 }
-//     const tradeSpot_MARK_1 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt1,
-//         "JMPUP",{lineColor:"rgb(188, 1, 1)",     //DEEPCRMSN
-//     }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_1);
 
-//     // const tradeSpot_MARK_2 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt2,
-//     //     "CROSDN",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
-//     // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_2);
-//     // const tradeSpot_MARK_3 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt3,
-//     //     "CRASH",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
-//     // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_3);
-//     // const tradeSpot_MARK_4 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt4,
-//     //     "BREVN",{lineColor:"rgb(1, 1, 188)",     //DEEPBlue
-//     // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_4);
-//     // const tradeSpot_MARK_5 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt5,
-//     //     "OVRBO",{lineColor:"rgb(0, 255, 88)",     //BRIGHTGRN
-//     // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_5);
-//     // const tradeSpot_MARK_6 = new TXTSpot_Class(xmplSymbol_Chart,xmplSymbol_Series,MarkPt6,
-//     //     "OVRSO",{lineColor:"rgb(255, 69, 44)", //BURNTORNG
-//     // }); xmplSymbol_Series.attachPrimitive(tradeSpot_MARK_6);
-// } //init_XMPL_SPOTZ();
 </script>
 
-<!--script type="module">//------------------------***********VLINE CHART MODULE-----------------
-    // import "./vert_1.js"
-    
-    // import {P as lwcprod} from "./lwc_dev_deriv_4.2.js"; //required for module.
-    // import {P as lwcprod} from "./lwc.prod.js"; //required for module.
-    import {VERTLINE_Class as VERTLINE_Class} from "./VERTLINE_2.js";  
-    import {g as getMockData} from "./sample-data.js";
-function init_VLINE_xmpl(){
-    // const lineChart = lwcprod("chart", { autoSize:!0, 
-    const lineChart = LightweightCharts.createChart("chart", { autoSize:true, 
-        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
-        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-        allowShiftVisibleRangeOnWhitespaceReplacement:true
-    })
-    const lineSeries = lineChart.addLineSeries()
-    const data = getMockData();
-    lineSeries.setData(data);
-    const vl1 = new VERTLINE_Class(lineChart,lineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
-    lineSeries.attachPrimitive(vl1);
-    const vl2 = new VERTLINE_Class(lineChart,lineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
-    lineSeries.attachPrimitive(vl2);
-}; init_VLINE_xmpl();
-    </script-->
-    
     <script type="module"> ///----------------------------DRAWCHART MODULE----------------
     import {TXT_SPOT_EDITOR} from "./TXTSPOT_EDITOR_3.js";
-    import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_2.js";    //todo VERTLINE  
+    import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
     import {g as getMockData} from "./sample-data.js";
     window.SPOT_EDIT_MODE = '';
     window.SPOTTXT_Editor_1;
     window.DRAW_CHART_Elem;
     window.DRAW_CHART_Series;
-    window.init_TXT_DRAW_FACTORY = (e)=>{
+    window.init_TXT_DRAW_XMPL = (e)=>{
         // const priceChart = LightweightCharts.createChart("xmpl_DRAW_chart",{
         window.DRAW_CHART_Elem = LightweightCharts.createChart("xmpl_DRAW_chart",{
             autoSize:true, height:300,
@@ -412,7 +501,7 @@ function init_VLINE_xmpl(){
         //--- CREATE HLINE--------------------------------
         // let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
         // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
-    }; init_TXT_DRAW_FACTORY();
+    }; init_TXT_DRAW_XMPL();
     </script>
 </body>
 </html>
