@@ -101,21 +101,8 @@ class VERTLINE_EDITOR_Class {
     _onClick(e) {
         if(window.SPOT_EDIT_MODE!="VLINE"){return}
         // const mousePrice = this._series.coordinateToPrice(e.point.y) 
-        let VLineEditor = document.getElementById('VLINE_EDITOR')
+        let VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME')
         const mouseTime = e.time;
-        // let editMode_Item = this.lineBetweenBuffer(mouseTime);
-        // if(editMode_Item){
-        //     debugger;
-        //     let editTime = editMode_Item._time;
-        //     let editColor = editMode_Item._options.color;
-        //     let editSize = editMode_Item._options.width;
-        //     VLineEditor.setAttribute('editMode',true); //set editor state
-        //     VLineEditor.setAttribute('timePT',editTime); //set editor state
-        //     VLineEditor.setAttribute('colorPT',editColor); //set editor state
-        //     VLineEditor.setAttribute('sizePT',editSize); //set editor state
-        // } else{
-        //     VLineEditor.setAttribute('editMode',false); //set editor state
-        // }
         let maxTime = Math.round(mouseTime + (mouseTime*0.00005) );
         let minTime = Math.round(mouseTime - (mouseTime*0.00005) );
         let item, editItem;
@@ -129,12 +116,12 @@ class VERTLINE_EDITOR_Class {
             let editTime = editItem._time;
             let editColor = editItem._options.color;
             let editSize = editItem._options.width;
-            VLineEditor.setAttribute('editIDX',idx); //set index of item
-            VLineEditor.setAttribute('timePT',editTime); //set editor state
-            VLineEditor.setAttribute('colorPT',editColor); //set editor state
-            VLineEditor.setAttribute('sizePT',editSize); //set editor state
+            VLINE_EDITOR_FRAME.setAttribute('edit_meta',idx); //set index of item
+            VLINE_EDITOR_FRAME.setAttribute('time_meta',editTime); //set editor state
+            VLINE_EDITOR_FRAME.setAttribute('color_meta',editColor); //set editor state
+            VLINE_EDITOR_FRAME.setAttribute('size_meta',editSize); //set editor state
         } else{
-            VLineEditor.setAttribute('editIDX',-1); //set index of item.
+            VLINE_EDITOR_FRAME.setAttribute('edit_meta',-1); //set index of item.
         }
 
 
@@ -166,11 +153,11 @@ class VERTLINE_EDITOR_Class {
 }
 
 function showVERTLINE_Editor(e, mouseTime){
-    const VLineEditor = document.getElementById('VLINE_EDITOR')
-    VLineEditor.style.visibility='visible';//show editor
-    VLineEditor.setAttribute('timePT',mouseTime); //set editor state
-    VLineEditor.style.top=e.sourceEvent.pageY+18+'px';
-    VLineEditor.style.left="10%";//e.sourceEvent.pageX-28+'px';
+    const VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME')
+    VLINE_EDITOR_FRAME.style.visibility='visible';//show editor
+    VLINE_EDITOR_FRAME.setAttribute('time_meta',mouseTime); //set editor state
+    VLINE_EDITOR_FRAME.style.top=e.sourceEvent.pageY+18+'px';
+    VLINE_EDITOR_FRAME.style.left="10%";//e.sourceEvent.pageX-28+'px';
 }
 
 export {VERTLINE_EDITOR_Class as VERTLINE_EDITOR};

@@ -131,7 +131,7 @@
     </span>
 </aside>
 
-<aside id="VLINE_EDITOR" style="border:solid 1px steelblue;visibility:hidden;
+<aside id="VLINE_EDITOR_FRAME" style="border:solid 1px steelblue;visibility:hidden;
 position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
 padding: 0.222em 0.666em 0.222em 0.666em;    box-shadow: inset 1px 3px 8px blue;
 display: flex;justify-content: space-between; align-items: center; width: 322px;">
@@ -188,15 +188,32 @@ function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
     // localStorage.DB_DRAWCHART = JSON.stringify(DB_DRAWCHART); //SAVE to LOCAL STORAGE 
 }
 </script><!--***********************END LOCAL DB*********************-->
-<script>//MAIN MODULE TEST.
-    let xxx = document.getElementById('MAIN_RENDER_FRAME');
-    let TXT_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. //TODO MAIN MODULE? master to sub components
+<script>//MAIN STATE - MODULE TEST. - master to sub components
+    
+    let MAIN_RENDER_FRAME = document.getElementById('MAIN_RENDER_FRAME');
+    let editTXTBTN = document.getElementById('editTXTBTN')
+    let editHLINEBTN = document.getElementById('editHLINEBTN')
+    let editVLINEBTN = document.getElementById('editVLINEBTN')
+    let editRECTBTN = document.getElementById('editRECTBTN')
+    let editTRENDBTN = document.getElementById('editTRENDBTN')
+
+    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    let txtEditInput = document.getElementById('txtEditInput');
+    let TXT_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. 
+    
+    let VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME') //TODOPRAME
+    let VLINE_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. //TODO
+
 </script>
 <script type="module">
 //-----------------------UI-MAIN-MODULE------------------------
-// let TXT_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. //TODO MAIN MODULE? master to sub components
+//IMPORT STATEMENTS HERE.
+import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_4.js";
+import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_4.js";    //todo VERTLINE  
+import {g as getMockData} from "./sample-data.js";
+//-------------------------------------------------------------
 function init_MAIN_RENDER_FRAMES(){
-    let MAIN_RENDER_FRAME = document.getElementById('MAIN_RENDER_FRAME');
+    // let MAIN_RENDER_FRAME = document.getElementById('MAIN_RENDER_FRAME');
     MAIN_RENDER_FRAME.innerHTML=''; //blank out
     let bookFrame_Model = ``, tgtTKR={};
     for(var i=0; i< DB_DRAWCHART.TICKR_LIST.length; i++){
@@ -237,152 +254,65 @@ function init_MAIN_RENDER_FRAMES(){
 };init_MAIN_RENDER_FRAMES();
 function render_ALL_DRAW_CHARTZ(){
     let elem,tgtTKR; //Render all drawchart DYNA_CHARTZ
-    // const All_DrawChart_Elems = document.getElementsByClassName('dynamicDrawChart')
-    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
-// debugger;
-    // let monthData = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];//todo
     for(var i=0; i< DB_DRAWCHART.TICKR_LIST.length; i++){
         tgtTKR = DB_DRAWCHART.TICKR_LIST[i].tkr;
-    // init_DYNA_DRAWCHART(monthData)
-    // for(var i=0; i<All_DrawChart_Elems.length;i++){ //render all charts.
-    //     elem = All_DrawChart_Elems[i];
         init_DYNA_DRAWCHART(tgtTKR);
     }
-    // // let tgt_Candle,tgtTKR; //Render all CANDLESTICK DYNA_CHARTZ
-    // const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
-    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
-    // for(var i=0; i<All_DynaCandles.length;i++){
-    //     tgt_Candle = All_DynaCandles[i];
-    //     init_DYNA_CHART_Candle(tgt_Candle);
-    // }
 }
-// function init_DYNA_DRAWCHART(tgtELEM){
-    import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_3.js";
-    import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
-    import {g as getMockData} from "./sample-data.js";
-function init_DYNA_DRAWCHART(tgtTKR){
-// debugger;
+// import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_4.js";
+// import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_4.js";    //todo VERTLINE  
+// import {g as getMockData} from "./sample-data.js";
+function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(`drawchartFRAME_${tgtTKR}`,{
-        autoSize:true, height:300,
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-        allowShiftVisibleRangeOnWhitespaceReplacement:true
+        autoSize:true, height:300, allowShiftVisibleRangeOnWhitespaceReplacement:true
     })
     const data = getMockData();
     let DYNA_DRAWCHART_LineSeries = DYNA_DRAWCHART_LineChart.addLineSeries()
-    // const priceSeries = priceChart.addLineSeries()
     DYNA_DRAWCHART_LineSeries.setData(data);
-    // priceSeries.setData(data);
-    //DEDICATED TXT EDITOR for TKR CHART.
     TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
         {tkr:tgtTKR,color: "steelblue"}); //TKR is very important for later elem lookup.
-    // window.TXT_EDITOR_ELEMS = {'SPY':elem} //EXAMPLEtodo
-    // window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
-    // window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(priceChart,priceSeries,{ color: "steelblue"});
     // --CREATE TXT SPOTZ!--------------------------------------------------
     let testTime = data[data.length-10].time;
     let spotTXT_1 = TXT_EDITOR_ELEMS[tgtTKR].createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
-    // window.TXT_EDITOR_ELEMS.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
-    // let spotTXT_1 = SPOTTXT_Editor_1.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
-    // let spotTXT_1 = TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
     //--- CREATE VERTLINELINE--------------------------------
     const vl1 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
     DYNA_DRAWCHART_LineSeries.attachPrimitive(vl1);
-
-    // -- CREATE VLINE------------------------------
-    // const vl1 = new VERTLINE_EDITOR(priceChart,priceSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
-    // priceSeries.attachPrimitive(vl1);
-    // const vl2 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
-    // DYNA_DRAWCHART_LineSeries.attachPrimitive(vl2);
-    //--- CREATE HLINE--------------------------------
-    // let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
-    // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
-
-    // const chartOptions = {width:400,height:300,autoSize:false,
-    //     layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
-    //         background:{type:'solid',color:'#000000'} },
-    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-    //     crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
-    //         vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
-    //     // rightPriceScale:{visible:true},//leftPriceScale:{visible:true},
-    //     // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
-    // }
-    // let tradeMarkerData = [];
-    // let tgtTKR = tgtELEM.id.split('_')[1]; 
-    // let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
-    // if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
-    // tgtELEM.innerHTML=''; //blank out
-    // const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
-    // // CANDLESTICK-SERIES******************************************************        
-    // const candlestickSeries = Dyna_Chart_CandleStick.addCandlestickSeries({
-    //     priceScaleId: 'right', layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
-    //     wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
-    // });
-    // candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
-    // candlestickSeries.setData(candleSeriesDATA);
-    // let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
-    // if(candleSeriesSUBSELECT==='none'){ //STRUCTURE LINES.
-
-    // }else if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
-    //     let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
-    //     tradeMarkerData = getMarker_TRADE_DATA(tgtTKR,startDate);
-    //     tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo
-    //     tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo
-    //     candlestickSeries.setMarkers(tradeMarkerData);        
-    // }
-
-    // if(window.render_TRADESPOTS){  //TODO init issue.  //CANDLESTICK TRADESPOTS
-    //     console.log('Render TRADESPOTS for CANDLES')
-    //     window.render_TRADESPOTS(Dyna_Chart_CandleStick,tradeMarkerData,candlestickSeries)
-    // }
-
-    // Dyna_Chart_CandleStick.timeScale().fitContent();    
-    // resize_BIG_CHART(Dyna_Chart_CandleStick);
-    // DYNA_CHART_CANDLES.push(Dyna_Chart_CandleStick); //for screen resize
-
 }; //END INIT DYNA_CHART - DRAWCHART *****************************************
 </script>
 
 <script type="module"> ///----------------------------UI MENU MODULE----------------
 
 window.clickTXTSAVE = (e)=>{
-    debugger;
-    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    // let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    // let editTXTElem = document.getElementById('txtEditInput');
     TXT_EDITOR_FRAME.style.visibility='hidden'; //Close editor
-    let editTXTElem = document.getElementById('txtEditInput');
-    let editTXT = editTXTElem.value;
-    let TKR_TXT_META = TXT_EDITOR_FRAME.getAttribute('TKR_TXT_META');
-    let pricePT = parseFloat(TXT_EDITOR_FRAME.getAttribute('pricePT') );
-    let timeUTC = parseFloat(TXT_EDITOR_FRAME.getAttribute('timePT') );
-    let colorPT = TXT_EDITOR_FRAME.getAttribute('colorPT');
-    if(!colorPT){colorPT = "steelblue"}
-    if(!TKR_TXT_META||!editTXT||!pricePT||!timeUTC){return}
+    let editTXT = txtEditInput.value;
+    let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
+    let price_meta = parseFloat(TXT_EDITOR_FRAME.getAttribute('price_meta') ); //TODO RENAME this.
+    let timeUTC = parseFloat(TXT_EDITOR_FRAME.getAttribute('time_meta') );
+    let color_meta = TXT_EDITOR_FRAME.getAttribute('color_meta');
+    if(!color_meta){color_meta = "steelblue"}
+    if(!tkr_meta||!editTXT||!price_meta||!timeUTC){return}
     let editMode = TXT_EDITOR_FRAME.getAttribute('txtEditID');
     if(editMode){ //UPDATE NODE
-        //TODO TKR for LOOKUP
-        // TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
-    // window.TXT_EDITOR_ELEMS
-        TXT_EDITOR_ELEMS[TKR_TXT_META].updateSpotTXT(editMode,
-            {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT});
-        // window.SPOTTXT_Editor_1.updateSpotTXT(editMode,
-        //     {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT});
-        //   spotEditor_xmpl.updateSpotTXT(editMode,
+        TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(editMode,
+            {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
     } else { //NEW NODE
-        TXT_EDITOR_ELEMS[TKR_TXT_META].createSpotTXT(
-            {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT});
-        // window.SPOTTXT_Editor_1.createSpotTXT({time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT})
-    //   spotEditor_xmpl.createSpotTXT({time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT})
+        TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(
+            {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
     }
 }
 window.clickTXTDELETE = (e)=>{
-    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    // let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
     TXT_EDITOR_FRAME.style.visibility='hidden';
-    let TKR_TXT_META = TXT_EDITOR_FRAME.getAttribute('TKR_TXT_META');
-    let editMode = TXT_EDITOR_FRAME.getAttribute('txtEditID');  //todo TXT_EDITOR_FRAME?
+    let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
+    let editMode = TXT_EDITOR_FRAME.getAttribute('txtEditID');  //todo rename
     if(editMode){
         // TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
     // window.TXT_EDITOR_ELEMS        
-    TXT_EDITOR_ELEMS[TKR_TXT_META].deleteSpot_TXT(editMode)
+    TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(editMode)
         // window.SPOTTXT_Editor_1.deleteSpot_TXT(editMode)
         // spotEditor_xmpl.deleteSpot_TXT(editMode)
     }
@@ -391,85 +321,85 @@ window.clickTXTDELETE = (e)=>{
 }
 //-----------------------------------------------EVENT HANDLERS
 window.editBTN_Click = (e) => { //-------------------SET_EDIT_MODE:
-    let txtBTN = document.getElementById('editTXTBTN')
-    let vlineBTN = document.getElementById('editVLINEBTN')
-    let hlineBTN = document.getElementById('editHLINEBTN')
-    let rectBTN = document.getElementById('editRECTBTN')
-    let trendBTN = document.getElementById('editTRENDBTN')
-    let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
-    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    // let txtBTN = document.getElementById('editTXTBTN')
+    // let vlineBTN = document.getElementById('editVLINEBTN')
+    // let hlineBTN = document.getElementById('editHLINEBTN')
+    // let rectBTN = document.getElementById('editRECTBTN')
+    // let trendBTN = document.getElementById('editTRENDBTN')
+    // let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
+    // let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
     let selectedMODE = e.target.innerText;
     if(selectedMODE==='TXT'){
-        txtBTN.classList.add('MODESELECTED');
+        editTXTBTN.classList.add('MODESELECTED');
         window.SPOT_EDIT_MODE = 'TXT';
-        vlineBTN.classList.remove('MODESELECTED');
-        hlineBTN.classList.remove('MODESELECTED');
-        rectBTN.classList.remove('MODESELECTED');
-        trendBTN.classList.remove('MODESELECTED');
-        VLINE_EDITOR.style.visibility='hidden';//hidden editor
+        editVLINEBTN.classList.remove('MODESELECTED');
+        editHLINEBTN.classList.remove('MODESELECTED');
+        editRECTBTN.classList.remove('MODESELECTED');
+        editTRENDBTN.classList.remove('MODESELECTED');
+        VLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
     }else if(selectedMODE==='VLINE'){
-        txtBTN.classList.remove('MODESELECTED');
-        vlineBTN.classList.add('MODESELECTED');
+        editTXTBTN.classList.remove('MODESELECTED');
+        editVLINEBTN.classList.add('MODESELECTED');
         window.SPOT_EDIT_MODE = 'VLINE';
-        hlineBTN.classList.remove('MODESELECTED');
-        rectBTN.classList.remove('MODESELECTED');
-        trendBTN.classList.remove('MODESELECTED');
+        editHLINEBTN.classList.remove('MODESELECTED');
+        editRECTBTN.classList.remove('MODESELECTED');
+        editTRENDBTN.classList.remove('MODESELECTED');
         TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor
     }else if(selectedMODE==='HLINE'){
-        txtBTN.classList.remove('MODESELECTED');
-        vlineBTN.classList.remove('MODESELECTED');
-        hlineBTN.classList.add('MODESELECTED');
+        editTXTBTN.classList.remove('MODESELECTED');
+        editVLINEBTN.classList.remove('MODESELECTED');
+        editHLINEBTN.classList.add('MODESELECTED');
         window.SPOT_EDIT_MODE = 'HLINE';
-        rectBTN.classList.remove('MODESELECTED');
-        trendBTN.classList.remove('MODESELECTED');
+        editRECTBTN.classList.remove('MODESELECTED');
+        editTRENDBTN.classList.remove('MODESELECTED');
     }else if(selectedMODE==='RECT'){
-        txtBTN.classList.remove('MODESELECTED');
-        vlineBTN.classList.remove('MODESELECTED');
-        hlineBTN.classList.remove('MODESELECTED');
-        rectBTN.classList.add('MODESELECTED');
+        editTXTBTN.classList.remove('MODESELECTED');
+        editVLINEBTN.classList.remove('MODESELECTED');
+        editHLINEBTN.classList.remove('MODESELECTED');
+        editRECTBTN.classList.add('MODESELECTED');
         window.SPOT_EDIT_MODE = 'RECT';
-        trendBTN.classList.remove('MODESELECTED');
+        editTRENDBTN.classList.remove('MODESELECTED');
     }else if(selectedMODE==='TREND'){
-        txtBTN.classList.remove('MODESELECTED');
-        vlineBTN.classList.remove('MODESELECTED');
-        hlineBTN.classList.remove('MODESELECTED');
-        rectBTN.classList.remove('MODESELECTED');
-        trendBTN.classList.add('MODESELECTED');
+        editTXTBTN.classList.remove('MODESELECTED');
+        editVLINEBTN.classList.remove('MODESELECTED');
+        editHLINEBTN.classList.remove('MODESELECTED');
+        editRECTBTN.classList.remove('MODESELECTED');
+        editTRENDBTN.classList.add('MODESELECTED');
         window.SPOT_EDIT_MODE = 'TREND';
     }
 }
 window.symbolClick = (e)=>{
     let symbolTXT = e.target.innerText.trim(' ');
-    let editTXT = document.getElementById('txtEditInput')
-    editTXT.value = symbolTXT;
+    // let editTXT = document.getElementById('txtEditInput')
+    txtEditInput.value = symbolTXT;
 }
 window.setTXTColor  = (e)=>{
     let txtColor = event.target.value;
-    TXT_EDITOR_FRAME.setAttribute('colorPT',txtColor);
+    TXT_EDITOR_FRAME.setAttribute('color_meta',txtColor);
 }
-//TODO SPLIT MODULE???
+//TODO SPLIT MODULE2???
 //--------------------------VLINE-EDITOR----------------------------
 window.vLine_Size = (e)=>{
-    let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
+    // let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
     let sizeSelect = e.target.innerText;
-    VLINE_EDITOR.setAttribute('sizePT',sizeSelect);
+    VLINE_EDITOR_FRAME.setAttribute('size_meta',sizeSelect); 
 }
 window.set_VLine_Color = (e)=>{
     let lineColor = event.target.value;
-    let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
-    VLINE_EDITOR.setAttribute('colorPT',lineColor);
+    // let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
+    VLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
 }
-import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
+import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_4.js";    //todo move thisVERTLINE  ?
 window.DRAW_VLINE_SET = [];
 window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK...
-    debugger; 
-    let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
-    let time = VLINE_EDITOR.getAttribute('timePT');
-    let size = VLINE_EDITOR.getAttribute('sizePT');
-    let color = VLINE_EDITOR.getAttribute('colorPT');
-    let editIDX = VLINE_EDITOR.getAttribute('editIDX');
-    if(editIDX>=0){ //EDIT ITEM
-        let editLine = window.DRAW_VLINE_SET[parseInt(editIDX)]
+    // debugger; 
+    // let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
+    let time = VLINE_EDITOR_FRAME.getAttribute('time_meta');
+    let size = VLINE_EDITOR_FRAME.getAttribute('size_meta');
+    let color = VLINE_EDITOR_FRAME.getAttribute('color_meta');
+    let edit_meta = VLINE_EDITOR_FRAME.getAttribute('edit_meta');
+    if(edit_meta>=0){ //EDIT ITEM
+        let editLine = window.DRAW_VLINE_SET[parseInt(edit_meta)]
         editLine._options.color=color;
         editLine._options.width=(size==='sml')?1:(size==='med')?2:3;
     }else{ //NEW ITEM
@@ -480,23 +410,23 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK...
     }
 }
 window.clickVLineDELETE = (e)=>{
-    let VLINE_EDITOR = document.getElementById('VLINE_EDITOR');
-    VLINE_EDITOR.style.visibility='hidden';
-    let editIDX = VLINE_EDITOR.getAttribute('editIDX');
-    if(editIDX>=0){
-        let editLine = window.DRAW_VLINE_SET[parseInt(editIDX)];
+    // let VLINE_EDITOR = document.getElementById('VLINE_EDITOR');
+    VLINE_EDITOR_FRAME.style.visibility='hidden';
+    let edit_meta = VLINE_EDITOR_FRAME.getAttribute('edit_meta');
+    if(edit_meta>=0){
+        let editLine = window.DRAW_VLINE_SET[parseInt(edit_meta)];
         editLine._series.detachPrimitive(editLine);
-        window.DRAW_VLINE_SET.splice(editIDX,1);
+        window.DRAW_VLINE_SET.splice(edit_meta,1);
     }
-    VLINE_EDITOR.setAttribute('editIDX',-1); //reset edit mode
+    VLINE_EDITOR_FRAME.setAttribute('edit_meta',-1); //reset edit mode
 }
 
 </script>
 
-    <script type="module"> ///----------------------------DRAWCHART MODULE----------------
-    import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_3.js";
-    import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
-    import {g as getMockData} from "./sample-data.js";
+<script type="module"> ///----------------------------DRAWCHART MODULE----------------
+import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_4.js";
+import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_4.js";    //todo VERTLINE  
+import {g as getMockData} from "./sample-data.js";
     window.SPOT_EDIT_MODE = '';
     window.SPOTTXT_Editor_1;
     window.DRAW_CHART_Elem;

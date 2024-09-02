@@ -131,9 +131,9 @@ class TXT_EDITOR_Class {
             let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME') 
             TXT_EDITOR_FRAME.setAttribute('txtEditID','');
         }
-        TXT_EDITOR_FRAME.setAttribute('TKR_TXT_META',this._options.tkr ); //set editor state
-        TXT_EDITOR_FRAME.setAttribute('pricePT',Math.round(mousePrice) ); //set editor state
-        TXT_EDITOR_FRAME.setAttribute('timePT', mouseTime ); //set editor state
+        TXT_EDITOR_FRAME.setAttribute('tkr_meta',this._options.tkr ); //set editor state
+        TXT_EDITOR_FRAME.setAttribute('price_meta',Math.round(mousePrice) ); //set editor state
+        TXT_EDITOR_FRAME.setAttribute('time_meta', mouseTime ); //set editor state
         TXT_EDITOR_FRAME.style.visibility='visible';
         TXT_EDITOR_FRAME.style.top=e.sourceEvent.pageY+66+'px';
         TXT_EDITOR_FRAME.style.left= "10%";//e.sourceEvent.pageX-28+'px';
@@ -177,7 +177,6 @@ class TXT_EDITOR_Class {
         }          
     }
     deleteSpot_TXT(spotID){
-        debugger;
         let item;
         let spotDataArr = spotID.split('-');
         for(var i=0;i<this._spotTXTArray.length;i++){
