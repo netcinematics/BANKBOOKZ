@@ -100,6 +100,7 @@ class VERTLINE_EDITOR_Class {
     }
     _onClick(e) {
         if(window.SPOT_EDIT_MODE!="VLINE"){return}
+        debugger;
         // const mousePrice = this._series.coordinateToPrice(e.point.y) 
         let VLineEditor = document.getElementById('VLINE_EDITOR')
         const mouseTime = e.time;

@@ -72,7 +72,7 @@
     <div id="xmpl_DRAW_chart" ></div>
     <!-- <div id="xmpl_spotz_chart" ></div> -->
 
-    <aside id="TXT_SPOT_EDITOR" style="border: 1px solid steelblue;
+    <aside id="TXT_EDITOR_FRAME" style="border: 1px solid steelblue;
     visibility: hidden;position: absolute;z-index: 11;color: aqua;line-height:2em;
     background: rgb(4, 1, 62);border-radius: 13px;padding: 0.222em 0.222em;width:280px;
     box-shadow: blue 1px 3px 8px inset;display: flex;justify-content: space-between;
@@ -82,8 +82,8 @@
         color: aqua;text-align: center;">
        <span onclick="((event) => {
            event.target.parentElement.parentElement.style.visibility = 'hidden';
-           let TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR')
-           TXT_SPOT_EDITOR.setAttribute('txtEditID',''); //cancel edit mode
+           let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+           TXT_EDITOR_FRAME.setAttribute('txtEditID',''); //cancel edit mode
        })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
            border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
@@ -188,7 +188,13 @@ function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
     // localStorage.DB_DRAWCHART = JSON.stringify(DB_DRAWCHART); //SAVE to LOCAL STORAGE 
 }
 </script><!--***********************END LOCAL DB*********************-->
+<script>//MAIN MODULE TEST.
+    let xxx = document.getElementById('MAIN_RENDER_FRAME');
+    let TXT_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. //TODO MAIN MODULE? master to sub components
+</script>
 <script type="module">
+//-----------------------UI-MAIN-MODULE------------------------
+// let TXT_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. //TODO MAIN MODULE? master to sub components
 function init_MAIN_RENDER_FRAMES(){
     let MAIN_RENDER_FRAME = document.getElementById('MAIN_RENDER_FRAME');
     MAIN_RENDER_FRAME.innerHTML=''; //blank out
@@ -233,7 +239,7 @@ function render_ALL_DRAW_CHARTZ(){
     let elem,tgtTKR; //Render all drawchart DYNA_CHARTZ
     // const All_DrawChart_Elems = document.getElementsByClassName('dynamicDrawChart')
     // DYNA_CHART_CANDLES = []; //blank out. for screen resize
-debugger;
+// debugger;
     // let monthData = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];//todo
     for(var i=0; i< DB_DRAWCHART.TICKR_LIST.length; i++){
         tgtTKR = DB_DRAWCHART.TICKR_LIST[i].tkr;
@@ -251,11 +257,11 @@ debugger;
     // }
 }
 // function init_DYNA_DRAWCHART(tgtELEM){
-    import {TXT_SPOT_EDITOR} from "./TXTSPOT_EDITOR_3.js";
+    import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_3.js";
     import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
     import {g as getMockData} from "./sample-data.js";
 function init_DYNA_DRAWCHART(tgtTKR){
-
+// debugger;
     let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(`drawchartFRAME_${tgtTKR}`,{
         autoSize:true, height:300,
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
@@ -267,18 +273,28 @@ function init_DYNA_DRAWCHART(tgtTKR){
     // const priceSeries = priceChart.addLineSeries()
     DYNA_DRAWCHART_LineSeries.setData(data);
     // priceSeries.setData(data);
-    window.SPOTTXT_Editor_1 = new TXT_SPOT_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
-    // window.SPOTTXT_Editor_1 = new TXT_SPOT_EDITOR(priceChart,priceSeries,{ color: "steelblue"});
+    debugger;
+    //DEDICATED TXT EDITOR for TKR CHART.
+    TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
+        {tkr:tgtTKR,color: "steelblue"}); //TKR is very important for later elem lookup.
+    // window.TXT_EDITOR_ELEMS = {'SPY':elem} //EXAMPLEtodo
+    // window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
+    // window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(priceChart,priceSeries,{ color: "steelblue"});
     // --CREATE TXT SPOTZ!--------------------------------------------------
     let testTime = data[data.length-10].time;
-    let spotTXT_1 = SPOTTXT_Editor_1.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
-    // -- CREATE VLINE------------------------------
-    // const vl1 = new VERTLINE_EDITOR(priceChart,priceSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
+    let spotTXT_1 = TXT_EDITOR_ELEMS[tgtTKR].createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
+    // window.TXT_EDITOR_ELEMS.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
+    // let spotTXT_1 = SPOTTXT_Editor_1.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
+    // let spotTXT_1 = TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
+    //--- CREATE VERTLINELINE--------------------------------
     const vl1 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
     DYNA_DRAWCHART_LineSeries.attachPrimitive(vl1);
+
+    // -- CREATE VLINE------------------------------
+    // const vl1 = new VERTLINE_EDITOR(priceChart,priceSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
     // priceSeries.attachPrimitive(vl1);
-    const vl2 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
-    DYNA_DRAWCHART_LineSeries.attachPrimitive(vl2);
+    // const vl2 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
+    // DYNA_DRAWCHART_LineSeries.attachPrimitive(vl2);
     //--- CREATE HLINE--------------------------------
     // let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
     // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
@@ -331,34 +347,57 @@ function init_DYNA_DRAWCHART(tgtTKR){
 <script type="module"> ///----------------------------UI MENU MODULE----------------
 
 window.clickTXTSAVE = (e)=>{
-    let TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR')
-    TXT_SPOT_EDITOR.style.visibility='hidden'; //Close editor
+    debugger;
+    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    TXT_EDITOR_FRAME.style.visibility='hidden'; //Close editor
     let editTXTElem = document.getElementById('txtEditInput');
     let editTXT = editTXTElem.value;
-    let pricePT = parseFloat(TXT_SPOT_EDITOR.getAttribute('pricePT') );
-    let timeUTC = parseFloat(TXT_SPOT_EDITOR.getAttribute('timePT') );
-    let colorPT = TXT_SPOT_EDITOR.getAttribute('colorPT');
+    let TKR_TXT_META = TXT_EDITOR_FRAME.getAttribute('TKR_TXT_META');
+    let pricePT = parseFloat(TXT_EDITOR_FRAME.getAttribute('pricePT') );
+    let timeUTC = parseFloat(TXT_EDITOR_FRAME.getAttribute('timePT') );
+    let colorPT = TXT_EDITOR_FRAME.getAttribute('colorPT');
     if(!colorPT){colorPT = "steelblue"}
-    if(!editTXT||!pricePT||!timeUTC){return}
-    let editMode = TXT_SPOT_EDITOR.getAttribute('txtEditID');
+    if(!TKR_TXT_META||!editTXT||!pricePT||!timeUTC){return}
+    let editMode = TXT_EDITOR_FRAME.getAttribute('txtEditID');
     if(editMode){ //UPDATE NODE
-        window.SPOTTXT_Editor_1.updateSpotTXT(editMode,
-    //   spotEditor_xmpl.updateSpotTXT(editMode,
-        {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT})
+        //TODO TKR for LOOKUP
+        // TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
+    // window.TXT_EDITOR_ELEMS
+    debugger;
+        TXT_EDITOR_ELEMS[TKR_TXT_META].updateSpotTXT(editMode,
+            {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT});
+        // window.SPOTTXT_Editor_1.updateSpotTXT(editMode,
+        //     {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT});
+        //   spotEditor_xmpl.updateSpotTXT(editMode,
     } else { //NEW NODE
-        window.SPOTTXT_Editor_1.createSpotTXT({time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT})
+    debugger;
+        TXT_EDITOR_ELEMS[TKR_TXT_META].createSpotTXT(
+            {time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT});
+        // window.SPOTTXT_Editor_1.createSpotTXT({time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT})
     //   spotEditor_xmpl.createSpotTXT({time:timeUTC,price:pricePT,txt:editTXT,txtColor:colorPT})
     }
 }
+window.clickTXTDELETE = (e)=>{
+    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
+    TXT_EDITOR_FRAME.style.visibility='hidden';
+    let editMode = TXT_EDITOR_FRAME.getAttribute('txtEditID');  //todo TXT_EDITOR_FRAME?
+    if(editMode){
+        // TXT_EDITOR_ELEMS[tgtTKR] = new TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,{ color: "steelblue"});
+    // window.TXT_EDITOR_ELEMS        
+        window.SPOTTXT_Editor_1.deleteSpot_TXT(editMode)
+        // spotEditor_xmpl.deleteSpot_TXT(editMode)
+    }
+    TXT_EDITOR_FRAME.setAttribute('txtEditID',''); //reset edit mode
+}
 //-----------------------------------------------EVENT HANDLERS
-window.editBTN_Click = (e) => {
+window.editBTN_Click = (e) => { //-------------------SET_EDIT_MODE:
     let txtBTN = document.getElementById('editTXTBTN')
     let vlineBTN = document.getElementById('editVLINEBTN')
     let hlineBTN = document.getElementById('editHLINEBTN')
     let rectBTN = document.getElementById('editRECTBTN')
     let trendBTN = document.getElementById('editTRENDBTN')
     let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
-    let TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR')
+    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
     let selectedMODE = e.target.innerText;
     if(selectedMODE==='TXT'){
         txtBTN.classList.add('MODESELECTED');
@@ -375,7 +414,7 @@ window.editBTN_Click = (e) => {
         hlineBTN.classList.remove('MODESELECTED');
         rectBTN.classList.remove('MODESELECTED');
         trendBTN.classList.remove('MODESELECTED');
-        TXT_SPOT_EDITOR.style.visibility='hidden';//hidden editor
+        TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor
     }else if(selectedMODE==='HLINE'){
         txtBTN.classList.remove('MODESELECTED');
         vlineBTN.classList.remove('MODESELECTED');
@@ -398,30 +437,18 @@ window.editBTN_Click = (e) => {
         trendBTN.classList.add('MODESELECTED');
         window.SPOT_EDIT_MODE = 'TREND';
     }
-
 }
-
 window.symbolClick = (e)=>{
     let symbolTXT = e.target.innerText.trim(' ');
     let editTXT = document.getElementById('txtEditInput')
     editTXT.value = symbolTXT;
 }
-window.clickTXTDELETE = (e)=>{
-    let TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR')
-    TXT_SPOT_EDITOR.style.visibility='hidden';
-    let editMode = TXT_SPOT_EDITOR.getAttribute('txtEditID');
-    if(editMode){
-        window.SPOTTXT_Editor_1.deleteSpot_TXT(editMode)
-        // spotEditor_xmpl.deleteSpot_TXT(editMode)
-    }
-    TXT_SPOT_EDITOR.setAttribute('txtEditID',''); //reset edit mode
-}
 window.setTXTColor  = (e)=>{
     let txtColor = event.target.value;
-    TXT_SPOT_EDITOR.setAttribute('colorPT',txtColor);
+    TXT_EDITOR_FRAME.setAttribute('colorPT',txtColor);
 }
-
-//------------------------------------------------------------------
+//TODO SPLIT MODULE???
+//--------------------------VLINE-EDITOR----------------------------
 window.vLine_Size = (e)=>{
     let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
     let sizeSelect = e.target.innerText;
@@ -434,7 +461,8 @@ window.set_VLine_Color = (e)=>{
 }
 import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
 window.DRAW_VLINE_SET = [];
-window.set_VLINE_Click = (e)=>{
+window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK...
+    debugger; 
     let VLINE_EDITOR = document.getElementById('VLINE_EDITOR')
     let time = VLINE_EDITOR.getAttribute('timePT');
     let size = VLINE_EDITOR.getAttribute('sizePT');
@@ -466,7 +494,7 @@ window.clickVLineDELETE = (e)=>{
 </script>
 
     <script type="module"> ///----------------------------DRAWCHART MODULE----------------
-    import {TXT_SPOT_EDITOR} from "./TXTSPOT_EDITOR_3.js";
+    import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_3.js";
     import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //todo VERTLINE  
     import {g as getMockData} from "./sample-data.js";
     window.SPOT_EDIT_MODE = '';
@@ -486,8 +514,8 @@ window.clickVLineDELETE = (e)=>{
         // const priceSeries = priceChart.addLineSeries()
         window.DRAW_CHART_Series.setData(data);
         // priceSeries.setData(data);
-        window.SPOTTXT_Editor_1 = new TXT_SPOT_EDITOR(window.DRAW_CHART_Elem,window.DRAW_CHART_Series,{ color: "steelblue"});
-        // window.SPOTTXT_Editor_1 = new TXT_SPOT_EDITOR(priceChart,priceSeries,{ color: "steelblue"});
+        window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(window.DRAW_CHART_Elem,window.DRAW_CHART_Series,{ color: "steelblue"});
+        // window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(priceChart,priceSeries,{ color: "steelblue"});
         // --CREATE TXT SPOTZ!--------------------------------------------------
         let testTime = data[data.length-10].time;
         let spotTXT_1 = SPOTTXT_Editor_1.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
@@ -503,5 +531,6 @@ window.clickVLineDELETE = (e)=>{
         // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
     }; init_TXT_DRAW_XMPL();
     </script>
+    <legal>Private License, copyright netcinematics llc. 2024 (c). All Rights Reserved. (tm) BANKBOOKZ.</legal>
 </body>
 </html>

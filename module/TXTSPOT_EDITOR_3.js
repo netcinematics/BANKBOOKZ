@@ -98,7 +98,7 @@ class TXTSpot_Class extends plugBase { //chartElem,lwc,EndPoint,StartPoint
 }    
 //------------END TXT SPOT
 const priceline_Default_Options = {color: "#888888", limitToOne:!0};
-class TXT_SPOT_EDITOR {
+class TXT_EDITOR_Class {
     constructor(chart, series, opts) {
         addMember(this, "_chart");
         addMember(this, "_series");
@@ -106,37 +106,39 @@ class TXT_SPOT_EDITOR {
         addMember(this, "_pricelines");
         addMember(this, "_spotTXTArray");
         addMember(this, "_clickHandler", t=>this._onClick(t));
-        addMember(this, "_spotWithinBoundary", e=>this._spotWithinBoundary(e));
+        // addMember(this, "_spotWithinBoundary", e=>this._spotWithinBoundary(e));
         this._chart = chart,
         this._series = series,
         this._pricelines = [],
         this._spotTXTArray = [],
         this._options = {...priceline_Default_Options,...opts },
         this._chart.subscribeClick(this._clickHandler);
+        if(!opts.tkr){ console.warn('Class needs TKR attribute') }
     }
     _onClick(e) {
         if(window.SPOT_EDIT_MODE!="TXT"){return}
         const mouseTime = e.time;//Math.abs(e.point.x)
-        const mousePrice = this._series.coordinateToPrice(e.point.y) 
-        let editMode_Item = this.spotWithinBoundary(mouseTime,mousePrice);
-        const TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR')
+        const mousePrice = this._series.coordinateToPrice(e.point.y); 
+        let editMode_Item = this._spotWithinBoundary(mouseTime,mousePrice);
+        const TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
         if(editMode_Item){
             let editTXT = document.getElementById('txtEditInput')
             editTXT.value = editMode_Item._txt;
-            TXT_SPOT_EDITOR.setAttribute('txtEditID','SPY'+'-'+Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
+            TXT_EDITOR_FRAME.setAttribute('txtEditID','SPY'+'-'+Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
         }else{
             let editTXTElem = document.getElementById('txtEditInput');
             editTXTElem.value = '';
-            let TXT_SPOT_EDITOR = document.getElementById('TXT_SPOT_EDITOR') 
-            TXT_SPOT_EDITOR.setAttribute('txtEditID','');
+            let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME') 
+            TXT_EDITOR_FRAME.setAttribute('txtEditID','');
         }
-        TXT_SPOT_EDITOR.setAttribute('pricePT',Math.round(mousePrice) ); //set editor state
-        TXT_SPOT_EDITOR.setAttribute('timePT', mouseTime ); //set editor state
-        TXT_SPOT_EDITOR.style.visibility='visible';
-        TXT_SPOT_EDITOR.style.top=e.sourceEvent.pageY+66+'px';
-        TXT_SPOT_EDITOR.style.left= "10%";//e.sourceEvent.pageX-28+'px';
+        TXT_EDITOR_FRAME.setAttribute('TKR_TXT_META',this._options.tkr ); //set editor state
+        TXT_EDITOR_FRAME.setAttribute('pricePT',Math.round(mousePrice) ); //set editor state
+        TXT_EDITOR_FRAME.setAttribute('timePT', mouseTime ); //set editor state
+        TXT_EDITOR_FRAME.style.visibility='visible';
+        TXT_EDITOR_FRAME.style.top=e.sourceEvent.pageY+66+'px';
+        TXT_EDITOR_FRAME.style.left= "10%";//e.sourceEvent.pageX-28+'px';
     }
-    spotWithinBoundary(mouseTime,mousePrice){
+    _spotWithinBoundary(mouseTime,mousePrice){
         let maxTop = Math.round(mousePrice + (mousePrice*0.05) );
         let maxBtm = Math.round(mousePrice - (mousePrice*0.05) );
         let maxLft = Math.round(mouseTime + (mouseTime*0.0001) );
@@ -190,5 +192,5 @@ class TXT_SPOT_EDITOR {
     }     
 }
 
-export {TXT_SPOT_EDITOR};
+export {TXT_EDITOR_Class};
 
