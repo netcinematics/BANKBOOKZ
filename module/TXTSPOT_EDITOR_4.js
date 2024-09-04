@@ -3,7 +3,7 @@ var P = (r,t,i)=>t in r ? v(r, t, {enumerable: !0,configurable: !0,writable: !0,
 var addMember = (r,t,i)=>(P(r, typeof t != "symbol" ? t + "" : t, i),i);
 import {P as plugBase} from "./plugin-base.js";
 //--------------TXT SPOT CLASSES------------------
-class TXTSPOT_Draw_Class {  //TODO TXTSPOT Draw Class
+class TXTSPOT_Draw_Class {  
     constructor(p1, txt, txt1, opts) {
         addMember(this, "_p1");
         addMember(this, "_txt");
@@ -56,11 +56,10 @@ class SpotTXTRender_Class {
 const default_Spot_Options = {
     txtColor:'steelblue',labelBackgroundColor:"rgba(0, 0, 55, 0.85)",labelTextColor:"steelblue"
 };
-//------------TXT SPOT
+//------------TXT SPOT-------------------------------------------------------
 class TXTSpot_Class extends plugBase { //chartElem,lwc,EndPoint,StartPoint
     // constructor(elem, lwc, strtpt, txt,  opts) {
-    constructor(elem, lwc, opts) {
-        super();
+    constructor(elem, lwc, opts) { super();
         addMember(this, "_chart");
         addMember(this, "_series");
         addMember(this, "_p1");
@@ -78,24 +77,20 @@ class TXTSpot_Class extends plugBase { //chartElem,lwc,EndPoint,StartPoint
         this._options = { ...default_Spot_Options, ...opts };
         this._paneViews = [new SpotTXTRender_Class(this)];
     }
-    autoscaleInfo(t, i) {
-        const P1 = this._pointIndex(this._p1)
+    autoscaleInfo(t, i) { const P1 = this._pointIndex(this._p1)
         return P1 === null || i < P1 || P1 ? null : {
             priceRange: { minValue: this._minPrice, maxValue: this._maxPrice }
         }
     }
-    updateAllViews() {
-        this._paneViews.forEach(t=>t.update())
+    updateAllViews() { this._paneViews.forEach(t=>t.update())
         this.requestUpdate()
     }
-    paneViews() {
-        return this._paneViews
+    paneViews() { return this._paneViews
     }
-    _pointIndex(t) {
-        const i = this._chart.timeScale().timeToCoordinate(t.time);
+    _pointIndex(t) { const i = this._chart.timeScale().timeToCoordinate(t.time);
         return i === null ? null : this._chart.timeScale().coordinateToLogical(i)
     }
-}    
+}
 //------------END TXT SPOT
 const priceline_Default_Options = {color: "#888888", limitToOne:!0};
 class TXT_EDITOR_Class {
@@ -103,13 +98,12 @@ class TXT_EDITOR_Class {
         addMember(this, "_chart");
         addMember(this, "_series");
         addMember(this, "_options");
-        addMember(this, "_pricelines");
+        addMember(this, "_pricelines"); //todo remove
         addMember(this, "_spotTXTArray");
         addMember(this, "_clickHandler", t=>this._onClick(t));
-        // addMember(this, "_spotWithinBoundary", e=>this._spotWithinBoundary(e));
         this._chart = chart,
         this._series = series,
-        this._pricelines = [],
+        this._pricelines = [], 
         this._spotTXTArray = [],
         this._options = {...priceline_Default_Options,...opts },
         this._chart.subscribeClick(this._clickHandler);
@@ -124,12 +118,13 @@ class TXT_EDITOR_Class {
         if(editMode_Item){
             let editTXT = document.getElementById('txtEditInput')
             editTXT.value = editMode_Item._txt;
-            TXT_EDITOR_FRAME.setAttribute('txtEditID','SPY'+'-'+Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
+            TXT_EDITOR_FRAME.setAttribute('edit_meta','SPY'+'-'+Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
+            //todo remove tkr
         }else{
             let editTXTElem = document.getElementById('txtEditInput');
             editTXTElem.value = '';
             let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME') 
-            TXT_EDITOR_FRAME.setAttribute('txtEditID','');
+            TXT_EDITOR_FRAME.setAttribute('edit_meta','');
         }
         TXT_EDITOR_FRAME.setAttribute('tkr_meta',this._options.tkr ); //set editor state
         TXT_EDITOR_FRAME.setAttribute('price_meta',Math.round(mousePrice) ); //set editor state
@@ -167,29 +162,27 @@ class TXT_EDITOR_Class {
         let spotDataArr = spotID.split('-');
         for(var i=0;i<this._spotTXTArray.length;i++){
             item = this._spotTXTArray[i];
-            if(spotDataArr[0]==='SPY'             //TODO
-                && item._p1.price === parseFloat(spotDataArr[1])
+            if(item._p1.price === parseFloat(spotDataArr[1])
                 && item._p1.time === parseInt(spotDataArr[2]) ){ //FOUND ITEM to UPDATE.
                     item._txt = opts.txt;
                     item._options.txtColor = opts.txtColor
                 break; //TODO also need to update in DB_bankbookz
             }
-        }          
+        }
     }
     deleteSpot_TXT(spotID){
         let item;
         let spotDataArr = spotID.split('-');
         for(var i=0;i<this._spotTXTArray.length;i++){
             item = this._spotTXTArray[i];
-            // if(spotDataArr[0]==='SPY'             //TODO
             if(item._p1.price === parseFloat(spotDataArr[1])
                 && item._p1.time === parseInt(spotDataArr[2]) ){ //FOUND ITEM to DELETE.
                 this._series.detachPrimitive(item)
                 this._spotTXTArray.splice(i,1);
-                break; 
+                break; //Also update in db_bankbooks.
             }
-        }  
-    }     
+        }
+    }
 }
 
 export {TXT_EDITOR_Class};
