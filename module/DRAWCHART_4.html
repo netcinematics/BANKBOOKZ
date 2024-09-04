@@ -27,6 +27,8 @@
     .gridBTN{color:aqua;font-size: 0.666em;padding: 0.222em 0.555em 0.222em 0.555em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
         border-radius: 44%;margin-left:0.444em;cursor: pointer;user-select: none;margin-bottom: 0.888em;
     }
+    .gridBTN:hover{border:1px solid darkcyan;  background:black;  color:steelblue}    
+    .gridBTN:active{border:1px solid steelblue;  background:black; color:purple}
     .editorBTN{color:aqua;font-size: 0.666em;padding:0.333em 0.666em 0.333em 0.666em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
         border-radius: 44%;margin-left:0.444em;cursor: pointer;user-select: none;
     }
@@ -39,7 +41,7 @@
     /**************RESPONSIVE BTN *******************/
     /* .BTN:hover{border:1px solid steelblue; color:purple}
     .BTN:active{border:1px solid lime; color:green} */
-    .blackBTN:hover{border:2px solid darkcyan;  background:black;  color:green}
+    .blackBTN:hover{border:2px solid darkcyan;  background:black;  color:steelblue}
     .blackBTN:active{border:1px solid steelblue;  background:black; color:purple}
     @media only screen and (max-width: 800px) { /************* TABLET */
         body{  background-color: #00070d;}
@@ -211,8 +213,10 @@
     </section>
     <span style="width:100%;display:flex;justify-content:space-around;margin:1em 0;">
         <input type="color" value="#003264" style="border: 1px solid blueviolet;border-radius: 44px; background: black;" onchange="setTXTColor(event)">
-        <button style="visibility:inherit;width: 5em; text-align: center;" class="blackBTN" onclick="set_TXT_Click(event)">SET_TXT</button>
-        <button style="visibility:inherit;width: 2em; text-align: center;" class="blackBTN" onclick="delete_TXT_Click(event)">🗑️</button>
+        <button style="visibility:inherit;width: 5em; text-align: center;box-shadow: inset 2px 2px 4px 0px lime;" 
+            class="blackBTN" onclick="set_TXT_Click(event)">SET_TXT</button>
+        <button style="visibility:inherit;width:2em;text-align:center;box-shadow: inset -2px -2px 3px darkred;" 
+            class="blackBTN" onclick="delete_TXT_Click(event)">🗑️</button>
     </span>
 </aside>
 
@@ -248,10 +252,10 @@ display: flex;justify-content: space-between; align-items: center; width:144px;"
     onchange="set_VLine_Color(event)"/>
     <button class="blackBTN" onclick="((e) => { window.set_VLINE_Click(e); })(event)"
         style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
-    box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+    box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;box-shadow: inset 1px -1px 4px 0px lime;
         border-radius: 44%;margin-left:0.444em;cursor: pointer;">SET</button>
     <button style="visibility:inherit;width:2em;text-align:center;
-        padding: 0.444em 1% 0.333em 1%;margin-left:0.444em;background: darkred;" 
+        padding: 0.444em 1% 0.333em 1%;margin-left:0.444em;box-shadow: inset -2px -2px 3px darkred;" 
         class="blackBTN" onclick="clickVLineDELETE(event)">🗑️</button>
 </section>
 </aside>
