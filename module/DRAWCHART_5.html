@@ -80,17 +80,17 @@
     <div id="description">
         <h1 style="color:steelblue;">DRAWCHART</h1>
         <p style="color:limegreen;">
-           Multiple Forms of Drawing. Lines, Rect, & TXT
+           Multiple Forms of Drawing. Lines, Box, & TXT
         </p>
     </div>	
     <menu id="DRAW_MODES" style="color:aqua;height: 2em;display: flex;justify-content:center;
             align-items:baseline;position: fixed; z-index: 100; width: 100%;">
         <div style="margin-right:1em;font-size:14px;">DRAW:</div>
-        <button id="editTXTBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">TXT</button>
-        <button id="editVLINEBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event,)">VLINE</button>
-        <button id="editHLINEBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">HLINE</button>
-        <button id="editRECTBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">RECT</button>
-        <button id="editTRENDBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">TREND</button>
+        <button id="editTXTBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">TXT📜</button>
+        <button id="editVLINEBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event,)">VLINE📏</button>
+        <button id="editHLINEBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">HLINE🕳️</button>
+        <!-- <button id="editBOXBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">BOX</button> -->
+        <!-- <button id="editTRENDBTN" style="margin:0 1em;" class="blackBTN"onclick="edit_Mode_Click(event)">TREND</button> -->
     </menu>	
     <div id="MAIN_RENDER_FRAME"></div>
     <div id="xmpl_DRAW_chart" ></div>
@@ -107,7 +107,7 @@
        <span onclick="((event) => {
            event.target.parentElement.parentElement.style.visibility = 'hidden';
            let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
-           TXT_EDITOR_FRAME.setAttribute('edit_meta',''); //cancel edit mode
+           TXT_EDITOR_FRAME.setAttribute('edit_txt_meta',''); //cancel edit mode
        })(event)" style="padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.111em;
            border-radius: 44%;margin-left: 1em;cursor: pointer;">x</span>
@@ -124,15 +124,14 @@
         <span class="gridBTN" onclick="symbolClick(event)">VOLDN&nbsp;</span>
         <span class="gridBTN" onclick="symbolClick(event)">GAPUP&nbsp;</span>
         <span class="gridBTN" onclick="symbolClick(event)">GAPDN&nbsp;</span>
-        <span class="gridBTN" onclick="symbolClick(event)">JMPUP&nbsp;</span>
-        <span class="gridBTN" onclick="symbolClick(event)">JMPDN&nbsp;</span>
+        <span class="gridBTN" onclick="symbolClick(event)">CROSUP</span>
+        <span class="gridBTN" onclick="symbolClick(event)">CROSDN</span>
+
     <span style="margin: 0.444em 0 0.444em 1em;width:100%; font-size: 0.888em;color: steelblue;">
         <label>momentum:</label>
     </span>
         <span class="gridBTN" onclick="symbolClick(event)">BRKUP&nbsp;</span>
         <span class="gridBTN" onclick="symbolClick(event)">BRKDN</span>
-        <span class="gridBTN" onclick="symbolClick(event)">CROSUP</span>
-        <span class="gridBTN" onclick="symbolClick(event)">CROSDN</span>
 
         <span class="gridBTN" onclick="symbolClick(event)">DIXUP&nbsp;</span>
         <span class="gridBTN" onclick="symbolClick(event)">DIXDN&nbsp;</span>
@@ -186,9 +185,9 @@
     <span class="gridBTN" onclick="symbolClick(event)">NEWHI</span>
     <span class="gridBTN" onclick="symbolClick(event)">NEWLO</span>
 
-    <span class="gridBTN" onclick="symbolClick(event)">BULFLG&nbsp;</span>
-    <span class="gridBTN" onclick="symbolClick(event)">BERFLG&nbsp;</span>
-    <span class="gridBTN" onclick="symbolClick(event)">RANGE&nbsp;</span>
+    <span class="gridBTN" onclick="symbolClick(event)">BULLFLAG&nbsp;</span>
+    <span class="gridBTN" onclick="symbolClick(event)">BEARFLAG&nbsp;</span>
+    <span class="gridBTN" onclick="symbolClick(event)">ZONE&nbsp;</span>
     <span class="gridBTN" onclick="symbolClick(event)">NUTRL</span>
 
 
@@ -206,9 +205,11 @@
     <span class="gridBTN" onclick="symbolClick(event)">DNTREND</span>
     <span class="gridBTN" onclick="symbolClick(event)">BBB</span>
     <span class="gridBTN" onclick="symbolClick(event)">SSS</span>
+    <span class="gridBTN" onclick="symbolClick(event)">HIRHI</span>
+    <span class="gridBTN" onclick="symbolClick(event)">LORLO</span>
 
     <span style="margin: 0.444em 0 0.444em 1em;width:100%; font-size: 0.888em;color: steelblue;">
-        <label>more:</label>
+        <label>seasonal:</label>
     </span>
 
     <span class="gridBTN" onclick="symbolClick(event)">W_BTM&nbsp;</span>
@@ -222,7 +223,13 @@
     <span class="gridBTN" onclick="symbolClick(event)">OVRVAL&nbsp;</span>
     <span class="gridBTN" onclick="symbolClick(event)">SEASNUP</span>
     <span class="gridBTN" onclick="symbolClick(event)">SEASNDN</span>
-
+    <span class="gridBTN" onclick="symbolClick(event)">BUYMAY</span>
+    <span class="gridBTN" onclick="symbolClick(event)">BUYSEPT</span>
+    <span class="gridBTN" onclick="symbolClick(event)">HARVST</span>
+    <span class="gridBTN" onclick="symbolClick(event)">SEED&nbsp;</span>
+    <span class="gridBTN" onclick="symbolClick(event)">GROW&nbsp;</span>
+    <span class="gridBTN" onclick="symbolClick(event)">REPRICE</span>
+    <span class="gridBTN" onclick="symbolClick(event)">RANGE</span>
 
     </section>
     <span style="width:100%;display:flex;justify-content:space-around;margin:1em 0;">
@@ -235,43 +242,78 @@
 </aside>
 
 <aside id="VLINE_EDITOR_FRAME" style="border:solid 1px steelblue;visibility:hidden;
-position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
-padding: 0.222em 0.666em 0.222em 0.666em;box-shadow: inset 1px 3px 8px blue;flex-wrap: wrap;
-display: flex;justify-content: space-between; align-items: center; width:144px;">
-<span>VLINE:</span>
-
-<button class="blackBTN" style="visibility:inherit;width: 0.888em;display: flex;vertical-align: middle;
-    justify-content:center;padding:0.444em;margin-left:0.666em;" onclick="((e)=>{e.target.parentElement.style.visibility='hidden';
-})(event)">x</button>
-
-<section style="visibility:inherit;display: flex;margin: 0.666em 0;width:100%; border-bottom:1px solid blue;
-    padding-bottom:0.888em;">
-    <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
-    box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
-    border-radius: 44%;margin-left: 1em;cursor: pointer;"
-     onclick="vLine_Size(event)">sml</button>
-    <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
-    box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
-    border-radius: 44%;margin-left: 1em;cursor: pointer;"
-     onclick="vLine_Size(event)">med</button>
-    <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
-    box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
-    border-radius: 44%;margin-left: 1em;cursor: pointer;"
-     onclick="vLine_Size(event)">lrg</button>
-</section>
-<section style="visibility:inherit;display: flex;margin: 0 0 0.444em 0;width:100%; border-bottom:1px solid blue;
-    padding-bottom:0.888em;justify-content: space-evenly;">
-    <input type="color" value="#002288" style="border: 1px solid blueviolet;border-radius: 44px; 
-        background: black; margin-left:0.444em;width:3.333em;"
-    onchange="set_VLine_Color(event)"/>
-    <button class="blackBTN" onclick="((e) => { window.set_VLINE_Click(e); })(event)"
-        style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
-    box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;box-shadow: inset 1px -1px 4px 0px lime;
-        border-radius: 44%;margin-left:0.444em;cursor: pointer;">SET</button>
-    <button style="visibility:inherit;width:2em;text-align:center;
-        padding: 0.444em 1% 0.333em 1%;margin-left:0.444em;box-shadow: inset -2px -2px 3px darkred;" 
-        class="blackBTN" onclick="clickVLineDELETE(event)">🗑️</button>
-</section>
+    position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
+    padding: 0.222em 0.666em 0.222em 0.666em;box-shadow: inset 1px 3px 8px blue;flex-wrap: wrap;
+    display: flex;justify-content: space-between; align-items: center; width:144px;">
+    <span>VLINE:</span>
+    <button class="blackBTN" style="visibility:inherit;width: 0.888em;display: flex;vertical-align: middle;
+        justify-content:center;padding:0.444em;margin-left:0.666em;" onclick="((e)=>{e.target.parentElement.style.visibility='hidden';
+    })(event)">x</button>
+    <section style="visibility:inherit;display: flex;margin: 0.666em 0;width:100%; border-bottom:1px solid blue;
+        padding-bottom:0.888em;">
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="vLine_Size(event)">sml</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="vLine_Size(event)">med</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="vLine_Size(event)">lrg</button>
+    </section>
+    <section style="visibility:inherit;display: flex;margin: 0 0 0.444em 0;width:100%; border-bottom:1px solid blue;
+        padding-bottom:0.888em;justify-content: space-evenly;">
+        <input type="color" value="#002288" style="border: 1px solid blueviolet;border-radius: 44px; 
+            background: black; margin-left:0.444em;width:3.333em;"
+        onchange="set_VLine_Color(event)"/>
+        <button class="blackBTN" onclick="((e) => { window.set_VLINE_Click(e); })(event)"
+            style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;box-shadow: inset 1px -1px 4px 0px lime;
+            border-radius: 44%;margin-left:0.444em;cursor: pointer;">SET</button>
+        <button style="visibility:inherit;width:2em;text-align:center;
+            padding: 0.444em 1% 0.333em 1%;margin-left:0.444em;box-shadow: inset -2px -2px 3px darkred;" 
+            class="blackBTN" onclick="clickVLineDELETE(event)">🗑️</button>
+    </section>
+</aside>
+<aside id="HLINE_EDITOR_FRAME" style="border:solid 1px steelblue;visibility:hidden;
+    position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
+    padding: 0.222em 0.666em 0.222em 0.666em;box-shadow: inset 1px 3px 8px blue;flex-wrap: wrap;
+    display: flex;justify-content: space-between; align-items: center; width:144px;">
+    <span>HLINE:</span>
+    <button class="blackBTN" style="visibility:inherit;width: 0.888em;display: flex;vertical-align: middle;
+        justify-content:center;padding:0.444em;margin-left:0.666em;" onclick="((e)=>{e.target.parentElement.style.visibility='hidden';
+    })(event)">x</button>
+    <section style="visibility:inherit;display: flex;margin: 0.666em 0;width:100%; border-bottom:1px solid blue;
+        padding-bottom:0.888em;">
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Size(event)">sml</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Size(event)">med</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Size(event)">lrg</button>
+    </section>
+    <section style="visibility:inherit;display: flex;margin: 0 0 0.444em 0;width:100%; border-bottom:1px solid blue;
+        padding-bottom:0.888em;justify-content: space-evenly;">
+        <input type="color" value="#002288" style="border: 1px solid blueviolet;border-radius: 44px; 
+            background: black; margin-left:0.444em;width:3.333em;"
+        onchange="set_HLine_Color(event)"/>
+        <button class="blackBTN" onclick="((e) => { window.set_HLINE_Click(e); })(event)"
+            style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;box-shadow: inset 1px -1px 4px 0px lime;
+            border-radius: 44%;margin-left:0.444em;cursor: pointer;">SET</button>
+        <button style="visibility:inherit;width:2em;text-align:center;
+            padding: 0.444em 1% 0.333em 1%;margin-left:0.444em;box-shadow: inset -2px -2px 3px darkred;" 
+            class="blackBTN" onclick="clickHLineDELETE(event)">🗑️</button>
+    </section>
 </aside>
 <script>// *************LOCAL_DB_PATTERN*********************
 /*************************************************************\
@@ -280,8 +322,10 @@ display: flex;justify-content: space-between; align-items: center; width:144px;"
 let DB_DRAWCHART=null;
 const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     DB_DRAWCHART = { 
-        DRAW_DATA_Monthly_YMT:{'2024_04_SPY':[ //new
+        DRAW_DATA_Monthly_YMT:{'2024_04_SPY':[ //todo load this data
             {tkr:'SPY',type:'vline',color:'blue',size:'lrg',time:''},
+            {tkr:'SPY',type:'hline',color:'blue',size:'lrg',time:''},
+            {tkr:'SPY',type:'txt',price:'',time:'',txt:''},
         ]},
         TICKR_LIST:[
             {tkr:'SPY',lastLoadYMD:''},
@@ -313,7 +357,7 @@ function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
     let editTXTBTN = document.getElementById('editTXTBTN')
     let editHLINEBTN = document.getElementById('editHLINEBTN')
     let editVLINEBTN = document.getElementById('editVLINEBTN')
-    let editRECTBTN = document.getElementById('editRECTBTN')
+    let editBOXBTN = document.getElementById('editBOXBTN')
     let editTRENDBTN = document.getElementById('editTRENDBTN')
 
     let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
@@ -323,56 +367,67 @@ function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
     let VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME') 
     let VLINE_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. 
     let _VERTLINE_EDITOR_Class = {} //MAIN STATE scope
+    
+    let HLINE_EDITOR_FRAME = document.getElementById('HLINE_EDITOR_FRAME') 
+    let HLINE_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. 
+    let _HLINE_EDITOR_Class = {} //MAIN STATE scope
 </script>
 <script>
     window.edit_Mode_Click = (e) => { //-------------------SET_EDIT_MODE:
         let selectedMODE = e.target.innerText;
-        if(selectedMODE==='TXT'){
+        if(selectedMODE.indexOf('TXT')>=0){
             editTXTBTN.classList.add('MODESELECTED');
             window.SPOT_EDIT_MODE = 'TXT';
             editVLINEBTN.classList.remove('MODESELECTED');
             editHLINEBTN.classList.remove('MODESELECTED');
-            editRECTBTN.classList.remove('MODESELECTED');
-            editTRENDBTN.classList.remove('MODESELECTED');
+            // editBOXBTN.classList.remove('MODESELECTED');
+            // editTRENDBTN.classList.remove('MODESELECTED');
+            HLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
             VLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
-        }else if(selectedMODE==='VLINE'){
+        }else if(selectedMODE.indexOf('VLINE')>=0){
             editTXTBTN.classList.remove('MODESELECTED');
             editVLINEBTN.classList.add('MODESELECTED');
             window.SPOT_EDIT_MODE = 'VLINE';
             editHLINEBTN.classList.remove('MODESELECTED');
-            editRECTBTN.classList.remove('MODESELECTED');
-            editTRENDBTN.classList.remove('MODESELECTED');
+            // editBOXBTN.classList.remove('MODESELECTED');
+            // editTRENDBTN.classList.remove('MODESELECTED');
+            HLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
             TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor
-        }else if(selectedMODE==='HLINE'){
+        }else if(selectedMODE.indexOf('HLINE')>=0){
             editTXTBTN.classList.remove('MODESELECTED');
             editVLINEBTN.classList.remove('MODESELECTED');
             editHLINEBTN.classList.add('MODESELECTED');
             window.SPOT_EDIT_MODE = 'HLINE';
-            editRECTBTN.classList.remove('MODESELECTED');
-            editTRENDBTN.classList.remove('MODESELECTED');
-        }else if(selectedMODE==='RECT'){
-            editTXTBTN.classList.remove('MODESELECTED');
-            editVLINEBTN.classList.remove('MODESELECTED');
-            editHLINEBTN.classList.remove('MODESELECTED');
-            editRECTBTN.classList.add('MODESELECTED');
-            window.SPOT_EDIT_MODE = 'RECT';
-            editTRENDBTN.classList.remove('MODESELECTED');
-        }else if(selectedMODE==='TREND'){
-            editTXTBTN.classList.remove('MODESELECTED');
-            editVLINEBTN.classList.remove('MODESELECTED');
-            editHLINEBTN.classList.remove('MODESELECTED');
-            editRECTBTN.classList.remove('MODESELECTED');
-            editTRENDBTN.classList.add('MODESELECTED');
-            window.SPOT_EDIT_MODE = 'TREND';
+            // editBOXBTN.classList.remove('MODESELECTED');
+            // editTRENDBTN.classList.remove('MODESELECTED');
+            VLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
+            TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
         }
+        // else if(selectedMODE.indexOf('BOX')>=0){
+        //     editTXTBTN.classList.remove('MODESELECTED');
+        //     editVLINEBTN.classList.remove('MODESELECTED');
+        //     editHLINEBTN.classList.remove('MODESELECTED');
+        //     // editBOXBTN.classList.add('MODESELECTED');
+        //     window.SPOT_EDIT_MODE = 'BOX';
+        //     editTRENDBTN.classList.remove('MODESELECTED');
+        // }else if(selectedMODE.indexOf('TREND')>=0){
+        //     editTXTBTN.classList.remove('MODESELECTED');
+        //     editVLINEBTN.classList.remove('MODESELECTED');
+        //     editHLINEBTN.classList.remove('MODESELECTED');
+        //     editBOXBTN.classList.remove('MODESELECTED');
+        //     editTRENDBTN.classList.add('MODESELECTED');
+        //     window.SPOT_EDIT_MODE = 'TREND';
+        // }
     }    
 </script>
 <script type="module">
 //-----------------------UI-MAIN-MODULE------------------------
 //IMPORT STATEMENTS HERE.
-import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_4.js";
-import {VERTLINE_EDITOR_Class} from "./VERTLINE_EDITOR_4.js";    //todo VERTLINE  Class
+import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_5.js";
+import {VERTLINE_EDITOR_Class} from "./VERTLINE_EDITOR_5.js";
 _VERTLINE_EDITOR_Class = VERTLINE_EDITOR_Class;//init MAINSTATE
+import {HLINE_EDITOR_Class} from "./HLINE_EDITOR_5.js";
+_HLINE_EDITOR_Class = HLINE_EDITOR_Class;//init MAINSTATE
 import {g as getMockData} from "./sample-data.js";
 //-------------------------------------------------------------
 function init_MAIN_RENDER_FRAMES(){
@@ -440,14 +495,17 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     //--- CREATE VLINE EDITOR--------------------------------
     VLINE_EDITOR_ELEMS[tgtTKR] = new VERTLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
         {tkr:tgtTKR});
-    //--- CREATE VERTLINELINE--------------------------------
+    //--- CREATE VERTLINES-------------------------------
     let testTime2 = data[data.length-12].time;
     let vLine_1 = VLINE_EDITOR_ELEMS[tgtTKR].create_VLINE(
-        {time:testTime2,price:444,color:'blue'}) //todo price?
-    // {tkr:tgtTKR,showLabel:true,labelText:"2"});
-    // DYNA_DRAWCHART_LineSeries.attachPrimitive(vLine_1);
-    // const vl1 = new VERTLINE_EDITOR(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
-    // DYNA_DRAWCHART_LineSeries.attachPrimitive(vl1);
+        {time:testTime2,color:'blue'});
+    //--- CREATE HLINE EDITOR--------------------------------
+    HLINE_EDITOR_ELEMS[tgtTKR] = new HLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
+        {tkr:tgtTKR});
+    //--- CREATE HLINES-------------------------------
+    let testPrice3 = data[data.length-15].value;
+    let hLine_1 = HLINE_EDITOR_ELEMS[tgtTKR].create_HLINE(
+        {price:testPrice3,color:'steelblue'});
 }; //END INIT DYNA_CHART - DRAWCHART *****************************************
 </script>
 
@@ -462,9 +520,9 @@ window.set_TXT_Click = (e)=>{
     let color_meta = TXT_EDITOR_FRAME.getAttribute('color_meta');
     if(!color_meta){color_meta = "steelblue"}
     if(!tkr_meta||!editTXT||!price_meta||!timeUTC){return}
-    let edit_meta = TXT_EDITOR_FRAME.getAttribute('edit_meta');
-    if(edit_meta){ //UPDATE NODE
-        TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_meta,
+    let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta');
+    if(edit_txt_meta){ //UPDATE NODE
+        TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_txt_meta,
             {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
     } else { //NEW NODE
         TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(
@@ -475,11 +533,11 @@ window.delete_TXT_Click = (e)=>{
     // let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
     TXT_EDITOR_FRAME.style.visibility='hidden';
     let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
-    let edit_meta = TXT_EDITOR_FRAME.getAttribute('edit_meta'); 
-    if(edit_meta){
-        TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_meta)
+    let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta'); 
+    if(edit_txt_meta){
+        TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_txt_meta)
     }
-    TXT_EDITOR_FRAME.setAttribute('edit_meta',''); //reset edit mode
+    TXT_EDITOR_FRAME.setAttribute('edit_txt_meta',''); //reset edit mode
     //TODO also need to remove in DB_bankbookz from this._spotTXTArray
 }
 //-----------------------------------------------EVENT HANDLERS
@@ -495,7 +553,6 @@ window.setTXTColor  = (e)=>{
 </script>
 <script>
 //--------------------------VLINE-EDITOR - UI MODULE----------------------------
-window.DRAW_VLINE_SET = []; //todo this changes...
 window.vLine_Size = (e)=>{ let sizeSelect = e.target.innerText;
     VLINE_EDITOR_FRAME.setAttribute('size_meta',sizeSelect); 
 }
@@ -509,15 +566,15 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
     let size_meta = VLINE_EDITOR_FRAME.getAttribute('size_meta');
     let color_meta = VLINE_EDITOR_FRAME.getAttribute('color_meta');
     if(!color_meta){color_meta = "steelblue"}
-    let edit_meta = VLINE_EDITOR_FRAME.getAttribute('edit_meta');
-    if(edit_meta){ //EDIT ITEM
+    let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
+    if(edit_vline_meta){ //EDIT ITEM
         VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(
         {time:timeUTC,color:color_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
     }else{ //NEW ITEM
         const aVertLine = VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE({ tkr:tkr_meta,
-            showLabel:true,color:color_meta,width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
-            time:timeUTC,price:444 //todo price show label
+            color:color_meta,time:timeUTC,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
         });
     }
 }
@@ -525,55 +582,55 @@ window.clickVLineDELETE = (e)=>{
     VLINE_EDITOR_FRAME.style.visibility='hidden';
     let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
     let timeUTC = parseFloat(VLINE_EDITOR_FRAME.getAttribute('time_meta') );
-    let edit_meta = VLINE_EDITOR_FRAME.getAttribute('edit_meta');
-    if(edit_meta){
-        // debugger;
+    let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
+    if(edit_vline_meta){
         VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeUTC);
-        // let editLine = window.DRAW_VLINE_SET[parseInt(edit_meta)];
-        // editLine._series.detachPrimitive(editLine);
-        // window.DRAW_VLINE_SET.splice(edit_meta,1);
     }
-    VLINE_EDITOR_FRAME.setAttribute('edit_meta',''); //reset edit mode
+    VLINE_EDITOR_FRAME.setAttribute('edit_vline_meta',''); //reset edit mode
 }
 </script>
-<script type="module"> ///----------------------------XMPL DRAWCHART MODULE----------------
-import {TXT_EDITOR_Class} from "./TXTSPOT_EDITOR_4.js";
-import {VERTLINE_EDITOR} from "./VERTLINE_EDITOR_3.js";    //XMPLE ONLY.
-import {g as getMockData} from "./sample-data.js";
-    window.SPOT_EDIT_MODE = '';
-    window.SPOTTXT_Editor_1;
-    window.DRAW_CHART_Elem;
-    window.DRAW_CHART_Series;
-    window.init_TXT_DRAW_XMPL = (e)=>{
-        // const priceChart = LightweightCharts.createChart("xmpl_DRAW_chart",{
-        window.DRAW_CHART_Elem = LightweightCharts.createChart("xmpl_DRAW_chart",{
-            autoSize:true, height:300,
-            layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
-            grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-            allowShiftVisibleRangeOnWhitespaceReplacement:true
-        })
-        const data = getMockData();
-        window.DRAW_CHART_Series = window.DRAW_CHART_Elem.addLineSeries()
-        // const priceSeries = priceChart.addLineSeries()
-        window.DRAW_CHART_Series.setData(data);
-        // priceSeries.setData(data);
-        window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(window.DRAW_CHART_Elem,window.DRAW_CHART_Series,{ color: "steelblue"});
-        // window.SPOTTXT_Editor_1 = new TXT_EDITOR_Class(priceChart,priceSeries,{ color: "steelblue"});
-        // --CREATE TXT SPOTZ!--------------------------------------------------
-        let testTime = data[data.length-10].time;
-        let spotTXT_1 = SPOTTXT_Editor_1.createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
-        // -- CREATE VLINE------------------------------
-        // const vl1 = new VERTLINE_EDITOR(priceChart,priceSeries,data[data.length-50].time,{showLabel:!0,labelText:"2"});
-        const vl1 = new VERTLINE_EDITOR(window.DRAW_CHART_Elem,window.DRAW_CHART_Series,data[data.length-50].time,{showLabel:!0,labelText:"2"});
-        window.DRAW_CHART_Series.attachPrimitive(vl1);
-        // priceSeries.attachPrimitive(vl1);
-        const vl2 = new VERTLINE_EDITOR(window.DRAW_CHART_Elem,window.DRAW_CHART_Series,data[data.length-25].time,{showLabel:!1,color:"red",width:2});
-        window.DRAW_CHART_Series.attachPrimitive(vl2);
-        //--- CREATE HLINE--------------------------------
-        // let spotHLINE = priceSeries.createPriceLine({ price: 444, color: 'steelblue' })
-        // spotFactory.setPricelines([{price: 444, line:spotHLINE}]);
-    }; init_TXT_DRAW_XMPL();
-    </script>
-    <legal>Private License, copyright netcinematics llc. 2024 (c). All Rights Reserved. (tm) BANKBOOKZ.</legal>
+<script>
+//--------------------------HLINE-EDITOR - UI MODULE----------------------------
+window.hLine_Size = (e)=>{ let sizeSelect = e.target.innerText;
+    HLINE_EDITOR_FRAME.setAttribute('size_meta',sizeSelect); 
+}
+window.set_HLine_Color = (e)=>{ let lineColor = event.target.value;
+    HLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
+}
+window.set_HLINE_Click = (e)=>{ //-------------------------SET HLINE CLICK.
+    debugger;
+    HLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
+    let tkr_meta = HLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let price_meta = Math.round(HLINE_EDITOR_FRAME.getAttribute('price_meta') );
+    let size_meta = HLINE_EDITOR_FRAME.getAttribute('size_meta');
+    let color_meta = HLINE_EDITOR_FRAME.getAttribute('color_meta');
+    if(!color_meta){color_meta = "steelblue"}
+    if(!size_meta){size_meta = "sml"}
+    let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
+    if(edit_hline_meta){ //EDIT ITEM
+        HLINE_EDITOR_ELEMS[tkr_meta].update_HLINE(
+        {price:price,color:color_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
+    }else{ //NEW ITEM
+        const aHLine = HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE({ tkr:tkr_meta,
+            color:color_meta,price:price_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
+        });
+    }
+}
+window.clickHLineDELETE = (e)=>{
+    debugger;
+    HLINE_EDITOR_FRAME.style.visibility='hidden';
+    let tkr_meta = HLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let timeUTC = parseFloat(HLINE_EDITOR_FRAME.getAttribute('time_meta') );
+    let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
+    if(edit_hline_meta){
+        HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(timeUTC);
+    }
+    HLINE_EDITOR_FRAME.setAttribute('edit_hline_meta',''); //reset edit mode
+}
+</script>
+
+<legal>Private License, copyright netcinematics llc. 2024 (c). All Rights Reserved. Code Reuse Restricted, without express written consent from NetCinematics llc. (tm) BANKBOOKZ.</legal>
 </body>
 </html>
