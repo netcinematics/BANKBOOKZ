@@ -6,6 +6,7 @@
     <title>DRAWCHART</title>
     
     <style>
+    body{color:steelblue !important;}
     /**  **************************CUSTOM SELECTOR*************************************/
     .chartSELECTOR {background:black; color:steelblue;border-radius: 10px;border: 1px solid aqua;
         padding:0.333% 0.444em 0.333% 0;font-size: 1em;height: 1.444em;text-align:right;}
@@ -80,7 +81,7 @@
     <div id="description">
         <h1 style="color:steelblue;">DRAWCHART</h1>
         <p style="color:limegreen;">
-           Multiple Forms of Drawing. Lines, Box, & TXT
+           Multiple Forms of Drawing. Lines, Box, & TXT. First, click a MODE button, then click CHART, then SET your drawing.
         </p>
     </div>	
     <menu id="DRAW_MODES" style="color:aqua;height: 2em;display: flex;justify-content:center;
@@ -301,6 +302,32 @@
         border-radius: 44%;margin-left: 1em;cursor: pointer;"
         onclick="hLine_Size(event)">lrg</button>
     </section>
+    <section style="visibility:inherit;display: flex;width:100%; border-bottom:1px solid blue;
+        padding-bottom:0.888em;">
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Style(event)">dot</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Style(event)">dash</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Style(event)">solid</button>
+    </section>
+    <section style="visibility:inherit;display: flex;margin: 0 0 0.444em 0;width:100%; border-bottom:1px solid blue;        
+        padding-bottom:0.444em;padding-top:0.444em; justify-content: space-evenly;">
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Style(event)">xlrg</button>
+        <button class="blackBTN" style="visibility:inherit;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; 
+        box-shadow: inset -2px 0px 2px steelblue;line-height: 1.555em;
+        border-radius: 44%;margin-left: 1em;cursor: pointer;"
+        onclick="hLine_Style(event)">xsml</button>
+    </section>
     <section style="visibility:inherit;display: flex;margin: 0 0 0.444em 0;width:100%; border-bottom:1px solid blue;
         padding-bottom:0.888em;justify-content: space-evenly;">
         <input type="color" value="#002288" style="border: 1px solid blueviolet;border-radius: 44px; 
@@ -376,32 +403,38 @@ function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
     window.edit_Mode_Click = (e) => { //-------------------SET_EDIT_MODE:
         let selectedMODE = e.target.innerText;
         if(selectedMODE.indexOf('TXT')>=0){
-            editTXTBTN.classList.add('MODESELECTED');
+            // editVLINEBTN.classList.remove('MODESELECTED');
+            // editHLINEBTN.classList.remove('MODESELECTED');
+            // editBOXBTN.classList.remove('MODESELECTED');
+            // editTRENDBTN.classList.remove('MODESELECTED');
+            // HLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
+            // VLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
+            deselectAllBtns();
             window.SPOT_EDIT_MODE = 'TXT';
-            editVLINEBTN.classList.remove('MODESELECTED');
-            editHLINEBTN.classList.remove('MODESELECTED');
-            // editBOXBTN.classList.remove('MODESELECTED');
-            // editTRENDBTN.classList.remove('MODESELECTED');
-            HLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
-            VLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor
+            editTXTBTN.classList.add('MODESELECTED');
+            hideAllEditors();
         }else if(selectedMODE.indexOf('VLINE')>=0){
-            editTXTBTN.classList.remove('MODESELECTED');
-            editVLINEBTN.classList.add('MODESELECTED');
+            // editTXTBTN.classList.remove('MODESELECTED');
+            // editHLINEBTN.classList.remove('MODESELECTED');
+            // editBOXBTN.classList.remove('MODESELECTED');
+            // editTRENDBTN.classList.remove('MODESELECTED');
+            // HLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
+            // TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor
+            deselectAllBtns();
             window.SPOT_EDIT_MODE = 'VLINE';
-            editHLINEBTN.classList.remove('MODESELECTED');
-            // editBOXBTN.classList.remove('MODESELECTED');
-            // editTRENDBTN.classList.remove('MODESELECTED');
-            HLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
-            TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor
+            editVLINEBTN.classList.add('MODESELECTED');
+            hideAllEditors();
         }else if(selectedMODE.indexOf('HLINE')>=0){
-            editTXTBTN.classList.remove('MODESELECTED');
-            editVLINEBTN.classList.remove('MODESELECTED');
-            editHLINEBTN.classList.add('MODESELECTED');
-            window.SPOT_EDIT_MODE = 'HLINE';
+            // editTXTBTN.classList.remove('MODESELECTED');
+            // editVLINEBTN.classList.remove('MODESELECTED');
             // editBOXBTN.classList.remove('MODESELECTED');
             // editTRENDBTN.classList.remove('MODESELECTED');
-            VLINE_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
-            TXT_EDITOR_FRAME.style.visibility='hidden';//hidden editor            
+            // VLINE_EDITOR_FRAME.style.visibility='hidden';
+            // TXT_EDITOR_FRAME.style.visibility='hidden';
+            deselectAllBtns();
+            window.SPOT_EDIT_MODE = 'HLINE';
+            editHLINEBTN.classList.add('MODESELECTED');
+            hideAllEditors();
         }
         // else if(selectedMODE.indexOf('BOX')>=0){
         //     editTXTBTN.classList.remove('MODESELECTED');
@@ -418,7 +451,17 @@ function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
         //     editTRENDBTN.classList.add('MODESELECTED');
         //     window.SPOT_EDIT_MODE = 'TREND';
         // }
-    }    
+    }
+    function hideAllEditors(){
+        VLINE_EDITOR_FRAME.style.visibility='hidden';
+        HLINE_EDITOR_FRAME.style.visibility='hidden';
+        TXT_EDITOR_FRAME.style.visibility='hidden';
+    }
+    function deselectAllBtns(){
+        editTXTBTN.classList.remove('MODESELECTED');
+        editVLINEBTN.classList.remove('MODESELECTED');
+        editHLINEBTN.classList.remove('MODESELECTED');
+    }
 </script>
 <script type="module">
 //-----------------------UI-MAIN-MODULE------------------------
@@ -461,7 +504,8 @@ function init_MAIN_RENDER_FRAMES(){
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
                 </header>
                 <article id="drawchartFRAME_${tgtTKR.tkr}" class="dynamicDrawChart" style="justify-content:center;
-                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+                    flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;
+                    ">
                     <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                 </article>
             </section>
@@ -478,6 +522,8 @@ function render_ALL_DRAW_CHARTZ(){
     }
 }
 function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
+    let drawFRAME = document.getElementById(`drawchartFRAME_${tgtTKR}`);
+    drawFRAME.innerHTML = ''; //blank out  msg
     let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(`drawchartFRAME_${tgtTKR}`,{
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
@@ -505,7 +551,7 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     //--- CREATE HLINES-------------------------------
     let testPrice3 = data[data.length-15].value;
     let hLine_1 = HLINE_EDITOR_ELEMS[tgtTKR].create_HLINE(
-        {price:testPrice3,color:'steelblue'});
+        {price:testPrice3,color:'steelblue',width:3,style:0});
 }; //END INIT DYNA_CHART - DRAWCHART *****************************************
 </script>
 
@@ -569,11 +615,11 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
     let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
     if(edit_vline_meta){ //EDIT ITEM
         VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(
-        {time:timeUTC,color:color_meta,
+        {time:timeUTC,color:color_meta,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
     }else{ //NEW ITEM
-        const aVertLine = VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE({ tkr:tkr_meta,
-            color:color_meta,time:timeUTC,
+        const aVertLine = VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE({ 
+            color:color_meta,time:timeUTC,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
         });
     }
@@ -594,38 +640,45 @@ window.clickVLineDELETE = (e)=>{
 window.hLine_Size = (e)=>{ let sizeSelect = e.target.innerText;
     HLINE_EDITOR_FRAME.setAttribute('size_meta',sizeSelect); 
 }
+window.hLine_Style = (e)=>{ let styleSelect = e.target.innerText;
+    HLINE_EDITOR_FRAME.setAttribute('style_meta',styleSelect); 
+}
 window.set_HLine_Color = (e)=>{ let lineColor = event.target.value;
     HLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
 }
 window.set_HLINE_Click = (e)=>{ //-------------------------SET HLINE CLICK.
-    debugger;
     HLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
     let tkr_meta = HLINE_EDITOR_FRAME.getAttribute('tkr_meta');
     let price_meta = Math.round(HLINE_EDITOR_FRAME.getAttribute('price_meta') );
     let size_meta = HLINE_EDITOR_FRAME.getAttribute('size_meta');
+    let style_meta = HLINE_EDITOR_FRAME.getAttribute('style_meta');
     let color_meta = HLINE_EDITOR_FRAME.getAttribute('color_meta');
     if(!color_meta){color_meta = "steelblue"}
     if(!size_meta){size_meta = "sml"}
+    if(!style_meta){style_meta = "dot"}
     let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
-    if(edit_hline_meta){ //EDIT ITEM
+    if(edit_hline_meta){ //EDIT ITEM -----------------------
         HLINE_EDITOR_ELEMS[tkr_meta].update_HLINE(
-        {price:price,color:color_meta,
-            width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
-    }else{ //NEW ITEM
-        const aHLine = HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE({ tkr:tkr_meta,
-            color:color_meta,price:price_meta,
+        {price:price_meta,color:color_meta,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
+            style:style_meta,
+        });
+    }else{ //NEW ITEM --------------------------------------
+        const aHLine = HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE({ 
+            color:color_meta,price:price_meta,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
+            style:style_meta,
         });
     }
 }
 window.clickHLineDELETE = (e)=>{
-    debugger;
+    // debugger;
     HLINE_EDITOR_FRAME.style.visibility='hidden';
     let tkr_meta = HLINE_EDITOR_FRAME.getAttribute('tkr_meta');
-    let timeUTC = parseFloat(HLINE_EDITOR_FRAME.getAttribute('time_meta') );
+    let price_meta = parseInt(HLINE_EDITOR_FRAME.getAttribute('price_meta') );
     let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
     if(edit_hline_meta){
-        HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(timeUTC);
+        HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(price_meta);
     }
     HLINE_EDITOR_FRAME.setAttribute('edit_hline_meta',''); //reset edit mode
 }
