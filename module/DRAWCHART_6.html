@@ -354,12 +354,12 @@ const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
         '2024_04_SPY':[ 
             {tkr:'SPY',type:'hline',color:'blue',size:'lrg',price:'444',style:'solid'},
             {tkr:'SPY',type:'vline',color:'purple',size:'med',time:'1556971200'},
-            {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'hi1',color:'orange'},
+            {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',color:'orange'},
         ],
         '2024_04_BTC':[ 
             {tkr:'BTC',type:'hline',color:'blue',size:'med',price:'666',style:'dot'},
             {tkr:'BTC',type:'vline',color:'yellow',size:'med',time:'1556971200'},
-            {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'hi2',color:'teal'},
+            {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',color:'teal'},
         ],
         },
         TICKR_LIST:[
@@ -371,7 +371,7 @@ const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             drawEditMode:'' //new
         } 
     }
-    save_DB_DRAWCHART(); //save to local storage
+    save_DRAWCHART_DB(); //save to local storage
 }
 const DB_DRAWCHART_init=()=>{ //READ from LOCAL STORAGE
     try{
@@ -381,7 +381,7 @@ const DB_DRAWCHART_init=()=>{ //READ from LOCAL STORAGE
         if(!DB_DRAWCHART){ DB_DRAWCHART_LOAD_MOCK_DATA(); }
     } catch(e){ DB_DRAWCHART_LOAD_MOCK_DATA(); }
 }; DB_DRAWCHART_init();
-function save_DB_DRAWCHART(){ //singleton, save LocalDB;.
+function save_DRAWCHART_DB(){ //singleton, save LocalDB;.
     // console.log('SAVED DRAWCHART DB.')
     // localStorage.DB_DRAWCHART = JSON.stringify(DB_DRAWCHART); //SAVE to LOCAL STORAGE 
 }
@@ -545,7 +545,6 @@ function init_DYNA_DRAW_DATA(){ //load dynamic DRAW data into DRAWCHART
                                 if(TXT_EDITOR_ELEMS[TKRObj.tkr]){
                                     TXT_EDITOR_ELEMS[TKRObj.tkr].createSpotTXT({
                                         time:parseInt(drawings.time),price:Math.round(drawings.price),txt:drawings.txt,txtColor:drawings.color})
- 
                                 } 
                             } else if(drawings.type==='vline'){
                                 if(VLINE_EDITOR_ELEMS[TKRObj.tkr]){

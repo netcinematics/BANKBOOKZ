@@ -170,10 +170,12 @@ window.clickHLineDELETE = (e)=>{
     let price_meta = parseInt(HLINE_EDITOR_FRAME.getAttribute('price_meta') );
     let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
     if(edit_hline_meta){
-        console.log('deleted',price_meta)
         HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(price_meta);
     }
     HLINE_EDITOR_FRAME.setAttribute('edit_hline_meta',''); //reset edit mode
+    debugger;
+    // DB_DRAWCHART.TICKR_LIST
+    save_DRAWCHART_DB();
 }
 let BUFFER_OFFSET = 0.02; //important for selection of edit or not.
 export {HLINE_EDITOR_Class};
