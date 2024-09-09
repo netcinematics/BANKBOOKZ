@@ -36,7 +36,6 @@ class HLINE_EDITOR_Class {
             item = this._hLineArray[idx]; 
             // console.log('item',item.price)
             if(item.price<maxPrice && item.price>minPrice ){
-                console.log('found item')
                 editItem = item; break;} //FOUND MATCH
         }
         //--------------------END CHECK EDIT MODE-----------
@@ -51,7 +50,6 @@ class HLINE_EDITOR_Class {
             let editSize=(!editOpts.lineWidth||editOpts.lineWidth===1)?'sml':(editOpts.lineWidth===2)?'med':'lrg';
             let editStyle=(!editOpts.lineStyle)?'solid':(editOpts.lineStyle===1)?'dot':(editOpts.lineStyle===2)?'dash':(editOpts.lineStyle===3)?'xlrg':'xsml'
             HLINE_EDITOR_FRAME.setAttribute('edit_hline_meta','editing'); //set edit state
-            console.log('set editing')
             HLINE_EDITOR_FRAME.setAttribute('price_meta',mousePrice); 
             HLINE_EDITOR_FRAME.setAttribute('color_meta',editColor); 
             HLINE_EDITOR_FRAME.setAttribute('size_meta',editSize); 
@@ -125,11 +123,57 @@ class HLINE_EDITOR_Class {
         return null;
     }
 }
+//-------HLINE-EDITOR - UI MODULE----------------------------
 function showHLINE_Editor(e){
     const HLINE_EDITOR_FRAME = document.getElementById('HLINE_EDITOR_FRAME')
     HLINE_EDITOR_FRAME.style.visibility='visible';//show editor
     HLINE_EDITOR_FRAME.style.top=e.sourceEvent.pageY+18+'px';
     HLINE_EDITOR_FRAME.style.left="7.777%";
+}
+window.hLine_Size = (e)=>{ let sizeSelect = e.target.innerText;
+    HLINE_EDITOR_FRAME.setAttribute('size_meta',sizeSelect); 
+}
+window.hLine_Style = (e)=>{ let styleSelect = e.target.innerText;
+    HLINE_EDITOR_FRAME.setAttribute('style_meta',styleSelect); 
+}
+window.set_HLine_Color = (e)=>{ let lineColor = event.target.value;
+    HLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
+}
+window.set_HLINE_Click = (e)=>{ //-------------------------SET HLINE CLICK.
+    HLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
+    let tkr_meta = HLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let price_meta = Math.round(HLINE_EDITOR_FRAME.getAttribute('price_meta') );
+    let size_meta = HLINE_EDITOR_FRAME.getAttribute('size_meta');
+    let style_meta = HLINE_EDITOR_FRAME.getAttribute('style_meta');
+    let color_meta = HLINE_EDITOR_FRAME.getAttribute('color_meta');
+    if(!color_meta){color_meta = "steelblue"}
+    if(!size_meta){size_meta = "sml"}
+    if(!style_meta){style_meta = "dot"}
+    let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
+    if(edit_hline_meta){ //EDIT ITEM -----------------------
+        HLINE_EDITOR_ELEMS[tkr_meta].update_HLINE(
+        {price:price_meta,color:color_meta,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
+            style:style_meta,
+        });
+    }else{ //NEW ITEM --------------------------------------
+        const aHLine = HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE({ 
+            color:color_meta,price:price_meta,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
+            style:style_meta,
+        });
+    }
+}
+window.clickHLineDELETE = (e)=>{
+    HLINE_EDITOR_FRAME.style.visibility='hidden';
+    let tkr_meta = HLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let price_meta = parseInt(HLINE_EDITOR_FRAME.getAttribute('price_meta') );
+    let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
+    if(edit_hline_meta){
+        console.log('deleted',price_meta)
+        HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(price_meta);
+    }
+    HLINE_EDITOR_FRAME.setAttribute('edit_hline_meta',''); //reset edit mode
 }
 let BUFFER_OFFSET = 0.02; //important for selection of edit or not.
 export {HLINE_EDITOR_Class};

@@ -148,11 +148,47 @@ class VERTLINE_EDITOR_Class {
         return null;
     }
 }
+//-------VLINE-EDITOR - UI MODULE----------------------------
 function showVERTLINE_Editor(e){
     const VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME')
     VLINE_EDITOR_FRAME.style.visibility='visible';//show editor
     VLINE_EDITOR_FRAME.style.top=e.sourceEvent.pageY+18+'px';
     VLINE_EDITOR_FRAME.style.left="7.777%";
+}
+window.vLine_Size = (e)=>{ let sizeSelect = e.target.innerText;
+    VLINE_EDITOR_FRAME.setAttribute('size_meta',sizeSelect); 
+}
+window.set_VLine_Color = (e)=>{ let lineColor = event.target.value;
+    VLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
+}
+window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
+    VLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
+    let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let timeUTC = parseFloat(VLINE_EDITOR_FRAME.getAttribute('time_meta') );
+    let size_meta = VLINE_EDITOR_FRAME.getAttribute('size_meta');
+    let color_meta = VLINE_EDITOR_FRAME.getAttribute('color_meta');
+    if(!color_meta){color_meta = "steelblue"}
+    let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
+    if(edit_vline_meta){ //EDIT ITEM
+        VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(
+        {time:timeUTC,color:color_meta,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
+    }else{ //NEW ITEM
+        const aVertLine = VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE({ 
+            color:color_meta,time:timeUTC,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
+        });
+    }
+}
+window.clickVLineDELETE = (e)=>{
+    VLINE_EDITOR_FRAME.style.visibility='hidden';
+    let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let timeUTC = parseFloat(VLINE_EDITOR_FRAME.getAttribute('time_meta') );
+    let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
+    if(edit_vline_meta){
+        VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeUTC);
+    }
+    VLINE_EDITOR_FRAME.setAttribute('edit_vline_meta',''); //reset edit mode
 }
 export {VERTLINE_EDITOR_Class};
 

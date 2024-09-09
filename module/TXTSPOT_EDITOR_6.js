@@ -58,7 +58,6 @@ const default_Spot_Options = {
 };
 //------------TXT SPOT-------------------------------------------------------
 class TXTSpot_Class extends plugBase { //chartElem,lwc,EndPoint,StartPoint
-    // constructor(elem, lwc, strtpt, txt,  opts) {
     constructor(elem, lwc, opts) { super();
         addMember(this, "_chart");
         addMember(this, "_series");
@@ -83,10 +82,8 @@ class TXTSpot_Class extends plugBase { //chartElem,lwc,EndPoint,StartPoint
         }
     }
     updateAllViews() { this._paneViews.forEach(t=>t.update())
-        this.requestUpdate()
-    }
-    paneViews() { return this._paneViews
-    }
+        this.requestUpdate() }
+    paneViews() { return this._paneViews }
     _pointIndex(t) { const i = this._chart.timeScale().timeToCoordinate(t.time);
         return i === null ? null : this._chart.timeScale().coordinateToLogical(i)
     }
@@ -123,7 +120,6 @@ class TXT_EDITOR_Class {
             if(colorPik.indexOf('#')<0){colorPik = '#4682b4'};//steelblue as hex. required.
             txtColorInput.value = colorPik; //SYNCH color to UI.
             TXT_EDITOR_FRAME.setAttribute('color_meta', colorPik); //set editor state
-            // TXT_EDITOR_FRAME.setAttribute('edit_meta','SPY'+'-'+Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
             TXT_EDITOR_FRAME.setAttribute('edit_txt_meta',Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
         }else{
             let editTXTElem = document.getElementById('txtEditInput');
@@ -189,11 +185,44 @@ class TXT_EDITOR_Class {
         }
     }
 }
-function showTXTSPOT_Editor(e){
-    // const VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME')
-    // VLINE_EDITOR_FRAME.style.visibility='visible';//show editor
-    // VLINE_EDITOR_FRAME.style.top=e.sourceEvent.pageY+18+'px';
-    // VLINE_EDITOR_FRAME.style.left="7.777%";
+///-------TXTSPOT --- UI MODULE----------------
+window.set_TXT_Click = (e)=>{
+    TXT_EDITOR_FRAME.style.visibility='hidden'; //Close editor
+    let editTXT = txtEditInput.value;
+    let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
+    let price_meta = parseFloat(TXT_EDITOR_FRAME.getAttribute('price_meta') ); 
+    let timeUTC = parseFloat(TXT_EDITOR_FRAME.getAttribute('time_meta') );
+    let color_meta = TXT_EDITOR_FRAME.getAttribute('color_meta');
+    if(!color_meta){color_meta = "#4682b4"} //steelblue;
+    if(!tkr_meta||!editTXT||!price_meta||!timeUTC){return}
+    let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta');
+    if(edit_txt_meta){ //UPDATE NODE
+        TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_txt_meta,
+            {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
+    } else { //NEW NODE
+        TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(
+            {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
+    }
+}
+window.delete_TXT_Click = (e)=>{
+    TXT_EDITOR_FRAME.style.visibility='hidden';
+    let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
+    let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta'); 
+    if(edit_txt_meta){
+        TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_txt_meta)
+    }
+    TXT_EDITOR_FRAME.setAttribute('edit_txt_meta',''); //reset edit mode
+    //TODO also need to remove in DB_bankbookz from this._spotTXTArray
+}
+//-----------------------------------------------EVENT HANDLERS
+
+window.symbolClick = (e)=>{
+    let symbolTXT = e.target.innerText.trim(' ');
+    txtEditInput.value = symbolTXT;
+}
+window.setTXTColor  = (e)=>{
+    let txtColor = event.target.value;
+    TXT_EDITOR_FRAME.setAttribute('color_meta',txtColor);
 }
 export {TXT_EDITOR_Class};
 
