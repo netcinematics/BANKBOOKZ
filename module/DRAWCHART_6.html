@@ -28,7 +28,7 @@
     .gridBTN{color:aqua;font-size: 0.666em;padding: 0.222em 0.555em 0.222em 0.555em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
         border-radius: 44%;margin-left:0.444em;cursor: pointer;user-select: none;margin-bottom: 0.888em;
     }
-    .gridBTN:hover{border:1px solid darkcyan;  background:black;  color:steelblue}    
+    .gridBTN:hover{border:1px solid darkcyan;  background:black;  color:steelblue}
     .gridBTN:active{border:1px solid steelblue;  background:black; color:purple}
     .editorBTN{color:aqua;font-size: 0.666em;padding:0.333em 0.666em 0.333em 0.666em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
         border-radius: 44%;margin-left:0.444em;cursor: pointer;user-select: none;
@@ -350,17 +350,30 @@
 let DB_DRAWCHART=null;
 const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     DB_DRAWCHART = { 
-        DRAW_DATA_Monthly_YMT:{
-        '2024_04_SPY':[ 
-            {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
-            {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
-            {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',color:'orange'},
-        ],
-        '2024_04_BTC':[ 
-            {tkr:'BTC',type:'hline',color:'blue',width:'med',price:'666',style:'dot'},
+        DRAW_DATA_ALL_VLINE : [
             {tkr:'BTC',type:'vline',color:'yellow',width:'med',time:'1556971200'},
-            {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',color:'teal'},
+            {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
         ],
+        DRAW_DATA_ALL_HLINE : [
+            {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
+            {tkr:'BTC',type:'hline',color:'red',width:'med',price:'666',style:'dot'},
+        ],
+        DRAW_DATA_ALL_SPOTTXT : [
+            {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',txtColor:'orange'},
+            {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
+        ],
+
+        DRAW_DATA_Monthly_YMT:{
+            '2024_04_SPY':[ 
+                {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
+                {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
+                {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',txtColor:'orange'},
+            ],
+            '2024_04_BTC':[ 
+                {tkr:'BTC',type:'hline',color:'blue',width:'med',price:'666',style:'dot'},
+                {tkr:'BTC',type:'vline',color:'yellow',width:'med',time:'1556971200'},
+                {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
+            ],
         },
         TICKR_LIST:[
             {tkr:'SPY',lastLoadYMD:''},
@@ -517,9 +530,9 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     VLINE_EDITOR_ELEMS[tgtTKR] = new VERTLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
         {tkr:tgtTKR});
     //--- CREATE VERTLINES-------------------------------
-    let testTime2 = data[data.length-12].time;
-    let vLine_1 = VLINE_EDITOR_ELEMS[tgtTKR].create_VLINE(
-        {time:testTime2,color:'blue'});
+    // let testTime2 = data[data.length-12].time;
+    // let vLine_1 = VLINE_EDITOR_ELEMS[tgtTKR].create_VLINE(
+    //     {time:testTime2,color:'blue'});
     //--- CREATE HLINE EDITOR--------------------------------
     HLINE_EDITOR_ELEMS[tgtTKR] = new HLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
         {tkr:tgtTKR});
@@ -531,47 +544,41 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
 }; //END INIT DYNA_CHART - DRAWCHART *****************************************
 function init_DYNA_DRAW_DATA(){ //load dynamic DRAW data into DRAWCHART
     let elKeys = [], elTGT, timeSelector,dbKeys=[], ymtArr=[];
-        for(let TKRObj of DB_DRAWCHART.TICKR_LIST){
-            timeSelector = 'Last 33';
-            if(timeSelector==='Last 33'){
-                dbKeys=Object.keys(DB_DRAWCHART.DRAW_DATA_Monthly_YMT);//['2024_04_SPY']
-                dbKeys.reverse(); // LIFO latest data.
-                for(let YMT of dbKeys ){
-                    ymtArr = YMT.split('_')
-                    if(ymtArr[2]===TKRObj.tkr){ //FOUND DATA for TKR REC,
-                        for(let drawings of DB_DRAWCHART.DRAW_DATA_Monthly_YMT[YMT]){
-                            if(!drawings.type){continue;}
-                            if(drawings.type==='txt'){
-                                if(TXT_EDITOR_ELEMS[TKRObj.tkr]){
-                                    TXT_EDITOR_ELEMS[TKRObj.tkr].createSpotTXT({
-                                        time:parseInt(drawings.time),price:Math.round(drawings.price),txt:drawings.txt,txtColor:drawings.color})
-                                } 
-                            } else if(drawings.type==='vline'){
-                                if(VLINE_EDITOR_ELEMS[TKRObj.tkr]){
-                                    // debugger;
-                                    VLINE_EDITOR_ELEMS[TKRObj.tkr].create_VLINE(
-                                        {time:parseInt(drawings.time),color:drawings.color,
-                                            width:(drawings.size==='sml')?1:(drawings.size==='med')?2:3,
-                                        });
-                                } 
-                            } else if(drawings.type==='hline'){ //--- CREATE HLINES-----------
-                                if(HLINE_EDITOR_ELEMS[TKRObj.tkr]){
-                                    HLINE_EDITOR_ELEMS[TKRObj.tkr].create_HLINE(
-                                        {price:drawings.price,color:drawings.color,
-                                            width:(drawings.size==='sml')?1:(drawings.size==='med')?2:3,
-                                            style:drawings.style//(drawings.style==='solid')?0:(drawings.style==='dot')?1:(drawings.style==='dash')?2:(drawings.style==='xlrg')?3:4
-                                        });
-                                } 
-                            }
-
-                        }
-                    }
-                }
-
+    for(let TKRObj of DB_DRAWCHART.TICKR_LIST){
+        timeSelector = 'Last 33';
+        if(timeSelector==='Last 33'){ //TODO
+            for(let drawings of DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT){ //RENDER TXTs
+                if(TXT_EDITOR_ELEMS[TKRObj.tkr]
+                    && TKRObj.tkr === drawings.tkr ){
+                    let newTXT = {time:parseInt(drawings.time),price:Math.round(drawings.price),
+                        txt:drawings.txt,txtColor:drawings.txtColor}
+                    TXT_EDITOR_ELEMS[TKRObj.tkr].createSpotTXT(newTXT)
+                    // console.log('RENDER TXT',newTXT)
+                } 
             }
+            for(let drawings of DB_DRAWCHART.DRAW_DATA_ALL_VLINE){ //RENDER VLINEs
+                if(VLINE_EDITOR_ELEMS[TKRObj.tkr]
+                  && TKRObj.tkr === drawings.tkr ){
+                    let newLine = {time:parseInt(drawings.time),color:drawings.color,
+                        width:drawings.width }
+                    VLINE_EDITOR_ELEMS[TKRObj.tkr].create_VLINE(newLine);
+                    console.log('RENDER VLINE',newLine)
+                } 
+            }
+            for(let drawings of DB_DRAWCHART.DRAW_DATA_ALL_HLINE){ //RENDER HLINEs
+                if(HLINE_EDITOR_ELEMS[TKRObj.tkr]
+                  && TKRObj.tkr === drawings.tkr ){
+                    let newLine = {price:drawings.price,color:drawings.color,
+                        width:drawings.width,style:drawings.style  }
+                    HLINE_EDITOR_ELEMS[TKRObj.tkr].create_HLINE(newLine);
+                    // console.log('RENDER HLINE',newLine)
+                } 
+            }
+            
         }
-    // }
-}
+
+    }
+}  // end render DRAW DATA
 </script>
 
 <legal>Private License, No Commercial Use, All Rights reserved. Netcinematics llc. 2024 (c). Code Reuse Restricted, without express written consent from NetCinematics llc. (tm) BANKBOOKZ.</legal>

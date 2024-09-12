@@ -117,7 +117,7 @@ class TXT_EDITOR_Class {
             editTXT.value = editMode_Item._txt; //SYNCH TXT to UI.
             let txtColorInput = document.getElementById('txtColorInput')
             let colorPik = editMode_Item._options.txtColor;
-            if(colorPik.indexOf('#')<0){colorPik = '#4682b4'};//steelblue as hex. required.
+            if(colorPik && colorPik.indexOf('#')<0){colorPik = '#4682b4'};//steelblue as hex. required.
             txtColorInput.value = colorPik; //SYNCH color to UI.
             TXT_EDITOR_FRAME.setAttribute('color_meta', colorPik); //set editor state
             TXT_EDITOR_FRAME.setAttribute('edit_txt_meta',Math.round(editMode_Item._p1.price)+'-'+editMode_Item._p1.time ); //set editor state
@@ -152,6 +152,7 @@ class TXT_EDITOR_Class {
         return editItem;
     }   
     createSpotTXT(spotTXTOps){
+        if(!spotTXTOps.txtColor){spotTXTOps.txtColor='steelblue'}
         const TXTSPOT_Mark_New = new TXTSpot_Class(this._chart,this._series,spotTXTOps);
         this._series.attachPrimitive(TXTSPOT_Mark_New);
         this._spotTXTArray.push(TXTSPOT_Mark_New)
@@ -170,6 +171,7 @@ class TXT_EDITOR_Class {
                 break; //TODO also need to update in DB_bankbookz
             }
         }
+        return item;
     }
     deleteSpot_TXT(spotID){
         let item;
@@ -180,8 +182,16 @@ class TXT_EDITOR_Class {
                 && item._p1.time === parseInt(spotDataArr[1]) ){ //FOUND ITEM to DELETE.
                 this._series.detachPrimitive(item)
                 this._spotTXTArray.splice(i,1);
-                break; //Also update in db_bankbooks.
             }
+        }
+        return item;
+    }
+    updateAllViews() {
+        console.log('updating...')
+        let txtRec;
+        for(var ii=0; ii<this._spotTXTArray.length;ii++){
+            txtRec = this._spotTXTArray[ii]
+            txtRec.updateAllViews()
         }
     }
 }
@@ -196,12 +206,34 @@ window.set_TXT_Click = (e)=>{
     if(!color_meta){color_meta = "#4682b4"} //steelblue;
     if(!tkr_meta||!editTXT||!price_meta||!timeUTC){return}
     let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta');
-    if(edit_txt_meta){ //UPDATE NODE
-        TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_txt_meta,
-            {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
-    } else { //NEW NODE
-        TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(
-            {time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta});
+    if(edit_txt_meta){ //---UPDATE TXT-----------------------
+        let newTXT = {tkr:tkr_meta,time:timeUTC,price:price_meta,
+            txt:editTXT,txtColor:color_meta,type:'txt' }
+        let txtItem = TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_txt_meta,newTXT);
+        let drawItem; //UPDATE Local DB--------------------------
+        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT; 
+        // let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY']; //TODO
+        for(var i=0; i < drawSet.length; i++){
+            drawItem = drawSet[i];
+            if(drawItem.tkr===tkr_meta 
+                && parseInt(drawItem.time)===txtItem._p1.time
+                && parseInt(drawItem.price)===txtItem._p1.price ){ //FOUND Local saved ITEM
+                drawSet[i] = newTXT; //update everything.
+                save_DRAWCHART_DB();
+                TXT_EDITOR_ELEMS[tkr_meta].updateAllViews()
+                break;
+            }
+        }//end local save
+
+
+
+    } else { //------NEW TXT--------------------------------
+        let newTXT = {tkr:tkr_meta,type:'txt',
+            time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta}
+        TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(newTXT);
+        // DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].push(newTXT)
+        DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT.push(newTXT)
+        save_DRAWCHART_DB(); //SAVE to LOCAL DB.
     }
 }
 window.delete_TXT_Click = (e)=>{
@@ -209,10 +241,24 @@ window.delete_TXT_Click = (e)=>{
     let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
     let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta'); 
     if(edit_txt_meta){
-        TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_txt_meta)
+        // TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_txt_meta)
+        let txtItem = TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_txt_meta)
+        let drawItem; //REMOVE from Local DB--------------------------
+        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT;
+        // let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];
+        for(var i=0; i < drawSet.length; i++){
+            drawItem = drawSet[i];
+            if(drawItem.tkr===tkr_meta 
+                && drawItem.time===txtItem._p1.time
+                && drawItem.price===txtItem._p1.price){ //FOUND Local saved ITEM
+                DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT.splice(i,1);
+                // DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].splice(i,1);
+                save_DRAWCHART_DB();
+                break;
+            }
+        }//end local save 
     }
     TXT_EDITOR_FRAME.setAttribute('edit_txt_meta',''); //reset edit mode
-    //TODO also need to remove in DB_bankbookz from this._spotTXTArray
 }
 //-----------------------------------------------EVENT HANDLERS
 

@@ -84,6 +84,7 @@ class HLINE_EDITOR_Class {
     }
     update_HLINE(opts){
         let editItem = this.find_HLINE(opts.price);
+        let itemPrice = editItem.price || 0;
         let styleSelect=(!opts.style || opts.style==='solid')?0:(opts.style==='dot')?1:(opts.style==='dash')?2:(opts.style==='xlrg')?3:4;
         if(editItem){
             let newOpts = {};
@@ -92,7 +93,9 @@ class HLINE_EDITOR_Class {
             newOpts.lineStyle=styleSelect;
             if(opts.color){newOpts.color=opts.color}
             editItem.line.applyOptions(newOpts)
+            return itemPrice;
         }
+        return itemPrice;
     }
     delete_HLINE(tgtPrice){
         let selectBuffer = tgtPrice*BUFFER_OFFSET; 
@@ -152,26 +155,28 @@ window.set_HLINE_Click = (e)=>{ //-------------------------SET HLINE CLICK.
     if(!style_meta){style_meta = "dot"}
     let edit_hline_meta = HLINE_EDITOR_FRAME.getAttribute('edit_hline_meta');
     if(edit_hline_meta){ //EDIT ITEM -----------------------
-        HLINE_EDITOR_ELEMS[tkr_meta].update_HLINE(
-        {price:price_meta,color:color_meta,tkr:tkr_meta,
+        let newLine = {price:price_meta,color:color_meta,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
-            style:style_meta,
-        });
+            style:style_meta,type:'hline' }
+        let itemPrice = HLINE_EDITOR_ELEMS[tkr_meta].update_HLINE(newLine);
+        let drawItem; //UPDATE Local DB--------------------------
+        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_HLINE;
+        // let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY']; //TODO
+        for(var i=0; i < drawSet.length; i++){
+            drawItem = drawSet[i];
+            if(drawItem.tkr===tkr_meta 
+                && drawItem.price===itemPrice){
+                drawSet[i] = newLine; //update everything.
+                save_DRAWCHART_DB();
+                break;
+            }
+        }//end local save
     }else{ //NEW ITEM --------------------------------------
-        let newLine = { type:'hline',
-            color:color_meta,price:price_meta,tkr:tkr_meta,
-            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
-            style:style_meta,
-        }
+        let newLine = { type:'hline',color:color_meta,price:price_meta,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3, style:style_meta}
         HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE(newLine);
-        // const aHLine = HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE({ 
-        //     color:color_meta,price:price_meta,tkr:tkr_meta,
-        //     width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
-        //     style:style_meta,
-        // });
-        //TODO YMT lookup.
-        // DB_DRAWCHART.TICKR_LIST
-        DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].push(newLine)
+        DB_DRAWCHART.DRAW_DATA_ALL_HLINE.push(newLine)
+        // DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].push(newLine)
         save_DRAWCHART_DB(); //SAVE to LOCAL DB.
     }
 }
@@ -184,12 +189,14 @@ window.clickHLineDELETE = (e)=>{
     if(edit_hline_meta){
         itemPrice = HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(price_meta);
         let drawItem; //REMOVE from Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];
+        // let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY']; //TODO
+        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_HLINE;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
-            if(drawItem.type==='hline' && drawItem.price===itemPrice){
-                //TODO YMT lookup
-                DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].splice(i,1);
+            if(drawItem.tkr===tkr_meta 
+                && drawItem.price===itemPrice){
+                DB_DRAWCHART.DRAW_DATA_ALL_HLINE.splice(i,1);
+                // DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].splice(i,1);
                 save_DRAWCHART_DB();
                 break;
             }

@@ -121,6 +121,7 @@ class VERTLINE_EDITOR_Class {
             editItem._options.width = opts.width;
             editItem._options.color = opts.color
         }
+        return editItem;
     }
     delete_VLINE(tgtTime){
         let maxTime = Math.round(tgtTime + (tgtTime*0.00005) );
@@ -171,21 +172,35 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
     if(!color_meta){color_meta = "steelblue"}
     let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
     if(edit_vline_meta){ //--  EDIT ITEM------------------------
-        VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(
-        {time:timeUTC,color:color_meta,tkr:tkr_meta,
-            width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
+        // VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(
+        // {time:timeUTC,color:color_meta,tkr:tkr_meta,
+        //     width:(size_meta==='sml')?1:(size_meta==='med')?2:3})
+        let newLine = {time:timeUTC,color:color_meta,tkr:tkr_meta,
+            width:(size_meta==='sml')?1:(size_meta==='med')?2:3,type:'vline'
+        }
+        let vItem = VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(newLine);
+        let drawItem; //UPDATE Local DB--------------------------
+        // let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY']; //TODO
+        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_VLINE;
+        for(var i=0; i < drawSet.length; i++){
+            drawItem = drawSet[i];
+            if(drawItem.tkr===tkr_meta 
+                && drawItem.time===vItem._time){            
+            // if(drawItem.type==='vline' && drawItem.price===itemTime){
+                drawSet[i] = newLine; //update everything.
+                // console.log('UPDATE VLINE',newLine)
+                save_DRAWCHART_DB();
+                break;
+            }
+        }//end local save        
     }else{ //-- -- NEW ITEM -----------------------------------
         let newLine = { type:'vline',
             color:color_meta,time:timeUTC,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
         }
-        debugger;
         VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE(newLine);
-        // const aVertLine = VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE({ 
-        //     color:color_meta,time:timeUTC,tkr:tkr_meta,
-        //     width:(size_meta==='sml')?1:(size_meta==='med')?2:3,
-        // });
-        DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].push(newLine)
+        DB_DRAWCHART.DRAW_DATA_ALL_VLINE.push(newLine)
+        // DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].push(newLine)
         save_DRAWCHART_DB(); //SAVE to LOCAL DB.
     }
 }
@@ -198,17 +213,19 @@ window.clickVLineDELETE = (e)=>{
         // VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeUTC);
         let lineTime = VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeUTC);
         let drawItem; //REMOVE from Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];
+        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_VLINE;
+        // let drawSet = DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'];
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
-            if(drawItem.type==='vline' && drawItem.time===lineTime){
-                //TODO YMT lookup
-                DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].splice(i,1);
+            if(drawItem.tkr===tkr_meta 
+                && drawItem.time===lineTime){
+                DB_DRAWCHART.DRAW_DATA_ALL_VLINE.splice(i,1);            
+            // if(drawItem.type==='vline' && drawItem.time===lineTime){
+                // DB_DRAWCHART.DRAW_DATA_Monthly_YMT['2024_04_SPY'].splice(i,1);
                 save_DRAWCHART_DB();
                 break;
             }
-        }//end local save        
-
+        }//end local save
     }
     VLINE_EDITOR_FRAME.setAttribute('edit_vline_meta',''); //reset edit mode
 }
