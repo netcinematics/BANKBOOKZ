@@ -352,13 +352,13 @@ const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     DB_DRAWCHART = { 
         DRAW_DATA_Monthly_YMT:{
         '2024_04_SPY':[ 
-            {tkr:'SPY',type:'hline',color:'blue',size:'lrg',price:'444',style:'solid'},
-            {tkr:'SPY',type:'vline',color:'purple',size:'med',time:'1556971200'},
+            {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
+            {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
             {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',color:'orange'},
         ],
         '2024_04_BTC':[ 
-            {tkr:'BTC',type:'hline',color:'blue',size:'med',price:'666',style:'dot'},
-            {tkr:'BTC',type:'vline',color:'yellow',size:'med',time:'1556971200'},
+            {tkr:'BTC',type:'hline',color:'blue',width:'med',price:'666',style:'dot'},
+            {tkr:'BTC',type:'vline',color:'yellow',width:'med',time:'1556971200'},
             {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',color:'teal'},
         ],
         },
@@ -377,13 +377,13 @@ const DB_DRAWCHART_init=()=>{ //READ from LOCAL STORAGE
     try{
         DB_DRAWCHART = (localStorage.DB_DRAWCHART)?
         JSON.parse( localStorage.DB_DRAWCHART ):null;
-        DB_DRAWCHART = null; //DEV: load mock data for TEST
+        // DB_DRAWCHART = null; //DEV: load mock data for TEST
         if(!DB_DRAWCHART){ DB_DRAWCHART_LOAD_MOCK_DATA(); }
     } catch(e){ DB_DRAWCHART_LOAD_MOCK_DATA(); }
 }; DB_DRAWCHART_init();
 function save_DRAWCHART_DB(){ //singleton, save LocalDB;.
-    // console.log('SAVED DRAWCHART DB.')
-    // localStorage.DB_DRAWCHART = JSON.stringify(DB_DRAWCHART); //SAVE to LOCAL STORAGE 
+    console.log('SAVED DRAWCHART DB.')
+    localStorage.DB_DRAWCHART = JSON.stringify(DB_DRAWCHART); //SAVE to LOCAL STORAGE 
 }
 </script><!--***********************END LOCAL DB*********************-->
 <script>//MAIN STATE - MODULE TEST. - master to sub components
