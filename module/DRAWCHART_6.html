@@ -363,18 +363,18 @@ const DB_DRAWCHART_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
         ],
 
-        DRAW_DATA_Monthly_YMT:{
-            '2024_04_SPY':[ 
-                {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
-                {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
-                {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',txtColor:'orange'},
-            ],
-            '2024_04_BTC':[ 
-                {tkr:'BTC',type:'hline',color:'blue',width:'med',price:'666',style:'dot'},
-                {tkr:'BTC',type:'vline',color:'yellow',width:'med',time:'1556971200'},
-                {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
-            ],
-        },
+        // DRAW_DATA_Monthly_YMT:{
+        //     '2024_04_SPY':[ 
+        //         {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
+        //         {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
+        //         {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',txtColor:'orange'},
+        //     ],
+        //     '2024_04_BTC':[ 
+        //         {tkr:'BTC',type:'hline',color:'blue',width:'med',price:'666',style:'dot'},
+        //         {tkr:'BTC',type:'vline',color:'yellow',width:'med',time:'1556971200'},
+        //         {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
+        //     ],
+        // },
         TICKR_LIST:[
             {tkr:'SPY',lastLoadYMD:''},
             {tkr:'BTC',lastLoadYMD:''}
@@ -478,6 +478,8 @@ function init_MAIN_RENDER_FRAMES(){
                 <span>
                         <select id="DYNA_YMT_SELECTOR_${tgtTKR.tkr}"" class="chartSELECTOR">
                             <option value="true" selected>Last 33</option>
+                            <option value="true">All Time</option>
+                            <option value="true">2024_04_BTC</option>
                         </select>
                     </span>
             </menu>
@@ -530,9 +532,9 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     VLINE_EDITOR_ELEMS[tgtTKR] = new VERTLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
         {tkr:tgtTKR});
     //--- CREATE VERTLINES-------------------------------
-    // let testTime2 = data[data.length-12].time;
-    // let vLine_1 = VLINE_EDITOR_ELEMS[tgtTKR].create_VLINE(
-    //     {time:testTime2,color:'blue'});
+    let testTime2 = data[data.length-12].time;
+    let vLine_1 = VLINE_EDITOR_ELEMS[tgtTKR].create_VLINE(
+        {time:testTime2,color:'blue'});
     //--- CREATE HLINE EDITOR--------------------------------
     HLINE_EDITOR_ELEMS[tgtTKR] = new HLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
         {tkr:tgtTKR});
@@ -553,7 +555,6 @@ function init_DYNA_DRAW_DATA(){ //load dynamic DRAW data into DRAWCHART
                     let newTXT = {time:parseInt(drawings.time),price:Math.round(drawings.price),
                         txt:drawings.txt,txtColor:drawings.txtColor}
                     TXT_EDITOR_ELEMS[TKRObj.tkr].createSpotTXT(newTXT)
-                    // console.log('RENDER TXT',newTXT)
                 } 
             }
             for(let drawings of DB_DRAWCHART.DRAW_DATA_ALL_VLINE){ //RENDER VLINEs
@@ -562,7 +563,6 @@ function init_DYNA_DRAW_DATA(){ //load dynamic DRAW data into DRAWCHART
                     let newLine = {time:parseInt(drawings.time),color:drawings.color,
                         width:drawings.width }
                     VLINE_EDITOR_ELEMS[TKRObj.tkr].create_VLINE(newLine);
-                    console.log('RENDER VLINE',newLine)
                 } 
             }
             for(let drawings of DB_DRAWCHART.DRAW_DATA_ALL_HLINE){ //RENDER HLINEs
@@ -571,7 +571,6 @@ function init_DYNA_DRAW_DATA(){ //load dynamic DRAW data into DRAWCHART
                     let newLine = {price:drawings.price,color:drawings.color,
                         width:drawings.width,style:drawings.style  }
                     HLINE_EDITOR_ELEMS[TKRObj.tkr].create_HLINE(newLine);
-                    // console.log('RENDER HLINE',newLine)
                 } 
             }
             

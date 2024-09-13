@@ -496,21 +496,6 @@
 let bankbookz_DB=null;
 const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
     bankbookz_DB = { 
-
-        DRAW_DATA_ALL_VLINE : [
-            {tkr:'BTC',type:'vline',color:'yellow',width:'med',time:'1556971200'},
-            {tkr:'SPY',type:'vline',color:'purple',width:'med',time:'1556971200'},
-        ],
-        DRAW_DATA_ALL_HLINE : [
-            {tkr:'SPY',type:'hline',color:'blue',width:'lrg',price:'444',style:'solid'},
-            {tkr:'BTC',type:'hline',color:'red',width:'med',price:'666',style:'dot'},
-        ],
-        DRAW_DATA_ALL_SPOTTXT : [
-            {tkr:'SPY',type:'txt',price:'333',time:'1557144000',txt:'OVRSO',txtColor:'orange'},
-            {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
-        ],
-
-
         TRADE_TXNZ_YMT: default_TRADE_DATA_MAP_Monthly,
         TICKR_DATA_MAP_Monthly : default_TICKR_DATA_MAP_Monthly,
         TICKR_LIST:[
@@ -530,13 +515,13 @@ const bankbookz_DB_init=()=>{ //READ from LOCAL STORAGE
     try{
         bankbookz_DB = (localStorage.bankbookz_DB)?
         JSON.parse( localStorage.bankbookz_DB ):null;
-        bankbookz_DB = null; //DEV: load mock data for TEST
+        // bankbookz_DB = null; //DEV: load mock data for TEST
         if(!bankbookz_DB){ bankbookz_DB_LOAD_MOCK_DATA(); }
     } catch(e){ bankbookz_DB_LOAD_MOCK_DATA(); }
 }; bankbookz_DB_init();
 function save_BANKBOOKZ_DB(){ //singleton, save LocalDB;.
-    // console.log('SAVED BANKBOOKZ DB.')
-    // localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
+    console.log('SAVED BANKBOOKZ DB.')
+    localStorage.bankbookz_DB = JSON.stringify(bankbookz_DB); //SAVE to LOCAL STORAGE 
 }
 </script><!--***********************END LOCAL DB*********************-->
 <script>
@@ -1714,38 +1699,6 @@ const init_BANKZ_TABZ = ()=>{
 }
 //*********************END BANKZ- TAB - LOGIC**********************/
 </script><!--*******************************END VIEW structure LOGIC-->
-<script>//---- EDITOR MODULE-- Main State - master to sub components
-    let MAIN_RENDER_FRAME = document.getElementById('MAIN_RENDER_FRAME');
-    let editTXTBTN = document.getElementById('editTXTBTN')
-    let editHLINEBTN = document.getElementById('editHLINEBTN')
-    let editVLINEBTN = document.getElementById('editVLINEBTN')
-    let editBOXBTN = document.getElementById('editBOXBTN')
-    let editTRENDBTN = document.getElementById('editTRENDBTN')
-
-    let TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
-    let txtEditInput = document.getElementById('txtEditInput');
-    let TXT_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. 
-    
-    let VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME') 
-    let VLINE_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. 
-    let _VERTLINE_EDITOR_Class = {} //MAIN STATE scope
-    let _TXT_EDITOR_Class = {} //MAIN STATE scope
-    
-    let HLINE_EDITOR_FRAME = document.getElementById('HLINE_EDITOR_FRAME') 
-    let HLINE_EDITOR_ELEMS = {}; //Map of EDITOR elems by tkr. 
-    let _HLINE_EDITOR_Class = {} //MAIN STATE scope
-    let _getMockData;
-</script>
-<script type="module"> //-----EDITOR IMPORTS-----------
-import {TXT_EDITOR_Class} from "./module/TXTSPOT_EDITOR_7.js";
-_TXT_EDITOR_Class = TXT_EDITOR_Class;
-import {VERTLINE_EDITOR_Class} from "./module/VERTLINE_EDITOR_7.js";
-_VERTLINE_EDITOR_Class = VERTLINE_EDITOR_Class;//init MAINSTATE
-import {HLINE_EDITOR_Class} from "./module/HLINE_EDITOR_7.js";
-_HLINE_EDITOR_Class = HLINE_EDITOR_Class;//init MAINSTATE
-import {g as getMockData} from "./module/sample-data.js";
-_getMockData = getMockData;
-</script>
 <script  >  //*********************BOOKZ-LOGIC**********************/
 //*********************BOOKZ- TAB - LOGIC**********************/
 const init_BOOKZ_TABZ = ()=>{
@@ -1900,7 +1853,7 @@ const init_BOOKZ_TABZ = ()=>{
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✴</span>
                 </header>
                 <section style="display:none;flex-direction: column;">
-                    <article id="drawchartFRAME_${tgtTKR.tkr}" style="justify-content:center;
+                    <article id="drawFRAME_${tgtTKR.tkr}" style="justify-content:center;
                         flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
                         <i style="font-size:0.555em;margin:0.888em;">No data.</i>
                     </article>
@@ -1984,8 +1937,8 @@ const init_BOOKZ_TABZ = ()=>{
     }//END BUILD LOOP
     init_BOOKZ_EXPANDER();
     setTimeout(render_ALL_BOOKZ_CHARTZ,222);
-    setTimeout(render_ALL_DYNA_SELECTORZ,333);
-    setTimeout(render_ALL_DRAW_CHARTZ,444);
+    setTimeout(render_ALL_DYNA_SELECTORZ,222);
+
 };init_BOOKZ_TABZ();
 function render_ALL_BOOKZ_CHARTZ(){
     let tgt_Candle,tgtTKR; //Render all CANDLESTICK DYNA_CHARTZ
@@ -2011,83 +1964,6 @@ function render_ALL_DYNA_SELECTORZ(){
         init_SUB_SELECTORS(tgtTKR); //assign click handlers.
     }   
 }
-function render_ALL_DRAW_CHARTZ(){
-    let elem,tgtTKR; //Render all drawchart DYNA_CHARTZ
-    for(var i=0; i< bankbookz_DB.TICKR_LIST.length; i++){
-        tgtTKR = bankbookz_DB.TICKR_LIST[i].tkr;
-        init_DYNA_DRAWCHART(tgtTKR);
-    }
-    init_DYNA_DRAW_DATA(); //draw data on charts.
-}
-function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
-    let drawFRAME = document.getElementById(`drawchartFRAME_${tgtTKR}`);
-    drawFRAME.innerHTML = ''; //blank out  msg
-    let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(`drawchartFRAME_${tgtTKR}`,{
-        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
-        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-        autoSize:true, height:300, allowShiftVisibleRangeOnWhitespaceReplacement:true
-    })
-    debugger;
-    const data = _getMockData(); //TODO
-    let DYNA_DRAWCHART_LineSeries = DYNA_DRAWCHART_LineChart.addLineSeries()
-    DYNA_DRAWCHART_LineSeries.setData(data);
-
-    //--- CREATE TXT EDITOR--------------------------------
-    TXT_EDITOR_ELEMS[tgtTKR] = new _TXT_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
-        {tkr:tgtTKR,color: "steelblue"}); //TKR is very important for later elem lookup.
-    // --CREATE TXT SPOTZ!--------------------------------------------------
-    let testTime = data[data.length-10].time;
-    let spotTXT_1 = TXT_EDITOR_ELEMS[tgtTKR].createSpotTXT({time:testTime,price: 466,txt:"OVRBO",txtColor:'steelblue'})
-    //--- CREATE VLINE EDITOR--------------------------------
-    VLINE_EDITOR_ELEMS[tgtTKR] = new _VERTLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
-        {tkr:tgtTKR});
-    //--- CREATE VERTLINES-------------------------------
-    let testTime2 = data[data.length-12].time;
-    let vLine_1 = VLINE_EDITOR_ELEMS[tgtTKR].create_VLINE(
-        {time:testTime2,color:'blue'});
-    //--- CREATE HLINE EDITOR--------------------------------
-    HLINE_EDITOR_ELEMS[tgtTKR] = new _HLINE_EDITOR_Class(DYNA_DRAWCHART_LineChart,DYNA_DRAWCHART_LineSeries,
-        {tkr:tgtTKR});
-    //--- CREATE HLINES-------------------------------
-    let testPrice3 = data[data.length-15].value;
-    let hLine_1 = HLINE_EDITOR_ELEMS[tgtTKR].create_HLINE(
-        {price:testPrice3,color:'steelblue',width:3,style:0});
-    
-}; //END INIT DYNA_CHART - DRAWCHART *****************************************
-function init_DYNA_DRAW_DATA(){ //load dynamic DRAW data into DRAWCHART
-    debugger;
-    let elKeys = [], elTGT, timeSelector,dbKeys=[], ymtArr=[];
-    for(let TKRObj of bankbookz_DB.TICKR_LIST){
-        timeSelector = 'Last 33';
-        if(timeSelector==='Last 33'){ //TODO
-            for(let drawings of bankbookz_DB.DRAW_DATA_ALL_SPOTTXT){ //RENDER TXTs
-                if(TXT_EDITOR_ELEMS[TKRObj.tkr]
-                    && TKRObj.tkr === drawings.tkr ){
-                    let newTXT = {time:parseInt(drawings.time),price:Math.round(drawings.price),
-                        txt:drawings.txt,txtColor:drawings.txtColor}
-                    TXT_EDITOR_ELEMS[TKRObj.tkr].createSpotTXT(newTXT)
-                } 
-            }
-            for(let drawings of bankbookz_DB.DRAW_DATA_ALL_VLINE){ //RENDER VLINEs
-                if(VLINE_EDITOR_ELEMS[TKRObj.tkr]
-                  && TKRObj.tkr === drawings.tkr ){
-                    let newLine = {time:parseInt(drawings.time),color:drawings.color,
-                        width:drawings.width }
-                    VLINE_EDITOR_ELEMS[TKRObj.tkr].create_VLINE(newLine);
-                } 
-            }
-            for(let drawings of bankbookz_DB.DRAW_DATA_ALL_HLINE){ //RENDER HLINEs
-                if(HLINE_EDITOR_ELEMS[TKRObj.tkr]
-                  && TKRObj.tkr === drawings.tkr ){
-                    let newLine = {price:drawings.price,color:drawings.color,
-                        width:drawings.width,style:drawings.style  }
-                    HLINE_EDITOR_ELEMS[TKRObj.tkr].create_HLINE(newLine);
-                } 
-            }
-            
-        }
-    }
-}  // end render DRAW DATA
 function init_BOOKZ_EXPANDER(){ //collapse all BOOKZ except expanded tabs in local storage,
     let tgtTKR='',viewTKR='',viewID='',expanded=false, tgtBTN;
     const allBookz = document.getElementsByClassName('BOOKFRAME_Item');
