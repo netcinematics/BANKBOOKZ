@@ -187,7 +187,6 @@ class TXT_EDITOR_Class {
         return item;
     }
     updateAllViews() {
-        console.log('updating...')
         let txtRec;
         for(var ii=0; ii<this._spotTXTArray.length;ii++){
             txtRec = this._spotTXTArray[ii]
@@ -211,14 +210,14 @@ window.set_TXT_Click = (e)=>{
             txt:editTXT,txtColor:color_meta,type:'txt' }
         let txtItem = TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_txt_meta,newTXT);
         let drawItem; //UPDATE Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT; 
+        let drawSet = bankbookz_DB.DRAW_DATA_ALL_SPOTTXT; 
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
                 && parseInt(drawItem.time)===txtItem._p1.time
                 && parseInt(drawItem.price)===txtItem._p1.price ){ //FOUND Local saved ITEM
                 drawSet[i] = newTXT; //update everything.
-                save_DRAWCHART_DB();
+                save_BANKBOOKZ_DB();
                 TXT_EDITOR_ELEMS[tkr_meta].updateAllViews()
                 break;
             }
@@ -227,8 +226,8 @@ window.set_TXT_Click = (e)=>{
         let newTXT = {tkr:tkr_meta,type:'txt',
             time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta}
         TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(newTXT);
-        DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT.push(newTXT)
-        save_DRAWCHART_DB(); //SAVE to LOCAL DB.
+        bankbookz_DB.DRAW_DATA_ALL_SPOTTXT.push(newTXT)
+        save_BANKBOOKZ_DB(); //SAVE to LOCAL DB.
     }
 }
 window.delete_TXT_Click = (e)=>{
@@ -238,14 +237,14 @@ window.delete_TXT_Click = (e)=>{
     if(edit_txt_meta){
         let txtItem = TXT_EDITOR_ELEMS[tkr_meta].deleteSpot_TXT(edit_txt_meta)
         let drawItem; //REMOVE from Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT;
+        let drawSet = bankbookz_DB.DRAW_DATA_ALL_SPOTTXT;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
                 && drawItem.time===txtItem._p1.time
                 && drawItem.price===txtItem._p1.price){ //FOUND Local saved ITEM
-                DB_DRAWCHART.DRAW_DATA_ALL_SPOTTXT.splice(i,1);
-                save_DRAWCHART_DB();
+                bankbookz_DB.DRAW_DATA_ALL_SPOTTXT.splice(i,1);
+                save_BANKBOOKZ_DB();
                 break;
             }
         }//end local save 

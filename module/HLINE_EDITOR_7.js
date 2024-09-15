@@ -160,13 +160,13 @@ window.set_HLINE_Click = (e)=>{ //-------------------------SET HLINE CLICK.
             style:style_meta,type:'hline' }
         let itemPrice = HLINE_EDITOR_ELEMS[tkr_meta].update_HLINE(newLine);
         let drawItem; //UPDATE Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_HLINE;
+        let drawSet = bankbookz_DB.DRAW_DATA_ALL_HLINE;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
                 && drawItem.price===itemPrice){
                 drawSet[i] = newLine; //update everything.
-                save_DRAWCHART_DB();
+                save_BANKBOOKZ_DB();
                 break;
             }
         }//end local save
@@ -174,8 +174,8 @@ window.set_HLINE_Click = (e)=>{ //-------------------------SET HLINE CLICK.
         let newLine = { type:'hline',color:color_meta,price:price_meta,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3, style:style_meta}
         HLINE_EDITOR_ELEMS[tkr_meta].create_HLINE(newLine);
-        DB_DRAWCHART.DRAW_DATA_ALL_HLINE.push(newLine)
-        save_DRAWCHART_DB(); //SAVE to LOCAL DB.
+        bankbookz_DB.DRAW_DATA_ALL_HLINE.push(newLine)
+        save_BANKBOOKZ_DB(); //SAVE to LOCAL DB.
     }
 }
 window.clickHLineDELETE = (e)=>{
@@ -187,13 +187,13 @@ window.clickHLineDELETE = (e)=>{
     if(edit_hline_meta){
         itemPrice = HLINE_EDITOR_ELEMS[tkr_meta].delete_HLINE(price_meta);
         let drawItem; //REMOVE from Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_HLINE;
+        let drawSet = bankbookz_DB.DRAW_DATA_ALL_HLINE;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
                 && drawItem.price===itemPrice){
-                DB_DRAWCHART.DRAW_DATA_ALL_HLINE.splice(i,1);
-                save_DRAWCHART_DB();
+                bankbookz_DB.DRAW_DATA_ALL_HLINE.splice(i,1);
+                save_BANKBOOKZ_DB();
                 break;
             }
         }//end local save

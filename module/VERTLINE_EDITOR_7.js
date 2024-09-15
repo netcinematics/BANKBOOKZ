@@ -176,13 +176,13 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3,type:'vline'  }
         let vItem = VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(newLine);
         let drawItem; //UPDATE Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_VLINE;
+        let drawSet = bankbookz_DB.DRAW_DATA_ALL_VLINE;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
                 && drawItem.time===vItem._time){
                 drawSet[i] = newLine; //update everything.
-                save_DRAWCHART_DB();
+                save_BANKBOOKZ_DB();
                 break;
             }
         }//end local save
@@ -190,8 +190,8 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
         let newLine = { type:'vline', color:color_meta,time:timeUTC,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3, }
         VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE(newLine);
-        DB_DRAWCHART.DRAW_DATA_ALL_VLINE.push(newLine)
-        save_DRAWCHART_DB(); //SAVE to LOCAL DB.
+        bankbookz_DB.DRAW_DATA_ALL_VLINE.push(newLine)
+        save_BANKBOOKZ_DB(); //SAVE to LOCAL DB.
     }
 }
 window.clickVLineDELETE = (e)=>{
@@ -202,13 +202,13 @@ window.clickVLineDELETE = (e)=>{
     if(edit_vline_meta){
         let lineTime = VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeUTC);
         let drawItem; //REMOVE from Local DB--------------------------
-        let drawSet = DB_DRAWCHART.DRAW_DATA_ALL_VLINE;
+        let drawSet = bankbookz_DB.DRAW_DATA_ALL_VLINE;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
                 && drawItem.time===lineTime){
-                DB_DRAWCHART.DRAW_DATA_ALL_VLINE.splice(i,1);
-                save_DRAWCHART_DB();
+                bankbookz_DB.DRAW_DATA_ALL_VLINE.splice(i,1);
+                save_BANKBOOKZ_DB();
                 break;
             }
         }//end local save
