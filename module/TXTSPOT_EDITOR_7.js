@@ -109,6 +109,7 @@ class TXT_EDITOR_Class {
     _onClick(e) {
         if(window.SPOT_EDIT_MODE!="TXT"){return}
         const mouseTime = e.time;//Math.abs(e.point.x)
+        // const mouseTime = new Date(e.time).getTime();//Math.abs(e.point.x)
         const mousePrice = this._series.coordinateToPrice(e.point.y); 
         const TXT_EDITOR_FRAME = document.getElementById('TXT_EDITOR_FRAME')
         let editMode_Item = this._spotWithinBoundary(mouseTime,mousePrice);
@@ -135,18 +136,23 @@ class TXT_EDITOR_Class {
         TXT_EDITOR_FRAME.style.left= "7.777%"; //SHOW EDITOR, inline better.
     }
     _spotWithinBoundary(mouseTime,mousePrice){
+        let timeUTC = new Date(mouseTime).getTime();
         let maxTop = Math.round(mousePrice + (mousePrice*0.05) );
         let maxBtm = Math.round(mousePrice - (mousePrice*0.05) );
-        let maxLft = Math.round(mouseTime + (mouseTime*0.0001) );
-        let maxRgt = Math.round(mouseTime - (mouseTime*0.00044) );
-        let editItem;
+        let maxLft = Math.round(timeUTC + (timeUTC*0.0001) );
+        let maxRgt = Math.round(timeUTC - (timeUTC*0.00044) );
+        // let maxLft = Math.round(mouseTime + (mouseTime*0.0001) );
+        // let maxRgt = Math.round(mouseTime - (mouseTime*0.00044) );
+        let editItem,itemTimeUTC;
         let item,itemTime,itemPrice;
         for(var i=0; i<this._spotTXTArray.length;i++){
             item = this._spotTXTArray[i];
             itemPrice = item._p1.price;
             itemTime = item._p1.time;
+            itemTimeUTC = new Date(itemTime).getTime();//needs utc not ymd
             if(itemPrice<maxTop && itemPrice>maxBtm 
-                &&  itemTime>maxRgt && itemTime<maxLft 
+                &&  itemTimeUTC>maxRgt && itemTimeUTC<maxLft 
+                // &&  itemTime>maxRgt && itemTime<maxLft 
             ){editItem=item;break;}            
         }
         return editItem;
@@ -160,12 +166,15 @@ class TXT_EDITOR_Class {
         return TXTSPOT_Mark_New;
     }      
     updateSpotTXT(spotID,opts){
-        let item;
+        let item, itemTimeUTC;
         let spotDataArr = spotID.split('-');
         for(var i=0;i<this._spotTXTArray.length;i++){
             item = this._spotTXTArray[i];
+            // itemTimeUTC = new Date(item._p1.time).getTime();//needs utc not ymd
             if(item._p1.price === parseFloat(spotDataArr[0])
-                && item._p1.time === parseInt(spotDataArr[1]) ){ //FOUND ITEM to UPDATE.
+                && item._p1.time === opts.time ){ //FOUND ITEM to UPDATE.
+                // && new Date(item._p1.time).getTime() === parseInt(spotDataArr[1]) ){ //FOUND ITEM to UPDATE.
+                // && item._p1.time === parseInt(spotDataArr[1]) ){ //FOUND ITEM to UPDATE.
                     item._txt = opts.txt;
                     item._options.txtColor = opts.txtColor
                 break; //TODO also need to update in DB_bankbookz
@@ -179,7 +188,8 @@ class TXT_EDITOR_Class {
         for(var i=0;i<this._spotTXTArray.length;i++){
             item = this._spotTXTArray[i];
             if(item._p1.price === parseFloat(spotDataArr[0])
-                && item._p1.time === parseInt(spotDataArr[1]) ){ //FOUND ITEM to DELETE.
+                && item._p1.time === `${spotDataArr[1]}-${spotDataArr[2]}-${spotDataArr[3]}` ){ //FOUND ITEM to DELETE.
+                // && item._p1.time === parseInt(spotDataArr[1]) ){ //FOUND ITEM to DELETE.
                 this._series.detachPrimitive(item)
                 this._spotTXTArray.splice(i,1);
             }
@@ -200,21 +210,29 @@ window.set_TXT_Click = (e)=>{
     let editTXT = txtEditInput.value;
     let tkr_meta = TXT_EDITOR_FRAME.getAttribute('tkr_meta');
     let price_meta = parseFloat(TXT_EDITOR_FRAME.getAttribute('price_meta') ); 
-    let timeUTC = parseFloat(TXT_EDITOR_FRAME.getAttribute('time_meta') );
+    // let timeUTC = new Date(TXT_EDITOR_FRAME.getAttribute('time_meta'));
+    // let timeUTC = parseFloat(TXT_EDITOR_FRAME.getAttribute('time_meta') );
+    let timeYMD = TXT_EDITOR_FRAME.getAttribute('time_meta');
     let color_meta = TXT_EDITOR_FRAME.getAttribute('color_meta');
     if(!color_meta){color_meta = "#4682b4"} //steelblue;
-    if(!tkr_meta||!editTXT||!price_meta||!timeUTC){return}
+    // if(!tkr_meta||!editTXT||!price_meta||!timeUTC){return}
+    if(!tkr_meta||!editTXT||!price_meta||!timeYMD){return}
     let edit_txt_meta = TXT_EDITOR_FRAME.getAttribute('edit_txt_meta');
     if(edit_txt_meta){ //---UPDATE TXT-----------------------
-        let newTXT = {tkr:tkr_meta,time:timeUTC,price:price_meta,
+        // let newTXT = {tkr:tkr_meta,time:timeUTC,price:price_meta,
+        let newTXT = {tkr:tkr_meta,time:timeYMD,price:price_meta,
             txt:editTXT,txtColor:color_meta,type:'txt' }
         let txtItem = TXT_EDITOR_ELEMS[tkr_meta].updateSpotTXT(edit_txt_meta,newTXT);
         let drawItem; //UPDATE Local DB--------------------------
         let drawSet = bankbookz_DB.DRAW_DATA_ALL_SPOTTXT; 
+        let timeTGTUTC;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
+            timeTGTUTC = new Date(drawItem.time).getTime(); //needs UTC
             if(drawItem.tkr===tkr_meta 
-                && parseInt(drawItem.time)===txtItem._p1.time
+                && timeTGTUTC=== new Date(txtItem._p1.time).getTime() //needs utc
+                // && parseInt(drawItem.time)===txtItem._p1.time
+                // && timeUTC===txtItem._p1.time
                 && parseInt(drawItem.price)===txtItem._p1.price ){ //FOUND Local saved ITEM
                 drawSet[i] = newTXT; //update everything.
                 save_BANKBOOKZ_DB();
@@ -224,8 +242,10 @@ window.set_TXT_Click = (e)=>{
         }//end local save
     } else { //------NEW TXT--------------------------------
         let newTXT = {tkr:tkr_meta,type:'txt',
-            time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta}
-        TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(newTXT);
+            // time:timeUTC,price:price_meta,txt:editTXT,txtColor:color_meta}
+            time:timeYMD,price:price_meta,txt:editTXT,txtColor:color_meta}
+        TXT_EDITOR_ELEMS[tkr_meta].createSpotTXT(newTXT); //ymd for chart
+        newTXT.time = new Date(timeYMD).getTime(); //UTC for save, need utc
         bankbookz_DB.DRAW_DATA_ALL_SPOTTXT.push(newTXT)
         save_BANKBOOKZ_DB(); //SAVE to LOCAL DB.
     }
@@ -241,7 +261,8 @@ window.delete_TXT_Click = (e)=>{
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
-                && drawItem.time===txtItem._p1.time
+                // && drawItem.time===txtItem._p1.time
+                && drawItem.time=== new Date(txtItem._p1.time).getTime() //needs UTC
                 && drawItem.price===txtItem._p1.price){ //FOUND Local saved ITEM
                 bankbookz_DB.DRAW_DATA_ALL_SPOTTXT.splice(i,1);
                 save_BANKBOOKZ_DB();

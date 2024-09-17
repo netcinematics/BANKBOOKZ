@@ -80,13 +80,18 @@ class VERTLINE_EDITOR_Class {
         if(window.SPOT_EDIT_MODE!="VLINE"){return}
         let VLINE_EDITOR_FRAME = document.getElementById('VLINE_EDITOR_FRAME')
         const mouseTime = e.time;
+        const timeUTC = new Date(mouseTime).getTime();
         //-------------------CHECK EDIT MODE--------------
-        let maxTime = Math.round(mouseTime + (mouseTime*0.00005) );
-        let minTime = Math.round(mouseTime - (mouseTime*0.00005) );
-        let item, editItem;
+        let maxTime = Math.round(timeUTC + (timeUTC*0.00005) );
+        let minTime = Math.round(timeUTC - (timeUTC*0.00005) );
+        // let maxTime = Math.round(mouseTime + (mouseTime*0.00005) );
+        // let minTime = Math.round(mouseTime - (mouseTime*0.00005) );
+        let item, editItem, itemTimeUTC;
         for(var idx=0; idx< this._vLineArray.length;idx++){
             item = this._vLineArray[idx]; 
-            if(item._time<maxTime && item._time>minTime ){
+            itemTimeUTC = new Date(item._time).getTime();
+            if(itemTimeUTC<maxTime && itemTimeUTC>minTime ){
+            // if(item._time<maxTime && item._time>minTime ){
                 editItem = item; break;} //FOUND MATCH
         }
         //--------------------END CHECK EDIT MODE-----------
@@ -108,6 +113,22 @@ class VERTLINE_EDITOR_Class {
         }
         showVERTLINE_Editor(e);
     }
+    find_VLINE(tgtTime){ //detemine line to edit.
+        let timeUTC = new Date(tgtTime).getTime();
+        let maxTime = Math.round(timeUTC + (timeUTC*0.00005) );
+        let minTime = Math.round(timeUTC - (timeUTC*0.00005) );
+        // let maxTime = Math.round(tgtTime + (tgtTime*0.00005) );
+        // let minTime = Math.round(tgtTime - (tgtTime*0.00005) );
+        let item,itemTimeUTC;
+        for(var idx=0; idx< this._vLineArray.length;idx++){
+            item = this._vLineArray[idx]; 
+            itemTimeUTC = new Date(item._time).getTime();
+            if(itemTimeUTC<maxTime && itemTimeUTC>minTime ){
+            // if(item._time<maxTime && item._time>minTime ){
+                return item;} //FOUND MATCH
+        }
+        return null;
+    }    
     create_VLINE(opts){
         const vLINE_New = new VLINE_Base_Class(this._chart,this._series,opts);
         this._series.attachPrimitive(vLINE_New);
@@ -124,30 +145,24 @@ class VERTLINE_EDITOR_Class {
         return editItem;
     }
     delete_VLINE(tgtTime){
-        let maxTime = Math.round(tgtTime + (tgtTime*0.00005) );
-        let minTime = Math.round(tgtTime - (tgtTime*0.00005) );
+        let timeUTC = new Date(tgtTime).getTime();
+        let maxTime = Math.round(timeUTC + (timeUTC*0.00005) );
+        let minTime = Math.round(timeUTC - (timeUTC*0.00005) );
+        // let maxTime = Math.round(tgtTime + (tgtTime*0.00005) );
+        // let minTime = Math.round(tgtTime - (tgtTime*0.00005) );
         let item, itemTime=0;
         for(var i=0; i< this._vLineArray.length;i++){
             item = this._vLineArray[i]; 
-            if(item._time<maxTime && item._time>minTime ){
-                itemTime = item._time;
+            itemTime = new Date(item._time).getTime();
+            if(itemTime<maxTime && itemTime>minTime ){
+            // if(item._time<maxTime && item._time>minTime ){
+                // itemTime = item._time;
                 item.updateAllViews();//?
                 this._series.detachPrimitive(item)
                 this._vLineArray.splice(i,1);
                 return itemTime;} //FOUND MATCH - use for lookup
         }
         return 0;
-    }
-    find_VLINE(tgtTime){ //detemine line to edit.
-        let maxTime = Math.round(tgtTime + (tgtTime*0.00005) );
-        let minTime = Math.round(tgtTime - (tgtTime*0.00005) );
-        let item;
-        for(var idx=0; idx< this._vLineArray.length;idx++){
-            item = this._vLineArray[idx]; 
-            if(item._time<maxTime && item._time>minTime ){
-                return item;} //FOUND MATCH
-        }
-        return null;
     }
 }
 //-------VLINE-EDITOR - UI MODULE----------------------------
@@ -166,30 +181,37 @@ window.set_VLine_Color = (e)=>{ let lineColor = event.target.value;
 window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
     VLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
     let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
-    let timeUTC = parseFloat(VLINE_EDITOR_FRAME.getAttribute('time_meta') );
+    let timeYMD = VLINE_EDITOR_FRAME.getAttribute('time_meta');
+    // let timeUTC = parseFloat(VLINE_EDITOR_FRAME.getAttribute('time_meta') );
     let size_meta = VLINE_EDITOR_FRAME.getAttribute('size_meta');
     let color_meta = VLINE_EDITOR_FRAME.getAttribute('color_meta');
     if(!color_meta){color_meta = "steelblue"}
     let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
     if(edit_vline_meta){ //--  EDIT ITEM------------------------
-        let newLine = {time:timeUTC,color:color_meta,tkr:tkr_meta,
+        // let newLine = {time:timeUTC,color:color_meta,tkr:tkr_meta,
+        let newLine = {time:timeYMD,color:color_meta,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3,type:'vline'  }
         let vItem = VLINE_EDITOR_ELEMS[tkr_meta].update_VLINE(newLine);
         let drawItem; //UPDATE Local DB--------------------------
         let drawSet = bankbookz_DB.DRAW_DATA_ALL_VLINE;
+        let timeTGTUTC;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
-                && drawItem.time===vItem._time){
+                // && drawItem.time===vItem._time){
+                && timeTGTUTC=== new Date(vItem._time).getTime() ){
                 drawSet[i] = newLine; //update everything.
                 save_BANKBOOKZ_DB();
                 break;
             }
         }//end local save
     }else{ //-- -- NEW ITEM -----------------------------------
-        let newLine = { type:'vline', color:color_meta,time:timeUTC,tkr:tkr_meta,
+        let newLine = { type:'vline', color:color_meta,
+            // time:timeUTC,tkr:tkr_meta,
+            time:timeYMD,tkr:tkr_meta,
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3, }
         VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE(newLine);
+        newLine.time = new Date(timeYMD).getTime(); /// UTC needed.
         bankbookz_DB.DRAW_DATA_ALL_VLINE.push(newLine)
         save_BANKBOOKZ_DB(); //SAVE to LOCAL DB.
     }
@@ -197,16 +219,18 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
 window.clickVLineDELETE = (e)=>{
     VLINE_EDITOR_FRAME.style.visibility='hidden';
     let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
+    let timeYMD = VLINE_EDITOR_FRAME.getAttribute('time_meta');
     let timeUTC = parseFloat(VLINE_EDITOR_FRAME.getAttribute('time_meta') );
     let edit_vline_meta = VLINE_EDITOR_FRAME.getAttribute('edit_vline_meta');
     if(edit_vline_meta){
-        let lineTime = VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeUTC);
+        let lineTime = VLINE_EDITOR_ELEMS[tkr_meta].delete_VLINE(timeYMD);
         let drawItem; //REMOVE from Local DB--------------------------
         let drawSet = bankbookz_DB.DRAW_DATA_ALL_VLINE;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
             if(drawItem.tkr===tkr_meta 
-                && drawItem.time===lineTime){
+                // && drawItem.time===lineTime){
+                && drawItem.time===new Date(lineTime).getTime() ){
                 bankbookz_DB.DRAW_DATA_ALL_VLINE.splice(i,1);
                 save_BANKBOOKZ_DB();
                 break;
