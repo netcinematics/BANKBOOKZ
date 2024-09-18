@@ -17,16 +17,11 @@
             // console.log(`RAW TRADES:${default_raw_trade_data.length}`)
             console.log(`MONTH TRADES:${Object.keys(default_TRADE_DATA_MAP_Monthly).length}`)
             console.log(`TICKRS, BTC(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['BTC']).length}`)
-            console.log(`TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`)
+            //todo make defaults AMZN and SPY.
+            // console.log(`TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`)
             // console.log(`BTC_TXNZ: MONTH${Object.keys(default_BTC_TRADEZ).length}`);
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
-        <!-- <script type="text/javascript"
-            src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script> -->
-        <!-- <script type="text/javascript" src="./module/derivative_lwc_2.js"></script> -->
         <script type="text/javascript" src="./module/lwc_dev_deriv_4.2.js"></script>
-
-
-        
 <style>
     body{ background:black; color:steelblue; font-size: 1em;padding: 1em 2% 2% 2%;
         font-family: verdana;height: 100%; min-height: 100%; display: flex;
@@ -59,7 +54,7 @@
         .BTN{font-size:1.111em;}
         /* .blackBTN{font-size:0.999em;} */
     }  
-    @media only screen and (max-width: 500px) { /************* PHONE */
+    @media only screen and (max-width: 600px) { /************* PHONE */
         body{ background-color: #07000c; }
         .BTN{font-size:1em;}
         .blackBTN{font-size:0.888em;}
@@ -107,7 +102,9 @@
     .expanderROW {display:flex;justify-content:space-between;border-bottom:1px dashed #021d33;
         padding: 0.222em 0em 0.333em 0em; margin: 0 2% 0.333em 2%;
     }
-    .expanderTITLE{font-size:0.888em;color:steelblue;    margin-top: 0.333em;    font-weight: bold;}
+    .expanderTITLE{font-size:0.888em;color:steelblue;    
+        /* margin-top: 0.333em;     */
+        font-weight: bold;}
     .expanderBTN {color:aqua;background:#000033;border:solid 1px seagreen;
         width: 1.444em;text-align: center;border-radius: 50%;box-shadow: 1px 1px 1px teal;
         cursor:pointer;height: 1.444em;
@@ -167,7 +164,7 @@
     @media only screen and (max-width: 800px) { /************* TABLET */
         #API_BOX{margin: 8px 10% 1em 10%;}
     }  
-    @media only screen and (max-width: 500px) { /************* PHONE */
+    @media only screen and (max-width: 600px) { /************* PHONE */
         #API_BOX{margin:0 0 1em 0; padding: 0;}
     }        
     #keyBOX{ margin:1%;border: solid 1px steelblue;font-size: 0.777em;}
@@ -205,6 +202,20 @@
     .gridBTN:hover{border:1px solid darkcyan;  background:black;  color:steelblue}
     .gridBTN:active{border:1px solid steelblue;  background:black; color:purple}    
     .DRAW_MODE_SELECTED{ border: 2px solid lime; }
+    /* ************* CUSTOM MOBILE ***********************/
+    @media only screen and (max-width: 600px) { /************* PHONE */
+        body{margin-left:2px; margin-right:2px;padding-left:2px;padding-right:2px;}
+        #BOOK_VIEW{margin-left:2px !important; margin-right:2px !important;
+            padding-left:2px !important;padding-right:2px !important;width: 98% !important;}
+        .BOOKFRAME_Item{
+            margin-left:4px !important; margin-right:4px !important;
+            padding-left:4px !important;padding-right:4px !important;
+        }
+        .BOXFRAME{
+            margin-left:6px !important; margin-right:6px !important;
+            padding-left:6px !important;padding-right:6px !important;
+        }
+    }
 </style>
 </head>
 <body class="scrollBarV">
@@ -280,7 +291,8 @@
         <section id="BOOKFRAME_XMPL" class="BOOKFRAME_Item">
             <header class="mainTitle expanderROW">
                 <span>XMPL</span>
-                <span class="expanderBTN" style="font-size:0.777em;" onclick="expander_BOOKZ_Click(event)">✧</span>
+                <span class="expanderBTN" style="font-size:0.777em;" 
+                onclick="expander_BOOKZ_Click(event)">✧</span>
             </header>
             <article id="candelstickFRAME_XMPL" style="justify-content:center;
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
@@ -299,7 +311,7 @@
                 </span>
             </menu>            
             <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
-                border-radius: 13px;margin: 0.444em 0;display: flex;border: solid 1px teal;">
+                border-radius: 13px;margin: 0.444em 0;display: flex;border: solid 1px teal; height: 15em;">
                 <header class="expanderROW">
                     <span class="expanderTITLE">PnL:</span>
                     <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
@@ -314,20 +326,20 @@
                 </menu>              
             </section>            
             <menu id="trend_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height: 22em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height: 23em;">
                 <header class="expanderTITLE">Trendz:</header>
                 <section id="trend_line_chart_xmpl" style="display: flex;justify-content: center;height: 20em;"></section>
             </menu>
             
             <menu id="bands_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex; margin: 0.444em 0;height: 22em;">
+                border-radius: 13px; flex:1; display:flex; margin: 0.444em 0;height: 23em;">
                 <header class="expanderTITLE">Bandz:</header>
                 <section id="xmpl_bands_chart" style="display: flex;justify-content: center;height: 20em;"></section>
             </menu>
 
             <menu id="structs_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex; margin: 0.444em 0;height: 24em;">
-                <header class="expanderTITLE">Structz:</header>
+                border-radius: 13px; flex:1; display:flex; margin: 0.444em 0;height: 25em;">
+                <header class="expanderTITLE">HLINE:</header>
                 <div id="xmpl_struct_chart" style="display: flex;justify-content: center;height:22em;"></div>
                 <div id="lineEditor" dataPt="none" style="border:solid 1px steelblue;visibility:hidden;
                     position:absolute;z-index:11;color:aqua;background: #04013e;border-radius:13px;
@@ -346,50 +358,50 @@
                 </div>
             </menu>
             <menu id="avgs_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height: 22em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height: 23em;">
                 <header class="expanderTITLE">AVGz:</header>
                 <div id="xmpl_avgs_chart" style="display: flex;justify-content: center;height:20em;"></div>
             </menu>
             <!--********************RSI, CCI, MOM ********************************************************-->
             <menu id="xmpl_RSI_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:11em;">
                 <header class="expanderTITLE">SPY RSI:</header>
                 <div id="xmpl_RSI_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <menu id="xmpl_CCI_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:11em;">
                 <header class="expanderTITLE">SPY CCI:</header>
                 <div id="xmpl_CCI_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <menu id="xmpl_MOM_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:11em;">
                 <header class="expanderTITLE">SPY MOM:</header>
                 <div id="xmpl_MOM_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <!--********************MACD, STOCH, BBANDS ********************************************************-->
             <menu id="xmpl_MACD_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:16em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:15em;">
                 <header class="expanderTITLE">SPY MACD:</header>
                 <div id="xmpl_MACD_SPY" style="display: flex;justify-content: center;height:12em;"></div>
             </menu>
             <menu id="xmpl_BOLL_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:16em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:15em;">
                 <header class="expanderTITLE">SPY BOLL:</header>
                 <div id="xmpl_BOLL_SPY" style="display: flex;justify-content: center;height:12em;"></div>
             </menu>
             <menu id="xmpl_STOCH_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:11em;">
                 <header class="expanderTITLE">SPY STOCH:</header>
                 <div id="xmpl_STOCH_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <menu id="xmpl_STOCRSI_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:11em;">
                 <header class="expanderTITLE">SPY STOCH_RSI:</header>
                 <div id="xmpl_STOCRSI_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>
             <!--- ***********************IV, SENTIMENT, SALES************************************************************-->
             <menu id="xmpl_HISTORIV_FRAME_XMPL" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:12em;">
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:11em;">
                 <header class="expanderTITLE">IV (Implied Volatility):</header>
                 <div id="xmpl_HISTORIV_SPY" style="display: flex;justify-content: center;height:8em;"></div>
             </menu>            
@@ -403,7 +415,7 @@
                 <header class="expanderTITLE">US SALES:</header>
                 <div id="xmpl_RETAIL_SALEZ" style="display: flex;justify-content: center;height:8em;"></div>
             </menu> 
-            <article id="xmpl_spotz_chart" style="justify-content:center;height: 20em;
+            <article id="xmpl_spotz_chart" style="justify-content:center;height:17em;
                     display:flex;flex:1;border:solid 1px steelblue;border-radius:22.222px;padding: 0.222em 0.444em 4em 0.444em;">
                     <i style="font-size:0.555em;margin:0.888em 0 4em 0;">No data.</i> 
             </article>      
@@ -539,9 +551,9 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
         TRADE_TXNZ_YMT: default_TRADE_DATA_MAP_Monthly,
         TICKR_DATA_MAP_Monthly : default_TICKR_DATA_MAP_Monthly,
         TICKR_LIST:[
-            {tkr:'BTC',lastLoadYMD:''},{tkr:'ETH',lastLoadYMD:''},
             {tkr:'AMZN',lastLoadYMD:''},{tkr:'NVDA',lastLoadYMD:''},
             {tkr:'SPY',lastLoadYMD:''},//{tkr:'QQQ',lastLoadYMD:''},
+            {tkr:'BTC',lastLoadYMD:''},//{tkr:'ETH',lastLoadYMD:''},
         ],
         METASTATE:{ 
             BOOKZ_EXPANDER:['BTC'], //multiple expansion.
@@ -637,7 +649,7 @@ function show_USERMSG (msg) {
             },222)                 
         },222)        
     },time) //TODO: interpolate on and off.
-};show_USERMSG({txt:'Welcome!',icon:'🌼',time:2000});
+};show_USERMSG({txt:'Welcome!',icon:'',time:2000});
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -807,7 +819,8 @@ function resize_BIG_CHART(elem){
     let maxWidth = (frame.offsetWidth>888)?744:(frame.offsetWidth<400)?frame.offsetWidth-60:frame.offsetWidth-100;//(frame.offsetWidth*0.1);
     let maxHeight = (frame.offsetWidth>800)?600:frame.offsetWidth-200;    
     if(maxWidth<100 || maxHeight<50){return}
-    elem.resize(maxWidth-100, maxHeight);
+    elem.resize(maxWidth-10, maxHeight);
+    // elem.resize(maxWidth-100, maxHeight);
 }
 /*********************************************DYNA_SELECTOR**********************/
 function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
@@ -875,7 +888,8 @@ function DYNA_SELECTOR_Change(e){
             selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
         } //END DYNAMIC SELECTOR BEHAVIOR
     }
-    init_All_Charts_by_TKR(TGTtkr)
+    setTimeout(init_All_Charts_by_TKR(TGTtkr),1888); //fix load issues?
+    // init_All_Charts_by_TKR(TGTtkr)
     // let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
     // init_DYNA_CHART_Candle(chartELEM);    //DYNA - init chart.
 }
@@ -1317,6 +1331,7 @@ function initBaselineChart_XMPL(){
 // ******DATES *********************DATES*****************************
 // const dateTXTStr = document.getElementById('dateTXTStamp');
 // dateTXTStam.innerHTML = new Date().getFullYear();
+const isPHONE = window.innerWidth <= 600;
 const currentDate = new Date();
 const yearNUM = currentDate.getFullYear();
 const monthNUM = (currentDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
@@ -1776,7 +1791,7 @@ const init_BOOKZ_TABZ = ()=>{
                         </select>
                     </span>
             </menu>
-            <section id="candlestickBOX_${tgtTKR.tkr}" style="justify-content:center;
+            <section id="candlestickBOX_${tgtTKR.tkr}" class="BOXFRAME" style="justify-content:center;
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0 0 0.222em 0;
                 flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
                 <header class="expanderROW">
@@ -2148,6 +2163,7 @@ function saveBookSelection(TGT){
     let CURR_STATE = TGT.innerHTML;
     let viewID = TGT.parentElement.parentElement.id;
     let viewTKR = viewID.split('_')[1];
+    if(viewTKR==='XMPL'){return}//do not save, always expand on init.
     let lookupIDX = bankbookz_DB.METASTATE.BOOKZ_EXPANDER.indexOf(viewTKR)
     if(CURR_STATE==='✴'){ //add singular to BOOKZ_EXPANDER
         if(lookupIDX>-1){
@@ -4429,6 +4445,7 @@ candlestickSeries.setData(barData);
     const frameElem = document.getElementById('xmpl_spotz_chart');
     frameElem.innerHTML='';
     const chartElem = LightweightCharts.createChart(frameElem, { autoSize:false, 
+        height:300,width:400,
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         allowShiftVisibleRangeOnWhitespaceReplacement:!0
@@ -4471,7 +4488,9 @@ background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
             dateTXTStamp.innerHTML = new Date().getFullYear();</script> BANKBOOKZ&#8482; by © NetCinematics llc. All rights reserved.
             Private License for external modules. Also, see Apache 2.0 License for internal modules. 
             DESCRIPTION: Template for Personal_Ledger_System. 
-            Charts by <a href="https://www.tradingview.com/">Trading View</a> ♥ ~:).
+            Charts by <a href="https://www.tradingview.com/">Trading View</a> ♥ ~:),
+            <span id="deviceMODE"></span>
+            <script>const dMode = document.getElementById('deviceMODE').innerHTML = ` MODE:${(window.innerWidth <= 600)?'MOBILE':'PC'}`</script>
     </div>
 </legal>
 <!--[if lt IE 7]>
