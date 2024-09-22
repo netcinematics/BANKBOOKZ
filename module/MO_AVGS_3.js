@@ -65,7 +65,7 @@ function calcMA(candleData, maLength) {
         }
     }
     return maData;
-}
+} 
 
 export {calcMA,getFakeData};
 

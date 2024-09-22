@@ -632,10 +632,8 @@ function show_USERMSG (msg) {
     USER_MSG_BOX.style.display = "flex";
     MSGTXT.innerText = msg.txt;
     MSGIcon1.innerText = (msg.icon)?msg.icon:'';
-    MSGIcon2.innerText = (msg.icon)?msg.icon:'';
-    // setTimeout( ()=>{ //HIDE
-    //     USER_MSG_BOX.style.display = "none";
-    // },time)
+    MSGIcon2.innerText = '';
+    // MSGIcon2.innerText = (msg.icon)?msg.icon:'';
     setTimeout( ()=>{ //HIDE
         USER_MSG_BOX.style.opacity = 0.99;
         setTimeout( ()=>{ //HIDE
@@ -658,7 +656,7 @@ function show_USERMSG (msg) {
             },222)                 
         },222)        
     },time) //TODO: interpolate on and off.
-};show_USERMSG({txt:'Welcome!',icon:'',time:2000});
+};show_USERMSG({txt:'Welcome!',icon:'🌻',time:2000});
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -779,7 +777,9 @@ window.render_TRADESPOTS = (chartElem, tradeData, trendSpotSeries) => {
 </script><!--***********END APP UTILITIES *********************-->
 <script>// ********************MAIN DYNAMIC CHART**********************
 let DYNA_CHART_CANDLES = []; //for screen resize
-function init_DYNA_CHART_Candle(tgtELEM){
+// function init_DYNA_CHART_Candle(tgtELEM){
+function init_DYNA_CHART_Candle(tkr){
+    let tgtELEM = document.getElementById(`candlestickFRAME_${tkr}`)
     const chartOptions = {width:400,height:300,autoSize:false,
         layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
             background:{type:'solid',color:'#000000'} },
@@ -790,8 +790,8 @@ function init_DYNA_CHART_Candle(tgtELEM){
         // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
     }
     let tradeMarkerData = [];
-    let tgtTKR = tgtELEM.id.split('_')[1]; 
-    let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
+    // let tgtTKR = tgtELEM.id.split('_')[1]; 
+    let candleSeriesDATA = getCandleSeriesDATA(tkr);
     if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
     tgtELEM.innerHTML=''; //blank out
     const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
@@ -803,12 +803,12 @@ function init_DYNA_CHART_Candle(tgtELEM){
     });
     candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
     candlestickSeries.setData(candleSeriesDATA);
-    let candleSeriesSUBSELECT = getCandleSubSELECT(tgtTKR); //SUB SELECTORS - LOGIC.
+    let candleSeriesSUBSELECT = getCandleSubSELECT(tkr); //SUB SELECTORS - LOGIC.
     if(candleSeriesSUBSELECT==='none'){ //STRUCTURE LINES.
 
     }else if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
         let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
-        tradeMarkerData = getMarker_TRADE_DATA(tgtTKR,startDate);
+        tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
         tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo
         tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo
         candlestickSeries.setMarkers(tradeMarkerData);        
@@ -912,8 +912,9 @@ function DYNA_SELECTOR_Change(e){
     // init_DYNA_CHART_Candle(chartELEM);    //DYNA - init chart.
 }
 function init_All_Charts_by_TKR (tkr){ //TODO this should become main initializer?
-    let candleELEM = document.getElementById(`candlestickFRAME_${tkr}`) //todo move into init, pass tkr
-    init_DYNA_CHART_Candle(candleELEM);    //DYNA - init chart. 
+    // let candleELEM = document.getElementById(`candlestickFRAME_${tkr}`) //todo move into init, pass tkr
+    // init_DYNA_CHART_Candle(candleELEM);    //DYNA - init chart. 
+    init_DYNA_CHART_Candle(tkr);    //DYNA - init chart. 
     init_DYNA_TRENDZCHART(tkr);    //init TRENDZ chart.
     init_DYNA_DRAWCHART(tkr);    //init DRAW chart.
     if(window.init_MOMENTUM_CHART){
@@ -928,8 +929,9 @@ function init_SUB_SELECTORS(tkr){ //assign click handlers
     selectELEM.addEventListener("change", (event) => {SUB_SELECTOR_Change(event,tkr)}); 
 }
 function SUB_SELECTOR_Change(e,tkr){
-    let chartELEM = document.getElementById(`candlestickFRAME_${tkr}`)
-    init_DYNA_CHART_Candle(chartELEM);   
+    init_DYNA_CHART_Candle(tkr);
+    // let chartELEM = document.getElementById(`candlestickFRAME_${tkr}`)
+    // init_DYNA_CHART_Candle(chartELEM);   
 }
 function getCandleSubSELECT(tgtTKR){
     let selectELEM = document.getElementById('CANDLE_SUB_SELECTOR_'+tgtTKR)
@@ -1256,8 +1258,9 @@ function delete_SELECTOR_TXT(e){
     //Reset selector map.
     bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = defaultTXT;
     //DYNA - init chart.
-    let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
-    init_DYNA_CHART_Candle(chartELEM);  
+    // let chartELEM = document.getElementById(`candlestickFRAME_${TGTtkr}`)
+    // init_DYNA_CHART_Candle(chartELEM);  
+    init_DYNA_CHART_Candle(TGTtkr);
 }
 //*******END Delete selector for - DYNA CHART***********
 
@@ -1879,8 +1882,10 @@ const init_BOOKZ_TABZ = ()=>{
                         padding: 1em 0 0 0; height: 4em; flex-wrap: wrap; ">
                         <input type="checkbox" class="Trendz_CHECKBOX" id="volz_opt_${tgtTKR.tkr}">
                         <label for="volz_opt">vols</label>
-                        <input type="checkbox" class="Trendz_CHECKBOX" id="avgz_opt_${tgtTKR.tkr}">
-                        <label for="avgz_opt">MoAvg</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="moavg_opt_${tgtTKR.tkr}">
+                        <label for="moavg_opt">MoveAvg</label>
+                        <input type="checkbox" class="Trendz_CHECKBOX" id="travg_opt_${tgtTKR.tkr}">
+                        <label for="travg_opt">TradeAvg</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="month_opt_${tgtTKR.tkr}">
                         <label for="month_opt_${tgtTKR.tkr}">months</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="trendTrades_opt_${tgtTKR.tkr}">
@@ -1917,7 +1922,7 @@ const init_BOOKZ_TABZ = ()=>{
                         flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
                         <i style="font-size:0.555em;margin:0.888em;"
                         class="MOBILE_Frame_Sizer">No data.</i>
-                        <button onclick="reload_MOMZ()">RELOAD</button>
+                        <button onclick="reload_MOMZ_Click()" class="blackBTN">RELOAD</button>
                     </article>
 
                     <menu style="justify-content:center;border-radius:13px;display:flex;padding: 1em 0 0 0;
@@ -2051,17 +2056,22 @@ const init_BOOKZ_TABZ = ()=>{
     setTimeout(render_ALL_BOOKZ_CHARTZ,222); //TODO this becomwes..
     setTimeout(render_ALL_DYNA_SELECTORZ,333);
     setTimeout(render_ALL_DRAW_CHARTZ,444); //MAIN INIT TODO REPLACE THIS with init_All_Charts_by_TKR
-    setTimeout(render_ALL_MOM_CHARTZ,555);
+    setTimeout(window.render_ALL_MOM_CHARTZ,555);
 };init_BOOKZ_TABZ();
 function render_ALL_BOOKZ_CHARTZ(){
-    // debugger;
-    let tgt_Candle,tgtTKR; //Render all CANDLESTICK DYNA_CHARTZ
-    const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
-    DYNA_CHART_CANDLES = []; //blank out. for screen resize
-    for(var i=0; i<All_DynaCandles.length;i++){
-        tgt_Candle = All_DynaCandles[i];
-        init_DYNA_CHART_Candle(tgt_Candle);
+    // let tgt_Candle,tgtTKR; //Render all CANDLESTICK DYNA_CHARTZ
+    // const All_DynaCandles = document.getElementsByClassName('dynamicCandleStick')
+    // DYNA_CHART_CANDLES = []; //blank out. for screen resize
+    // for(var i=0; i<All_DynaCandles.length;i++){
+    //     tgt_Candle = All_DynaCandles[i];
+    //     init_DYNA_CHART_Candle(tgt_Candle);
+    // }
+
+    for(let TKRObj of bankbookz_DB.TICKR_LIST){
+        init_DYNA_CHART_Candle(TKRObj.tkr);
     }
+
+
     // let tgt_Baseline; //Render all BASELINE DYNA_CHARTZ
     // const All_Dynabaselines = document.getElementsByClassName('dynamicBaseline')
     // DYNA_CHART_BASELINES = []; //blank out. for screen resize
@@ -2086,7 +2096,7 @@ function render_ALL_DRAW_CHARTZ(){ //render data by selectorz
     }
     init_DYNA_DRAW_DATA(); //draw data on charts.
 }
-function render_ALL_MOM_CHARTZ(){
+window.render_ALL_MOM_CHARTZ = ()=>{
     let elem,tgtTKR; //Render all drawchart DYNA_CHARTZ
     for(var i=0; i< bankbookz_DB.TICKR_LIST.length; i++){
         tgtTKR = bankbookz_DB.TICKR_LIST[i].tkr;
@@ -2666,9 +2676,10 @@ function init_EDITOR_UI(){
 import {TrendLine_Class} from "./module/TRENDLINES.js";
 import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";//3dmo
 import {TradeSpot_Class as TradeSpot_Class} from "./module/TRADESPOT_3.js";
-import {calcMA,getFakeData} from "./module/MO_AVGS_3.js"; //calc move avgs.
+// import {calcMA,getFakeData} from "./module/MO_AVGS_3.js"; //calc move avgs.
+import {calcMA,calcSELLZ,calcBUYZ,calcBREV} from "./module/ALGORITHMZ_4.js"; //calc move avgs.
 import {g as getMockData} from "./module/sample-data.js";
-
+//todo calcMA, ALGORITHMS module? add calc buy, sell 
 window.init_DYNA_TRENDZCHART = (tkr) => {
     let checkz = get_Trendz_Checked(tkr);
     let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
@@ -2681,6 +2692,14 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
         priceScale: {
             priceFormatter: (price) => Math.round(price).toString(),
         },
+        crosshair: {
+            timeFormatter: (time) => {
+            const date = new Date(time);
+            const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+            return 'hi1'
+            // return `${dayOfWeek}, ${date.toLocaleDateString('en-US')}`;
+            },
+        },
         // priceScale:{fontSize:"0.8em",priceFormatter: (price) => Math.round(price) },
         // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
         allowShiftVisibleRangeOnWhitespaceReplacement:true
@@ -2689,18 +2708,53 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
     let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
 
     const lineSeries = TrendzChart.addLineSeries({
-         color: 'aqua',fontSize:"0.8em"
+        color: 'aqua',fontSize:"0.8em",
+        crosshair: {
+            timeFormatter: (time) => {
+            const date = new Date(time);
+            const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+            return 'hi2'
+            // return `${dayOfWeek}, ${date.toLocaleDateString('en-US')}`;
+            },
+        },
         //  priceScale:{fontSize:"0.8em",priceFormatter: (price) => Math.round(price) },
     })
     lineSeries.setData(lineSeriesMETADATA);
-    if(checkz.avgz_opt){
+    if(checkz.travg_opt){
+        debugger;
+        //-------------------------------------TRADE DATA
+        let tradeMarkerData = [];
+        if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
+            let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
+            tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
+            debugger;
+            tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo necessary?
+            tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo necessary?
+        }
+        // window.render_TRADESPOTS(TrendzChart,tradeMarkerData,lineSeries)
+    //-------------------------------------------------------------------END TRADE DATA
+
+        //---------------------------------------------------- BUY/SELL/BR/AVGZ - 
+        const sell_Data_1 = calcSELLZ(lineSeriesMETADATA);
+        const brev_Data_2 = calcBREV(lineSeriesMETADATA);
+        const buyz_Data_3 = calcBUYZ(lineSeriesMETADATA);
+        const sell_Series_1 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2});
+        const brev_Series_2 = TrendzChart.addLineSeries({ color: 'orange', lineWidth:1});
+        const buyz_Series_3 = TrendzChart.addLineSeries({ color: 'crimson', lineWidth:2});
+        sell_Series_1.setData(sell_Data_1);
+        brev_Series_2.setData(brev_Data_2);
+        buyz_Series_3.setData(buyz_Data_3);
+        //----------------------------------------------------END MO AVGZ
+
+    }
+    if(checkz.moavg_opt){
         //---------------------------------------------------- MO AVGZ - 
         const ma_Data_1 = calcMA(lineSeriesMETADATA, 10);
         const ma_Data_2 = calcMA(lineSeriesMETADATA, 20);
         const ma_Data_3 = calcMA(lineSeriesMETADATA, 30);
-        const ma_Series_1 = TrendzChart.addLineSeries({ color: 'steelblue', lineWidth:2});
-        const ma_Series_2 = TrendzChart.addLineSeries({ color: 'purple', lineWidth:2});
-        const ma_Series_3 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2});
+        const ma_Series_1 = TrendzChart.addLineSeries({ color: 'steelblue', lineWidth:2,priceLineVisible:false});
+        const ma_Series_2 = TrendzChart.addLineSeries({ color: 'purple', lineWidth:2,priceLineVisible:false});
+        const ma_Series_3 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2,priceLineVisible:false});
         ma_Series_1.setData(ma_Data_1);
         ma_Series_2.setData(ma_Data_2);
         ma_Series_3.setData(ma_Data_3);
@@ -2759,7 +2813,6 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
      //-------------------------------------------------------------------
     }
     if(checkz.trendTrade_opt){ //************ DRAW TRADE SPOTS ********************
-        console.log('Render TRADESPOTS for TRENDZ')
         let tradeMarkerData = [];
         if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
             let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
@@ -2771,10 +2824,12 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
     //-------------------------------------------------------------------
     }
     if(checkz.boll_opt){  //--------------------------------BOLL in TRENDZ
-        if(tkr==='BTC'||tkr==='ETH'){ show_USERMSG({txt:'No BOLL data for Crypto',icon:'🌼',time:2000});
-            TrendzChart.timeScale().fitContent(); //error fix
-            resize_BIG_CHART(TrendzChart);
-            return; }
+        if(tkr==='BTC'||tkr==='ETH'){ 
+            show_USERMSG({txt:'No BOLL data for Crypto?',icon:'🌼',time:2000});
+        //     TrendzChart.timeScale().fitContent(); //error fix
+        //     resize_BIG_CHART(TrendzChart);
+        //     return; 
+        }
         let BOLLData = get_MOMZ_DATA_JUNCTION(tkr,"BOLLZ"); //GET DATA BY SELECTOR
         const BOLL_Series_up = TrendzChart.addLineSeries({ priceLineVisible:false,color:'limegreen',
                 priceFormat: { type: 'price', precision: 4, minMove: 0.0001,} });
@@ -2805,21 +2860,22 @@ function init_Trendz_CHECKBOXES(){
             const isChecked = event.target.checked;
             const tkr = event.target.id.split('_')[2];
             if(!tkr){return}
-            console.log(`${tkr} Checkbox ${checkbox.id} is ${isChecked ? 'checked' : 'unchecked'}`);
+            // console.log(`${tkr} Checkbox ${checkbox.id} is ${isChecked ? 'checked' : 'unchecked'}`);
             init_DYNA_TRENDZCHART(tkr); //refresh
         });
     });
 }; init_Trendz_CHECKBOXES();
 function get_Trendz_Checked(tkr){
     if(!tkr){return}
-    let avgzElem = document.getElementById(`avgz_opt_${tkr}`);
+    let tradeAvgElem = document.getElementById(`travg_opt_${tkr}`);
+    let avgzElem = document.getElementById(`moavg_opt_${tkr}`);
     let volzElem = document.getElementById(`volz_opt_${tkr}`);
     let bollElem = document.getElementById(`boll_opt_${tkr}`);
     let monthElem = document.getElementById(`month_opt_${tkr}`);
     let trendTradeElem = document.getElementById(`trendTrades_opt_${tkr}`);
-    
     let checked_selection = {
-        avgz_opt: avgzElem.checked,
+        travg_opt: tradeAvgElem.checked,
+        moavg_opt: avgzElem.checked,
         volz_opt: volzElem.checked,
         month_opt: monthElem.checked,
         trendTrade_opt: trendTradeElem.checked,
@@ -2924,8 +2980,7 @@ window.init_MOMENTUM_CHART = (tkr) => { //call DATA JUNCTION for SELECTIONZ (tri
     let tgt_Chart = document.getElementById(`MOMENTUMFRAME_${tkr}`)
     tgt_Chart.innerHTML = ''; //blank out frame.
     //-------------------------------------------------------MOMENTUM-CHART------------
-    const chartOptions2={ 
-        width:400, height:300,autoSize:false,
+    const chartOptions2={ width:400, height:300,autoSize:false,
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         layout:{textColor: 'steelblue',background:{ type:'solid',color:'black' } },
         rightPriceScale:{visible:true,},leftPriceScale:{visible:false} 
@@ -3125,8 +3180,8 @@ function get_MOMENTUM_Checked(tkr){
     return checked_selection;
 }
 // ********************************END CHECKBOXES***************************
-function reload_MOMZ(){
-    debugger;  
+window.reload_MOMZ_Click = ()=>{ //for reload button click
+    window.render_ALL_MOM_CHARTZ()
 }
 </script>
 
@@ -3870,10 +3925,10 @@ function get_ALL_BOLLZ_DATA_Click(){ //---Button handler
         // if(getAPI_Limiter('BOLLZ')){continue;} //SET 1 call per day with: LastRefreshTime YMD      
         // if(i>=1){break;}//DEV_limiter stay below 20
         // tkr = 'SPY'//'NVDA';//DEV_specifier 
-        if(tkr==='BTC'||tkr==='ETH'){ 
+        // if(tkr==='BTC'||tkr==='ETH'){ 
             // show_USERMSG({txt:'No BOLL data for Crypto',icon:'🌼',time:2000});
-            continue;
-        }
+            // continue;
+        // }
         getBOLL_Data(tkr);
     }
 }
