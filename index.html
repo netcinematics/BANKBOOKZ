@@ -670,6 +670,41 @@ function padTimeWithZeros(arr){ //sadly 01 format is standard
     }
     return arr;
 }
+function addWeekends(timeData){
+    debugger;
+    let dayOfWeek='',TGTDate,Sat,Sun;
+    let DataWithWeekends = [],item,nextItem;
+    let satyr,satmo,satdy,sunyr,sunmo,sundy,SatStr='',SunStr='';
+    for(let i=0; i<timeData.length;i++){
+        item=timeData[i];
+        TGTDate = new Date(item.time);
+        dayOfWeekNUM = TGTDate.getDay();
+        if(dayOfWeekNUM===5){ //'Friday'
+            Sat = new Date(TGTDate.setDate(TGTDate.getDate() + 1));
+            Sun = new Date(TGTDate.setDate(TGTDate.getDate() + 2));
+            satyr = Sat.getFullYear();
+            satmo = (Sat.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
+            satdy = Sat.getDate().toString().padStart(2, '0');
+            SatStr = `${satyr}-${satmo}-${satdy}`;
+            sunyr = Sun.getFullYear();
+            sunmo = (Sun.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
+            sundy = Sun.getDate().toString().padStart(2, '0');
+            SunStr = `${sunyr}-${sunmo}-${sundy}`;
+            nextItem = timeData[i+1];
+            if(nextItem && nextItem.time===SatStr){
+                break; //Weekend Data EXISTS.
+            }else{ //Add missing Weekend Data
+                DataWithWeekends.push(item);//non weekend data
+                DataWithWeekends.push({time:SatStr,value:TGTDate});//sat data
+                DataWithWeekends.push({time:SunStr,value:TGTDate});//sun data
+            }
+
+        }else{
+            DataWithWeekends.push(item);//non weekend data
+        }
+    }
+    return DataWithWeekends;
+}
 function ensureOrderASC(timeArray){ //time array for markers must be ASC.
     const orderedData = timeArray.sort((a, b) => {
         const [yearA, monthA, dayA] = a.time.split('-');
@@ -761,12 +796,16 @@ window.render_TRADESPOTS = (chartElem, tradeData, trendSpotSeries) => {
         item = tradeData[i];
         markPt = {time:item.time,price:item.price}
         // console.log(`${item.amt} ${item.price} ${item.time} ${item.type} ${item.mode}`)
-        //item.tmstmp TODO BROKE.
+        //item.tmstmp TODO?
         if(item.type==='BUY'){
             tradeSpot_MARK = new TradeSpot_Class(chartElem,trendSpotSeries,markPt,
                 "BOX",{lineColor:"rgb(22, 44, 255)",     //blue
             }); trendSpotSeries.attachPrimitive(tradeSpot_MARK);
-        } else {
+        } else { //"SELL"
+            // if(item.price===153.98){ //todo does not render on weekends!
+            //     // markPt.price = 166
+            //     markPt.time = '2024-08-05'
+            // }
             tradeSpot_MARK = new TradeSpot_Class(chartElem,trendSpotSeries,markPt,
                 "X",{lineColor:"rgb(111, 22, 222)",     //PURPLE
             }); trendSpotSeries.attachPrimitive(tradeSpot_MARK);            
@@ -815,7 +854,7 @@ function init_DYNA_CHART_Candle(tkr){
     }
 
     if(window.render_TRADESPOTS){  //TODO init issue.  //CANDLESTICK TRADESPOTS
-        console.log('Render TRADESPOTS for CANDLES')
+        // console.log('Render TRADESPOTS for CANDLES')
         window.render_TRADESPOTS(Dyna_Chart_CandleStick,tradeMarkerData,candlestickSeries)
     }
 
@@ -2677,7 +2716,7 @@ import {TrendLine_Class} from "./module/TRENDLINES.js";
 import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";//3dmo
 import {TradeSpot_Class as TradeSpot_Class} from "./module/TRADESPOT_3.js";
 // import {calcMA,getFakeData} from "./module/MO_AVGS_3.js"; //calc move avgs.
-import {calcMA,calcSELLZ,calcBUYZ,calcBREV} from "./module/ALGORITHMZ_4.js"; //calc move avgs.
+import {calcMA,calcBuySellAVG_Lines} from "./module/ALGORITHMZ_4.js"; //calc move avgs.
 import {g as getMockData} from "./module/sample-data.js";
 //todo calcMA, ALGORITHMS module? add calc buy, sell 
 window.init_DYNA_TRENDZCHART = (tkr) => {
@@ -2705,7 +2744,9 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
         allowShiftVisibleRangeOnWhitespaceReplacement:true
     })
     let candleSeriesDATA = getCandleSeriesDATA(tkr);
+    // candleSeriesDATA = addWeekends(candleSeriesDATA);
     let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
+    lineSeriesMETADATA = addWeekends(lineSeriesMETADATA);
 
     const lineSeries = TrendzChart.addLineSeries({
         color: 'aqua',fontSize:"0.8em",
@@ -2721,13 +2762,11 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
     })
     lineSeries.setData(lineSeriesMETADATA);
     if(checkz.travg_opt){
-        debugger;
         //-------------------------------------TRADE DATA
         let tradeMarkerData = [];
         if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
             let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
             tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
-            debugger;
             tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo necessary?
             tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo necessary?
         }
@@ -2735,15 +2774,16 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
     //-------------------------------------------------------------------END TRADE DATA
 
         //---------------------------------------------------- BUY/SELL/BR/AVGZ - 
-        const sell_Data_1 = calcSELLZ(lineSeriesMETADATA);
-        const brev_Data_2 = calcBREV(lineSeriesMETADATA);
-        const buyz_Data_3 = calcBUYZ(lineSeriesMETADATA);
-        const sell_Series_1 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2});
-        const brev_Series_2 = TrendzChart.addLineSeries({ color: 'orange', lineWidth:1});
-        const buyz_Series_3 = TrendzChart.addLineSeries({ color: 'crimson', lineWidth:2});
-        sell_Series_1.setData(sell_Data_1);
-        brev_Series_2.setData(brev_Data_2);
-        buyz_Series_3.setData(buyz_Data_3);
+        // const sell_Data_1 = calcSELLZ(lineSeriesMETADATA);
+        // const brev_Data_2 = calcBREV(lineSeriesMETADATA);
+        // const buyz_Data_3 = calcBUYZ(lineSeriesMETADATA);
+        const buySellAVG_Lines = calcBuySellAVG_Lines(tradeMarkerData);
+        // const sell_Series_1 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2});
+        // const brev_Series_2 = TrendzChart.addLineSeries({ color: 'orange', lineWidth:1});
+        // const buyz_Series_3 = TrendzChart.addLineSeries({ color: 'crimson', lineWidth:2});
+        // sell_Series_1.setData(sell_Data_1);
+        // brev_Series_2.setData(brev_Data_2);
+        // buyz_Series_3.setData(buyz_Data_3);
         //----------------------------------------------------END MO AVGZ
 
     }
@@ -2817,8 +2857,8 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
         if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
             let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
             tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
-            tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo necessary?
-            tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo necessary?
+            tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - data integrity
+            tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - data integrity
         }
         window.render_TRADESPOTS(TrendzChart,tradeMarkerData,lineSeries)
     //-------------------------------------------------------------------
@@ -2983,7 +3023,10 @@ window.init_MOMENTUM_CHART = (tkr) => { //call DATA JUNCTION for SELECTIONZ (tri
     const chartOptions2={ width:400, height:300,autoSize:false,
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
         layout:{textColor: 'steelblue',background:{ type:'solid',color:'black' } },
-        rightPriceScale:{visible:true,},leftPriceScale:{visible:false} 
+        rightPriceScale:{visible:true,},leftPriceScale:{visible:false} ,
+        // timeScale: {
+        //     timeVisible: true,
+        // },
     };
     const MOMENTUM_Chart = LightweightCharts.createChart(tgt_Chart, chartOptions2);
     //------------------------------------------------------MOMENTUM-DATA-----------------
@@ -3117,19 +3160,20 @@ window.init_MOMENTUM_CHART = (tkr) => { //call DATA JUNCTION for SELECTIONZ (tri
         STOCRSI_Series_D.setData(dSET);
         STOCRSI_Series_K.setData(kSET);
     }
-    if(checkz.momTrades_opt){ //************ DRAW TRADE SPOTS ********************
-        debugger;
-        console.log('Render TRADESPOTS for MOMENTUM')
-        let tradeMarkerData = [];
-        if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
-            let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
-            tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
-            tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo necessary?
-            tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo necessary?
-        }
-        window.render_TRADESPOTS(MOMENTUM_Chart,tradeMarkerData,MOMENTUM_Series_Price)
+    // if(checkz.momTrades_opt){ //************ DRAW TRADE SPOTS ********************
+    //     // console.log('Render TRADESPOTS for MOMENTUM')
+    //     let tradeMarkerData = [];
+    //     if(candleSeriesDATA && candleSeriesDATA[0] && candleSeriesDATA[0].time){ //TRADE_MARKERS
+    //         let startDate = ymdToUTC(candleSeriesDATA[0].time);//for Last 33 markers, todo skip if null time.
+    //         tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
+    //         tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD 
+    //         tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC 
+    //         debugger
+    //         tradeMarkerData = addWeekends(tradeMarkerData);
+    //     }
+    //     window.render_TRADESPOTS(MOMENTUM_Chart,tradeMarkerData,MOMENTUM_Series_Price)
+    // }
     //-------------------------------------------------------------------
-    }
     MOMENTUM_Chart.timeScale().fitContent(); 
     resize_BIG_CHART(MOMENTUM_Chart);
 }//END MOMENTUM INIT - individual chart
