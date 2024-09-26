@@ -17,7 +17,6 @@ function calcMA(candleData, maLength) {
 } 
 
 function calcBuySellAVG_Lines(trades){
-    debugger;
     // const buySellBrev = {buy:0,sell:0,brev:0};
     let buyAMT=0,buyCNT=0,buyAVG=0,sellAMT=0,sellCNT=0,sellAVG=0,brev=0;
     for(let trade of trades){
@@ -29,7 +28,7 @@ function calcBuySellAVG_Lines(trades){
     }
     if(sellAMT && sellCNT){ sellAVG = Math.round(sellAMT/sellCNT)}
     if(buyAMT && buyCNT){ buyAVG = Math.round(buyAMT/buyCNT)}
-    if(buyAVG && sellAVG){ brev = Math.round(buyAVG+sellAVG/2)}
+    if(buyAVG && sellAVG){ brev = Math.round((buyAVG+sellAVG)/2)}
     return {buy:buyAVG,sell:sellAVG,brev:brev};
 
 }

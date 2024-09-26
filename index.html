@@ -670,41 +670,113 @@ function padTimeWithZeros(arr){ //sadly 01 format is standard
     }
     return arr;
 }
-function addWeekends(timeData){
-    debugger;
-    let dayOfWeek='',TGTDate,Sat,Sun;
-    let DataWithWeekends = [],item,nextItem;
-    let satyr,satmo,satdy,sunyr,sunmo,sundy,SatStr='',SunStr='';
-    for(let i=0; i<timeData.length;i++){
-        item=timeData[i];
-        TGTDate = new Date(item.time);
-        dayOfWeekNUM = TGTDate.getDay();
-        if(dayOfWeekNUM===5){ //'Friday'
-            Sat = new Date(TGTDate.setDate(TGTDate.getDate() + 1));
-            Sun = new Date(TGTDate.setDate(TGTDate.getDate() + 2));
-            satyr = Sat.getFullYear();
-            satmo = (Sat.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
-            satdy = Sat.getDate().toString().padStart(2, '0');
-            SatStr = `${satyr}-${satmo}-${satdy}`;
-            sunyr = Sun.getFullYear();
-            sunmo = (Sun.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
-            sundy = Sun.getDate().toString().padStart(2, '0');
-            SunStr = `${sunyr}-${sunmo}-${sundy}`;
-            nextItem = timeData[i+1];
-            if(nextItem && nextItem.time===SatStr){
-                break; //Weekend Data EXISTS.
-            }else{ //Add missing Weekend Data
-                DataWithWeekends.push(item);//non weekend data
-                DataWithWeekends.push({time:SatStr,value:TGTDate});//sat data
-                DataWithWeekends.push({time:SunStr,value:TGTDate});//sun data
-            }
+// function ensureTradesHaveCandle(tradeMarkerData,lineSeriesMETADATA){
+//     let timeTGT,found=false;
+//     let lineSeriesDataWithTradeDays=[]
+//     for(var trade of tradeMarkerData){
+//         timeTGT = trade.time;
+//         lineSeriesDataWithTradeDays
+//         if(timeTGT){
+//             found=false;
+//             for(var candle of lineSeriesMETADATA){
+//                 if(timeTGT===candle.time){ //found
+//                     found=true;
+//                     break;
+//                 }
+//             }
+//             if(!found){
 
-        }else{
-            DataWithWeekends.push(item);//non weekend data
-        }
-    }
-    return DataWithWeekends;
-}
+//             }
+//         }
+//     }
+// }
+// function addWeekendsHolidays(timeData){ //todo removable?
+//     let DataWithWeekends = [],item,yr,mo,dy,nextTime,secondTime;
+//     let today,nextDay,secondDay,nextItem,secondItem,nextStr,secondStr;
+//     for(let i=0; i<timeData.length;i++){
+//         item=timeData[i];
+//         DataWithWeekends.push(item);//non weekend data
+//         today = new Date(item.time);
+//         // debugger;
+//         nextItem = timeData[i+1];
+//         // secondItem = timeData[i+2];
+//         // debugger;
+//         if(nextItem && nextItem.time){
+//             // debugger;
+//             nextDay = new Date(nextItem.time);
+//             // secondDay = new Date(today.setDate(today.getDate() + 2));
+//             yr = nextDay.getFullYear();
+//             mo = (nextDay.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
+//             // debugger;
+//             dy = nextDay.getDate().toString().padStart(2, '0');
+//             nextStr = `${yr}-${mo}-${dy}`;
+//             debugger;
+//             if(nextStr!=nextItem.time){
+//                 DataWithWeekends.push({tkr:item.tkr,time:nextStr,value:item.value});//sat data
+//             }
+//         }
+//         // if(secondItem && secondItem.time!=secondDay){ 
+//         //     secondTime = new Date(secondItem.time)
+//         //     yr = secondTime.getFullYear();
+//         //     mo = (secondTime.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
+//         //     dy = secondTime.getDate().toString().padStart(2, '0');
+//         //     secondStr = `${yr}-${mo}-${dy}`;
+//         //     DataWithWeekends.push({tkr:item.tkr,time:secondStr,value:item.value});//sun data
+//         // }
+//     }
+
+//     // let dayOfWeek='',TGTDate,Sat,Sun;
+//     // let DataWithWeekends = [],item,nextItem,sunItem;
+//     // let satyr,satmo,satdy,sunyr,sunmo,sundy,SatStr='',SunStr='';
+//     // for(let i=0; i<timeData.length;i++){
+//     //     item=timeData[i];
+//     //     DataWithWeekends.push(item);//non weekend data
+//     //     TGTDate = new Date(item.time);
+//     //     dayOfWeekNUM = TGTDate.getDay();
+//     //     console.log('Date',TGTDate,dayOfWeekNUM)
+//     //     if(dayOfWeekNUM===5){ //'Friday'
+//     //         Sat = new Date(TGTDate.setDate(TGTDate.getDate() + 1));
+//     //         console.log('Sat',Sat)
+//     //         Sun = new Date(TGTDate.setDate(TGTDate.getDate() + 2));
+//     //         console.log('Sun',Sun)
+//     //         satyr = Sat.getFullYear();
+//     //         satmo = (Sat.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
+//     //         satdy = Sat.getDate().toString().padStart(2, '0');
+//     //         SatStr = `${satyr}-${satmo}-${satdy}`;
+//     //         sunyr = Sun.getFullYear();
+//     //         sunmo = (Sun.getMonth() + 1).toString().padStart(2, '0'); // Pad month with leading zero
+//     //         sundy = Sun.getDate().toString().padStart(2, '0');
+//     //         SunStr = `${sunyr}-${sunmo}-${sundy}`;
+//     //         nextItem = timeData[i+1];
+//     //         // console.log('NextSat',nextItem.time)
+//     //         if(nextItem && nextItem.time===SatStr){
+//     //             // break; //Weekend Data EXISTS.
+//     //         }else{ //Add missing Weekend Data
+//     //             // debugger;
+//     //             // DataWithWeekends.push(item);//non weekend data
+//     //             DataWithWeekends.push({tkr:item.tkr,time:SatStr,value:item.value});//sat data
+//     //             // DataWithWeekends.push({tkr:item.tkr,time:SunStr,value:item.value});//sun data
+//     //         }
+
+
+//     //     }//end friday check
+//     //     else if (){
+//     //         sunItem = timeData[i+2];
+//     //         // console.log('NextSun',sunItem.time)
+//     //         if(sunItem && sunItem.time===SunStr){
+//     //             // break; //Weekend Data EXISTS.
+//     //         }else{ //Add missing Weekend Data
+//     //             // debugger;
+//     //             // DataWithWeekends.push({tkr:item.tkr,time:SatStr,value:item.value});//sat data
+//     //             DataWithWeekends.push({tkr:item.tkr,time:SunStr,value:item.value});//sun data
+//     //         }
+//     //     }//end saturday
+//     //     // else{
+//     //     //     DataWithWeekends.push(item);//non weekend data
+//     //     // }
+//     // }
+//     return DataWithWeekends;
+// }
 function ensureOrderASC(timeArray){ //time array for markers must be ASC.
     const orderedData = timeArray.sort((a, b) => {
         const [yearA, monthA, dayA] = a.time.split('-');
@@ -2746,7 +2818,8 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
     let candleSeriesDATA = getCandleSeriesDATA(tkr);
     // candleSeriesDATA = addWeekends(candleSeriesDATA);
     let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
-    lineSeriesMETADATA = addWeekends(lineSeriesMETADATA);
+    // let lineSeriesMETADATA2 = addWeekendsHolidays(lineSeriesMETADATA);
+    // debugger;
 
     const lineSeries = TrendzChart.addLineSeries({
         color: 'aqua',fontSize:"0.8em",
@@ -2769,6 +2842,29 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
             tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
             tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - todo necessary?
             tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - todo necessary?
+            // lineSeriesMETADATA = ensureTradesHaveCandle(tradeMarkerData,lineSeriesMETADATA)
+            const buySellAVG_Lines = calcBuySellAVG_Lines(tradeMarkerData);
+            let len = lineSeriesMETADATA.length;
+            const EndTradeAvg1={time: lineSeriesMETADATA[len - 1].time,price:buySellAVG_Lines.sell}
+            const StartTradeAvg1={time: lineSeriesMETADATA[0].time,price:buySellAVG_Lines.sell}
+            const lineOptions_1 = {width:1,showLabels:true,lineColor:"red",
+                labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"   };
+            const trendLine_1 = new TrendLine_Class(TrendzChart,lineSeries,EndTradeAvg1,StartTradeAvg1,lineOptions_1);
+            lineSeries.attachPrimitive(trendLine_1);
+            const EndTradeAvg2={time: lineSeriesMETADATA[len - 1].time,price:buySellAVG_Lines.brev}
+            const StartTradeAvg2={time: lineSeriesMETADATA[0].time,price:buySellAVG_Lines.brev}
+            const lineOptions_2 = {width:1,showLabels:true,lineColor:"orange",
+                labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"  };
+            const trendLine_2 = new TrendLine_Class(TrendzChart,lineSeries,EndTradeAvg2,StartTradeAvg2,lineOptions_2);
+            lineSeries.attachPrimitive(trendLine_2);
+            const EndTradeAvg3={time: lineSeriesMETADATA[len - 1].time,price:buySellAVG_Lines.buy}
+            const StartTradeAvg3={time: lineSeriesMETADATA[0].time,price:buySellAVG_Lines.buy}
+            const lineOptions_3 = {width:1,showLabels:true,lineColor:"lime",
+                labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue" };
+            const trendLine_3 = new TrendLine_Class(TrendzChart,lineSeries,EndTradeAvg3,StartTradeAvg3,lineOptions_3);
+            lineSeries.attachPrimitive(trendLine_3);
+
+
         }
         // window.render_TRADESPOTS(TrendzChart,tradeMarkerData,lineSeries)
     //-------------------------------------------------------------------END TRADE DATA
@@ -2777,7 +2873,7 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
         // const sell_Data_1 = calcSELLZ(lineSeriesMETADATA);
         // const brev_Data_2 = calcBREV(lineSeriesMETADATA);
         // const buyz_Data_3 = calcBUYZ(lineSeriesMETADATA);
-        const buySellAVG_Lines = calcBuySellAVG_Lines(tradeMarkerData);
+
         // const sell_Series_1 = TrendzChart.addLineSeries({ color: 'limegreen', lineWidth:2});
         // const brev_Series_2 = TrendzChart.addLineSeries({ color: 'orange', lineWidth:1});
         // const buyz_Series_3 = TrendzChart.addLineSeries({ color: 'crimson', lineWidth:2});
