@@ -777,6 +777,124 @@ function padTimeWithZeros(arr){ //sadly 01 format is standard
 //     // }
 //     return DataWithWeekends;
 // }
+
+
+function fillMissingDays_Candle(data) {
+  const filledData = [];
+  let lastDate = new Date(data[0].time),item;
+  let cloneLast={};
+
+  for (let i = 0; i < data.length; i++) {
+    item = data[i];
+    const currentDate = new Date(item.time);
+    const daysDifference = Math.ceil((currentDate - lastDate) / (1000 * 60 * 60 * 24));
+
+    for (let j = 0; j < daysDifference; j++) {
+      const date = new Date(lastDate);
+      date.setDate(date.getDate() + j);
+      const formattedDate = date.toISOString().slice(0, 10);
+
+      // Check if the date already exists in the filledData array
+      const existingData = filledData.find(item => item.time === formattedDate);
+      if (!existingData) {
+// debugger;
+        cloneLast = { ...item };
+        cloneLast.time = date.toISOString().slice(0, 10);
+        filledData.push(cloneLast); 
+        // filledData.push({
+        //   tkr: data[i].tkr,
+        //   time: formattedDate,
+        //   open: null,
+        //   high: null,
+        //   low: null
+        // });
+// // closehighlastCloselowopentimetkrvaluevolAVGvolColorvolume        
+      }
+    }
+    lastDate = currentDate;
+  }
+  return filledData;
+}
+function fillMissingDays_Line(data) {
+  const filledData = [];
+  let lastDate = new Date(data[0].time),item,cloneLast;
+
+  for (let i = 0; i < data.length; i++) {
+    item = data[i];
+    const currentDate = new Date(item.time);
+    const daysDifference = Math.ceil((currentDate - lastDate) / (1000 * 60 * 60 * 24));
+
+    for (let j = 0; j < daysDifference; j++) {
+      const date = new Date(lastDate);
+      date.setDate(date.getDate() + j);
+      const formattedDate = date.toISOString().slice(0, 10);
+
+      // Check if the date already exists in the filledData array
+      const existingData = filledData.find(item => item.time === formattedDate);
+      if (!existingData) {
+
+        cloneLast = { ...item };
+        cloneLast.time = date.toISOString().slice(0, 10);
+        filledData.push(cloneLast); 
+        // filledData.push({
+        //   tkr: data[i].tkr,
+        //   time: formattedDate,
+        //   open: null,
+        //   high: null,
+        //   low: null
+        // });
+// // closehighlastCloselowopentimetkrvaluevolAVGvolColorvolume        
+      }
+    }
+    lastDate = currentDate;
+  }
+  return filledData;
+}
+
+// Example usage:
+// const chronologicData = [
+//   { tkr: 'BBB', time: '2024-08-01', open: 64609.61, high: 65593.56, low: 62212.81 },
+//   { tkr: 'BBB', time: '2024-08-02', open: 65293.48, high: 65557.86, low: 61150 },
+//   { tkr: 'BBB', time: '2024-08-04', open: 60674.93, high: 61082.3, low: 57123 }
+// ];
+
+// const filledData = fillMissingDays(chronologicData);
+// console.log(filledData);
+
+// function fillMissingDays(data) {
+//   const filledData = [];
+//   let item,currentDate,daysDifference,date,cloneLast={};
+//   let lastDate = new Date(data[0].time);
+//   for (let i = 0; i < data.length; i++) {
+//     item = data[i];
+//     currentDate = new Date(item.time);
+//     // currentDate = new Date(data[i].time);
+//     daysDifference = Math.ceil((currentDate - lastDate) / (1000 * 60 * 60 * 24));
+//     console.log('DAYS OFF',daysDifference)
+//     // debugger;
+//     for (let j = 0; j < daysDifference; j++) {
+//       date = new Date(lastDate);
+//       date.setDate(date.getDate() + j);
+//       if(daysDifference<=1){ //non skip days
+//         // filledData.push(item);
+//         debugger;
+//         filledData.push({ time: date.toISOString().slice(0, 10)});
+//       }
+//     //   } else { //fill skipped days
+//     // //   filledData.push({ time: date.toISOString().slice(0, 10) });
+//     //     cloneLast = new Object(item)
+//     //     cloneLast.time = date.toISOString().slice(0, 10);
+//     //     filledData.push(cloneLast); 
+//             // filledData.push({ time: date.toISOString().slice(0, 10)});
+//     //   }
+
+//     //   });
+//     }
+//     lastDate = currentDate;
+//   }
+//   return filledData;
+// }
+
 function ensureOrderASC(timeArray){ //time array for markers must be ASC.
     const orderedData = timeArray.sort((a, b) => {
         const [yearA, monthA, dayA] = a.time.split('-');
@@ -903,6 +1021,7 @@ function init_DYNA_CHART_Candle(tkr){
     let tradeMarkerData = [];
     // let tgtTKR = tgtELEM.id.split('_')[1]; 
     let candleSeriesDATA = getCandleSeriesDATA(tkr);
+
     if(!candleSeriesDATA.length){ tgtELEM.innerHTML='<i style="font-size:0.555em;margin:0.888em;">No data.</i>'; return; }
     tgtELEM.innerHTML=''; //blank out
     const Dyna_Chart_CandleStick = LightweightCharts.createChart(tgtELEM, chartOptions);  
@@ -912,7 +1031,8 @@ function init_DYNA_CHART_Candle(tkr){
         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } },
         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
     });
-    candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC - todo
+    candleSeriesDATA = ensureOrderASC(candleSeriesDATA);   //IMPORT ASC 
+    candleSeriesDATA = fillMissingDays_Candle(candleSeriesDATA);
     candlestickSeries.setData(candleSeriesDATA);
     let candleSeriesSUBSELECT = getCandleSubSELECT(tkr); //SUB SELECTORS - LOGIC.
     if(candleSeriesSUBSELECT==='none'){ //STRUCTURE LINES.
@@ -2231,7 +2351,8 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
         {color:'steelblue',layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } }
     })
     let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
-    let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA); //todo?
+    let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA); 
+    lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
     DYNA_DRAWCHART_LineSeries.setData(lineSeriesMETADATA);
     if(!_TXT_EDITOR_Class||!_TXT_EDITOR_Class.name){ //TODO!
         console.log('Reload',tgtTKR);
@@ -2264,22 +2385,35 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     
 }; //END INIT DYNA_CHART - DRAWCHART *****************************************
 function init_DYNA_DRAW_DATA(){ //SELECTORZ load dynamic DRAW data into DRAWCHART
-    let elKeys = [], elTGT, timeSelector,dbKeys=[], ymtArr=[];
+    let elKeys = [], elTGT, timeSelector,dbKeys=[], ymtArr=[],dateYMD;
+    // bankbookz_DB.DRAW_DATA_ALL_VLINE = []
+    // bankbookz_DB.DRAW_DATA_ALL_SPOTTXT = []
     for(let TKRObj of bankbookz_DB.TICKR_LIST){
         timeSelector = 'All Time';
         if(timeSelector==='All Time'){ //TODO
             for(let drawings of bankbookz_DB.DRAW_DATA_ALL_SPOTTXT){ //RENDER TXTs
                 if(TXT_EDITOR_ELEMS[TKRObj.tkr]
                     && TKRObj.tkr === drawings.tkr ){
-                    let newTXT = {time:parseInt(drawings.time),price:Math.round(drawings.price),
+
+                        
+                    // if(drawings.tkr==='AMZN'){debugger;}
+                    dateYMD = new Date(parseInt(drawings.time)).toISOString().slice(0, 10);
+                    
+                    // let newTXT = {time:parseInt(drawings.time),price:Math.round(drawings.price),
+                    let newTXT = {time:dateYMD,price:Math.round(drawings.price),
                         txt:drawings.txt,txtColor:drawings.txtColor}
+
                     TXT_EDITOR_ELEMS[TKRObj.tkr].createSpotTXT(newTXT)
                 } 
             }
             for(let drawings of bankbookz_DB.DRAW_DATA_ALL_VLINE){ //RENDER VLINEs
                 if(VLINE_EDITOR_ELEMS[TKRObj.tkr]
                   && TKRObj.tkr === drawings.tkr ){
-                    let newLine = {time:parseInt(drawings.time),color:drawings.color,
+                    // if(drawings.tkr==='AMZN'){debugger;}
+
+                    dateYMD = new Date(parseInt(drawings.time)).toISOString().slice(0, 10);
+                    // let newLine = {time:parseInt(drawings.time),color:drawings.color,
+                    let newLine = {time:dateYMD,color:drawings.color,
                         width:drawings.width }
                     VLINE_EDITOR_ELEMS[TKRObj.tkr].create_VLINE(newLine);
                 } 
@@ -2816,9 +2950,14 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
         allowShiftVisibleRangeOnWhitespaceReplacement:true
     })
     let candleSeriesDATA = getCandleSeriesDATA(tkr);
+    // let candleSeriesDATA2 = fillMissingDays_Candle(candleSeriesDATA);
+    // debugger;
+
     // candleSeriesDATA = addWeekends(candleSeriesDATA);
     let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
     // let lineSeriesMETADATA2 = addWeekendsHolidays(lineSeriesMETADATA);
+    // let lineSeriesMETADATA2 = fillMissingDays(lineSeriesMETADATA);
+    lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
     // debugger;
 
     const lineSeries = TrendzChart.addLineSeries({
@@ -3128,6 +3267,7 @@ window.init_MOMENTUM_CHART = (tkr) => { //call DATA JUNCTION for SELECTIONZ (tri
     //------------------------------------------------------MOMENTUM-DATA-----------------
     let candleSeriesDATA = getCandleSeriesDATA(tkr);
     let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
+    lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
     //------------------------------------------------------MOMENTUM-PRICE-SERIES-----------------
     const MOMENTUM_Series_Price = MOMENTUM_Chart.addLineSeries({priceLineVisible:true,color:'aqua',
         priceFormat:{ type:'price',precision:4,minMove:0.0001,}, priceScaleId: 'right' });

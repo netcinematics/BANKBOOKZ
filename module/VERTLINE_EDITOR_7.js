@@ -179,6 +179,7 @@ window.set_VLine_Color = (e)=>{ let lineColor = event.target.value;
     VLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
 }
 window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
+    // debugger;
     VLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
     let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
     let timeYMD = VLINE_EDITOR_FRAME.getAttribute('time_meta');
@@ -197,9 +198,12 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
         let timeTGTUTC;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
+            // newLine.time = new Date(timeYMD).getTime(); /// UTC needed.
+            timeTGTUTC = new Date(parseInt(drawItem.time)).getTime(); //needs UTC
             if(drawItem.tkr===tkr_meta 
-                // && drawItem.time===vItem._time){
                 && timeTGTUTC=== new Date(vItem._time).getTime() ){
+                // && drawItem.time===vItem._time){
+                newLine.time = new Date(timeYMD).getTime(); /// UTC needed.
                 drawSet[i] = newLine; //update everything.
                 save_BANKBOOKZ_DB();
                 break;
@@ -212,6 +216,7 @@ window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
             width:(size_meta==='sml')?1:(size_meta==='med')?2:3, }
         VLINE_EDITOR_ELEMS[tkr_meta].create_VLINE(newLine);
         newLine.time = new Date(timeYMD).getTime(); /// UTC needed.
+        // debugger;
         bankbookz_DB.DRAW_DATA_ALL_VLINE.push(newLine)
         save_BANKBOOKZ_DB(); //SAVE to LOCAL DB.
     }

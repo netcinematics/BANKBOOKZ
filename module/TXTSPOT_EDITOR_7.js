@@ -228,12 +228,13 @@ window.set_TXT_Click = (e)=>{
         let timeTGTUTC;
         for(var i=0; i < drawSet.length; i++){
             drawItem = drawSet[i];
-            timeTGTUTC = new Date(drawItem.time).getTime(); //needs UTC
+            timeTGTUTC = new Date(parseInt(drawItem.time)).getTime(); //needs UTC
             if(drawItem.tkr===tkr_meta 
                 && timeTGTUTC=== new Date(txtItem._p1.time).getTime() //needs utc
                 // && parseInt(drawItem.time)===txtItem._p1.time
                 // && timeUTC===txtItem._p1.time
                 && parseInt(drawItem.price)===txtItem._p1.price ){ //FOUND Local saved ITEM
+                newTXT.time = timeTGTUTC; /// UTC needed.
                 drawSet[i] = newTXT; //update everything.
                 save_BANKBOOKZ_DB();
                 TXT_EDITOR_ELEMS[tkr_meta].updateAllViews()
