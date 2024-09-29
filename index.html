@@ -469,7 +469,7 @@
                 </section>  
                 <div style="display: flex;align-items: center;width: 100%;justify-content: space-around;">
                     <section id="connectStatus" style="font-size: 0.666em;margin-right:2%;color:aqua;">disconnected</section>
-                </div>                    
+                </div>
                 <menu>
                     <button id="latestBtn1" class="blackBTN" style="margin:1em 1% 1em 1%;"
                     onclick="getLastPriceClick()">GET ALL TKR Prices🔄</button>
@@ -524,8 +524,18 @@
                 background: #00010b;">No Data. </section>
             <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
                 align-items:center;margin:1em 0;">
-            </footer>   
-        </article>        
+            </footer>
+        </article>
+        <article id="DATA_MOMZ_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
+        background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
+            <header style="margin:1em;width: 100%;padding-left:2em;">EDIT MOMZ DATA:</header>
+            <section id="render_EDIT_MOMZ_Frame" class="scrollBarV" 
+            style="width: 94%;display: flex;flex-direction: column;margin: 0 2em 0 3em;
+                background: #00010b;">No Data. </section>
+            <footer class="main_footer" style="display:flex;width: 100%;height:2.222em;justify-content:space-around;
+                align-items:center;margin:1em 0;">
+            </footer>
+        </article>
     </section><!--end DATAVIEW-->
 <script>// *************LOCAL_DB*********************
 /*************************************************************\
@@ -697,6 +707,7 @@ function padTimeWithZeros(arr){ //sadly 01 format is standard
 // }
 function fillMissingDays(data) { //todo line and candle seem the same.
   const filledData = [];
+  if(!data.length){return data}
   let lastDate = new Date(data[0].time),item,cloneLast;
   for (let i = 0; i < data.length; i++) {
     item = data[i];
@@ -1401,10 +1412,12 @@ const IMPORT_VIEW_BTN = document.getElementById("IMPORT_VIEW_BTN");
 const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
 const DATA_TICKR_FRAME = document.getElementById("DATA_TICKR_FRAME");
 const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
+const DATA_MOMZ_FRAME = document.getElementById("DATA_MOMZ_FRAME");
 const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
 const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
 const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
 const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
+const render_EDIT_MOMZ_Frame = document.getElementById("render_EDIT_MOMZ_Frame");
 const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
 const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
 TCKR_VIEW.classList.add('hiddenTab')     //TAB SWITCH
@@ -1416,6 +1429,7 @@ DATA_GALLERY_FRAME.classList.remove('hiddenTab')     //TAB DEFAULT
 load_GALLERY_FRAME_DATA();
 DATA_TICKR_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 DATA_TRADE_FRAME.classList.add('hiddenTab')     //TAB SWITCH
+DATA_MOMZ_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 DATA_IMPORT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
 let EDIT_YMT_RECORD_ID = ''; //persist record editing between views.
 let CHART_SELECTIONS = []; //persist chart selections between views. 
@@ -1470,55 +1484,72 @@ function remove_SUB_VIEW_SELECTED(){
 function showDataGalleryView(type){
     if(type==='gallery'){
         DATA_GALLERY_FRAME.classList.remove('hiddenTab');
-        load_GALLERY_FRAME_DATA();     
+        load_GALLERY_FRAME_DATA();
         remove_SUB_VIEW_SELECTED();
-        GALLERY_VIEW_BTN.classList.add('selectedSUBBTN')            
-        DATA_IMPORT_FRAME.classList.add('hiddenTab')   
-        DATA_TICKR_FRAME.classList.add('hiddenTab')     
-        DATA_TRADE_FRAME.classList.add('hiddenTab')     
+        GALLERY_VIEW_BTN.classList.add('selectedSUBBTN')
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')
+        DATA_TICKR_FRAME.classList.add('hiddenTab')
+        DATA_TRADE_FRAME.classList.add('hiddenTab')
+        DATA_MOMZ_FRAME.classList.add('hiddenTab')
     }else if (type==='edittrade'){
-        DATA_GALLERY_FRAME.classList.add('hiddenTab')     
-        DATA_IMPORT_FRAME.classList.add('hiddenTab')  
-        DATA_TICKR_FRAME.classList.add('hiddenTab')     
-        DATA_TRADE_FRAME.classList.remove('hiddenTab')         
+        DATA_GALLERY_FRAME.classList.add('hiddenTab')
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')
+        DATA_TICKR_FRAME.classList.add('hiddenTab')
+        DATA_TRADE_FRAME.classList.remove('hiddenTab')
+        DATA_MOMZ_FRAME.classList.add('hiddenTab')
     }else if(type==='edittickr'){ 
-        DATA_GALLERY_FRAME.classList.add('hiddenTab')     
-        DATA_IMPORT_FRAME.classList.add('hiddenTab')    
-        DATA_TICKR_FRAME.classList.remove('hiddenTab')     
-        DATA_TRADE_FRAME.classList.add('hiddenTab')     
+        DATA_GALLERY_FRAME.classList.add('hiddenTab')
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')
+        DATA_TICKR_FRAME.classList.remove('hiddenTab')
+        DATA_TRADE_FRAME.classList.add('hiddenTab')
+        DATA_MOMZ_FRAME.classList.add('hiddenTab')
+    }else if(type==='editmomz'){ 
+        DATA_GALLERY_FRAME.classList.add('hiddenTab')
+        DATA_IMPORT_FRAME.classList.add('hiddenTab')
+        DATA_TICKR_FRAME.classList.add('hiddenTab')
+        DATA_TRADE_FRAME.classList.add('hiddenTab')
+        DATA_MOMZ_FRAME.classList.remove('hiddenTab')
     }else if(type==='import'){ 
-        DATA_GALLERY_FRAME.classList.add('hiddenTab')     
-        DATA_TICKR_FRAME.classList.add('hiddenTab')     
-        DATA_TRADE_FRAME.classList.add('hiddenTab')      
-        DATA_IMPORT_FRAME.classList.remove('hiddenTab')    
+        DATA_GALLERY_FRAME.classList.add('hiddenTab')
+        DATA_TICKR_FRAME.classList.add('hiddenTab')
+        DATA_TRADE_FRAME.classList.add('hiddenTab')
+        DATA_MOMZ_FRAME.classList.add('hiddenTab')
+        DATA_IMPORT_FRAME.classList.remove('hiddenTab')
         remove_SUB_VIEW_SELECTED();
-        IMPORT_VIEW_BTN.classList.add('selectedSUBBTN')          
+        IMPORT_VIEW_BTN.classList.add('selectedSUBBTN')
     }
 }
 function load_GALLERY_FRAME_DATA(){
-    let tkrREC = {}, tkrINPUT, tkrROW, editBTN_TKR,editBTN_TRADE;
+    let tkrREC = {}, tkrINPUT, tkrROW, editBTN_TKR,editBTN_TRADE,editBTN_MOMZ;
     render_TICKR_GALLERY.innerHTML=''; //blank out
     for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
         tkrREC = bankbookz_DB.TICKR_LIST[i];
         tkrINPUT = document.createElement('input')
         tkrINPUT.value = tkrREC.tkr;
         tkrINPUT.readOnly = true;
-        // tkrINPUT.placeholder = "ticker";
         tkrINPUT.classList.add('tkrTXT_BOX')
         tkrROW = document.createElement('article')
         tkrROW.classList.add('tkrROWZ')
         tkrROW.appendChild(tkrINPUT)
-        editBTN_TRADE = document.createElement('button')
-        editBTN_TRADE.innerHTML = 'Edit TRADE'+'🎢';
-        editBTN_TRADE.classList.add('blackBTN')
-        editBTN_TRADE.addEventListener("click",(e)=>{ editDataClick(e,'TRADE') });
-        tkrROW.appendChild(editBTN_TRADE)
         editBTN_TKR = document.createElement('button')
         editBTN_TKR.innerHTML = 'Edit TKR'+'🎪';
         editBTN_TKR.classList.add('blackBTN')
         editBTN_TKR.addEventListener("click",(e)=>{ editDataClick(e,'TKR') });
-        tkrROW.appendChild(editBTN_TKR)        
-        render_TICKR_GALLERY.appendChild(tkrROW)  
+        tkrROW.appendChild(editBTN_TKR);
+        editBTN_TRADE = document.createElement('button')
+        editBTN_TRADE.innerHTML = 'Edit TRADE'+'🎢';
+        editBTN_TRADE.classList.add('blackBTN')
+        editBTN_TRADE.addEventListener("click",(e)=>{ editDataClick(e,'TRADE') });
+        tkrROW.appendChild(editBTN_TRADE);
+
+
+        editBTN_MOMZ = document.createElement('button')
+        editBTN_MOMZ.innerHTML = 'Edit MOMZ'+'🌙';
+        editBTN_MOMZ.classList.add('blackBTN')
+        editBTN_MOMZ.addEventListener("click",(e)=>{ editDataClick(e,'MOMZ') });
+        tkrROW.appendChild(editBTN_MOMZ);
+
+        render_TICKR_GALLERY.appendChild(tkrROW);
     }
 }
 function editDataClick(e, datatype){
@@ -1529,6 +1560,9 @@ function editDataClick(e, datatype){
     }else if(datatype==='TRADE'){
         showDataGalleryView('edittrade'); //show data panel.
         renderTRADEData(datatgt);
+    }else if(datatype==='MOMZ'){
+        showDataGalleryView('editmomz'); //show data panel.
+        renderMOMZData(datatgt);
     }
 }
 function renderTICKRData(datatgt){
@@ -1643,6 +1677,37 @@ function renderTRADEData(datatgt){
         moBOX.appendChild(tradeDataFrame)
         render_EDIT_TRADE_Frame.appendChild(moBOX)  
     }
+}
+function renderMOMZData(datatgt){
+let tkr = datatgt;
+let momz_del_btns = `
+    <button id="del_bollz_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:12em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete all BOLLz 🗑️</button>
+    <button id="del_rsi_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:12em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete all RSIz 🗑️</button>
+    <button id="del_cci_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:12em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete all CCIz 🗑️</button>
+    <button id="del_mom_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:12em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete all MOMz 🗑️</button>
+    <button id="del_macd_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:12em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete all MACDz 🗑️</button>
+    <button id="del_stoch_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:12em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete all STOCHz 🗑️</button>
+    <button id="del_stochrsi_BTN" class="blackBTN" style="margin:1em 1% 1em 1%;width:13em;"
+        onclick="delete_MOMZ_Sublist('${datatgt}',event)">Delete STOCHRSIz 🗑️</button>
+    `;
+    // // ************************************TOP LINE************
+    let tkrTXT,delBTN,BTNBOX;
+    let tkrTTL = document.createElement('header');
+    tkrTTL.classList = 'tkrTTL';
+    tkrTXT = document.createElement('span')
+    tkrTXT.innerText = datatgt;
+    tkrTXT.classList.add('tkrTXT_BOX')
+    tkrTXT.style.margin='1em 0 1em 0';
+    tkrTTL.appendChild(tkrTXT);
+    render_EDIT_MOMZ_Frame.appendChild(tkrTTL)
+    // ************************************END TOP LINE*****
+    render_EDIT_MOMZ_Frame.innerHTML = momz_del_btns;
 }
 //--------------------------------------END DATA fns----------------------------------
 //     show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
@@ -2258,9 +2323,7 @@ function saveTickerClick(e){
 }
 //**************************************************ENDSAVE BTNS****************
 //********************************DELETE BTNS*********************************
-// function deleteTickerMaster(e){ debugger;}
 function deleteTickerSubList(e){
-    // debugger;
     let moYMT = e.target.parentElement.previousElementSibling.innerText
     if(!moYMT){return}
     let tkr = moYMT.split('_')[2];
@@ -2269,17 +2332,39 @@ function deleteTickerSubList(e){
     if(!dataSet){return}
     delete bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr][moYMT];
     e.target.parentElement.parentElement.parentElement.remove();   
-    save_BANKBOOKZ_DB();      
+    save_BANKBOOKZ_DB();
 }
-function deleteTradeMaster(e){ debugger;}
+
 function deleteTradeSubList(e){
     let moYMT = e.target.parentElement.previousElementSibling.innerText
     if(!moYMT){return}
     let dataSet = bankbookz_DB.TRADE_TXNZ_YMT[moYMT];
     if(!dataSet){return}
     delete bankbookz_DB.TRADE_TXNZ_YMT[moYMT];
-    e.target.parentElement.parentElement.parentElement.remove();   
-    save_BANKBOOKZ_DB();       
+    e.target.parentElement.parentElement.parentElement.remove();
+    save_BANKBOOKZ_DB();
+}
+function delete_MOMZ_Sublist(tkr,e){
+    let momID = e.target.id;
+    if(!momID){return}
+    let dataSet = [];
+    if(momID==="del_bollz_BTN"){
+        delete bankbookz_DB.BOLL_DATA_MAP_Monthly[tkr];
+    }else if(momID==="del_rsi_BTN"){
+        delete bankbookz_DB.RSI_DATA_MAP_Monthly[tkr];
+    }else if(momID==="del_cci_BTN"){
+        delete bankbookz_DB.CCI_DATA_MAP_Monthly[tkr];
+    }else if(momID==="del_mom_BTN"){
+        delete bankbookz_DB.MOM_DATA_MAP_Monthly[tkr];
+    }else if(momID==="del_macd_BTN"){
+        delete bankbookz_DB.MACD_DATA_MAP_Monthly[tkr];
+    }else if(momID==="del_stoch_BTN"){
+        delete bankbookz_DB.STOCH_DATA_MAP_Monthly[tkr];
+    }else if(momID==="del_stochrsi_BTN"){
+        delete bankbookz_DB.STOCHRSI_DATA_MAP_Monthly[tkr];
+    }
+    show_USERMSG({txt:'Deleted MOMz',icon:'⏰',time:2000}); 
+    save_BANKBOOKZ_DB();
 }
 function deleteTickerClick(e){
     let userTKR = e.target.previousElementSibling.value;
@@ -2289,7 +2374,7 @@ function deleteTickerClick(e){
         if(userTKR===item.tkr){ //delete tkr
             bankbookz_DB.TICKR_LIST.splice(i,1)
             save_BANKBOOKZ_DB();
-            init_TKRZ_TABZ();             
+            init_TKRZ_TABZ(); 
             return; 
         }
     }
