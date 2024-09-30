@@ -669,7 +669,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-};show_USERMSG({txt:'Welcome!!',icon:'🌻',time:2000}); 
+};show_USERMSG({txt:'Welcome!!!',icon:'🌻',time:2000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -4244,6 +4244,8 @@ import {g as getRandomDataSet} from "./module/sample-data.js";
 import {TrendLine_Class} from "./module/TRENDLINES.js";
 function init_LineTrends_XMPL(){
 try{ 
+    if(!LightweightCharts){show_USERMSG({txt:'ERR: No lwc',icon:'⚠️',time:4000});}
+    if(!TrendLine_Class){show_USERMSG({txt:'ERR: No TLC',icon:'⚠️',time:4000});}
     const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
         {width:400,height:300, autoSize:true, 
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
