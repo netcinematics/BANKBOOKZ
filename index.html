@@ -12,14 +12,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="./favicon.ico" />
         <script src="./data/default_data.js"></script><!--****************LOAD-CUSTOM-DATA-MODULE******************-->
-        <script  > //****************LOAD-CUSTOM-DATA-MODULE******************
-            console.log("Imported Data:")
-            // console.log(`RAW TRADES:${default_raw_trade_data.length}`)
-            console.log(`MONTH TRADES:${Object.keys(default_TRADE_DATA_MAP_Monthly).length}`)
-            console.log(`TICKRS, BTC(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['BTC']).length}`)
-            //todo make defaults AMZN and SPY BIG_6_Defaults.
-            // console.log(`TICKRS, ETH(months):${Object.keys(default_TICKR_DATA_MAP_Monthly['ETH']).length}`)
-            // console.log(`BTC_TXNZ: MONTH${Object.keys(default_BTC_TRADEZ).length}`);
+        <script  > //****************IMPORT _default_ DATA-MODULE******************
+            let _default_TICKR_DATA_MAP_Monthly = default_TICKR_DATA_MAP_Monthly
+            let _default_TRADE_DATA_MAP_Monthly = default_TRADE_DATA_MAP_Monthly
+            let _default_MOMZ_DATA_MAP = default_MOMZ_DATA_MAP
         </script>  <!-- **************************END-CUSTOM-DATA-MODULE******************-->      
         <script type="text/javascript" src="./module/lwc_dev_deriv_4.2.js"></script>
 <style>
@@ -47,8 +43,8 @@
     /**************RESPONSIVE BTN *******************/
     /* .BTN:hover{border:1px solid steelblue; color:purple}
     .BTN:active{border:1px solid lime; color:green} */
-    .blackBTN:hover{border:1px solid lime;  background:black;  color:green}
-    .blackBTN:active{border:1px solid steelblue;  background:black; color:purple}
+    .blackBTN:hover{border:2px solid lime;  background:black;  color:green}
+    .blackBTN:active{border:2px solid steelblue;  background:black; color:purple}
     @media only screen and (max-width: 800px) { /************* TABLET */
         body{  background-color: #00070d;}
         .BTN{font-size:1.111em;}
@@ -558,21 +554,28 @@ const bankbookz_DB_LOAD_MOCK_DATA=()=>{ //INIT DATA_MODEL XMPL
             {tkr:'BTC',type:'txt',price:'555',time:'1557144000',txt:'OVERBO',txtColor:'teal'},
         ],
 
-
-        BOLL_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
-        RSI_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
-        CCI_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
-        MOM_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
-        MACD_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
-        STOCH_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
-        STOCHRSI_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // BOLL_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // RSI_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // CCI_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // MOM_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // MACD_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // STOCH_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        // STOCHRSI_DATA_MAP_Monthly : {'SPY':{'2024_04_SPY':[]}},
+        
+        BOLL_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['BOLLZ'],
+        RSI_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['RSI'],
+        CCI_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['CCI'],
+        MOM_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['MOM'],
+        MACD_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['MACD'],
+        STOCH_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['STOCH'],
+        STOCHRSI_DATA_MAP_Monthly : default_MOMZ_DATA_MAP['STOCHRSI'],
 
         TRADE_TXNZ_YMT: default_TRADE_DATA_MAP_Monthly,
         TICKR_DATA_MAP_Monthly : default_TICKR_DATA_MAP_Monthly,
         TICKR_LIST:[
             {tkr:'AMZN',lastLoadYMD:''},{tkr:'NVDA',lastLoadYMD:''},
-            {tkr:'SPY',lastLoadYMD:''},//{tkr:'QQQ',lastLoadYMD:''},
-            {tkr:'BTC',lastLoadYMD:''},//{tkr:'ETH',lastLoadYMD:''},
+            {tkr:'SPY',lastLoadYMD:''},{tkr:'NDAQ',lastLoadYMD:''},
+            {tkr:'BTC',lastLoadYMD:''},{tkr:'COST',lastLoadYMD:''},
         ],
         METASTATE:{ 
             BOOKZ_EXPANDER:['BTC'], //multiple expansion.
@@ -680,31 +683,6 @@ function padTimeWithZeros(arr){ //sadly 01 format is standard
     }
     return arr;
 }
-
-// function fillMissingDays_Candle(data) {
-//   const filledData = [];
-//   let lastDate = new Date(data[0].time),item;
-//   let cloneLast={};
-//   for (let i = 0; i < data.length; i++) {
-//     item = data[i];
-//     const currentDate = new Date(item.time);
-//     const daysDifference = Math.ceil((currentDate - lastDate) / (1000 * 60 * 60 * 24));
-//     for (let j = 0; j < daysDifference; j++) {
-//       const date = new Date(lastDate);
-//       date.setDate(date.getDate() + j);
-//       const formattedDate = date.toISOString().slice(0, 10);
-//       // Check if the date already exists in the filledData array
-//       const existingData = filledData.find(item => item.time === formattedDate);
-//       if (!existingData) {
-//         cloneLast = { ...item };
-//         cloneLast.time = date.toISOString().slice(0, 10);
-//         filledData.push(cloneLast); 
-//       }
-//     }
-//     lastDate = currentDate;
-//   }
-//   return filledData;
-// }
 function fillMissingDays(data) { //todo line and candle seem the same.
   const filledData = [];
   if(!data.length){return data}
@@ -1710,7 +1688,6 @@ let momz_del_btns = `
     render_EDIT_MOMZ_Frame.innerHTML = momz_del_btns;
 }
 //--------------------------------------END DATA fns----------------------------------
-//     show_USERMSG({txt:'Saved!',icon:'🎇',time:2000});
 function import_TradeClick(){
     let render_TRADE_IMPORT = document.getElementById('render_TRADE_IMPORT');
     let tkrSTR, YMT_id, txnSET=[],txnItem, dupeCNT=0, newCNT=0,txnFound=false;//, ymdSTR,clearDataMap={'YMT_id':true};
@@ -1958,7 +1935,7 @@ const init_BOOKZ_TABZ = ()=>{
                     </article>
 
                     <menu style="justify-content: center;border-radius: 13px; display: flex; margin-top: 0;
-                        padding: 1em 0 0 0; height: 4em; flex-wrap: wrap; ">
+                        padding: 1em 0 0 0; flex-wrap: wrap; ">
                         <input type="checkbox" class="Trendz_CHECKBOX" id="volz_opt_${tgtTKR.tkr}">
                         <label for="volz_opt">vols</label>
                         <input type="checkbox" class="Trendz_CHECKBOX" id="moavg_opt_${tgtTKR.tkr}">
@@ -1973,8 +1950,9 @@ const init_BOOKZ_TABZ = ()=>{
                         <label>boll</label>
                     </menu>
 
-                    <menu style="justify-content: space-evenly; border-radius: 13px;display: flex; 
-                        margin-top: 0;padding: 1em 0 0 0;">
+                    <footer style="justify-content: space-evenly; border-radius: 13px;display: flex; 
+                        margin-bottom:1em;">
+                        <button onclick="reload_TRENDZ_Click()" class="blackBTN">🔄</button>
                         <span><div style="background:blue;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
                             margin-right: 0.5em;"></div>
                             <span style="font-size:0.666em;color:royalblue">BUY</span>
@@ -1983,7 +1961,11 @@ const init_BOOKZ_TABZ = ()=>{
                             margin-right: 0.5em;"></div>
                             <span style="font-size:0.666em;color:rebeccapurple">SELL</span>
                         </span>
-                    </menu>
+                        <span><div style="background:steelblue;border-radius:100%;border:solid 1px steelblue;height:0.666em;
+                            width:0.666em;display: inline-block;margin-right:0.222em;font-weight:'bold';margin-left:1.444em;"></div>
+                            <span style="font-size:1em;padding-left: 0.555em;">PRICE</span>
+                        </span>
+                    </footer>
                 </section>
             </section>
 
@@ -2001,7 +1983,6 @@ const init_BOOKZ_TABZ = ()=>{
                         flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
                         <i style="font-size:0.555em;margin:0.888em;"
                         class="MOBILE_Frame_Sizer">No data.</i>
-                        <button onclick="reload_MOMZ_Click()" class="blackBTN">RELOAD</button>
                     </article>
 
                     <menu style="justify-content:center;border-radius:13px;display:flex;padding: 1em 0 0 0;
@@ -2013,11 +1994,8 @@ const init_BOOKZ_TABZ = ()=>{
                             <label>CCI</label>
                             <input type="checkbox"id="mom_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
                             <label>MOM</label>
-                        </section>    
+                        </section>
                         <section style="margin: 1em 0;display: flex;align-items: center;">    
-
-
-
                             <input type="checkbox"id="macd_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
                             <label>MACD</label>
                             <input type="checkbox"id="stoch_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
@@ -2026,15 +2004,14 @@ const init_BOOKZ_TABZ = ()=>{
                             <label>STOCH_RSI</label>
                             <input type="checkbox"id="hgrid_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
                             <label>H_GRID</label>
+                        </section>
+                        <footer style="width: 100%;display: flex;justify-content: center;">
+                            <button onclick="reload_MOMZ_Click()" class="blackBTN">🔄</button>
                             <span><div style="background:aqua;border-radius:100%;border:solid 1px steelblue;height:0.666em;
                                 width:0.666em;display: inline-block;margin-right:0.222em;font-weight:'bold';margin-left:1.444em;"></div>
                                 <span style="font-size:1em;padding-left: 0.555em;">PRICE</span>
-                            </span>                            
-                        </section>    
-                        <!--section  style="display: flex;align-items: center;">
-                            <input type="checkbox" class="MOMENTUM_CHECKBOX" id="momTrades_opt_${tgtTKR.tkr}">
-                            <label">TRADES</label>
-                        </section-->
+                            </span>
+                        </footer>
                     </menu>
 
                 </section>
@@ -2063,6 +2040,13 @@ const init_BOOKZ_TABZ = ()=>{
                         <button style="margin:0 1em;" class="drawBTN_HLINE blackBTN" 
                             onclick="edit_Mode_Click(event)">HLINE🕳️</button>
                     </menu>
+                    <footer style="width: 100%;display: flex;justify-content: center;margin-bottom: 1em;">
+                        <button onclick="reload_DRAW_Click()" class="blackBTN">🔄</button>
+                        <span><div style="background:steelblue;border-radius:100%;border:solid 1px steelblue;height:0.666em;
+                            width:0.666em;display: inline-block;margin-right:0.222em;font-weight:'bold';margin-left:1.444em;"></div>
+                            <span style="font-size:1em;padding-left: 0.555em;">PRICE</span>
+                        </span>
+                    </footer>
                 </section>
             </section>
 
@@ -2135,9 +2119,10 @@ const init_BOOKZ_TABZ = ()=>{
     }//END BUILD LOOP
     init_BOOKZ_EXPANDER();
     try{
-        setTimeout(()=>{
+        setTimeout(()=>{ 
             render_ALL_BOOKZ_CHARTZ();
             render_ALL_DYNA_SELECTORZ();
+            window.init_All_TRENDZ_CHARTS(); //todo rename?
             render_ALL_DRAW_CHARTZ();
             window.render_ALL_MOMZ_CHARTZ();
         },1000); //init fix for master module load.
@@ -2895,18 +2880,23 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
             tradeMarkerData = getMarker_TRADE_DATA(tkr,startDate);
             tradeMarkerData = padTimeWithZeros(tradeMarkerData); //IMPORT PAD - data integrity
             tradeMarkerData = ensureOrderASC(tradeMarkerData);   //IMPORT ASC - data integrity
+
         }
-        window.render_TRADESPOTS(TrendzChart,tradeMarkerData,lineSeries)
+        if(!tradeMarkerData || !tradeMarkerData.length){
+            show_USERMSG({txt:'IMPORT Trade data.',icon:'🌼',time:2000});
+        }else{
+            window.render_TRADESPOTS(TrendzChart,tradeMarkerData,lineSeries)
+        }
     //-------------------------------------------------------------------
     }
     if(checkz.boll_opt){  //--------------------------------BOLL in TRENDZ
         if(tkr==='BTC'||tkr==='ETH'){ 
-            show_USERMSG({txt:'No BOLL data for Crypto?',icon:'🌼',time:2000});
-        //     TrendzChart.timeScale().fitContent(); //error fix
-        //     resize_BIG_CHART(TrendzChart);
-        //     return; 
+            show_USERMSG({txt:'No BOLL data for Crypto',icon:'🌼',time:2000});
         }
         let BOLLData = get_MOMZ_DATA_JUNCTION(tkr,"BOLLZ"); //GET DATA BY SELECTOR
+        if(!BOLLData || !BOLLData.length){ 
+            show_USERMSG({txt:'Get BOLL data',icon:'🌼',time:2000});
+        }
         const BOLL_Series_up = TrendzChart.addLineSeries({ priceLineVisible:false,color:'limegreen',
                 priceFormat: { type: 'price', precision: 4, minMove: 0.0001,} });
         const BOLL_Series_mid = TrendzChart.addLineSeries({ priceLineVisible:false,color:'steelblue',//orange
@@ -2923,10 +2913,10 @@ window.init_DYNA_TRENDZCHART = (tkr) => {
     TrendzChart.timeScale().fitContent(); 
     resize_BIG_CHART(TrendzChart);
 }//------------------------------------------------------END TRENDZ CHART-----
-function init_All_TRENDZ_CHARTS(){ //INIT ALL TRENDZ CHARTS.
+window.init_All_TRENDZ_CHARTS = () => { //INIT ALL TRENDZ CHARTS.
     const tkrSet = bankbookz_DB.TICKR_LIST;
     tkrSet.forEach(tkr => { init_DYNA_TRENDZCHART(tkr.tkr); })
-}; setTimeout(init_All_TRENDZ_CHARTS(),222); //todo this alwaya works?
+}; //setTimeout(init_All_TRENDZ_CHARTS(),222); //todo this alwaya works?
 //**************************************END INIT TRENDZ**********************
 //**************************************CUSTOM CHECKBOXES***********************
 function init_Trendz_CHECKBOXES(){
@@ -2981,27 +2971,25 @@ window.get_MOMZ_DATA_JUNCTION = (tkr,datatype)=>{ //GET DATA BY TIMESELECTOR - D
     if(datatype==='BOLLZ'){ 
         if(!bankbookz_DB.BOLL_DATA_MAP_Monthly){bankbookz_DB.BOLL_DATA_MAP_Monthly={}}
         if(!bankbookz_DB.BOLL_DATA_MAP_Monthly[tkr]){bankbookz_DB.BOLL_DATA_MAP_Monthly[tkr]={};}
-        dataSet = bankbookz_DB.BOLL_DATA_MAP_Monthly[tkr];//[YMT] 
+        dataSet = bankbookz_DB.BOLL_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET BOLL Data',icon:'🛠️',time:2000}); return[]; };
-        // ymtKEYS = Object.keys(dataSet); //for Last 33, etc.
     } else if (datatype==='RSI'){
-        dataSet = bankbookz_DB.RSI_DATA_MAP_Monthly[tkr];//[YMT] 
+        dataSet = bankbookz_DB.RSI_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET RSI Data',icon:'🛠️',time:2000}); return[]; };
-        //[{"tkr":"SPY","value":59,"time":"2022-06-06"},{"tkr":"SPY","value":51,"time":"2022-06-07"}
     } else if (datatype==='CCI'){
-        dataSet = bankbookz_DB.CCI_DATA_MAP_Monthly[tkr];//[YMT]
+        dataSet = bankbookz_DB.CCI_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET CCI Data',icon:'🛠️',time:2000}); return[]; };
     } else if (datatype==='MOM'){
-        dataSet = bankbookz_DB.MOM_DATA_MAP_Monthly[tkr];//[YMT] 
+        dataSet = bankbookz_DB.MOM_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET MOM Data',icon:'🛠️',time:2000}); return[]; };
     } else if (datatype==='MACD'){
-        dataSet = bankbookz_DB.MACD_DATA_MAP_Monthly[tkr];//[YMT] 
+        dataSet = bankbookz_DB.MACD_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET MACD Data',icon:'🛠️',time:2000}); return[]; };
     } else if (datatype==='STOCH'){
-        dataSet = bankbookz_DB.STOCH_DATA_MAP_Monthly[tkr];//[YMT] 
+        dataSet = bankbookz_DB.STOCH_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET STOCH Data',icon:'🛠️',time:2000}); return[]; };
     } else if (datatype==='STOCH_RSI'){
-        dataSet = bankbookz_DB.STOCHRSI_DATA_MAP_Monthly[tkr];//[YMT] 
+        dataSet = bankbookz_DB.STOCHRSI_DATA_MAP_Monthly[tkr];
         if(!dataSet){ show_USERMSG({txt:'GET STOCH_RSI Data',icon:'🛠️',time:2000}); return[]; };
     }
     //------------------------------------------------------LAST 333 AllTIME and monthly.
@@ -3186,33 +3174,34 @@ function init_MOMENTUM_CHECKBOXES(){
     });
 }; init_MOMENTUM_CHECKBOXES();
 function get_MOMENTUM_Checked(tkr){
-    // if(!tkr){return}
-    // let avgzElem = document.getElementById(`avgz_opt_${tkr}`);
     let rsiElem = document.getElementById(`rsi_opt_${tkr}`);
     let cciElem = document.getElementById(`cci_opt_${tkr}`);
     let momElem = document.getElementById(`mom_opt_${tkr}`);
-    // let bollElem = document.getElementById(`boll_opt_${tkr}`);// boll_opt: bollElem.checked,
     let macdElem = document.getElementById(`macd_opt_${tkr}`);
     let stochElem = document.getElementById(`stoch_opt_${tkr}`);
     let storsiElem = document.getElementById(`storsi_opt_${tkr}`);
     let hgridElem = document.getElementById(`hgrid_opt_${tkr}`);
-    // let momTradeElem = document.getElementById(`momTrades_opt_${tkr}`);
     let checked_selection = {
         rsi_opt: rsiElem.checked,
         cci_opt: cciElem.checked,
         mom_opt: momElem.checked,
-        // boll_opt: bollElem.checked,
         macd_opt: macdElem.checked,
         stoch_opt: stochElem.checked,
         storsi_opt: storsiElem.checked,
         hgrid_opt: hgridElem.checked,
-        // momTrades: momTradeElem.checked,
     }
     return checked_selection;
 }
 // ********************************END CHECKBOXES***************************
+window.reload_TRENDZ_Click = ()=>{ //reload button click for load ERR fallback
+    // window.render_ALL_MOMZ_CHARTZ() 
+    window.init_All_TRENDZ_CHARTS();
+}
 window.reload_MOMZ_Click = ()=>{ //reload button click for load ERR fallback
-    window.render_ALL_MOMZ_CHARTZ() //todo for trendz and draw?
+    window.render_ALL_MOMZ_CHARTZ() 
+}
+window.reload_DRAW_Click = ()=>{ //reload button click for load ERR fallback
+    render_ALL_DRAW_CHARTZ();
 }
 </script>
 
@@ -3240,11 +3229,11 @@ let setAPIKEY = ()=>{
 const getLastPriceClick = async ()=>{ //loop all for last close.
     let item,queries=[],tkrREC,tkr;
     for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
-        tkrTGT = bankbookz_DB.TICKR_LIST[i];        
+        tkrTGT = bankbookz_DB.TICKR_LIST[i];
         tkr = tkrTGT.tkr;        
         if(getAPI_Limiter(tkr)){continue;} //CHECK LastRefreshTime
         // if(i>=1){break;}//DEV_limiter stay below 20
-        // tkr = 'AMZN';//'NVDA';//DEV_specifier 
+        // tkr = 'NVDA';//'AMZN';//'NVDA';//DEV_specifier 
         queries.push(tkr);
    }
    if(stock_api_key && queries.length){
@@ -3270,11 +3259,12 @@ const call_Various_Stock_API = async (queries)=>{
             await getCrypto_Daily(queries[i])
             continue;
             //END CRYPTO QUERIES-----------------------------------
-         }else if(queries[i]==='NVDA' 
-            || queries[i]==='MSTR'){ //ADJUSTED WEEKLY STOCKS.
-            console.log('GET Weekly Adjusted:',queries[i]);
-            await getStock_Weekly_Adjusted(queries[i]);
-            continue;
+        //  }
+        //  else if(queries[i]==='NVDA' 
+        //     || queries[i]==='MSTR'){ //ADJUSTED WEEKLY STOCKS.
+        //     console.log('GET Weekly Adjusted:',queries[i]);
+        //     await getStock_Weekly_Adjusted(queries[i]);
+        //     continue;
          } else { //All Other Stock Requests.
             console.log('GET Stock:',queries[i]);
             await getStock_Daily(queries[i])
@@ -3327,7 +3317,6 @@ const getCrypto_Daily = async (tkrTGT)=>{
 }
 const getStock_Daily = async (tkr)=>{
     await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${tkr}&apikey=${stock_api_key}`)
-    // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
     .then((data)=>{
         if(data.ok){
             return data.json();
@@ -3345,7 +3334,6 @@ const getStock_Daily = async (tkr)=>{
         if(!resTKR){return;}
         console.log('GOT_STOCK:',resTKR)
         const tickDaily_RAW = tickData["Time Series (Daily)"]
-        // const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
         if(!tickDaily_RAW){return;}
         let tickDaily_KEYS = Object.keys(tickDaily_RAW)     
         tickDaily_KEYS.reverse(); //CONFIRM: earliest ASC for LWC.
@@ -3368,14 +3356,11 @@ const getStock_Daily = async (tkr)=>{
         bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
         save_NEW_Stock_DAILY(tickDaily_TV)
         bankbookz_DB.METASTATE.lastRefreshMap[resTKR]
-    }).catch((error)=>{
-        debugger;
-        console.log(error)
+    }).catch((error)=>{ debugger; console.log(error)
     })
 }
-const  getStock_Weekly_Adjusted = async(tkr)=>{
-    await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${tkr}&apikey=${stock_api_key}`)
-    // await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
+const  getStock_Weekly_Adjusted = async(tkr)=>{ //was used for nvda,maybe needed in future
+    await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${queries[i]}&apikey=${stock_api_key}`)
     .then((data)=>{
         if(data.ok){
             return data.json();
@@ -3389,7 +3374,7 @@ const  getStock_Weekly_Adjusted = async(tkr)=>{
             debugger; 
         }
         let resTKR = tickData["Meta Data"]["2. Symbol"];
-        // if(resTKR==='NVDA'){debugger;} //todo nvda data?
+        // if(resTKR==='NVDA'){debugger;} //nvda data
         if(!resTKR){return;}
         console.log('GOT_STOCK:',resTKR)
         const tickDaily_RAW = tickData["Weekly Adjusted Time Series"];
@@ -3405,7 +3390,7 @@ const  getStock_Weekly_Adjusted = async(tkr)=>{
             obj = tickDaily_RAW[aKey];
             tickDaily_TV.push({
                 tkr:resTKR,
-                time: aKey,     
+                time: aKey,
                 open: parseFloat(obj["1. open"]),
                 high: parseFloat(obj["2. high"]),
                 low: parseFloat(obj["3. low"]),
@@ -3463,7 +3448,7 @@ function save_NEW_Stock_DAILY(tickDaily_TV){
             bankbookz_DB.TICKR_DATA_MAP_Monthly[aTicker.tkr][YMT].push(aTicker); //ORDERED for LWC.
         }
     }
-    console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`)     
+    console.log(`Response; Dupes:${dupeCNT}, NEW recs:${newCNT}`)
 }
 function save_NEW_CRYPTO_DAILY(tickDaily_TV){ //skip duplicates, add local storage
     let tkrREC,tkrYMT,txnItem,ymd, ym, YMT,txnFound=false;
@@ -3506,9 +3491,9 @@ function save_NEW_MOMZ_DATA_JUNCTION(dataType, dataSet, tkr){ //skip duplicates,
         ymd = aMOM_REC.time.replace(/-/g, "_");
         ym = ymd.split("_")[0] +"_"+ymd.split("_")[1].padStart(2, '0');//add padding.
         YMT = ym + '_' + tkr //for sub rec 
-        if(dataType==='BOLLZ'){    //TODO: BTC and ETH, bad data for BOLL
+        if(dataType==='BOLLZ'){    // BTC and ETH, bad data for BOLL?
             if(tkr==='BTC'||tkr==='ETH'){ console.log(`No ${tkr} boll service`); 
-                debugger; //does this happen?
+                // debugger; //does this happen?
                  return; }
             if( !bankbookz_DB.BOLL_DATA_MAP_Monthly){bankbookz_DB.BOLL_DATA_MAP_Monthly={}} //DEFAULT CREATE
             monthSet = bankbookz_DB.BOLL_DATA_MAP_Monthly[tkr];
