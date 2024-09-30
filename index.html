@@ -669,7 +669,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-};show_USERMSG({txt:'Welcome!',icon:'🌻',time:2000}); 
+};show_USERMSG({txt:'Welcome!!',icon:'🌻',time:2000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -4243,6 +4243,7 @@ function render_SALEZ_XMPL(salesData){
 import {g as getRandomDataSet} from "./module/sample-data.js";
 import {TrendLine_Class} from "./module/TRENDLINES.js";
 function init_LineTrends_XMPL(){
+try{ 
     const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
         {width:400,height:300, autoSize:true, 
         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
@@ -4287,10 +4288,11 @@ function init_LineTrends_XMPL(){
     };
     const trendLine_BTM = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
     lwc_lineSeries.attachPrimitive(trendLine_BTM);
-}; //init_LineTrends_XMPL();
-try{ init_LineTrends_XMPL(); } catch(e){ console.log('ERR:',e);
+
+} catch(e){ console.log('ERR:',e);
     show_USERMSG({txt:'ERR: TL_XMPL',icon:'⚠️',time:2000}); 
 }
+}; init_LineTrends_XMPL();
 </script>
 <script type="module">
     //-------------------------------------------GREEN BAND LINE 1---------------
