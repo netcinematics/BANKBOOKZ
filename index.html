@@ -4239,82 +4239,73 @@ function render_SALEZ_XMPL(salesData){
 <script type="module" >
 //***************************** XMPL CHART MODULES******************
 try{ 
-    show_USERMSG({txt:'LOAD TL_XMPL1',icon:'⚠️',time:2000}); 
+    show_USERMSG({txt:'LOAD TL_XMPL1',icon:'⚠️',time:3000}); 
 } catch(e){ console.log('ERR:',e);
     console.log('no usermsg')
     alert('fna')
 }    
-    // if(!show_USERMSG){alert('f')}
-    // show_USERMSG({txt:'deb1',icon:'⚠️',time:3000});
 // LightweightCharts.LineStyle enumeration INDEX://0:"Solid",1:"Dotted",2:"Dashed"3:"LargeDashed"4:"SparseDotted"
-// import {g as getRandomDataSet} from "./module/sample-data.js";
-// import {TrendLine_Class} from "./module/TRENDLINES.js";
-
-// if(TrendLine_Class){
-//     show_USERMSG({txt:'GOT TLC',icon:'⚠️',time:4000});
-// }else {
-//     show_USERMSG({txt:'ERR: No TLC',icon:'⚠️',time:4000});
-// }
-// if(LightweightCharts && LightweightCharts.createChart && TrendLine_Class){
-//     show_USERMSG({txt:'GOT LWC',icon:'⚠️',time:4000});
-// }else {
-//     show_USERMSG({txt:'ERR: No LWC',icon:'⚠️',time:4000});
-// }
+import {g as getRandomDataSet} from "./module/sample-data.js";
+import {TrendLine_Class} from "./module/TRENDLINES.js";
 
 function init_LineTrends_XMPL(){
 
-//     show_USERMSG({txt:'deb2',icon:'⚠️',time:2000});
-//     if(!LightweightCharts){show_USERMSG({txt:'ERR: No lwc',icon:'⚠️',time:4000});}
-//     if(!TrendLine_Class){show_USERMSG({txt:'ERR: No TLC',icon:'⚠️',time:4000});}
-//     const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
-//         {width:400,height:300, autoSize:false, 
-//         grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-//         layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } 
-//         }, allowShiftVisibleRangeOnWhitespaceReplacement:true
-//     })
-//     const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
-//     const  dataSet = getRandomDataSet();
+if(LightweightCharts && LightweightCharts.createChart && TrendLine_Class){
+    show_USERMSG({txt:'GOT LWC',icon:'⚠️',time:4000});
+}else {
+    show_USERMSG({txt:'ERR: No LWC',icon:'⚠️',time:4000});
+}
+    if(!LightweightCharts){show_USERMSG({txt:'ERR: No lwc',icon:'⚠️',time:4000});}
+    if(!TrendLine_Class){show_USERMSG({txt:'ERR: No TLC',icon:'⚠️',time:4000});}
+    const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
+        {width:400,height:300, autoSize:true, 
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } 
+        }, allowShiftVisibleRangeOnWhitespaceReplacement:true
+    })
+    const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
+    const  dataSet = getRandomDataSet();
 
-//     if(!TrendLineChart_XMPL){show_USERMSG({txt:'ERR: No chart',icon:'⚠️',time:4000});}
-//     if(!lwc_lineSeries){show_USERMSG({txt:'ERR: No series',icon:'⚠️',time:4000});}
-//     if(!dataSet){show_USERMSG({txt:'ERR: No dataset',icon:'⚠️',time:4000});}
+    if(!TrendLineChart_XMPL){show_USERMSG({txt:'ERR: No chart',icon:'⚠️',time:4000});}
+    if(!lwc_lineSeries){show_USERMSG({txt:'ERR: No series',icon:'⚠️',time:4000});}
+    if(!dataSet){show_USERMSG({txt:'ERR: No dataset',icon:'⚠️',time:4000});}
 
-//     lwc_lineSeries.setData(dataSet);
-//     const len = dataSet.length;
-//     const EndPoint={time: dataSet[len - 50].time,price: dataSet[len - 50].value * .9}
-//     const StartPoint={time: dataSet[len - 5].time,price: dataSet[len - 5].value * 1.1}
-//     const trendLine1 = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,EndPoint,StartPoint);
-//     lwc_lineSeries.attachPrimitive(trendLine1);
-//     let topEND={},topSTART={};
-//     topEND.time = EndPoint.time;
-//     topEND.price = EndPoint.price+10;
-//     topSTART.time = StartPoint.time;
-//     topSTART.price = StartPoint.price+200;
-//     const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
-//         labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"
-//     }; 
-//     const trendLineTOP = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,topEND,topSTART,lineOptions_TOP);
-//     lwc_lineSeries.attachPrimitive(trendLineTOP);
-//     let midEND={},midSTART={};
-//     midEND.time = EndPoint.time;
-//     midEND.price = EndPoint.price-10;
-//     midSTART.time = StartPoint.time;
-//     midSTART.price = EndPoint.price-10;
-//     const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
-//         labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue",
-//     };
-//     const trendLine_MID = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,midEND,midSTART,lineOptions_MID);
-//     lwc_lineSeries.attachPrimitive(trendLine_MID);
-//     let btmEND={},btmSTART={};
-//     btmEND.time = EndPoint.time;
-//     btmEND.price = EndPoint.price-10;
-//     btmSTART.time = StartPoint.time;
-//     btmSTART.price = StartPoint.price-200;
-//     const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
-//         labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"
-//     };
-//     const trendLine_BTM = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
-//     lwc_lineSeries.attachPrimitive(trendLine_BTM);
+    lwc_lineSeries.setData(dataSet);
+    const len = dataSet.length;
+    const EndPoint={time: dataSet[len - 50].time,price: dataSet[len - 50].value * .9}
+    const StartPoint={time: dataSet[len - 5].time,price: dataSet[len - 5].value * 1.1}
+    const trendLine1 = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,EndPoint,StartPoint);
+    lwc_lineSeries.attachPrimitive(trendLine1);
+    let topEND={},topSTART={};
+    topEND.time = EndPoint.time;
+    topEND.price = EndPoint.price+10;
+    topSTART.time = StartPoint.time;
+    topSTART.price = StartPoint.price+200;
+    const lineOptions_TOP = {width:1,showLabels:true,lineColor:"rgb(0, 255, 88)",
+        labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"
+    }; 
+    const trendLineTOP = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,topEND,topSTART,lineOptions_TOP);
+    lwc_lineSeries.attachPrimitive(trendLineTOP);
+    let midEND={},midSTART={};
+    midEND.time = EndPoint.time;
+    midEND.price = EndPoint.price-10;
+    midSTART.time = StartPoint.time;
+    midSTART.price = EndPoint.price-10;
+    const lineOptions_MID = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
+        labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue",
+    };
+    const trendLine_MID = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,midEND,midSTART,lineOptions_MID);
+    lwc_lineSeries.attachPrimitive(trendLine_MID);
+    let btmEND={},btmSTART={};
+    btmEND.time = EndPoint.time;
+    btmEND.price = EndPoint.price-10;
+    btmSTART.time = StartPoint.time;
+    btmSTART.price = StartPoint.price-200;
+    const lineOptions_BTM = {width:1,showLabels:true,lineColor:"rgb(255, 0, 88)",
+        labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"
+    };
+    const trendLine_BTM = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
+    lwc_lineSeries.attachPrimitive(trendLine_BTM);
 show_USERMSG({txt:'LOAD TL_XMPL2',icon:'⚠️',time:2000}); 
 
 // } catch(e){ console.log('ERR:',e);
