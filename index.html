@@ -4239,11 +4239,11 @@ function render_SALEZ_XMPL(salesData){
 <script type="module">
     show_USERMSG({txt:'LOAD BANDS22',icon:'⚠️',time:2000}); 
     //-------------------------------------------GREEN BAND LINE 1---------------
-import {g as getMockData} from "./module/sample-data.js";
-// import {TrendLine_Class} from "./module/TRENDLINES.js";
+// import {g as getMockData} from "./module/sample-data.js";
+import {TrendLine_Class} from "./module/TRENDLINES_3.js";
     
     import {BandsChart_Class} from "./module/BANDLINES_3.js";
-    // import {g as getMockData} from "./module/sample-data.js";
+    import {g as getMockData} from "./module/sample-data.js";
     import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
 function init_b2(){
     const LineChart = LightweightCharts.createChart("trend_line_chart_xmpl", { 
