@@ -4236,19 +4236,100 @@ function render_SALEZ_XMPL(salesData){
 /****************************************END STOCH, IV SALES SENTIMENT, ****************/
 //***************************** END STOCK API INPUT******************
 </script>
+<script type="module">
+    show_USERMSG({txt:'LOAD BANDS2',icon:'⚠️',time:2000}); 
+    //-------------------------------------------GREEN BAND LINE 1---------------
+    import {BandsChart_Class} from "./module/BANDLINES_3.js";
+    import {g as getMockData} from "./module/sample-data.js";
+    import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
+function init_b2(){
+    const LineChart = LightweightCharts.createChart("trend_line_chart_xmpl", { 
+        width:400,height:300,autoSize:true, 
+        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' }},
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
+        allowShiftVisibleRangeOnWhitespaceReplacement:true
+    })
+    const lineSeries = LineChart.addLineSeries()
+    const bands_DataSet = getMockData(); //XMPL bands
+    lineSeries.setData(bands_DataSet);
+    const BandsChart = new BandsChart_Class;
+    lineSeries.attachPrimitive(BandsChart);
+//**************************************** DRAW MONTH LINES ********************
+//    import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";
+    let MonthStartDates = []
+    bands_DataSet.forEach(data => {
+        const tgtDate = new Date(data.time * 1000); // Convert timestamp to date object
+        if (tgtDate.getDate() === 1) { //Found 1st Day of Month.
+            const yearNUM = tgtDate.getFullYear();
+            const monthNUM = (tgtDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+            const dayNUM = tgtDate.getDate().toString();//.padStart(2, '0');
+            const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+            MonthStartDates.push(data)
+        }
+    });
+    let Num_Month_Crop=12;
+    if(MonthStartDates.length>Num_Month_Crop){ //CROP LAST Num of MONTHS.
+        MonthStartDates = MonthStartDates.splice(MonthStartDates.length-Num_Month_Crop,Num_Month_Crop)
+    }
+    let vLine, dItem;
+    for(var ii=0;ii<MonthStartDates.length;ii++){
+        dItem = MonthStartDates[ii];
+        vLine = new MonthTrendLines_Class(LineChart,lineSeries,
+            dItem.time,dItem.value,
+            {showLabel: !1,color: "steelblue",width: 1 });
+        lineSeries.attachPrimitive(vLine);
+    } 
+//-------------------------------------------------------------------
+//*********************************************************VOLUME SERIES*******
+const volumeSeries = LineChart.addHistogramSeries({
+        color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: '', // set as an overlay by setting a blank priceScaleId
+        scaleMargins: { top: 0.7, bottom: 0 } //70%off top
+    });
+    volumeSeries.priceScale().applyOptions({
+        scaleMargins: { top: 0.7, bottom: 0 } //70% off top
+    });
+volumeSeries.setData([
+    { time: '2019-01-10', value: 14259910.00, color: '#26a69a' },{ time: '2019-01-11', value: 15801548.00, color: '#26a69a' }, { time: '2019-01-14', value: 11342293.00, color: '#26a69a' },    { time: '2019-01-15', value: 10074386.00, color: '#26a69a' },
+    { time: '2019-01-16', value: 13411691.00, color: '#ef5350' },{ time: '2019-01-17', value: 15223854.00, color: '#ef5350' }, { time: '2019-01-18', value: 16802516.00, color: '#26a69a' },    { time: '2019-01-22', value: 18284771.00, color: '#ef5350' },
+    { time: '2019-01-23', value: 15109007.00, color: '#26a69a' },{ time: '2019-01-24', value: 12494109.00, color: '#ef5350' }, { time: '2019-01-25', value: 17806822.00, color: '#ef5350' },    { time: '2019-01-28', value: 25955718.00, color: '#ef5350' },
+    { time: '2019-01-29', value: 33789235.00, color: '#ef5350' },{ time: '2019-01-30', value: 27260036.00, color: '#26a69a' }, { time: '2019-01-31', value: 28585447.00, color: '#26a69a' },    { time: '2019-02-01', value: 13778392.00, color: '#ef5350' },
+    { time: '2019-02-04', value: 15818901.00, color: '#ef5350' },{ time: '2019-02-05', value: 14124794.00, color: '#26a69a' }, { time: '2019-02-06', value: 11391442.00, color: '#ef5350' },    { time: '2019-02-07', value: 12436168.00, color: '#ef5350' },
+    { time: '2019-02-08', value: 12011657.00, color: '#26a69a' },{ time: '2019-02-11', value: 9802798.00, color: '#26a69a' }, { time: '2019-02-12', value: 11227550.00, color: '#26a69a' },    { time: '2019-02-13', value: 11884803.00, color: '#26a69a' },
+    { time: '2019-02-14', value: 11190094.00, color: '#ef5350' },{ time: '2019-02-15', value: 15719416.00, color: '#26a69a' }, { time: '2019-02-19', value: 12272877.00, color: '#26a69a' },    { time: '2019-02-20', value: 11379006.00, color: '#26a69a' },
+    { time: '2019-02-21', value: 14680547.00, color: '#26a69a' },{ time: '2019-02-22', value: 12534431.00, color: '#26a69a' }, { time: '2019-02-25', value: 15051182.00, color: '#ef5350' },    { time: '2019-02-26', value: 12005571.00, color: '#ef5350' },
+    { time: '2019-02-27', value: 8962776.00, color: '#26a69a' },{ time: '2019-02-28', value: 15742971.00, color: '#26a69a' }, { time: '2019-03-01', value: 10942737.00, color: '#26a69a' },    { time: '2019-03-04', value: 13674737.00, color: '#ef5350' },
+    { time: '2019-03-05', value: 15749545.00, color: '#ef5350' },{ time: '2019-03-06', value: 13935530.00, color: '#ef5350' }, { time: '2019-03-07', value: 12644171.00, color: '#26a69a' },    { time: '2019-03-08', value: 10646710.00, color: '#26a69a' },
+    { time: '2019-03-11', value: 13627431.00, color: '#26a69a' },{ time: '2019-03-12', value: 12812980.00, color: '#ef5350' }, { time: '2019-03-13', value: 14168350.00, color: '#26a69a' },    { time: '2019-03-14', value: 12148349.00, color: '#26a69a' },
+    { time: '2019-03-15', value: 23715337.00, color: '#26a69a' },{ time: '2019-03-18', value: 12168133.00, color: '#ef5350' }, { time: '2019-03-19', value: 13462686.00, color: '#ef5350' },    { time: '2019-03-20', value: 11903104.00, color: '#26a69a' },
+    { time: '2019-03-21', value: 10920129.00, color: '#26a69a' },{ time: '2019-03-22', value: 25125385.00, color: '#26a69a' }, { time: '2019-03-25', value: 15463411.00, color: '#26a69a' },    { time: '2019-03-26', value: 12316901.00, color: '#26a69a' },
+    { time: '2019-03-27', value: 13290298.00, color: '#26a69a' },{ time: '2019-03-28', value: 20547060.00, color: '#ef5350' }, { time: '2019-03-29', value: 17283871.00, color: '#26a69a' },    { time: '2019-04-01', value: 16331140.00, color: '#ef5350' },
+    { time: '2019-04-02', value: 11408146.00, color: '#ef5350' },{ time: '2019-04-03', value: 15491724.00, color: '#26a69a' }, { time: '2019-04-04', value: 8776028.00, color: '#26a69a' },    { time: '2019-04-05', value: 11497780.00, color: '#26a69a' },
+    { time: '2019-04-08', value: 11680538.00, color: '#26a69a' },{ time: '2019-04-09', value: 10414416.00, color: '#ef5350' }, { time: '2019-04-10', value: 8782061.00, color: '#26a69a' },    { time: '2019-04-11', value: 9219930.00, color: '#ef5350' },
+    { time: '2019-04-12', value: 10847504.00, color: '#26a69a' },{ time: '2019-04-15', value: 7741472.00, color: '#ef5350' }, { time: '2019-04-16', value: 10239261.00, color: '#26a69a' },    { time: '2019-04-17', value: 15498037.00, color: '#ef5350' },
+    { time: '2019-04-18', value: 13189013.00, color: '#26a69a' },{ time: '2019-04-22', value: 11950365.00, color: '#26a69a' }, { time: '2019-04-23', value: 23488682.00, color: '#ef5350' },    { time: '2019-04-24', value: 13227084.00, color: '#ef5350' },
+    { time: '2019-04-25', value: 17425466.00, color: '#ef5350' },{ time: '2019-04-26', value: 16329727.00, color: '#26a69a' }, { time: '2019-04-29', value: 13984965.00, color: '#26a69a' },    { time: '2019-04-30', value: 15469002.00, color: '#26a69a' },
+    { time: '2019-05-01', value: 11627436.00, color: '#ef5350' },{ time: '2019-05-02', value: 14435436.00, color: '#26a69a' }, { time: '2019-05-03', value: 9388228.00, color: '#26a69a' },    { time: '2019-05-06', value: 10066145.00, color: '#ef5350' },
+    { time: '2019-05-07', value: 12963827.00, color: '#ef5350' },{ time: '2019-05-08', value: 12086743.00, color: '#ef5350' }, { time: '2019-05-09', value: 14835326.00, color: '#26a69a' },    { time: '2019-05-10', value: 10707335.00, color: '#26a69a' },
+    { time: '2019-05-13', value: 13759350.00, color: '#ef5350' },{ time: '2019-05-14', value: 12776175.00, color: '#ef5350' }, { time: '2019-05-15', value: 10806379.00, color: '#26a69a' },    { time: '2019-05-16', value: 11695064.00, color: '#26a69a' },
+    { time: '2019-05-17', value: 14436662.00, color: '#26a69a' },{ time: '2019-05-20', value: 20910590.00, color: '#26a69a' }, { time: '2019-05-21', value: 14016315.00, color: '#26a69a' },    { time: '2019-05-22', value: 11487448.00, color: '#ef5350' },
+    { time: '2019-05-23', value: 11707083.00, color: '#ef5350' },{ time: '2019-05-24', value: 8755506.00, color: '#26a69a' }, { time: '2019-05-28', value: 3097125.00, color: '#26a69a' }, ]);
+ //---------------------------------END VOLUME SERIES---------------------   
+}; init_b2();
+</script>
 <script type="module" >
 //***************************** XMPL CHART MODULES******************
-try{ 
-    show_USERMSG({txt:'LOAD TL_XMPL11',icon:'⚠️',time:3000}); 
-} catch(e){ console.log('ERR:',e);
-    console.log('no usermsg')
-    alert('fna')
-}    
+// try{ 
+//     show_USERMSG({txt:'LOAD TL_XMPL11',icon:'⚠️',time:3000}); 
+// } catch(e){ console.log('ERR:',e);
+//     console.log('no usermsg')
+//     alert('fna')
+// }    
 // LightweightCharts.LineStyle enumeration INDEX://0:"Solid",1:"Dotted",2:"Dashed"3:"LargeDashed"4:"SparseDotted"
-import {g as getRandomDataSet} from "./module/sample-data.js";
-import {TrendLine_Class} from "./module/TRENDLINES.js";
+// import {g as getRandomDataSet} from "./module/sample-data.js";
+// import {TrendLine_Class} from "./module/TRENDLINES.js";
 
-function init_LineTrends_XMPL(){
+// function init_LineTrends_XMPL(){
 
 // if(LightweightCharts && LightweightCharts.createChart && TrendLine_Class){
 //     show_USERMSG({txt:'GOT LWC',icon:'⚠️',time:4000});
@@ -4306,12 +4387,12 @@ function init_LineTrends_XMPL(){
     // };
     // const trendLine_BTM = new TrendLine_Class(TrendLineChart_XMPL,lwc_lineSeries,btmEND,btmSTART,lineOptions_BTM);
     // lwc_lineSeries.attachPrimitive(trendLine_BTM);
-show_USERMSG({txt:'LOAD TL_XMPL2',icon:'⚠️',time:2000}); 
+// show_USERMSG({txt:'LOAD TL_XMPL2',icon:'⚠️',time:2000}); 
 
 // } catch(e){ console.log('ERR:',e);
     // show_USERMSG({txt:'ERR: TL_XMPL',icon:'⚠️',time:2000}); 
 // }
-}; setTimeout(init_LineTrends_XMPL,3000);
+// }; setTimeout(init_LineTrends_XMPL,3000);
 // }; init_LineTrends_XMPL();
 </script>
 <script type="module">
