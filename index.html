@@ -439,16 +439,17 @@
             <label style="padding-top: 1em;font-size: 0.777em;">Log Backup data:</label>
             <menu style="display:flex;justify-content: space-around;width: 80%;
                 flex-wrap: wrap; padding-left: 0;height: 8em; align-items: baseline;">
-                <button class="blackBTN" onclick="logData('rsi')">Log RSI Data</button>
-                <button class="blackBTN" onclick="logData('cci')">Log CCI Data</button>
-                <button class="blackBTN" onclick="logData('mom')">Log MOM Data</button>
-                <button class="blackBTN" onclick="logData('macd')">Log MACD Data</button>
-                <button class="blackBTN" onclick="logData('stoch')">Log STOCH Data</button>
-                <button class="blackBTN" onclick="logData('stoch_rsi')">Log STOCHRSI Data</button>
-                <button class="blackBTN" onclick="logData('trade')">Log TRADE Data</button>
-                <button class="blackBTN" onclick="logData('tkr')">Log TKR Data</button>
-                <button class="blackBTN" onclick="logData('boll')">Log BOLLZ Data</button>                
+                <button class="blackBTN" onclick="logDataClick('rsi')">Log RSI Data</button>
+                <button class="blackBTN" onclick="logDataClick('cci')">Log CCI Data</button>
+                <button class="blackBTN" onclick="logDataClick('mom')">Log MOM Data</button>
+                <button class="blackBTN" onclick="logDataClick('macd')">Log MACD Data</button>
+                <button class="blackBTN" onclick="logDataClick('stoch')">Log STOCH Data</button>
+                <button class="blackBTN" onclick="logDataClick('stoch_rsi')">Log STOCHRSI Data</button>
+                <button class="blackBTN" onclick="logDataClick('trade')">Log TRADE Data</button>
+                <button class="blackBTN" onclick="logDataClick('tkr')">Log TKR Data</button>
+                <button class="blackBTN" onclick="logDataClick('boll')">Log BOLLZ Data</button>                
             </menu>
+            <button class="blackBTN" onclick="resetDatabaseClick()">RESET default DB</button>                
         </article> 
         <article id="DATA_IMPORT_FRAME" style="height:35em; border:solid 1px steelblue;border-radius:10px;
                 background: black; border: solid 1px lime;display: flex;flex-direction: column;align-items: center;" class="hiddenTab">
@@ -670,7 +671,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-}; show_USERMSG({txt:'Welcome!!',icon:'🌻',time:1000}); 
+}; show_USERMSG({txt:'Welcome!!!',icon:'🌻',time:1000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -1743,7 +1744,7 @@ function import_TradeClick(){
         console.log('ERR: Bad data.'); go_DATA_VIEW(); 
     }
 }
-function logData(type){
+function logDataClick(type){
     if(type==='tkr'){
         console.log("TKR_DATA:");
         console.log(JSON.stringify(bankbookz_DB.TICKR_DATA_MAP_Monthly))
@@ -1772,6 +1773,14 @@ function logData(type){
         console.log("STOCHRSI_DATA:"); //COPY TO default_data : default_x_MAP_Monthly
         console.log(JSON.stringify(bankbookz_DB.STOCHRSI_DATA_MAP_Monthly));
     }
+}
+function resetDatabaseClick(){
+    debugger;
+    try{
+        bankbookz_DB = null; //Delete entire app data.
+        bankbookz_DB_LOAD_MOCK_DATA();  //load default database.
+        save_BANKBOOKZ_DB(); //save it.
+    } catch(e){ console.log(e) }
 }
 </script><!--*******************************END VIEW structure LOGIC-->
 <script  >  //********TAB VIEW LOGIC**************************
@@ -3161,16 +3170,14 @@ window.init_MOMENTUM_CHART = (tkr) => {
     MOMENTUM_Chart.timeScale().fitContent(); 
     resize_BIG_CHART(MOMENTUM_Chart);
 }//END MOMENTUM INIT - individual chart
-function init_MOMENTUM_CHECKBOXES(){
+function init_MOMENTUM_CHECKBOXES(){ //all MOMENTUM selectors.
     const checkboxes = document.querySelectorAll('.MOMENTUM_CHECKBOX');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', (event) => {
             const isChecked = event.target.checked;
             const tkr = event.target.id.split('_')[2];
             if(!tkr){return}
-            // console.log(`Checkbox ${checkbox.id} is ${isChecked ? 'checked' : 'unchecked'}`);
             init_MOMENTUM_CHART(tkr); //refresh
-            // init_MOMENTUM_CHART(); //refresh
         });
     });
 }; init_MOMENTUM_CHECKBOXES();

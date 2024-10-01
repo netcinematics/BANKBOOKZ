@@ -1,16 +1,6 @@
-MIT License with conditions.
+Modified MIT License.
 
 Copyright (c) 2024 NetCinematics.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,8 +13,8 @@ SOFTWARE.
 CONDITIONS:
 
 A. BANKBOOKZ (tm) NetCinematics 2024. 
-    As of July 1, 2024 APACHE LICENSE, VERSION 2.0
-    Copyright 2024 NetCinematics - for educational purposes.
+    As of July 1, 2024 APACHE LICENSE, VERSION 2.0 for light-weight charts.
+    Copyright 2024 NetCinematics - for educational & experimental purposes.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -40,22 +30,26 @@ A. BANKBOOKZ (tm) NetCinematics 2024.
 
 B. Not financial advice, must abide AI regulation.
 
-C. Does not guarantee profits. This is a study of mathmatic algorithms into visualzation.
+C. Does not guarantee profits. This is a study of data visualzation 1st.
+   Capabilities of any ai potential - is separate from data visualization.
 
 D. This software is OPEN-SOURCE as a basis,
- for eventual closed source iterations with addional
- ai, data visualization, and various algorithmic features as a service
- - as experimental study of what is possible - with (leading-edge) open source software.
+ for eventual closed source iterations with innovative ai potential.
+ 
+E. Original vision - personal_ledger_system. I really wanted to know PROFIT/LOSS 
+   as accurate as possible.
 
-E. Original vision - personal_ledger_system.
+F. More precise views, of exactly what was happening, in visual terms.
 
-F. A dashboard of exactly, how finances exist, in trends and patterns, and math.
+G. A dashboard of exactly, how finances exist, in trends and patterns, and math,
+   and how to transfer that knowledge from the bankbookz, into my awareness.
 
-G. More precise views, of what was happening, in terms of visualized percentages..
+H. Still in development - do not use for production purposes, 
+     this is an experimental boiler-plate.
 
 Contains Derivative APACHE LICENSE, VERSION 2.0
 Text version: https://www.apache.org/licenses/LICENSE-2.0.txt
-Thank you, LightWeight Charts and TradingView innovation.
+Thank you, LightWeight Charts and TradingView innovation and examples.
 Also thank you AlphaAdvantage api for innovation.
 
-Produced by NetCinematics llc 2024
+NetCinematics llc 2024. All Rights Reserved, with Modified MIT.
