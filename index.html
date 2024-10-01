@@ -671,7 +671,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-}; show_USERMSG({txt:'Welcome!!',icon:'🌻',time:1000}); 
+}; show_USERMSG({txt:'Welcome!!!',icon:'🌻',time:1000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -2134,7 +2134,7 @@ const init_BOOKZ_TABZ = ()=>{
             render_ALL_DYNA_SELECTORZ();
             setTimeout(()=>{ 
                 window.init_All_TRENDZ_CHARTS(); 
-                // window.render_ALL_MOMZ_CHARTZ();
+                window.render_ALL_MOMZ_CHARTZ();
                 // render_ALL_DRAW_CHARTZ();
             },2000); //init fix for master module load. //todo
         },2000); //init fix for master module load.
@@ -2176,7 +2176,6 @@ function render_ALL_DRAW_CHARTZ(){ //render data by selectorz
     init_DYNA_DRAW_DATA(); //draw data on charts.
 }
 window.render_ALL_MOMZ_CHARTZ = ()=>{
-    // console.log('RENDER all MOMZ CHARTZ 2160')  
     let elem,tgtTKR; //Render all drawchart DYNA_CHARTZ
     for(var i=0; i< bankbookz_DB.TICKR_LIST.length; i++){
         tgtTKR = bankbookz_DB.TICKR_LIST[i].tkr;
@@ -2751,7 +2750,6 @@ import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";//3dmo
 import {TradeSpot_Class as TradeSpot_Class} from "./module/TRADESPOT_3.js";
 import {calcMA,calcBuySellAVG_Lines} from "./module/ALGORITHMZ_4.js"; //calc move avgs.
 window.init_DYNA_TRENDZCHART = (tkr) => {
-    // if(tkr!='BTC'){return}//todo
     let checkz = get_Trendz_Checked(tkr);
     let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
     tgt_Chart.innerHTML = ''; //blank out frame.
@@ -3046,7 +3044,7 @@ window.get_MOMZ_DATA_JUNCTION = (tkr,datatype)=>{ //GET DATA BY TIMESELECTOR - D
 </script><!--END TRENDZ-->
 
 <script type="module"> //-----MOMENTUM MODULE----------------------------
-import {TrendLine_Class} from "./module/TRENDLINES.js"; 
+import {TrendLine_Class} from "./module/TRENDLINES_3.js"; 
 window.init_MOMENTUM_CHART = (tkr) => { 
     let checkz = get_MOMENTUM_Checked(tkr);
     let tgt_Chart = document.getElementById(`MOMENTUMFRAME_${tkr}`)
@@ -3212,7 +3210,6 @@ function get_MOMENTUM_Checked(tkr){
 }
 // ********************************END CHECKBOXES***************************
 window.reload_TRENDZ_Click = ()=>{ //reload button click for load ERR fallback
-    // window.render_ALL_MOMZ_CHARTZ() 
     window.init_All_TRENDZ_CHARTS();
 }
 window.reload_MOMZ_Click = ()=>{ //reload button click for load ERR fallback
