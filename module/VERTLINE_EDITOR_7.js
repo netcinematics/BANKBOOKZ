@@ -179,7 +179,6 @@ window.set_VLine_Color = (e)=>{ let lineColor = event.target.value;
     VLINE_EDITOR_FRAME.setAttribute('color_meta',lineColor);
 }
 window.set_VLINE_Click = (e)=>{ //-------------------------SET VLINE CLICK.
-    // debugger;
     VLINE_EDITOR_FRAME.style.visibility = 'hidden'; //HIDE FRAME 
     let tkr_meta = VLINE_EDITOR_FRAME.getAttribute('tkr_meta');
     let timeYMD = VLINE_EDITOR_FRAME.getAttribute('time_meta');

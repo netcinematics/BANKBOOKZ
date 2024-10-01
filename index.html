@@ -671,7 +671,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-}; show_USERMSG({txt:'Welcome!!!',icon:'🌻',time:1000}); 
+}; show_USERMSG({txt:'Welcome!',icon:'🌻',time:1000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -2029,7 +2029,8 @@ const init_BOOKZ_TABZ = ()=>{
 
             <section id="drawBOX_${tgtTKR.tkr}" style="justify-content:center;
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
-                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
+                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;"
+                class="MOBILE_Box_Sizer">
                 <header class="expanderROW">
                     <span class="expanderTITLE">
                         ${tgtTKR.tkr}_DRAW:</span>
@@ -2063,7 +2064,8 @@ const init_BOOKZ_TABZ = ()=>{
 <!--
             <section id="advancedBOX_${tgtTKR.tkr}" style="justify-content:center;
                 display:flex;border:solid 1px steelblue;border-radius:22.222px;margin:0.222em 0 0.222em 0;
-                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;">
+                flex-direction: column;padding: 0.222em 0.888em 0.222em 0.888em;"
+                class="MOBILE_Box_Sizer">
                 <header class="expanderROW">
                     <span class="expanderTITLE">
                         ${tgtTKR.tkr}_ADVANCED:</span>
@@ -2090,7 +2092,8 @@ const init_BOOKZ_TABZ = ()=>{
 
             <section style="justify-content: center;margin-top:1em;flex-direction: column; padding:0 2% 0 2%;
                 border-radius:22.222px;  display:flex;border:solid 1px teal;padding: 0.222em 0.888em 0.222em 0.888em;
-                margin: 0.222em 0 0.222em 0;">
+                margin: 0.222em 0 0.222em 0;"
+                class="MOBILE_Box_Sizer">
                 <header class="expanderROW">
                     <span class="expanderTITLE">
                         ${tgtTKR.tkr}_PnL:</span>
@@ -2135,7 +2138,7 @@ const init_BOOKZ_TABZ = ()=>{
             setTimeout(()=>{ 
                 window.init_All_TRENDZ_CHARTS(); 
                 window.render_ALL_MOMZ_CHARTZ();
-                // render_ALL_DRAW_CHARTZ();
+                render_ALL_DRAW_CHARTZ();
             },2000); //init fix for master module load. //todo
         },2000); //init fix for master module load.
         // setTimeout(render_ALL_BOOKZ_CHARTZ,222); //TODO this becomwes.. #1000?
@@ -2184,6 +2187,7 @@ window.render_ALL_MOMZ_CHARTZ = ()=>{
 }
 function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     let drawFRAME = document.getElementById(`drawchartFRAME_${tgtTKR}`);
+    if(tgtTKR!='BTC'){return}//todo
     drawFRAME.innerHTML = ''; //blank out  msg
     let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(
         `drawchartFRAME_${tgtTKR}`,{
@@ -2199,7 +2203,6 @@ function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     let candleSeriesDATA = getCandleSeriesDATA(tgtTKR);
     let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA); 
     lineSeriesMETADATA = fillMissingDays(lineSeriesMETADATA);
-    // lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
     DYNA_DRAWCHART_LineSeries.setData(lineSeriesMETADATA);
     if(!_TXT_EDITOR_Class||!_TXT_EDITOR_Class.name){ //fixed load err:
         console.log('RENDER Reload EDITOR  ERR:',tgtTKR);
