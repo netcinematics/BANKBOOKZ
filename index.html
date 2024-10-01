@@ -2130,9 +2130,11 @@ const init_BOOKZ_TABZ = ()=>{
     init_BOOKZ_EXPANDER();
     try{
         setTimeout(()=>{ 
+            show_USERMSG({txt:'render1',icon:'⚠️',time:2000}); 
             render_ALL_BOOKZ_CHARTZ();
             render_ALL_DYNA_SELECTORZ();
             setTimeout(()=>{ 
+                show_USERMSG({txt:'render2',icon:'⚠️',time:2000}); 
                 window.init_All_TRENDZ_CHARTS(); 
                 // window.render_ALL_MOMZ_CHARTZ();
                 // render_ALL_DRAW_CHARTZ();
@@ -3083,41 +3085,47 @@ window.init_MOMENTUM_CHART = (tkr) => {
         //----------------------------20/25/30/75/80/85 BASELINES. 
         const len = RSI_Data.length;
         const EndPoint0={time: RSI_Data[len - 1].time,price:80}
-        const StartPoint0={time: RSI_Data[0].time,price:80}            
+        const StartPoint0={time: RSI_Data[0].time,price:80}
         const lineOptions_0 = {width:1,showLabels:true,lineColor:"rgb(140, 144, 88)",
             labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"  };
         const trendLine_0 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint0,StartPoint0,lineOptions_0);
         hgridSeries.attachPrimitive(trendLine_0);
         const EndPoint1={time: RSI_Data[len - 1].time,price:80}
-        const StartPoint1={time: RSI_Data[0].time,price:80}            
+        const StartPoint1={time: RSI_Data[0].time,price:80}
         const lineOptions_1 = {width:1,showLabels:true,lineColor:"rgb(140, 144, 88)",
             labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"   };
         const trendLine_1 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint1,StartPoint1,lineOptions_1);
         hgridSeries.attachPrimitive(trendLine_1);
         const EndPoint2={time: RSI_Data[len - 1].time,price:75}
-        const StartPoint2={time: RSI_Data[0].time,price:75}            
+        const StartPoint2={time: RSI_Data[0].time,price:75}
         const lineOptions_2 = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
             labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"  };
         const trendLine_2 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint2,StartPoint2,lineOptions_2);
         hgridSeries.attachPrimitive(trendLine_2);
         const EndPoint3={time: RSI_Data[len - 1].time,price:30}
-        const StartPoint3={time: RSI_Data[0].time,price:30}            
+        const StartPoint3={time: RSI_Data[0].time,price:30}
         const lineOptions_3 = {width:1,showLabels:true,lineColor:"rgb(140, 144, 88)",
             labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue" };
         const trendLine_3 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint3,StartPoint3,lineOptions_3);
         hgridSeries.attachPrimitive(trendLine_3);
         const EndPoint4={time: RSI_Data[len - 1].time,price:25}
-        const StartPoint4={time: RSI_Data[0].time,price:25}            
+        const StartPoint4={time: RSI_Data[0].time,price:25}
         const lineOptions_4 = {width:1,showLabels:true,lineColor:"rgb(0, 144, 188)",
             labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"  };
         const trendLine_4 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint4,StartPoint4,lineOptions_4);
         hgridSeries.attachPrimitive(trendLine_4);
         const EndPoint5={time: RSI_Data[len - 1].time,price:20}
-        const StartPoint5={time: RSI_Data[0].time,price:20}            
+        const StartPoint5={time: RSI_Data[0].time,price:20}
         const lineOptions_5 = {width:1,showLabels:true,lineColor:"rgb(100, 44, 88)",
             labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"  };
         const trendLine_5 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint5,StartPoint5,lineOptions_5);
         hgridSeries.attachPrimitive(trendLine_5);
+        const EndPoint6={time: RSI_Data[len - 1].time,price:50}
+        const StartPoint6={time: RSI_Data[0].time,price:50}
+        const lineOptions_6 = {width:1,showLabels:true,lineColor:"rgb(44, 144, 222)",
+            labelBackgroundColor: "rgba(0, 0, 55, 0.85)", labelTextColor: "steelblue"  };
+        const trendLine_6 = new TrendLine_Class(MOMENTUM_Chart,hgridSeries,EndPoint6,StartPoint6,lineOptions_6);
+        hgridSeries.attachPrimitive(trendLine_6);
     } //----------------------------20/25/30/75/80/85 END BASELINES.
     if(checkz.cci_opt){ //--------------------------------CCI
         const CCI_Series = MOMENTUM_Chart.addLineSeries({ priceLineVisible:false,color:'firebrick',
@@ -3126,7 +3134,8 @@ window.init_MOMENTUM_CHART = (tkr) => {
         CCI_Series.setData(CCI_Data);
     }
     if(checkz.mom_opt){  //--------------------------------MOM
-        const MOM_Series = MOMENTUM_Chart.addLineSeries({ priceLineVisible:false,color:'purple',
+        const MOM_Series = MOMENTUM_Chart.addLineSeries({ priceLineVisible:false,
+            color:'blue',
         priceFormat: { type: 'percent', precision: 2 }, priceScaleId: 'mom'  });
         let MOM_Data = get_MOMZ_DATA_JUNCTION(tkr,"MOM"); //GET DATA BY SELECTOR
         MOM_Series.setData(MOM_Data);
