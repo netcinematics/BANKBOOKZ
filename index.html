@@ -1775,11 +1775,11 @@ function logDataClick(type){
     }
 }
 function resetDatabaseClick(){
-    debugger;
     try{
         bankbookz_DB = null; //Delete entire app data.
         bankbookz_DB_LOAD_MOCK_DATA();  //load default database.
         save_BANKBOOKZ_DB(); //save it.
+        show_USERMSG({txt:'Reset!',icon:'🌻',time:3000});
     } catch(e){ console.log(e) }
 }
 </script><!--*******************************END VIEW structure LOGIC-->
@@ -2132,10 +2132,12 @@ const init_BOOKZ_TABZ = ()=>{
         setTimeout(()=>{ 
             render_ALL_BOOKZ_CHARTZ();
             render_ALL_DYNA_SELECTORZ();
-            window.init_All_TRENDZ_CHARTS(); //todo rename?
-            render_ALL_DRAW_CHARTZ();
-            window.render_ALL_MOMZ_CHARTZ();
-        },1000); //init fix for master module load.
+            setTimeout(()=>{ 
+                window.init_All_TRENDZ_CHARTS(); 
+                // window.render_ALL_MOMZ_CHARTZ();
+                // render_ALL_DRAW_CHARTZ();
+            },3000); //init fix for master module load.
+        },3000); //init fix for master module load.
         // setTimeout(render_ALL_BOOKZ_CHARTZ,222); //TODO this becomwes.. #1000?
         // setTimeout(render_ALL_DYNA_SELECTORZ,333);
         // setTimeout(render_ALL_DRAW_CHARTZ,444); //MAIN INIT 
