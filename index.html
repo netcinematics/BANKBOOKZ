@@ -4239,7 +4239,7 @@ function render_SALEZ_XMPL(salesData){
 <script type="module" >
 //***************************** XMPL CHART MODULES******************
 try{ 
-    show_USERMSG({txt:'LOAD TL_XMPL1',icon:'⚠️',time:3000}); 
+    show_USERMSG({txt:'LOAD TL_XMPL11',icon:'⚠️',time:3000}); 
 } catch(e){ console.log('ERR:',e);
     console.log('no usermsg')
     alert('fna')
@@ -4250,26 +4250,26 @@ import {TrendLine_Class} from "./module/TRENDLINES.js";
 
 function init_LineTrends_XMPL(){
 
-if(LightweightCharts && LightweightCharts.createChart && TrendLine_Class){
-    show_USERMSG({txt:'GOT LWC',icon:'⚠️',time:4000});
-}else {
-    show_USERMSG({txt:'ERR: No LWC',icon:'⚠️',time:4000});
-}
-    if(!LightweightCharts){show_USERMSG({txt:'ERR: No lwc',icon:'⚠️',time:4000});}
-    if(!TrendLine_Class){show_USERMSG({txt:'ERR: No TLC',icon:'⚠️',time:4000});}
-    const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
-        {width:400,height:300, autoSize:true, 
-        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
-        layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } 
-        }, allowShiftVisibleRangeOnWhitespaceReplacement:true
-    })
-    const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
-    const  dataSet = getRandomDataSet();
+// if(LightweightCharts && LightweightCharts.createChart && TrendLine_Class){
+//     show_USERMSG({txt:'GOT LWC',icon:'⚠️',time:4000});
+// }else {
+//     show_USERMSG({txt:'ERR: No LWC',icon:'⚠️',time:4000});
+// }
+    // if(!LightweightCharts){show_USERMSG({txt:'ERR: No lwc',icon:'⚠️',time:4000});}
+    // if(!TrendLine_Class){show_USERMSG({txt:'ERR: No TLC',icon:'⚠️',time:4000});}
+    // const TrendLineChart_XMPL = LightweightCharts.createChart("trend_line_chart_xmpl", 
+    //     {width:400,height:300, autoSize:true, 
+    //     grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+    //     layout: {textColor:'steelblue',background: { type: 'solid', color: '#000000' } 
+    //     }, allowShiftVisibleRangeOnWhitespaceReplacement:true
+    // })
+    // const lwc_lineSeries = TrendLineChart_XMPL.addLineSeries()
+    // const  dataSet = getRandomDataSet();
 
     // if(!TrendLineChart_XMPL){show_USERMSG({txt:'ERR: No chart',icon:'⚠️',time:4000});}
     // if(!lwc_lineSeries){show_USERMSG({txt:'ERR: No series',icon:'⚠️',time:4000});}
     // if(!dataSet){show_USERMSG({txt:'ERR: No dataset',icon:'⚠️',time:4000});}
-    lwc_lineSeries.setData(dataSet);
+    // lwc_lineSeries.setData(dataSet);
 
     // const len = dataSet.length;
     // const EndPoint={time: dataSet[len - 50].time,price: dataSet[len - 50].value * .9}
