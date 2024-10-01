@@ -2,8 +2,8 @@ var objprops = Object.defineProperty;
 var typeset = (a,t,i)=>t in a ? objprops(a, t, {
     enumerable: !0, configurable: !0, writable: !0, value: i}) : a[t] = i;
 var makeMember = (a,t,i)=>(typeset(a, typeof t != "symbol" ? t + "" : t, i),i);
-import {P as lwcprod} from "./lwc.prod.js";
-import {g as getRandomDataSet} from "./sample-data.js";
+// import {P as lwcprod} from "./lwc.prod.js";
+// import {g as getRandomDataSet} from "./sample-data.js";
 class LineDraw_Class {
     constructor(p1, p2, txt1, txt2, opts) {
         makeMember(this, "_p1");
