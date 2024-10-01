@@ -671,7 +671,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-}; show_USERMSG({txt:'Welcome!!!',icon:'🌻',time:1000}); 
+}; show_USERMSG({txt:'Welcome!',icon:'🌻',time:1000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -2130,22 +2130,20 @@ const init_BOOKZ_TABZ = ()=>{
     init_BOOKZ_EXPANDER();
     try{
         setTimeout(()=>{ 
-            show_USERMSG({txt:'render1',icon:'⚠️',time:2000}); 
             render_ALL_BOOKZ_CHARTZ();
             render_ALL_DYNA_SELECTORZ();
             setTimeout(()=>{ 
-                show_USERMSG({txt:'render2',icon:'⚠️',time:2000}); 
                 window.init_All_TRENDZ_CHARTS(); 
                 // window.render_ALL_MOMZ_CHARTZ();
                 // render_ALL_DRAW_CHARTZ();
-            },3000); //init fix for master module load.
-        },3000); //init fix for master module load.
+            },2000); //init fix for master module load. //todo
+        },2000); //init fix for master module load.
         // setTimeout(render_ALL_BOOKZ_CHARTZ,222); //TODO this becomwes.. #1000?
         // setTimeout(render_ALL_DYNA_SELECTORZ,333);
         // setTimeout(render_ALL_DRAW_CHARTZ,444); //MAIN INIT 
         // setTimeout(window.render_ALL_MOMZ_CHARTZ,555);
     } catch (e){  console.log('ERR:',e); debugger;
-        show_USERMSG({txt:'ERR: bookz_tabz',icon:'⚠️',time:2000}); 
+        show_USERMSG({txt:'ERR: bookz_tabz',icon:'⚠️',time:2000});
     }
 };init_BOOKZ_TABZ(); //MAIN init render
 function render_ALL_BOOKZ_CHARTZ(){ 
@@ -2748,11 +2746,12 @@ function init_EDITOR_UI(){
 </script><!-------*********END EDIT UI*********-->
 <script type="module">
 // *****************************************TRENDS-CHART**********
-import {TrendLine_Class} from "./module/TRENDLINES.js";
+import {TrendLine_Class} from "./module/TRENDLINES_3.js";
 import {MonthTrendLines_Class} from "./module/MONTHLINES_3.js";//3dmo
 import {TradeSpot_Class as TradeSpot_Class} from "./module/TRADESPOT_3.js";
 import {calcMA,calcBuySellAVG_Lines} from "./module/ALGORITHMZ_4.js"; //calc move avgs.
 window.init_DYNA_TRENDZCHART = (tkr) => {
+    if(tkr!='BTC'){return}//todo
     let checkz = get_Trendz_Checked(tkr);
     let tgt_Chart = document.getElementById(`trendzFRAME_${tkr}`)
     tgt_Chart.innerHTML = ''; //blank out frame.
