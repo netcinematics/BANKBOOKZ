@@ -671,7 +671,7 @@ function show_USERMSG (msg) {
             },222)
         },222)
     },time) 
-}; show_USERMSG({txt:'Welcome!',icon:'🌻',time:1000}); 
+}; show_USERMSG({txt:'Welcome!!',icon:'🌻',time:1000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
 function padTimeWithZeros(arr){ //sadly 01 format is standard
@@ -2187,7 +2187,7 @@ window.render_ALL_MOMZ_CHARTZ = ()=>{
 }
 function init_DYNA_DRAWCHART(tgtTKR){ //DEDICATED TXT EDITOR, per TKR CHART.
     let drawFRAME = document.getElementById(`drawchartFRAME_${tgtTKR}`);
-    if(tgtTKR!='BTC'){return}//todo
+    // if(tgtTKR!='BTC'){return}//todo
     drawFRAME.innerHTML = ''; //blank out  msg
     let DYNA_DRAWCHART_LineChart = LightweightCharts.createChart(
         `drawchartFRAME_${tgtTKR}`,{
