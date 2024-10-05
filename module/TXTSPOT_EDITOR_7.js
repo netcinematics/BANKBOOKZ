@@ -29,6 +29,7 @@ class TXTSPOT_Draw_Class {
             el.context.roundRect(p1x - padLeft, p1y - padLeft, txtMetrics.width + padLeft, 20, 15);
             el.context.fill();
             el.context.beginPath();
+            el.context.font = '18px Arial';
             el.context.fillStyle = this._options.txtColor;
             el.context.fillText(this._txt, p1x - txtPad, p1y+txtPad);
         })

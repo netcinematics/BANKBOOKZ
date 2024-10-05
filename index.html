@@ -664,13 +664,13 @@ function show_USERMSG (msg) {
                             setTimeout( ()=>{ //HIDE
                                 USER_MSG_BOX.style.display = "none";
                                 USER_MSG_BOX.style.opacity = 1;
-                            },111)  
-                        },111)  
-                    },111) 
+                            },111)
+                        },111)
+                    },111)
                 },111)
             },222)
         },222)
-    },time) 
+    },time)
 }; show_USERMSG({txt:'Welcome!',icon:'🌻',time:1000}); 
 //**********************************END CUSTOM USERMSG***********
 //*************************************************Pad Months With Zeros***********
@@ -2005,7 +2005,7 @@ const init_BOOKZ_TABZ = ()=>{
                             <input type="checkbox"id="mom_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
                             <label>MOM</label>
                         </section>
-                        <section style="margin: 1em 0;display: flex;align-items: center;">    
+                        <section style="margin: 1em 0;display: flex;align-items: center;">
                             <input type="checkbox"id="macd_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
                             <label>MACD</label>
                             <input type="checkbox"id="stoch_opt_${tgtTKR.tkr}"class="MOMENTUM_CHECKBOX">
@@ -3185,6 +3185,7 @@ function init_MOMENTUM_CHECKBOXES(){ //all MOMENTUM selectors.
     const checkboxes = document.querySelectorAll('.MOMENTUM_CHECKBOX');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', (event) => {
+            // debugger;///todo somehow broke after import
             const isChecked = event.target.checked;
             const tkr = event.target.id.split('_')[2];
             if(!tkr){return}
@@ -3330,7 +3331,7 @@ const getCrypto_Daily = async (tkrTGT)=>{
             console.log('API: Daily Limit.')
             console.log(error)
             let status = document.getElementById('connectStatus')
-            status.innerHTML='DISCONNECTED'            
+            status.innerHTML='DISCONNECTED'
     })
 }
 const getStock_Daily = async (tkr)=>{
@@ -3707,6 +3708,7 @@ const getRSI = async (tkr) => {
             }
             // render_RSI_XMPL(resTKR,RSI_TV) //DEV test
             save_NEW_MOMZ_DATA_JUNCTION("RSI",RSI_TV, tkr);
+            show_USERMSG({txt:'RSI Updated',icon:'🌼',time:2000});
             // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
         });
 }; //getRSI('SPY');
@@ -3755,6 +3757,7 @@ const getCCI = async (tkr) => {
         }
         // render_CCI_XMPL(resTKR,CCI_TV)
         save_NEW_MOMZ_DATA_JUNCTION("CCI",CCI_TV, tkr);
+        show_USERMSG({txt:'CCI Updated',icon:'🌼',time:2000});
         // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
         });
 }; //getCCI('SPY');
@@ -3803,6 +3806,7 @@ const getMOM = async (tkr) => {
         }
         // render_MOM_XMPL(resTKR,MOM_TV)
         save_NEW_MOMZ_DATA_JUNCTION("MOM",MOM_TV, tkr);
+        show_USERMSG({txt:'MOM Updated',icon:'🌼',time:2000});
         // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
         });
 }; //getMOM('SPY');
@@ -3855,6 +3859,7 @@ const getMACD = async (tkr) => { //MACDEXT
             }
             // render_MACD_XMPL(resTKR,MACD_TV)
             save_NEW_MOMZ_DATA_JUNCTION("MACD",MACD_TV, tkr);
+            show_USERMSG({txt:'MACD Updated',icon:'🌼',time:2000});
             // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
         });
 }; //getMACD('SPY');
@@ -3904,7 +3909,7 @@ function get_ALL_BOLLZ_DATA_Click(){ //---Button handler
         // if(i>=1){break;}//DEV_limiter stay below 20
         // tkr = 'SPY'//'NVDA';//DEV_specifier 
         if(tkr==='BTC'||tkr==='ETH'){ //todo boll for crypto?
-            show_USERMSG({txt:'No BOLL data for Crypto',icon:'🌼',time:2000});
+            // show_USERMSG({txt:'No BOLL data for Crypto',icon:'🌼',time:2000});
             continue;
         }
         getBOLL_Data(tkr);
@@ -3938,9 +3943,7 @@ const getBOLL_Data = async (tkr) => { //BBANDS
             let lastRefreshTime = tickData["Meta Data"]["3: Last Refreshed"];
             for (const aKey of BOLL_KEYS) {  //FORMAT TO TRADING VIEW.
                 obj = BOLL_RAW_Data[aKey];
-                BOLL_TV.push({
-                    tkr:resTKR,
-                    time:aKey,
+                BOLL_TV.push({ tkr:resTKR, time:aKey,
                     loBand: Math.round(obj["Real Lower Band"]),
                     midBand: Math.round(obj["Real Middle Band"]),
                     upBand: Math.round(obj["Real Upper Band"]),
@@ -3948,6 +3951,7 @@ const getBOLL_Data = async (tkr) => { //BBANDS
             }
             // bankbookz_DB.METASTATE.lastRefreshMap['BOLLZ'] = lastRefreshTime;
             save_NEW_MOMZ_DATA_JUNCTION("BOLLZ", BOLL_TV, tkr);
+            show_USERMSG({txt:'BOLLZ Updated',icon:'🌼',time:2000});
         });
 }; //getBOLL_Data('SPY');
 function render_BOLL_XMPL(tkr,BOLLData){ //----------------------------------XMPL-_BOLL- DATA
@@ -4009,6 +4013,7 @@ const getSTOCH = async (tkr) => { //STOCHASTIC OSCILLATOR.
         }
         // bankbookz_DB.METASTATE.lastRefreshMap[resTKR] = lastRefreshTime;
         save_NEW_MOMZ_DATA_JUNCTION("STOCH", STOCH_TV, tkr);
+        show_USERMSG({txt:'STOCH Updated',icon:'🌼',time:2000});
         });
 }; //getSTOCH('SPY');
 function render_STOCH_XMPL(tkr,STOCHData){
@@ -4031,7 +4036,6 @@ function render_STOCH_XMPL(tkr,STOCHData){
 //---------------------------END STOCH
 //******************************************STOCRSI:***************
 const getSTOCHRSI = async (tkr) => { //STOCHASTIC RSI
-               //https://www.alphavantage.co/query?function=STOCHRSI&symbol=IBM&interval=daily&time_period=10&series_type=close&fastkperiod=6&fastdmatype=1&apikey=demo
     await fetch(`https://www.alphavantage.co/query?function=STOCHRSI&symbol=${tkr}&interval=daily&time_period=10&series_type=close&fastkperiod=6&fastdmatype=1&apikey=${stock_api_key}`)
     .then((data)=>{
         if(data.ok){
@@ -4064,6 +4068,7 @@ const getSTOCHRSI = async (tkr) => { //STOCHASTIC RSI
             });
         }
         save_NEW_MOMZ_DATA_JUNCTION("STOCH_RSI", STOCRSI_TV, tkr);
+        show_USERMSG({txt:'STOCH Updated',icon:'🌼',time:2000});
         });
 }; //getSTOCHRSI('SPY');
 function render_STOCRSI_XMPL(tkr,STOCRSIData){
