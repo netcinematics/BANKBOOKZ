@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CANDLE</title>
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+    <link rel="stylesheet" href="./lwc.css">
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">CANDLE</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- simple candle example</p>
+    </div>    
+    <div id="candleChart" style="height:20em;margin-left:3em;"></div>
+<script type="module">
+import {calcMA,getFakeData} from "./moving_average_1.js";
+const chartOptions={layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
+const chart = LightweightCharts.createChart(document.getElementById('candleChart'), chartOptions);
+const barData = getFakeData(500);
+const candlestickSeries = chart.addCandlestickSeries({ upColor: '#26a69a',downColor: '#ef5350',
+    borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+candlestickSeries.setData(barData);
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heiken Ashi Chart Example</title>
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@3.6.0/dist/lightweight-charts.standalone.production.js"></script> -->
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">HEIKENASHI</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- double candle example</p>
+    </div>    
+    <div id="candelstickFRAME_XMPL" style="height:20em;margin-left:3em;"></div>
+<script type="module">
+  function calculateHeikinAshi(data) {
+    let resultData = [];
+    let prevClose = null;
+    let prevOpen = null;
+  
+    data.forEach((candle, index) => {
+      const open = index === 0 ? candle.open : (prevOpen + prevClose) / 2;
+      const close = (candle.open + candle.high + candle.low + candle.close) / 4;
+      const high = Math.max(candle.high, (open + close) / 2);
+      const low = Math.min(candle.low, (open + close) / 2);
+  
+      resultData.push({
+        time: candle.time,
+        open,
+        high,
+        low,
+        close
+      });
+  
+      prevClose = close;
+      prevOpen = open;
+    });
+  
+    return resultData;
+  }
+let CandlestickChart1;
+function initCandleChart_XMPL(){
+    const chartOptions = { width: 400, height: 300, 
+        layout: { textColor: 'steelblue', background: { type: 'solid', color: '#000000' } },
+        grid: { vertLines: { color: "#222" }, horzLines: { color: "#9090ff" } },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal ,
+            vertLine: { color: "darkslategrey" },
+            horzLine: { color: "darkslategrey" },
+        },
+        rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
+    }
+    CandlestickChart1 = LightweightCharts.createChart(
+        document.getElementById('candelstickFRAME_XMPL'), chartOptions);
+    // CANDLESTICK-SERIES******************************************************        
+    const candlestickSeries = CandlestickChart1.addCandlestickSeries({ //width: 600, height: 300, 
+        priceScaleId: 'left',layout: { textColor: 'steelblue',autoSize:false,
+        background: { type: 'solid', color: '#000000' } }  ,
+        wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
+    });
+    const data = [
+        {time: '2018-12-22', open: 7511.16, high: 8211.84, low: 3611.16, close: 4511.72 },{time: '2018-12-23', open: 4511.12, high: 5311.90, low: 4511.12, close: 4811.09 },
+        {time: '2018-12-24', open: 6011.71, high: 6011.71, low: 5311.39, close: 5911.29 },{time: '2018-12-25', open: 6811.26, high: 6811.26, low: 5911.04, close: 6011.50 },
+        {time: '2018-12-26', open: 6711.71, high: 10511.85, low: 6611.67, close: 9111.04 },{time: '2018-12-27', open: 9111.04, high: 12111.40, low: 8211.70, close: 11111.40 },
+        {time: '2018-12-28', open: 11111.51, high: 14211.83, low: 10311.34, close: 13111.25 },{time: '2018-12-29', open: 13111.33, high: 15111.17, low: 7711.68, close: 9611.43 },
+        {time: '2018-12-30', open: 10611.33, high: 11011.20, low: 9011.39, close: 9811.10 },{time: '2018-12-31', open: 10911.87, high: 11411.69, low: 8511.66, close: 11111.26 },
+    ];
+    candlestickSeries.setData(data);
+    const candlestickSeries2 = CandlestickChart1.addCandlestickSeries({ //width: 600, height: 300, 
+        priceScaleId: 'right',layout: { textColor: 'steelblue',autoSize:false,
+        background: { type: 'solid', color: '#000000' } }  ,
+        wickUpColor: "#00a69a",upColor: "rgb(55, 150, 85)",
+        wickDownColor: "rgb(125, 50, 85)",downColor: "rgb(125, 50, 85)",
+    });
+    const haData = calculateHeikinAshi(data);
+    candlestickSeries2.setData(haData);
+    CandlestickChart1.timeScale().fitContent();
+    // resizeCandlestickChart1();
+}; initCandleChart_XMPL();
+
+// import {calcMA,getFakeData} from "./moving_average_1.js";
+// const chartOptions={layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
+// const chart = LightweightCharts.createChart(document.getElementById('candleChart'), chartOptions);
+// const barData = getFakeData(500);
+// const candlestickSeries = chart.addCandlestickSeries({ upColor: '#26a69a',downColor: '#ef5350',
+//     borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+// candlestickSeries.setData(barData);
+</script>
+
+</body>
+</html>

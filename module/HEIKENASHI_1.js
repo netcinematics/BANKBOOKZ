@@ -115,8 +115,8 @@ function generateFakeData(startDate, endDate) {
     }
   });
   
-  const data = generateFakeData(new Date('2023-11-01'), new Date('2023-11-30'));
-  const heikinAshiData = calculateHeikinAshi(data);
+  const dataz = generateFakeData(new Date('2023-11-01'), new Date('2023-11-30'));
+  const heikinAshiDataz = calculateHeikinAshi(dataz);
   
-  heikinAshiSeries.setData(heikinAshiData);
+  heikinAshiSeries.setData(heikinAshiDataz);
   

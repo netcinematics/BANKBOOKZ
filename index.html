@@ -996,7 +996,7 @@ function resize_DYNA_CHART_Baseline(elem){
         :bodyWidth-(bodyWidth*0.155);//(frame.offsetWidth*0.1);
     let maxHeight = 100;//(frame.offsetWidth>800)?600:frame.offsetWidth-200;
     if(maxWidth<100 || maxHeight<50){return}
-    elem.resize(maxWidth, maxHeight);    
+    elem.resize(maxWidth, maxHeight);
 }; 
 //*************************************************END DYNA-CHART BASELINE***********
 //******************************SCREEN RESIZE - DYNA CHART***********
@@ -2099,7 +2099,7 @@ const init_BOOKZ_TABZ = ()=>{
                 <section style="display:none; flex-direction:column;">
                 <menu id="baselineFRAME_${tgtTKR.tkr}" class="FRAME" style="justify-content: center;flex-direction: column;
                     border-radius: 13px; flex:1; display:flex;margin: 0.444em 0;height:10em;">
-                    <header class="expanderTITLE">BASELINE:</header>
+                    <header class="expanderTITLE">BreakEven:</header>
                     <div id="baselineChart_${tgtTKR.tkr}" style="display: flex;justify-content: center;height:8em;"></div>
                 </menu>
                     <footer style="font-size:0.888em;margin-bottom:1em;display:flex;
@@ -2147,13 +2147,11 @@ const init_BOOKZ_TABZ = ()=>{
     }
 };init_BOOKZ_TABZ(); //MAIN init render
 function render_ALL_CANDLE_Charts(){ 
-    console.log('RENDER all bookz chartz')
     for(let TKRObj of bankbookz_DB.TICKR_LIST){
         init_DYNA_CHART_Candle(TKRObj.tkr);
     }
 }
 function render_ALL_Baseline_Charts(){ 
-    console.log('RENDER all bookz chartz')
     for(let TKRObj of bankbookz_DB.TICKR_LIST){
         init_DYNA_CHART_Baseline(TKRObj.tkr);
     }

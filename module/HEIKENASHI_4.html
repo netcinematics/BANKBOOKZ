@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heiken Ashi Chart Example</title>
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">HEIKENASHI</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- double candle example</p>
+    </div>    
+    <div id="ha_Chart_XMPL" style="height:20em;margin-left:3em;"></div>
+<script type="module">
+// Define utility functions for working with price data
+
+// function getSecurityPrice(symbol, timeframe, expression) {
+//   return request.security(symbol: symbol, timeframe: timeframe, expression: expression, gaps: barmerge.gaps_off, lookahead: barmerge.lookahead_off);
+// }
+
+
+// Example usage
+const candledata = [
+  { time: '2024-08-01', open: 64609.61, high: 65593.56, low: 62212.81, close: 64293.48 },
+  { time: '2024-08-02', open: 65293.48, high: 64557.86, low: 61150, close: 61674.93 },
+  { time: '2024-08-03', open: 66293.48, high: 63557.86, low: 62150, close: 62674.93 },
+  { time: '2024-08-04', open: 67293.48, high: 62557.86, low: 63150, close: 63674.93 },
+  // ... more data points
+];
+
+// const haData2 = calculateHeikinAshiSmooth(candledata);
+// console.log("TEST smooth", haData2);
+
+// function SmoothedHeikinAshi(symbol, timeframe, 
+//                              time_frameInput, 
+//                              colorBullish, colorBearish, showWicks, 
+//                              smoothedHALength, smoothedMAType, smoothedHAalmaSigma, smoothedHAalmaOffset, 
+//                              doDoubleSmoothing, doubleSmoothedHALength, doubleSmoothedMAType, doubleSmoothedHAalmaSigma, doubleSmoothedHAalmaOffset) {
+//   // Get actual price data
+//   const actualOpen = getSecurityPrice(symbol, timeframe, open);
+//   const actualHigh = getSecurityPrice(symbol, timeframe, high);
+//   const actualLow = getSecurityPrice(symbol, timeframe, low);
+//   const actualClose = getSecurityPrice(symbol, timeframe, close);
+
+//   // Calculate smoothed MA values
+//   const smoothedMA1open = getMAValue(actualOpen, smoothedHALength, smoothedMAType);
+//   const smoothedMA1high = getMAValue(actualHigh, smoothedHALength, smoothedMAType);
+//   const smoothedMA1low = getMAValue(actualLow, smoothedHALength, smoothedMAType);
+//   const smoothedMA1close = getMAValue(actualClose, smoothedHALength, smoothedMAType);
+
+//   // Calculate smoothed Heikin Ashi open, high, low, and close
+//   let smoothedHAOpen = smoothedMA1open;
+//   if (isNaN(smoothedHAOpen[1])) {
+//     smoothedHAOpen = getHAOpen(smoothedHAOpen[1], smoothedHAClose[1]);
+//   } else {
+//     smoothedHAOpen = getHAOpen(smoothedHAOpen[1], HAClose[1]);
+//   }
+//   const smoothedHAHigh = getHAHigh(smoothedHAOpen, smoothedMA1high, smoothedMA1close);
+//   const smoothedHALow = getHALow(smoothedHAOpen, smoothedMA1low, smoothedMA1close);
+//   const smoothedHAClose = getHAClose(smoothedHAOpen, smoothedMA1high, smoothedMA1low, smoothedMA1close);
+
+//   // Apply double smoothing if enabled
+//   let openToPlot = smoothedHAOpen;
+//   let closeToPlot = smoothedHAClose;
+//   let highToPlot = smoothedHAHigh;
+//   let lowToPlot = smoothedHALow;
+// //   if (doDoubleSmoothing) {
+// //     openToPlot = getMAValue(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+// //     closeToPlot = getMAValue(smoothedHAClose, doubleSmoothedHALength, doubleSmo   
+// // function SmoothedHeikinAshi(symbol, timeframe, colorBullish, colorBearish, showWicks, smoothedHALength, smoothedMAType, smoothedHAalmaSigma, smoothedHAalmaOffset, doDoubleSmoothing, doubleSmoothedHALength, doubleSmoothedMAType, doubleSmoothedHAalmaSigma, doubleSmoothedHAalmaOffset) {
+//   // ... (previous code)
+
+//   // Double-smoothing
+//   if (doDoubleSmoothing) {
+//     openToPlot = getMAValue(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+//     closeToPlot = getMAValue(smoothedHAClose, doubleSmoothedHALength, doubleSmoothedMAType);
+//     highToPlot = getMAValue(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType);
+//     lowToPlot = getMAValue(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType);
+//   }
+
+//   // Candle color
+//   let candleColor = color.rgb(0, 0, 0, 100);
+//   if (closeToPlot > openToPlot) {
+//     candleColor = colorBullish;
+//   } else if (closeToPlot < openToPlot) {
+//     candleColor = colorBearish;
+//   } else if (smoothedHAOpen[1] !== undefined) { // Check for previous candle
+//     candleColor = smoothedHAOpen[1] > smoothedHAClose[1] ? colorBearish : colorBullish;
+//   }
+
+//   // Plot candle (adjust to your charting library's API)
+//   // Example using Chart.js:
+//   const ctx = chart.getContext('2d');
+//   ctx.fillStyle = candleColor;
+//   ctx.fillRect(x, y, width, height); // Adjust x, y, width, and height based on your chart's layout
+
+//   // ... (rest of the code for alerts, etc.)
+// } 
+</script>
+<script>
+// const chart = LightweightCharts.createChart("chart-container", { /* chart options */ });
+
+// // User inputs (replace with your actual implementation for inputs)
+// const timeframe = /* get user selection for timeframe */;
+// const colorBullish = /* get user selection for bullish color */;
+// const colorBearish = /* get user selection for bearish color */;
+// const showWicks = /* get user selection for show wicks */;
+// const smoothedHALength = /* get user selection for smoothing length */;
+// const smoothedMAType = /* get user selection for moving average type */;
+// // ... other user inputs
+
+// // Function to calculate Heikin Ashi values
+// function getHAValues(open, high, low, close) {
+//   const prevOpen = open[1] || 0;
+//   const prevClose = close[1] || 0;
+//   const haOpen = (prevOpen + prevClose) / 2;
+//   const haHigh = Math.max(open, high, close);
+//   const haLow = Math.min(open, low, close);
+//   const haClose = (open + high + low + close) / 4;
+//   return { haOpen, haHigh, haLow, haClose };
+// }
+
+// // Function to calculate moving average
+// function getMovingAverage(data, length, type) {
+//   const maValues = chart.api("formula", `ema(${data}, ${length})`); // Replace with appropriate formula for other MATypes
+//   return maValues;
+// }
+
+// const barData = chart.addCandlestickSeries({
+//   timeframe,
+//   upColor: colorBullish,
+//   downColor: colorBearish,
+//   wickUpColor: showWicks ? colorBullish : chart.options.timeScale.borderColor,
+//   wickDownColor: showWicks ? colorBearish : chart.options.timeScale.borderColor
+// });
+
+// let smoothedHAOpen, smoothedHAClose, smoothedHAHigh, smoothedHALow;
+
+// chart.subscribeCrosshairMove((({ time, point }) => {
+//   if (point) {
+//     const { open, high, low, close } = point;
+
+//     // Calculate smoothed HA values using moving average function
+//     const smoothedMAOpen = getMovingAverage(open, smoothedHALength, smoothedMAType);
+//     const smoothedMAHigh = getMovingAverage(high, smoothedHALength, smoothedMAType);
+//     const smoothedMALow = getMovingAverage(low, smoothedHALength, smoothedMAType);
+//     const smoothedMAClose = getMovingAverage(close, smoothedHALength, smoothedMAType);
+
+//     const haValues = getHAValues(smoothedMAOpen, smoothedMAHigh, smoothedMALow, smoothedMAClose);
+//     smoothedHAOpen = haValues.haOpen;
+//     smoothedHAClose = haValues.haClose;
+//     smoothedHAHigh = haValues.haHigh;
+//     smoothedHALow = haValues.haLow;
+
+//     // Update series data with smoothed HA values (replace with your chart's data update method)
+//     barData.update({
+//       time,
+//       open: smoothedHAOpen,
+//       high: smoothedHAHigh,
+//       low: smoothedHALow,
+//       close: smoothedHAClose
+//     });
+
+//     // Implement double smoothing logic here (if applicable)
+//     // ...
+
+//     // Logic for alerts (replace with your chart's alert system)
+//     // ...
+//   }
+// }));    
+</script>
+<script type="module">
+  function calculateHeikinAshi(data) {
+    let resultData = [];
+    let prevClose = null;
+    let prevOpen = null;
+  
+    data.forEach((candle, index) => {
+      const open = index === 0 ? candle.open : (prevOpen + prevClose) / 2;
+      const close = (candle.open + candle.high + candle.low + candle.close) / 4;
+      const high = Math.max(candle.high, (open + close) / 2);
+      const low = Math.min(candle.low, (open + close) / 2);
+  
+      resultData.push({
+        time: candle.time,
+        open,
+        high,
+        low,
+        close
+      });
+  
+      prevClose = close;
+      prevOpen = open;
+    });
+  
+    return resultData;
+  }
+
+
+
+  function getMovingAverage(data, length, type) {
+  const maValues = [];
+  if (type === 'Exponential') {
+    for (let i = 0; i < data.length; i++) {
+      const candle = data[i];
+      const avgCandle = {};
+      const prevMA = maValues[i - 1];
+    //   const ma = prevMA ? (value - prevMA) * (2 / (length + 1)) + prevMA : value;
+      const hi = (prevMA && prevMA.high) ? (candle.high - prevMA.high) * (2 / (length + 1)) + prevMA.high : candle.high;
+      const lo = (prevMA && prevMA.low) ? (candle.low - prevMA.low) * (2 / (length + 1)) + prevMA.low : candle.low;
+      const opn = (prevMA && prevMA.open) ? (candle.open - prevMA.open) * (2 / (length + 1)) + prevMA.open : candle.open;
+      const cls = (prevMA && prevMA.close) ? (candle.close - prevMA.close) * (2 / (length + 1)) + prevMA.close : candle.close;
+      avgCandle.high = hi;
+      avgCandle.low = lo;
+      avgCandle.open = opn;
+      avgCandle.close = cls;
+      avgCandle.time = candle.time;
+      maValues.push(avgCandle);
+    }
+  }
+
+
+//   if (type === 'Exponential') {
+//     for (let i = 0; i < data.length; i++) {
+//       const value = data[i];
+//       const prevMA = maValues[i - 1];
+//       const ma = prevMA ? (value - prevMA) * (2 / (length + 1)) + prevMA : value;
+//       maValues.push(ma);
+//     }
+//   } else if (type === 'Simple') {
+//     for (let i = 0; i < data.length; i++) {
+//       const sum = data.slice(i - length + 1, i + 1).reduce((acc, val) => acc + val, 0);
+//       const ma = sum / length;
+//       maValues.push(ma);
+//     }
+//   }
+//   } else if (type === 'Weighted') {
+//     // Implement weighted moving average calculation here
+//     console.error('Weighted moving average not implemented');
+//     return [];
+//   } else if (type === 'Linear') {
+//     // Implement linear regression moving average calculation here
+//     console.error('Linear regression moving average not implemented');
+//     return [];
+//   } else if (type === 'Hull') {
+//     // Implement Hull moving average calculation here
+//     console.error('Hull moving average not implemented');
+//     return [];
+//   } else if (type === 'Arnaud Legoux') {
+//     // Implement Arnaud Legoux moving average calculation here
+//     console.error('Arnaud Legoux moving average not implemented');
+//     return [];
+//   } else {
+//     console.error('Invalid moving average type');
+//     return [];
+//   }
+
+  return maValues;
+}
+
+// function getMAValue(source, length, type) {
+//   if (type === 'Exponential') {
+//     return ta.ema(source: source, length: length);
+//   } else if (type === 'Simple') {
+//     return ta.sma(source: source, length: length);
+//   } else if (type === 'Smoothed') {
+//     // Implement your custom smoothed moving average calculation here
+//     console.error('Smoothed moving average not implemented');
+//     return NaN;
+//   } else if (type === 'Weighted') {
+//     return ta.wma(source: source, length: length);
+//   } else if (type === 'Linear') {
+//     return ta.linreg(source: source, length: length, offset: 0);
+//   } else if (type === 'Hull') {
+//     return ta.hma(source: source, length: length);
+//   } else if (type === 'Arnaud Legoux') {
+//     return ta.alma(series: source, length: length);
+//   } else {
+//     console.error('Invalid moving average type');
+//     return NaN;
+//   }
+// }
+
+// Define utility functions for calculating Heikin Ashi values
+
+function getHAOpen(prevOpen, prevClose) {
+  return (prevOpen + prevClose) / 2;
+}
+
+function getHAHigh(open, high, close) {
+  return Math.max(high, open, close);
+}
+
+function getHALow(open, low, close) {
+  return Math.min(open, low, close);
+}
+
+function getHAClose(open, high, low, close) {
+  return (open + high + low + close) / 4;
+}
+
+// const timeframe = /* get user selection for timeframe */;
+const colorBullish = "#002200"; //darkgreen
+const colorBearish = "#330111"; //bergundy
+const showWicks = true;
+const smoothedHALength = 10;
+const doubleSmoothedHALength = 10;
+const smoothedMAType = 'Exponential';
+const doubleSmoothedMAType = 'Exponential';
+//alma sigma 6
+//alma offset 0.85
+const doDoubleSmoothing = false;
+
+
+function calculateHeikinAshiSmooth(data, smoothedHALength = 10, smoothedMAType = 'Exponential') {
+  const haData = [];
+  let prevHAOpen = null;
+
+
+//   debugger;
+  const movingAverageSet = getMovingAverage(data, smoothedHALength, smoothedMAType);
+  for (let i = 0; i < data.length; i++) {
+    const candle = data[i];
+    // debugger;
+    // const { time, open, high, low, close } = candle;
+
+    // const smoothedMAOpen = getMovingAverage(open, smoothedHALength, smoothedMAType);
+    // const smoothedMAHigh = getMovingAverage(high, smoothedHALength, smoothedMAType);
+    // const smoothedMALow = getMovingAverage(low, smoothedHALength, smoothedMAType);
+    // const smoothedMAClose = getMovingAverage(close, smoothedHALength, smoothedMAType);
+
+    const smoothedMAOpen = movingAverageSet[i].open;
+    const smoothedMAHigh = movingAverageSet[i].high;
+    const smoothedMALow = movingAverageSet[i].low;
+    const smoothedMAClose = movingAverageSet[i].close;
+
+    let haOpen = prevHAOpen || (smoothedMAOpen + smoothedMAClose) / 2;
+    let haHigh = Math.max(smoothedMAHigh, haOpen, smoothedMAClose);
+    let haLow = Math.min(smoothedMALow, haOpen, smoothedMAClose);
+    let haClose = (smoothedMAOpen + smoothedMAHigh + smoothedMALow + smoothedMAClose) / 4;
+
+    //double smoothing
+  if (doDoubleSmoothing) {
+    haOpen = getMovingAverage(haOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+    haClose = getMovingAverage(haClose, doubleSmoothedHALength, doubleSmoothedMAType);
+    haHigh = getMovingAverage(haHigh, doubleSmoothedHALength, doubleSmoothedMAType);
+    haLow = getMovingAverage(haLow, doubleSmoothedHALength, doubleSmoothedMAType);
+    // openToPlot = getMovingAverage(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+    // closeToPlot = getMovingAverage(smoothedHAClose, doubleSmoothedHALength, doubleSmoothedMAType);
+    // highToPlot = getMovingAverage(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType);
+    // lowToPlot = getMovingAverage(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType);
+  }    
+
+    haData.push({
+      time:candle.time,
+      open: haOpen,
+      high: haHigh,
+      low: haLow,
+      close: haClose
+    });
+
+    prevHAOpen = haOpen;
+  } //end loop
+
+  return haData;
+} //end fn
+
+  import {getFakeData,calcMA} from "./moving_average_1.js";
+// const chartOptions={layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
+const chartOptions = {//width:400,height:300,autoSize:false,
+        layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
+            background:{type:'solid',color:'#000000'} },
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
+            vertLine:{color:"darkslategrey"},horzLine:{color:"darkslategrey"} },
+        // rightPriceScale:{visible:true},//leftPriceScale:{visible:true},
+        // priceScale:{position: 'left',scaleMargins: {top: 0.2, bottom: 0.2 } },
+    }
+const chart = LightweightCharts.createChart(document.getElementById('ha_Chart_XMPL'), chartOptions);
+
+
+let data = getFakeData(30);//number of recs
+//TKR TEST DATA OVERRIDE********************************************
+// let A_10 = [{"tkr":"A","time":"2024-10-01","open":184.9,"high":186.19,"low":183.4519,"close":185.13},{"tkr":"A","time":"2024-10-02","open":184.44,"high":186.6,"low":184.04,"close":184.76},{"tkr":"A","time":"2024-10-03","open":183.045,"high":183.44,"low":180.875,"close":181.96}];
+//{"time":"2024-10-04","open":185.71,"high":187.6,"low":183.6,"close":186.51},{"time":"2024-10-07","open":182.95,"high":183.6,"low":180.25,"close":180.8},{"time":"2024-10-08","open":181.915,"high":183.09,"low":180.92,"close":182.72},{"time":"2024-10-09","open":182.82,"high":185.845,"low":182.05,"close":185.17},{"time":"2024-10-10","open":187.13,"high":188.134,"low":185.83,"close":186.65},{"time":"2024-10-11","open":186.63,"high":189.9284,"low":186.3,"close":188.82},{"time":"2024-10-14","open":189.78,"high":189.83,"low":187.36,"close":187.54}
+let AMZN_10 = [{"tkr":"AMZN","time":"2024-10-01","open":184.9,"high":186.19,"low":183.4519,"close":185.13,"volume":36044906,"value":185,"volAVG":37536416,"lastClose":186.33,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-02","open":184.44,"high":186.6,"low":184.04,"close":184.76,"volume":23704056,"value":185,"volAVG":30620236,"lastClose":185.13,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-03","open":183.045,"high":183.44,"low":180.875,"close":181.96,"volume":30204302,"value":182,"volAVG":30412269,"lastClose":184.76,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-04","open":185.71,"high":187.6,"low":183.6,"close":186.51,"volume":40853327,"value":186,"volAVG":35632798,"lastClose":181.96,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-07","open":182.95,"high":183.6,"low":180.25,"close":180.8,"volume":42364201,"value":182,"volAVG":38998500,"lastClose":186.51,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-08","open":181.915,"high":183.09,"low":180.92,"close":182.72,"volume":26372086,"value":182,"volAVG":32685293,"lastClose":180.8,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-09","open":182.82,"high":185.845,"low":182.05,"close":185.17,"volume":26343117,"value":184,"volAVG":29514205,"lastClose":182.72,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-10","open":187.13,"high":188.134,"low":185.83,"close":186.65,"volume":27785043,"value":187,"volAVG":28649624,"lastClose":185.17,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-11","open":186.63,"high":189.9284,"low":186.3,"close":188.82,"volume":25751557,"value":188,"volAVG":27200591,"lastClose":186.65,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-14","open":189.78,"high":189.83,"low":187.36,"close":187.54,"volume":22425533,"value":189,"volAVG":24813062,"lastClose":188.82,"volColor":"crimson"}];
+let AMZN_09 = [{"tkr":"AMZN","time":"2024-09-03","open":177.55,"high":178.26,"low":175.26,"close":176.25,"volume":37817511,"value":177,"volAVG":66181615,"lastClose":161.02,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-04","open":174.48,"high":175.98,"low":172.54,"close":173.33,"volume":29682478,"value":174,"volAVG":47932047,"lastClose":176.25,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-05","open":175,"high":179.875,"low":174.995,"close":177.89,"volume":40170526,"value":177,"volAVG":44051287,"lastClose":173.33,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-06","open":177.24,"high":178.38,"low":171.16,"close":171.39,"volume":41466537,"value":175,"volAVG":42758912,"lastClose":177.89,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-09","open":174.53,"high":175.85,"low":173.51,"close":175.4,"volume":29037362,"value":175,"volAVG":35898137,"lastClose":171.39,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-10","open":177.49,"high":180.5,"low":176.79,"close":179.55,"volume":36233796,"value":179,"volAVG":36065967,"lastClose":175.4,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-11","open":180.095,"high":184.99,"low":175.73,"close":184.52,"volume":42564698,"value":180,"volAVG":39315333,"lastClose":179.55,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-12","open":184.8,"high":187.41,"low":183.54,"close":187,"volume":33622483,"value":185,"volAVG":36468908,"lastClose":184.52,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-13","open":187,"high":188.5,"low":185.91,"close":186.49,"volume":26495351,"value":187,"volAVG":31482130,"lastClose":187,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-16","open":185.29,"high":185.81,"low":183.36,"close":184.89,"volume":25196092,"value":185,"volAVG":28339111,"lastClose":186.49,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-17","open":186.85,"high":189.45,"low":186.14,"close":186.88,"volume":26091682,"value":188,"volAVG":27215397,"lastClose":184.89,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-18","open":186.45,"high":188.8,"low":185.06,"close":186.43,"volume":34448130,"value":187,"volAVG":30831764,"lastClose":186.88,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-19","open":190.04,"high":190.99,"low":188.47,"close":189.87,"volume":39543168,"value":190,"volAVG":35187466,"lastClose":186.43,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-20","open":190.23,"high":191.84,"low":187.41,"close":191.6,"volume":100378553,"value":190,"volAVG":67783010,"lastClose":189.87,"volColor":"limegreen"},{"tkr":"AMZN","time":"2024-09-23","open":191.64,"high":194.45,"low":190.57,"close":193.88,"volume":36993111,"value":193,"volAVG":52388061,"lastClose":191.6,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-24","open":194.27,"high":195.37,"low":190.13,"close":193.96,"volume":43478926,"value":193,"volAVG":47933494,"lastClose":193.88,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-25","open":193.75,"high":193.9498,"low":192.16,"close":192.53,"volume":26391144,"value":193,"volAVG":37162319,"lastClose":193.96,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-26","open":194.31,"high":194.53,"low":189.54,"close":191.16,"volume":36334854,"value":192,"volAVG":36748587,"lastClose":192.53,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-27","open":190.68,"high":190.9,"low":187.34,"close":187.97,"volume":36002316,"value":189,"volAVG":36375452,"lastClose":191.16,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-30","open":187.14,"high":188.49,"low":184.65,"close":186.33,"volume":41680400,"value":187,"volAVG":39027926,"lastClose":187.97,"volColor":"crimson"}];
+let NVDA_10 = [{"tkr":"NVDA","time":"2024-10-01","open":121.765,"high":122.4351,"low":115.79,"close":117,"volume":302094485,"value":119,"volAVG":279270828,"lastClose":121.44,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-02","open":116.44,"high":119.38,"low":115.14,"close":118.85,"volume":221845887,"value":117,"volAVG":250558358,"lastClose":117,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-03","open":120.92,"high":124.36,"low":120.3401,"close":122.85,"volume":277117973,"value":122,"volAVG":263838166,"lastClose":118.85,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-04","open":124.93,"high":125.02,"low":121.9,"close":124.92,"volume":243067845,"value":123,"volAVG":253453006,"lastClose":122.85,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-07","open":124.99,"high":130.64,"low":124.95,"close":127.72,"volume":346250233,"value":128,"volAVG":299851620,"lastClose":124.92,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-08","open":130.26,"high":133.48,"low":129.42,"close":132.89,"volume":285722485,"value":131,"volAVG":292787053,"lastClose":127.72,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-09","open":134.11,"high":134.52,"low":131.38,"close":132.65,"volume":246191612,"value":133,"volAVG":269489333,"lastClose":132.89,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-10","open":131.91,"high":135,"low":131,"close":134.81,"volume":242311337,"value":133,"volAVG":255900335,"lastClose":132.65,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-11","open":134.01,"high":135.78,"low":133.66,"close":134.8,"volume":170209474,"value":135,"volAVG":213054905,"lastClose":134.81,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-14","open":136.47,"high":139.6,"low":136.3,"close":138.07,"volume":229746674,"value":138,"volAVG":221400790,"lastClose":134.8,"volColor":"darkgreen"}];
+let NVDA_09 = [{"tkr":"NVDA","time":"2024-09-03","open":116.01,"high":116.21,"low":107.29,"close":108,"volume":477155100,"value":112,"volAVG":502474368,"lastClose":100.45,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-04","open":105.41,"high":113.27,"low":104.12,"close":106.21,"volume":368378810,"value":109,"volAVG":435426589,"lastClose":108,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-05","open":104.985,"high":109.65,"low":104.76,"close":107.21,"volume":306850696,"value":107,"volAVG":371138643,"lastClose":106.21,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-06","open":108.04,"high":108.15,"low":100.95,"close":102.83,"volume":413638098,"value":105,"volAVG":392388371,"lastClose":107.21,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-09","open":104.88,"high":106.55,"low":103.69,"close":106.47,"volume":273912015,"value":105,"volAVG":333150193,"lastClose":102.83,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-10","open":107.81,"high":109.4,"low":104.95,"close":108.1,"volume":268283736,"value":107,"volAVG":300716965,"lastClose":106.47,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-11","open":109.39,"high":117.19,"low":107.42,"close":116.91,"volume":441422370,"value":112,"volAVG":371069668,"lastClose":108.1,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-12","open":116.84,"high":120.79,"low":115.38,"close":119.14,"volume":367100496,"value":118,"volAVG":369085082,"lastClose":116.91,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-13","open":119.08,"high":119.955,"low":117.6,"close":119.1,"volume":238358328,"value":119,"volAVG":303721705,"lastClose":119.14,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-16","open":116.79,"high":118.18,"low":114.36,"close":116.78,"volume":248772308,"value":116,"volAVG":276247007,"lastClose":119.1,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-17","open":118.17,"high":118.8,"low":114.83,"close":115.59,"volume":231925876,"value":117,"volAVG":254086442,"lastClose":116.78,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-18","open":115.89,"high":117.7,"low":113.22,"close":113.37,"volume":310318937,"value":115,"volAVG":282202690,"lastClose":115.59,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-19","open":117.35,"high":119.66,"low":117.25,"close":117.87,"volume":293506438,"value":118,"volAVG":287854564,"lastClose":113.37,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-20","open":117.06,"high":118.6181,"low":115.3901,"close":116,"volume":382462428,"value":117,"volAVG":335158496,"lastClose":117.87,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-23","open":116.55,"high":116.99,"low":114.86,"close":116.26,"volume":206228490,"value":116,"volAVG":270693493,"lastClose":116,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-24","open":116.515,"high":121.8,"low":115.38,"close":120.87,"volume":354966772,"value":119,"volAVG":312830133,"lastClose":116.26,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-25","open":122.02,"high":124.94,"low":121.61,"close":123.51,"volume":284692948,"value":123,"volAVG":298761541,"lastClose":120.87,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-26","open":126.8,"high":127.665,"low":121.8,"close":124.04,"volume":302582868,"value":125,"volAVG":300672205,"lastClose":123.51,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-27","open":123.97,"high":124.03,"low":119.26,"close":121.4,"volume":271009175,"value":122,"volAVG":285840690,"lastClose":124.04,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-30","open":118.31,"high":121.5,"low":118.15,"close":121.44,"volume":227053651,"value":120,"volAVG":256447171,"lastClose":121.4,"volColor":"darkgreen"}];
+// data = [...AMZN_09,...AMZN_10];
+data = [...NVDA_09,...NVDA_10];
+//ENDTEST TKR DATA********************************************
+// HA2SMTH RES TGT DATA*************************************
+let AMZN_HA2_30 = [
+    {time:'2024-09-03',open:174,high:176,low:172,close:174},
+    {time:'2024-09-04',open:174,high:176,low:172,close:174},
+    {time:'2024-09-05',open:174,high:176,low:172,close:174},
+    {time:'2024-09-06',open:174,high:177,low:172,close:175},
+    {time:'2024-09-09',open:174,high:177,low:172,close:175},
+    {time:'2024-09-10',open:174,high:177,low:173,close:175},
+    {time:'2024-09-11',open:175,high:177,low:173,close:175},
+    {time:'2024-09-12',open:175,high:178,low:173,close:175},
+    {time:'2024-09-13',open:175,high:178,low:174,close:176},
+    {time:'2024-09-16',open:176,high:179,low:175,close:177},
+    {time:'2024-09-17',open:176,high:180,low:175,close:178},
+    {time:'2024-09-18',open:177,high:181,low:176,close:179},
+    {time:'2024-09-19',open:178,high:182,low:177,close:180},
+    {time:'2024-09-20',open:179,high:182,low:178,close:180},
+    {time:'2024-09-23',open:180,high:183,low:179,close:181},
+    {time:'2024-09-24',open:181,high:184,low:180,close:183},
+    {time:'2024-09-25',open:182,high:185,low:181,close:184},
+    {time:'2024-09-26',open:183,high:186,low:182,close:185},
+    {time:'2024-09-27',open:184,high:187,low:183,close:185},
+    {time:'2024-09-30',open:184,high:188,low:184,close:185},
+    {time:'2024-10-01',open:185,high:188,low:184,close:186},
+    {time:'2024-10-02',open:186,high:188,low:184,close:186},
+    {time:'2024-10-03',open:185,high:188,low:184,close:186},
+    {time:'2024-10-04',open:186,high:188,low:184,close:186},
+    {time:'2024-10-07',open:186,high:188,low:184,close:186},
+    {time:'2024-10-08',open:186,high:187,low:184,close:186},
+    {time:'2024-10-09',open:186,high:187,low:184,close:186},
+    {time:'2024-10-10',open:186,high:187,low:184,close:185},
+    {time:'2024-10-11',open:186,high:187,low:184,close:185},
+    {time:'2024-10-14',open:185,high:187,low:184,close:185},
+]
+let NVDA_HA2_30 = [
+    {time:'2024-09-03',open:120,high:123,low:118,close:121},
+    {time:'2024-09-04',open:120,high:123,low:117,close:120},
+    {time:'2024-09-05',open:120,high:123,low:116,close:119},
+    {time:'2024-09-06',open:120,high:122,low:115,close:118},
+    {time:'2024-09-09',open:119,high:121,low:114,close:117},
+    {time:'2024-09-10',open:118,high:119,low:113,close:116},
+    {time:'2024-09-11',open:117,high:118,low:112,close:115},
+    {time:'2024-09-12',open:116,high:118,low:112,close:115},
+    {time:'2024-09-13',open:115,high:118,low:111,close:115},
+    {time:'2024-09-16',open:115,high:117,low:111,close:114},
+    {time:'2024-09-17',open:115,high:117,low:112,close:114},
+    {time:'2024-09-18',open:115,high:117,low:112,close:114},
+    {time:'2024-09-19',open:115,high:117,low:112,close:115},
+    {time:'2024-09-20',open:115,high:117,low:112,close:115},
+    {time:'2024-09-23',open:115,high:117,low:112,close:115},
+    {time:'2024-09-24',open:115,high:117,low:113,close:115},
+    {time:'2024-09-25',open:115,high:118,low:113,close:115},
+    {time:'2024-09-26',open:115,high:118,low:114,close:116},
+    {time:'2024-09-27',open:116,high:119,low:114,close:116},
+    {time:'2024-09-30',open:116,high:119,low:115,close:117},
+    {time:'2024-10-01',open:116,high:120,low:115,close:117},
+    {time:'2024-10-02',open:117,high:120,low:115,close:118},
+    {time:'2024-10-03',open:117,high:120,low:116,close:118},
+    {time:'2024-10-04',open:118,high:120,low:116,close:118},
+    {time:'2024-10-07',open:118,high:121,low:116,close:119},
+    {time:'2024-10-08',open:118,high:122,low:117,close:120},
+    {time:'2024-10-09',open:119,high:123,low:118,close:120},
+    {time:'2024-10-10',open:120,high:124,low:119,close:122},
+    {time:'2024-10-11',open:121,high:125,low:120,close:123},
+    {time:'2024-10-14',open:122,high:126,low:121,close:124},
+];
+// END HA2SMTH RES TGT DATA*************************************
+
+// let CandlestickChart1;
+// function initCandleChart_XMPL(){
+//     const chartOptions = { width: 400, height: 300, 
+//         layout: { textColor: 'steelblue', background: { type: 'solid', color: '#000000' } },
+//         grid: { vertLines: { color: "#222" }, horzLines: { color: "#9090ff" } },
+//         crosshair: { mode: LightweightCharts.CrosshairMode.Normal ,
+//             vertLine: { color: "darkslategrey" },
+//             horzLine: { color: "darkslategrey" },
+//         },
+//         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
+//     }
+
+
+
+
+
+
+
+//     CandlestickChart1 = LightweightCharts.createChart(
+//         document.getElementById('candelstickFRAME_XMPL'), chartOptions);
+//     // CANDLESTICK-SERIES******************************************************        
+//     const candlestickSeries = CandlestickChart1.addCandlestickSeries({ //width: 600, height: 300, 
+//         priceScaleId: 'left',layout: { textColor: 'steelblue',autoSize:false,
+//         background: { type: 'solid', color: '#000000' } }  ,
+//         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
+//     });
+    // const data = [
+    //     {time: '2018-12-22', open: 7511.16, high: 8211.84, low: 3611.16, close: 4511.72 },{time: '2018-12-23', open: 4511.12, high: 5311.90, low: 4511.12, close: 4811.09 },
+    //     {time: '2018-12-24', open: 6011.71, high: 6011.71, low: 5311.39, close: 5911.29 },{time: '2018-12-25', open: 6811.26, high: 6811.26, low: 5911.04, close: 6011.50 },
+    //     {time: '2018-12-26', open: 6711.71, high: 10511.85, low: 6611.67, close: 9111.04 },{time: '2018-12-27', open: 9111.04, high: 12111.40, low: 8211.70, close: 11111.40 },
+    //     {time: '2018-12-28', open: 11111.51, high: 14211.83, low: 10311.34, close: 13111.25 },{time: '2018-12-29', open: 13111.33, high: 15111.17, low: 7711.68, close: 9611.43 },
+    //     {time: '2018-12-30', open: 10611.33, high: 11011.20, low: 9011.39, close: 9811.10 },{time: '2018-12-31', open: 10911.87, high: 11411.69, low: 8511.66, close: 11111.26 },
+    // ];
+    const haData1 = calculateHeikinAshi(data); 
+    const candlestickSeries = chart.addCandlestickSeries({ 
+    upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+    borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+candlestickSeries.setData(haData1); //HA ORIGINAL
+// candlestickSeries.setData(data); //PRICE
+
+//     candlestickSeries.setData(data);
+const BullishColor = "#006600"; //darkgreen
+const BearishColor = "#660111"; //bergundy
+    const candlestickSeries2 = chart.addCandlestickSeries({ //width: 600, height: 300, 
+        priceScaleId: 'right',layout: { textColor: 'steelblue',autoSize:false,
+        background: { type: 'solid', color: '#000000' } } ,
+        wickUpColor:BullishColor,upColor:BullishColor,borderVisible: false,
+        wickDownColor:BearishColor,downColor:BearishColor,
+        priceLineVisible:false
+    });
+
+    // const haData = calculateHeikinAshiSmooth(data);
+    // candlestickSeries2.setData(haData1);
+    // candlestickSeries2.setData(haData); //SMOOTH
+    // candlestickSeries2.setData(NVDA_HA2_30); //2X SMOOTH
+    // candlestickSeries2.setData(AMZN_HA2_30); //2X SMOOTH
+    
+    function doubleSmoothingHeikenAshi(input, days) {
+  const output = [];
+  const ema1 = [];
+  const ema2 = [];
+
+  // Initialize EMA arrays with the first closing price
+  ema1[0] = input[0].close;
+  ema2[0] = input[0].close;
+
+  // Calculate EMAs and Heiken-Ashi values
+  for (let i = 1; i < input.length; i++) {
+    // Calculate EMA1
+    const multiplier1 = 2 / (days + 1);
+    ema1[i] = (input[i].close - ema1[i - 1]) * multiplier1 + ema1[i - 1];
+
+    // Calculate EMA2
+    const multiplier2 = 2 / (days + 1);
+    ema2[i] = (ema1[i] - ema2[i - 1]) * multiplier2 + ema2[i - 1];
+
+    // Calculate Heiken-Ashi values
+    const open = (ema1[i - 1] + ema2[i - 1]) / 2;
+    const high = Math.max(input[i].high, ema1[i], ema2[i]);
+    const low = Math.min(input[i].low, ema1[i], ema2[i]);
+    const close = (ema1[i] + ema2[i]) / 2;
+
+    output.push({
+      time: input[i].time,
+      open,
+      high,
+      low,
+      close,
+    });
+  }
+
+  return output;
+}
+
+// Example usage
+// const input_A_10 = [
+//   { time: "2024-10-01", open: 184.9, high: 186.19, low: 183.4519, close: 185.13 },
+//   { time: "2024-10-02", open: 184.44, high: 186.6, low: 184.04, close: 184.76 },
+//   { time: "2024-10-03", open: 183.045, high: 183.44, low: 180.875, close: 181.96 },
+//   { time: "2024-10-04", open: 185.71, high: 187.6, low: 183.6, close: 186.51 },
+//   { time: "2024-10-07", open: 182.95, high: 183.6, low: 180.25, close: 180.8 },
+//   { time: "2024-10-08", open: 181.915, high: 183.09, low: 180.92, close: 182.72 },
+//   { time: "2024-10-09", open: 182.82, high: 185.845, low: 182.05, close: 185.17 },
+//   { time: "2024-10-10", open: 187.13, high: 188.134, low: 185.83, close: 186.65 },
+//   { time: "2024-10-11", open: 186.63, high: 189.9284, low: 186.3, close: 188.82 },
+//   { time: "2024-10-14", open: 189.78, high: 189.83, low: 187.36, close: 187.54 }
+// ];
+
+// const output_B_10 = doubleSmoothingHeikenAshi(input_A_10, 10);
+
+// console.log(output_B_10);
+// const output_B_10 = doubleSmoothingHeikenAshi(AMZN_HA2_30, 10);
+const output_B_10 = doubleSmoothingHeikenAshi(NVDA_HA2_30, 10);
+
+// // console.log(output_B_10);
+    candlestickSeries2.setData(output_B_10); //2X SMOOTH
+
+
+
+// const candlestickSeries3 = chart.addCandlestickSeries({ 
+//     upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+//     borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+// candlestickSeries3.setData(haData1); //HA original
+
+
+const maData20 = calcMA(data, 10);
+const maData120 = calcMA(data, 20);
+const maData200 = calcMA(data, 30);
+const maSeries20 = chart.addLineSeries({ color: 'yellow', lineWidth:1,priceLineVisible:false});
+const maSeries120 = chart.addLineSeries({ color: 'purple', lineWidth:1,priceLineVisible:false});
+const maSeries200 = chart.addLineSeries({ color: 'limegreen', lineWidth:1,priceLineVisible:false});
+maSeries20.setData(maData20);
+maSeries120.setData(maData120);
+maSeries200.setData(maData200);
+
+    chart.timeScale().fitContent();
+
+
+    // resizeCandlestickChart1();
+// }; initCandleChart_XMPL();
+
+</script>
+
+</body>
+</html>
+
+
+<!--
+indicator(title='Smoothed Heiken Ashi - SamX', shorttitle='Smoothed HA', overlay=true)
+g_TimeframeSettings = 'Display & Timeframe Settings'
+time_frame = input.timeframe(title='Timeframe for HA candle calculation', defval='', group=g_TimeframeSettings, tooltip='Select the timeframe to use for calculating the smoothed ' +
+                 'HA candles.  The default value is to use the current chart timeframe, but altering this will allow you to have the indicator reflect a higher or lower timeframe. \n\n' +
+                 'Note: Selecting a lower timeframe than the current chart timeframe may not result in more precise candles as the display will still be limited to the current timeframe resolution.') 
+// I decided to add just a couple display-related settings here
+colorBullish = input.color(title='Color for bullish candle (Close > Open)', defval=color.rgb(255, 255, 255, 0), tooltip='Select the color to use to denote a bullish candle (where price closed above the open). \n\n' +
+                 'Note: Any changes to the "Style" tab will override this setting.  Actual doji candles (Open == Close) inherit the color of the previous candle.')
+colorBearish = input.color(title='Color for bearish candle (Close < Open)', defval=color.rgb(255, 0, 255, 0), tooltip='Select the color to use to denote a bearish candle (where price closed below the open). \n\n' +
+                 'Note: Any changes to the "Style" tab will override this setting.  Actual doji candles (Open == Close) inherit the color of the previous candle.')
+showWicks = input.bool(title="Show Wicks", defval=true, group=g_TimeframeSettings, tooltip='If checked (default), this indicator will paint wicks for the smoothed HA candles. \n\n' +
+                 'This can be helpful with shorter smooting periods, but many people like to hide wicks for longer periods to de-clutter the chart a bit. \n\n' +
+                 'Note: By default, wick color will match the candle body color.  This can be overridden in the "Styles" tab.')
+g_SmoothedHASettings = 'Smoothed HA Settings'
+smoothedHALength = input.int(title='HA Price Input Smoothing Length', minval=1, maxval=500, step=1, defval=10, group=g_SmoothedHASettings, tooltip='This input determines the number of time intervals (i.e. candles) ' +
+                 'to use when calculating a single smoothed HA candle.  Lower values will be more responsive to momentum shifts, while higher values will be better able to show sustained trends even ' +
+                 'during a moderate pull-back. \n\n' +
+                 'Note: A value of 1 (no matter the moving average type selected) will result in a standard HA candle, which may be desirable if you wish to see both regular and HA candles on the same ' +
+                 'chart simultaneously (in which case you should un-check "Enable double-smoothing" below).')
+smoothedMAType = input.string(title='Moving Average Calculation', group=g_SmoothedHASettings, options=['Exponential', 'Simple', 'Smoothed', 'Weighted', 'Linear', 'Hull', 'Arnaud Legoux'], defval='Exponential', tooltip='Type of moving average calculation to use ' +
+                 'for calculating the smoothed HA candles (default is Exponential (EMA)).')
+smoothedHAalmaSigma = input.float(title="ALMA Sigma", defval=6, minval=0, maxval=100, step=0.1, group=g_SmoothedHASettings, tooltip='Standard deviation applied to the ALMA MA.  Higher values tend to make the line smoother.  \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 6')
+smoothedHAalmaOffset = input.float(title="ALMA Offset", defval=0.85, minval=0, maxval=1, step=0.01, group=g_SmoothedHASettings, tooltip='Gaussian offset applied to the ALMA MA.  Higher values tend to make the line smoother, while lower values make it more responsive. \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 0.85')
+g_DoubleSmoothingSettings = 'Double-smoothed HA Settings'
+doDoubleSmoothing = input.bool(title='Enable double-smoothing', defval=true, group=g_DoubleSmoothingSettings, tooltip='Check this box to apply a secondary moving average to further smooth ' +
+                 'the smoothed HA candles. \n\n' +
+                 'While this may seem counter-intuitive, most versions of this indicator do use double-smoothing, hence the default value is true/checked.')
+doubleSmoothedHALength = input.int(title='HA Second Smoothing Length', minval=1, maxval=500, step=1, defval=10, group=g_DoubleSmoothingSettings, tooltip='This input defines how many of the smoothed HA candle ' +
+                 'price points to include for calculating a double-smoothed HA candle.  \n\n' +
+                 'Similar to how the comparable "Smoothed HA Settings" setting above use pure price data to calculate and construct a smoothed HA candle, this will use the output open, high, low, and close ' +
+                 'of the above pre-smoothed candles and apply a second level of smoothing on top of them in a similar method (calculate a new average open, high, low, and close, then apply the HA formula ' +
+                 'to those new values to determing what to print as the output). \n\n' +
+                 'Also, a value of 1 for this setting will be the same as un-checking the "Enable double-smoothing" box.')
+doubleSmoothedMAType = input.string(title='Double-Smoothing Moving Average Calculation', group=g_DoubleSmoothingSettings, options=['Exponential', 'Simple', 'Smoothed', 'Weighted', 'Linear', 'Hull', 'Arnaud Legoux'], defval='Exponential', tooltip='Type of moving average calculation to use ' +
+                 'for calculating the second smoothing applied to the smoothed HA candles (default is Exponential (EMA)).')
+doubleSmoothedHAalmaSigma = input.float(title="ALMA Sigma", defval=6, minval=0, maxval=100, step=0.1, group=g_DoubleSmoothingSettings, tooltip='Standard deviation applied to the ALMA MA above.  Higher values tend to make the line smoother.  \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 6')
+doubleSmoothedHAalmaOffset = input.float(title="ALMA Offset", defval=0.85, minval=0, maxval=1, step=0.01, group=g_DoubleSmoothingSettings, tooltip='Gaussian offset applied to the ALMA MA above.  Higher values tend to make the line smoother, while lower values make it more responsive. \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 0.85')
+smoothedMovingAvg(src, len) => 
+	smma = 0.0
+	// TV will complain about the use of the ta.sma function use inside a function saying that it should be called on each calculation, 
+	// but since we're only using it once to set the initial value for the smoothed MA (when the previous smma value is NaN - Not a Number)
+	// and using the previous smma value for each subsequent iteration, this can be safely ignored
+	smma := na(smma[1]) ? ta.sma(src, len) : (smma[1] * (len - 1) + src) / len 
+	smma
+getHAOpen(prevOpen, prevClose) =>
+    haOpen = 0.0
+    haOpen := ((prevOpen + prevClose)/2)
+    haOpen
+getHAHigh(o, h, c) =>
+    haHigh = 0.0
+    haHigh := math.max(h, o, c)
+    haHigh
+getHALow(o, l, c) =>
+    haLow = 0.0
+    haLow := math.min(o, l, c)
+    haLow
+getHAClose(o, h, l, c) =>
+    haClose = 0.0
+    haClose := ((o + h + l + c)/4)
+    haClose
+getMAValue(src, len, type, isDoubleSmooth) =>
+	maValue = 0.0
+	if (type == 'Exponential')
+		maValue := ta.ema(source=src, length=len)
+	else if (type == 'Simple')
+		maValue := ta.sma(source=src, length=len)
+	else if (type == 'Smoothed')
+		maValue := smoothedMovingAvg(src=src, len=len)
+	else if (type == 'Weighted')
+		maValue := ta.wma(source=src, length=len)
+	else if (type == 'Linear')
+		maValue := ta.linreg(source=src, length=len, offset=0)
+	else if (type == 'Hull')
+		maValue := ta.hma(source=src, length=len)
+	else if (type == 'Arnaud Legoux')
+		maValue := ta.alma(series=src, length=len, offset=(isDoubleSmooth ? doubleSmoothedHAalmaOffset : smoothedHAalmaOffset), sigma=(isDoubleSmooth ? doubleSmoothedHAalmaSigma : smoothedHAalmaSigma))
+	else 
+		maValue := na
+	maValue
+realPriceTicker = ticker.new(prefix=syminfo.prefix, ticker=syminfo.ticker)
+actualOpen = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=open, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+actualHigh = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=high, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+actualLow = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=low, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+actualClose = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=close, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+smoothedMA1open = getMAValue(actualOpen, smoothedHALength, smoothedMAType, false) 
+smoothedMA1high = getMAValue(actualHigh, smoothedHALength, smoothedMAType, false) 
+smoothedMA1low = getMAValue(actualLow, smoothedHALength, smoothedMAType, false) 
+smoothedMA1close = getMAValue(actualClose, smoothedHALength, smoothedMAType, false)
+smoothedHAClose = getHAClose(smoothedMA1open, smoothedMA1high, smoothedMA1low, smoothedMA1close)
+smoothedHAOpen = smoothedMA1open
+smoothedHAOpen := na(smoothedHAOpen[1]) ? smoothedMA1open : getHAOpen(smoothedHAOpen[1], smoothedHAClose[1])
+smoothedHAHigh = getHAHigh(smoothedHAOpen, smoothedMA1high, smoothedHAClose)
+smoothedHALow =  getHALow(smoothedHAOpen, smoothedMA1low, smoothedHAClose)
+openToPlot = smoothedHAOpen
+closeToPlot = smoothedHAClose
+highToPlot = smoothedHAHigh
+lowToPlot = smoothedHALow
+if (doDoubleSmoothing)
+    openToPlot := getMAValue(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType, true)
+    closeToPlot := getMAValue(smoothedHAClose, doubleSmoothedHALength, doubleSmoothedMAType, true)
+    highToPlot := getMAValue(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType, true)
+    lowToPlot := getMAValue(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType, true)
+else
+    na
+candleColor = color.rgb(0, 0, 0, 100)
+candleColor := (closeToPlot > openToPlot) ? colorBullish : 
+     (closeToPlot < openToPlot) ? colorBearish : candleColor[1]
+plotcandle(open=openToPlot, high=highToPlot, low=lowToPlot, close=closeToPlot, title="Smoothed HA", color=candleColor, wickcolor=(showWicks ? candleColor : na), bordercolor=candleColor)
+isBullishColorChange = ((closeToPlot[1] < openToPlot[1]) ? (closeToPlot > openToPlot ? true : false) : false)
+isBearishColorChange = ((closeToPlot[1] > openToPlot[1]) ? (closeToPlot < openToPlot ? true : false) : false)
+isConfirmedBullishColorChange = isBullishColorChange and barstate.isconfirmed
+isConfirmedBearishColorChange = isBearishColorChange and barstate.isconfirmed
+alertcondition(condition=isConfirmedBullishColorChange, title="Smoothed HA Bear -> Bull", message="Smoothed Heiken Ashi detected a change in candle direction from bearish to bullish.")
+alertcondition(condition=isConfirmedBearishColorChange, title="Smoothed HA Bull -> Bear", message="Smoothed Heiken Ashi detected a change in candle direction from bullish to bearish.")
+if (isConfirmedBullishColorChange)
+    alert(freq=alert.freq_once_per_bar_close, message="Smoothed Heiken Ashi detected a change in candle direction from bearish to bullish.")
+if (isConfirmedBearishColorChange)
+    alert(freq=alert.freq_once_per_bar_close, message="Smoothed Heiken Ashi detected a change in candle direction from bullish to bearish.")
+
+-->
+

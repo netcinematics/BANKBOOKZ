@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heiken Ashi Chart Example</title>
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">HEIKENASHI</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- double candle example</p>
+    </div>    
+    <div id="ha_Chart_XMPL" style="height:20em;margin-left:3em;"></div>
+<script type="module">
+// Define utility functions for working with price data
+
+// function getSecurityPrice(symbol, timeframe, expression) {
+//   return request.security(symbol: symbol, timeframe: timeframe, expression: expression, gaps: barmerge.gaps_off, lookahead: barmerge.lookahead_off);
+// }
+
+
+// Example usage
+const candledata = [
+  { time: '2024-08-01', open: 64609.61, high: 65593.56, low: 62212.81, close: 64293.48 },
+  { time: '2024-08-02', open: 65293.48, high: 64557.86, low: 61150, close: 61674.93 },
+  { time: '2024-08-03', open: 66293.48, high: 63557.86, low: 62150, close: 62674.93 },
+  { time: '2024-08-04', open: 67293.48, high: 62557.86, low: 63150, close: 63674.93 },
+  // ... more data points
+];
+
+// const haData2 = calculateHeikinAshiSmooth(candledata);
+// console.log("TEST smooth", haData2);
+
+// function SmoothedHeikinAshi(symbol, timeframe, 
+//                              time_frameInput, 
+//                              colorBullish, colorBearish, showWicks, 
+//                              smoothedHALength, smoothedMAType, smoothedHAalmaSigma, smoothedHAalmaOffset, 
+//                              doDoubleSmoothing, doubleSmoothedHALength, doubleSmoothedMAType, doubleSmoothedHAalmaSigma, doubleSmoothedHAalmaOffset) {
+//   // Get actual price data
+//   const actualOpen = getSecurityPrice(symbol, timeframe, open);
+//   const actualHigh = getSecurityPrice(symbol, timeframe, high);
+//   const actualLow = getSecurityPrice(symbol, timeframe, low);
+//   const actualClose = getSecurityPrice(symbol, timeframe, close);
+
+//   // Calculate smoothed MA values
+//   const smoothedMA1open = getMAValue(actualOpen, smoothedHALength, smoothedMAType);
+//   const smoothedMA1high = getMAValue(actualHigh, smoothedHALength, smoothedMAType);
+//   const smoothedMA1low = getMAValue(actualLow, smoothedHALength, smoothedMAType);
+//   const smoothedMA1close = getMAValue(actualClose, smoothedHALength, smoothedMAType);
+
+//   // Calculate smoothed Heikin Ashi open, high, low, and close
+//   let smoothedHAOpen = smoothedMA1open;
+//   if (isNaN(smoothedHAOpen[1])) {
+//     smoothedHAOpen = getHAOpen(smoothedHAOpen[1], smoothedHAClose[1]);
+//   } else {
+//     smoothedHAOpen = getHAOpen(smoothedHAOpen[1], HAClose[1]);
+//   }
+//   const smoothedHAHigh = getHAHigh(smoothedHAOpen, smoothedMA1high, smoothedMA1close);
+//   const smoothedHALow = getHALow(smoothedHAOpen, smoothedMA1low, smoothedMA1close);
+//   const smoothedHAClose = getHAClose(smoothedHAOpen, smoothedMA1high, smoothedMA1low, smoothedMA1close);
+
+//   // Apply double smoothing if enabled
+//   let openToPlot = smoothedHAOpen;
+//   let closeToPlot = smoothedHAClose;
+//   let highToPlot = smoothedHAHigh;
+//   let lowToPlot = smoothedHALow;
+// //   if (doDoubleSmoothing) {
+// //     openToPlot = getMAValue(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+// //     closeToPlot = getMAValue(smoothedHAClose, doubleSmoothedHALength, doubleSmo   
+// // function SmoothedHeikinAshi(symbol, timeframe, colorBullish, colorBearish, showWicks, smoothedHALength, smoothedMAType, smoothedHAalmaSigma, smoothedHAalmaOffset, doDoubleSmoothing, doubleSmoothedHALength, doubleSmoothedMAType, doubleSmoothedHAalmaSigma, doubleSmoothedHAalmaOffset) {
+//   // ... (previous code)
+
+//   // Double-smoothing
+//   if (doDoubleSmoothing) {
+//     openToPlot = getMAValue(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+//     closeToPlot = getMAValue(smoothedHAClose, doubleSmoothedHALength, doubleSmoothedMAType);
+//     highToPlot = getMAValue(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType);
+//     lowToPlot = getMAValue(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType);
+//   }
+
+//   // Candle color
+//   let candleColor = color.rgb(0, 0, 0, 100);
+//   if (closeToPlot > openToPlot) {
+//     candleColor = colorBullish;
+//   } else if (closeToPlot < openToPlot) {
+//     candleColor = colorBearish;
+//   } else if (smoothedHAOpen[1] !== undefined) { // Check for previous candle
+//     candleColor = smoothedHAOpen[1] > smoothedHAClose[1] ? colorBearish : colorBullish;
+//   }
+
+//   // Plot candle (adjust to your charting library's API)
+//   // Example using Chart.js:
+//   const ctx = chart.getContext('2d');
+//   ctx.fillStyle = candleColor;
+//   ctx.fillRect(x, y, width, height); // Adjust x, y, width, and height based on your chart's layout
+
+//   // ... (rest of the code for alerts, etc.)
+// } 
+</script>
+<script>
+// const chart = LightweightCharts.createChart("chart-container", { /* chart options */ });
+
+// // User inputs (replace with your actual implementation for inputs)
+// const timeframe = /* get user selection for timeframe */;
+// const colorBullish = /* get user selection for bullish color */;
+// const colorBearish = /* get user selection for bearish color */;
+// const showWicks = /* get user selection for show wicks */;
+// const smoothedHALength = /* get user selection for smoothing length */;
+// const smoothedMAType = /* get user selection for moving average type */;
+// // ... other user inputs
+
+// // Function to calculate Heikin Ashi values
+// function getHAValues(open, high, low, close) {
+//   const prevOpen = open[1] || 0;
+//   const prevClose = close[1] || 0;
+//   const haOpen = (prevOpen + prevClose) / 2;
+//   const haHigh = Math.max(open, high, close);
+//   const haLow = Math.min(open, low, close);
+//   const haClose = (open + high + low + close) / 4;
+//   return { haOpen, haHigh, haLow, haClose };
+// }
+
+// // Function to calculate moving average
+// function getMovingAverage(data, length, type) {
+//   const maValues = chart.api("formula", `ema(${data}, ${length})`); // Replace with appropriate formula for other MATypes
+//   return maValues;
+// }
+
+// const barData = chart.addCandlestickSeries({
+//   timeframe,
+//   upColor: colorBullish,
+//   downColor: colorBearish,
+//   wickUpColor: showWicks ? colorBullish : chart.options.timeScale.borderColor,
+//   wickDownColor: showWicks ? colorBearish : chart.options.timeScale.borderColor
+// });
+
+// let smoothedHAOpen, smoothedHAClose, smoothedHAHigh, smoothedHALow;
+
+// chart.subscribeCrosshairMove((({ time, point }) => {
+//   if (point) {
+//     const { open, high, low, close } = point;
+
+//     // Calculate smoothed HA values using moving average function
+//     const smoothedMAOpen = getMovingAverage(open, smoothedHALength, smoothedMAType);
+//     const smoothedMAHigh = getMovingAverage(high, smoothedHALength, smoothedMAType);
+//     const smoothedMALow = getMovingAverage(low, smoothedHALength, smoothedMAType);
+//     const smoothedMAClose = getMovingAverage(close, smoothedHALength, smoothedMAType);
+
+//     const haValues = getHAValues(smoothedMAOpen, smoothedMAHigh, smoothedMALow, smoothedMAClose);
+//     smoothedHAOpen = haValues.haOpen;
+//     smoothedHAClose = haValues.haClose;
+//     smoothedHAHigh = haValues.haHigh;
+//     smoothedHALow = haValues.haLow;
+
+//     // Update series data with smoothed HA values (replace with your chart's data update method)
+//     barData.update({
+//       time,
+//       open: smoothedHAOpen,
+//       high: smoothedHAHigh,
+//       low: smoothedHALow,
+//       close: smoothedHAClose
+//     });
+
+//     // Implement double smoothing logic here (if applicable)
+//     // ...
+
+//     // Logic for alerts (replace with your chart's alert system)
+//     // ...
+//   }
+// }));    
+</script>
+<script type="module">
+  function calculateHeikinAshi(data) {
+    let resultData = [];
+    let prevClose = null;
+    let prevOpen = null;
+  
+    data.forEach((candle, index) => {
+      const open = index === 0 ? candle.open : (prevOpen + prevClose) / 2;
+      const close = (candle.open + candle.high + candle.low + candle.close) / 4;
+      const high = Math.max(candle.high, (open + close) / 2);
+      const low = Math.min(candle.low, (open + close) / 2);
+  
+      resultData.push({
+        time: candle.time,
+        open,
+        high,
+        low,
+        close
+      });
+  
+      prevClose = close;
+      prevOpen = open;
+    });
+  
+    return resultData;
+  }
+
+
+
+  function getMovingAverage(data, length, type) {
+  const maValues = [];
+  if (type === 'Exponential') {
+    for (let i = 0; i < data.length; i++) {
+      const candle = data[i];
+      const avgCandle = {};
+      const prevMA = maValues[i - 1];
+    //   const ma = prevMA ? (value - prevMA) * (2 / (length + 1)) + prevMA : value;
+      const hi = (prevMA && prevMA.high) ? (candle.high - prevMA.high) * (2 / (length + 1)) + prevMA.high : candle.high;
+      const lo = (prevMA && prevMA.low) ? (candle.low - prevMA.low) * (2 / (length + 1)) + prevMA.low : candle.low;
+      const opn = (prevMA && prevMA.open) ? (candle.open - prevMA.open) * (2 / (length + 1)) + prevMA.open : candle.open;
+      const cls = (prevMA && prevMA.close) ? (candle.close - prevMA.close) * (2 / (length + 1)) + prevMA.close : candle.close;
+      avgCandle.high = hi;
+      avgCandle.low = lo;
+      avgCandle.open = opn;
+      avgCandle.close = cls;
+      avgCandle.time = candle.time;
+      maValues.push(avgCandle);
+    }
+  }
+
+
+//   if (type === 'Exponential') {
+//     for (let i = 0; i < data.length; i++) {
+//       const value = data[i];
+//       const prevMA = maValues[i - 1];
+//       const ma = prevMA ? (value - prevMA) * (2 / (length + 1)) + prevMA : value;
+//       maValues.push(ma);
+//     }
+//   } else if (type === 'Simple') {
+//     for (let i = 0; i < data.length; i++) {
+//       const sum = data.slice(i - length + 1, i + 1).reduce((acc, val) => acc + val, 0);
+//       const ma = sum / length;
+//       maValues.push(ma);
+//     }
+//   }
+//   } else if (type === 'Weighted') {
+//     // Implement weighted moving average calculation here
+//     console.error('Weighted moving average not implemented');
+//     return [];
+//   } else if (type === 'Linear') {
+//     // Implement linear regression moving average calculation here
+//     console.error('Linear regression moving average not implemented');
+//     return [];
+//   } else if (type === 'Hull') {
+//     // Implement Hull moving average calculation here
+//     console.error('Hull moving average not implemented');
+//     return [];
+//   } else if (type === 'Arnaud Legoux') {
+//     // Implement Arnaud Legoux moving average calculation here
+//     console.error('Arnaud Legoux moving average not implemented');
+//     return [];
+//   } else {
+//     console.error('Invalid moving average type');
+//     return [];
+//   }
+
+  return maValues;
+}
+
+// function getMAValue(source, length, type) {
+//   if (type === 'Exponential') {
+//     return ta.ema(source: source, length: length);
+//   } else if (type === 'Simple') {
+//     return ta.sma(source: source, length: length);
+//   } else if (type === 'Smoothed') {
+//     // Implement your custom smoothed moving average calculation here
+//     console.error('Smoothed moving average not implemented');
+//     return NaN;
+//   } else if (type === 'Weighted') {
+//     return ta.wma(source: source, length: length);
+//   } else if (type === 'Linear') {
+//     return ta.linreg(source: source, length: length, offset: 0);
+//   } else if (type === 'Hull') {
+//     return ta.hma(source: source, length: length);
+//   } else if (type === 'Arnaud Legoux') {
+//     return ta.alma(series: source, length: length);
+//   } else {
+//     console.error('Invalid moving average type');
+//     return NaN;
+//   }
+// }
+
+// Define utility functions for calculating Heikin Ashi values
+
+function getHAOpen(prevOpen, prevClose) {
+  return (prevOpen + prevClose) / 2;
+}
+
+function getHAHigh(open, high, close) {
+  return Math.max(high, open, close);
+}
+
+function getHALow(open, low, close) {
+  return Math.min(open, low, close);
+}
+
+function getHAClose(open, high, low, close) {
+  return (open + high + low + close) / 4;
+}
+
+// const timeframe = /* get user selection for timeframe */;
+const colorBullish = "#002200"; //darkgreen
+const colorBearish = "#330111"; //bergundy
+const showWicks = true;
+const smoothedHALength = 10;
+const doubleSmoothedHALength = 10;
+const smoothedMAType = 'Exponential';
+const doubleSmoothedMAType = 'Exponential';
+//alma sigma 6
+//alma offset 0.85
+const doDoubleSmoothing = false;
+
+
+function calculateHeikinAshiSmooth(data, smoothedHALength = 10, smoothedMAType = 'Exponential') {
+  const haData = [];
+  let prevHAOpen = null;
+
+
+//   debugger;
+  const movingAverageSet = getMovingAverage(data, smoothedHALength, smoothedMAType);
+  for (let i = 0; i < data.length; i++) {
+    const candle = data[i];
+    // debugger;
+    // const { time, open, high, low, close } = candle;
+
+    // const smoothedMAOpen = getMovingAverage(open, smoothedHALength, smoothedMAType);
+    // const smoothedMAHigh = getMovingAverage(high, smoothedHALength, smoothedMAType);
+    // const smoothedMALow = getMovingAverage(low, smoothedHALength, smoothedMAType);
+    // const smoothedMAClose = getMovingAverage(close, smoothedHALength, smoothedMAType);
+
+    const smoothedMAOpen = movingAverageSet[i].open;
+    const smoothedMAHigh = movingAverageSet[i].high;
+    const smoothedMALow = movingAverageSet[i].low;
+    const smoothedMAClose = movingAverageSet[i].close;
+
+    let haOpen = prevHAOpen || (smoothedMAOpen + smoothedMAClose) / 2;
+    let haHigh = Math.max(smoothedMAHigh, haOpen, smoothedMAClose);
+    let haLow = Math.min(smoothedMALow, haOpen, smoothedMAClose);
+    let haClose = (smoothedMAOpen + smoothedMAHigh + smoothedMALow + smoothedMAClose) / 4;
+
+    //double smoothing
+  if (doDoubleSmoothing) {
+    haOpen = getMovingAverage(haOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+    haClose = getMovingAverage(haClose, doubleSmoothedHALength, doubleSmoothedMAType);
+    haHigh = getMovingAverage(haHigh, doubleSmoothedHALength, doubleSmoothedMAType);
+    haLow = getMovingAverage(haLow, doubleSmoothedHALength, doubleSmoothedMAType);
+    // openToPlot = getMovingAverage(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType);
+    // closeToPlot = getMovingAverage(smoothedHAClose, doubleSmoothedHALength, doubleSmoothedMAType);
+    // highToPlot = getMovingAverage(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType);
+    // lowToPlot = getMovingAverage(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType);
+  }    
+
+    haData.push({
+      time:candle.time,
+      open: haOpen,
+      high: haHigh,
+      low: haLow,
+      close: haClose
+    });
+
+    prevHAOpen = haOpen;
+  } //end loop
+
+  return haData;
+} //end fn
+
+  import {getFakeData,calcMA} from "./moving_average_1.js";
+const chartOptions={layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
+const chart = LightweightCharts.createChart(document.getElementById('ha_Chart_XMPL'), chartOptions);
+
+const data = getFakeData(500);
+// let CandlestickChart1;
+// function initCandleChart_XMPL(){
+//     const chartOptions = { width: 400, height: 300, 
+//         layout: { textColor: 'steelblue', background: { type: 'solid', color: '#000000' } },
+//         grid: { vertLines: { color: "#222" }, horzLines: { color: "#9090ff" } },
+//         crosshair: { mode: LightweightCharts.CrosshairMode.Normal ,
+//             vertLine: { color: "darkslategrey" },
+//             horzLine: { color: "darkslategrey" },
+//         },
+//         rightPriceScale:{visible:true,},leftPriceScale:{visible:true},
+//     }
+
+
+
+
+
+
+
+//     CandlestickChart1 = LightweightCharts.createChart(
+//         document.getElementById('candelstickFRAME_XMPL'), chartOptions);
+//     // CANDLESTICK-SERIES******************************************************        
+//     const candlestickSeries = CandlestickChart1.addCandlestickSeries({ //width: 600, height: 300, 
+//         priceScaleId: 'left',layout: { textColor: 'steelblue',autoSize:false,
+//         background: { type: 'solid', color: '#000000' } }  ,
+//         wickUpColor: "#26a69a",upColor: "#26a69a",wickDownColor: "rgb(225, 50, 85)",downColor: "rgb(225, 50, 85)",
+//     });
+    // const data = [
+    //     {time: '2018-12-22', open: 7511.16, high: 8211.84, low: 3611.16, close: 4511.72 },{time: '2018-12-23', open: 4511.12, high: 5311.90, low: 4511.12, close: 4811.09 },
+    //     {time: '2018-12-24', open: 6011.71, high: 6011.71, low: 5311.39, close: 5911.29 },{time: '2018-12-25', open: 6811.26, high: 6811.26, low: 5911.04, close: 6011.50 },
+    //     {time: '2018-12-26', open: 6711.71, high: 10511.85, low: 6611.67, close: 9111.04 },{time: '2018-12-27', open: 9111.04, high: 12111.40, low: 8211.70, close: 11111.40 },
+    //     {time: '2018-12-28', open: 11111.51, high: 14211.83, low: 10311.34, close: 13111.25 },{time: '2018-12-29', open: 13111.33, high: 15111.17, low: 7711.68, close: 9611.43 },
+    //     {time: '2018-12-30', open: 10611.33, high: 11011.20, low: 9011.39, close: 9811.10 },{time: '2018-12-31', open: 10911.87, high: 11411.69, low: 8511.66, close: 11111.26 },
+    // ];
+//     candlestickSeries.setData(data);
+const BullishColor = "#006600"; //darkgreen
+const BearishColor = "#660111"; //bergundy
+    const candlestickSeries2 = chart.addCandlestickSeries({ //width: 600, height: 300, 
+        priceScaleId: 'right',layout: { textColor: 'steelblue',autoSize:false,
+        background: { type: 'solid', color: '#000000' } }  ,
+        wickUpColor:BullishColor,upColor:BullishColor,borderVisible: false,
+        wickDownColor:BearishColor,downColor:BearishColor,
+    });
+    // const haData = calculateHeikinAshi(data);
+    const haData = calculateHeikinAshiSmooth(data);
+    candlestickSeries2.setData(haData);
+
+
+
+const candlestickSeries = chart.addCandlestickSeries({ upColor: '#26a69a',downColor: '#ef5350',
+    borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+candlestickSeries.setData(data);
+
+
+const maData20 = calcMA(data, 10);
+const maData120 = calcMA(data, 20);
+const maData200 = calcMA(data, 30);
+const maSeries20 = chart.addLineSeries({ color: 'yellow', lineWidth:1});
+const maSeries120 = chart.addLineSeries({ color: 'purple', lineWidth:1});
+const maSeries200 = chart.addLineSeries({ color: 'limegreen', lineWidth:1});
+maSeries20.setData(maData20);
+maSeries120.setData(maData120);
+maSeries200.setData(maData200);
+
+    chart.timeScale().fitContent();
+
+
+
+
+    // resizeCandlestickChart1();
+// }; initCandleChart_XMPL();
+
+</script>
+
+</body>
+</html>
+
+
+<!--
+indicator(title='Smoothed Heiken Ashi - SamX', shorttitle='Smoothed HA', overlay=true)
+g_TimeframeSettings = 'Display & Timeframe Settings'
+time_frame = input.timeframe(title='Timeframe for HA candle calculation', defval='', group=g_TimeframeSettings, tooltip='Select the timeframe to use for calculating the smoothed ' +
+                 'HA candles.  The default value is to use the current chart timeframe, but altering this will allow you to have the indicator reflect a higher or lower timeframe. \n\n' +
+                 'Note: Selecting a lower timeframe than the current chart timeframe may not result in more precise candles as the display will still be limited to the current timeframe resolution.') 
+// I decided to add just a couple display-related settings here
+colorBullish = input.color(title='Color for bullish candle (Close > Open)', defval=color.rgb(255, 255, 255, 0), tooltip='Select the color to use to denote a bullish candle (where price closed above the open). \n\n' +
+                 'Note: Any changes to the "Style" tab will override this setting.  Actual doji candles (Open == Close) inherit the color of the previous candle.')
+colorBearish = input.color(title='Color for bearish candle (Close < Open)', defval=color.rgb(255, 0, 255, 0), tooltip='Select the color to use to denote a bearish candle (where price closed below the open). \n\n' +
+                 'Note: Any changes to the "Style" tab will override this setting.  Actual doji candles (Open == Close) inherit the color of the previous candle.')
+showWicks = input.bool(title="Show Wicks", defval=true, group=g_TimeframeSettings, tooltip='If checked (default), this indicator will paint wicks for the smoothed HA candles. \n\n' +
+                 'This can be helpful with shorter smooting periods, but many people like to hide wicks for longer periods to de-clutter the chart a bit. \n\n' +
+                 'Note: By default, wick color will match the candle body color.  This can be overridden in the "Styles" tab.')
+g_SmoothedHASettings = 'Smoothed HA Settings'
+smoothedHALength = input.int(title='HA Price Input Smoothing Length', minval=1, maxval=500, step=1, defval=10, group=g_SmoothedHASettings, tooltip='This input determines the number of time intervals (i.e. candles) ' +
+                 'to use when calculating a single smoothed HA candle.  Lower values will be more responsive to momentum shifts, while higher values will be better able to show sustained trends even ' +
+                 'during a moderate pull-back. \n\n' +
+                 'Note: A value of 1 (no matter the moving average type selected) will result in a standard HA candle, which may be desirable if you wish to see both regular and HA candles on the same ' +
+                 'chart simultaneously (in which case you should un-check "Enable double-smoothing" below).')
+smoothedMAType = input.string(title='Moving Average Calculation', group=g_SmoothedHASettings, options=['Exponential', 'Simple', 'Smoothed', 'Weighted', 'Linear', 'Hull', 'Arnaud Legoux'], defval='Exponential', tooltip='Type of moving average calculation to use ' +
+                 'for calculating the smoothed HA candles (default is Exponential (EMA)).')
+smoothedHAalmaSigma = input.float(title="ALMA Sigma", defval=6, minval=0, maxval=100, step=0.1, group=g_SmoothedHASettings, tooltip='Standard deviation applied to the ALMA MA.  Higher values tend to make the line smoother.  \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 6')
+smoothedHAalmaOffset = input.float(title="ALMA Offset", defval=0.85, minval=0, maxval=1, step=0.01, group=g_SmoothedHASettings, tooltip='Gaussian offset applied to the ALMA MA.  Higher values tend to make the line smoother, while lower values make it more responsive. \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 0.85')
+g_DoubleSmoothingSettings = 'Double-smoothed HA Settings'
+doDoubleSmoothing = input.bool(title='Enable double-smoothing', defval=true, group=g_DoubleSmoothingSettings, tooltip='Check this box to apply a secondary moving average to further smooth ' +
+                 'the smoothed HA candles. \n\n' +
+                 'While this may seem counter-intuitive, most versions of this indicator do use double-smoothing, hence the default value is true/checked.')
+doubleSmoothedHALength = input.int(title='HA Second Smoothing Length', minval=1, maxval=500, step=1, defval=10, group=g_DoubleSmoothingSettings, tooltip='This input defines how many of the smoothed HA candle ' +
+                 'price points to include for calculating a double-smoothed HA candle.  \n\n' +
+                 'Similar to how the comparable "Smoothed HA Settings" setting above use pure price data to calculate and construct a smoothed HA candle, this will use the output open, high, low, and close ' +
+                 'of the above pre-smoothed candles and apply a second level of smoothing on top of them in a similar method (calculate a new average open, high, low, and close, then apply the HA formula ' +
+                 'to those new values to determing what to print as the output). \n\n' +
+                 'Also, a value of 1 for this setting will be the same as un-checking the "Enable double-smoothing" box.')
+doubleSmoothedMAType = input.string(title='Double-Smoothing Moving Average Calculation', group=g_DoubleSmoothingSettings, options=['Exponential', 'Simple', 'Smoothed', 'Weighted', 'Linear', 'Hull', 'Arnaud Legoux'], defval='Exponential', tooltip='Type of moving average calculation to use ' +
+                 'for calculating the second smoothing applied to the smoothed HA candles (default is Exponential (EMA)).')
+doubleSmoothedHAalmaSigma = input.float(title="ALMA Sigma", defval=6, minval=0, maxval=100, step=0.1, group=g_DoubleSmoothingSettings, tooltip='Standard deviation applied to the ALMA MA above.  Higher values tend to make the line smoother.  \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 6')
+doubleSmoothedHAalmaOffset = input.float(title="ALMA Offset", defval=0.85, minval=0, maxval=1, step=0.01, group=g_DoubleSmoothingSettings, tooltip='Gaussian offset applied to the ALMA MA above.  Higher values tend to make the line smoother, while lower values make it more responsive. \n\n' +
+                 'Only relevant when "Arnaud Legoux" is selected as the MA type above.  Default: 0.85')
+smoothedMovingAvg(src, len) => 
+	smma = 0.0
+	// TV will complain about the use of the ta.sma function use inside a function saying that it should be called on each calculation, 
+	// but since we're only using it once to set the initial value for the smoothed MA (when the previous smma value is NaN - Not a Number)
+	// and using the previous smma value for each subsequent iteration, this can be safely ignored
+	smma := na(smma[1]) ? ta.sma(src, len) : (smma[1] * (len - 1) + src) / len 
+	smma
+getHAOpen(prevOpen, prevClose) =>
+    haOpen = 0.0
+    haOpen := ((prevOpen + prevClose)/2)
+    haOpen
+getHAHigh(o, h, c) =>
+    haHigh = 0.0
+    haHigh := math.max(h, o, c)
+    haHigh
+getHALow(o, l, c) =>
+    haLow = 0.0
+    haLow := math.min(o, l, c)
+    haLow
+getHAClose(o, h, l, c) =>
+    haClose = 0.0
+    haClose := ((o + h + l + c)/4)
+    haClose
+getMAValue(src, len, type, isDoubleSmooth) =>
+	maValue = 0.0
+	if (type == 'Exponential')
+		maValue := ta.ema(source=src, length=len)
+	else if (type == 'Simple')
+		maValue := ta.sma(source=src, length=len)
+	else if (type == 'Smoothed')
+		maValue := smoothedMovingAvg(src=src, len=len)
+	else if (type == 'Weighted')
+		maValue := ta.wma(source=src, length=len)
+	else if (type == 'Linear')
+		maValue := ta.linreg(source=src, length=len, offset=0)
+	else if (type == 'Hull')
+		maValue := ta.hma(source=src, length=len)
+	else if (type == 'Arnaud Legoux')
+		maValue := ta.alma(series=src, length=len, offset=(isDoubleSmooth ? doubleSmoothedHAalmaOffset : smoothedHAalmaOffset), sigma=(isDoubleSmooth ? doubleSmoothedHAalmaSigma : smoothedHAalmaSigma))
+	else 
+		maValue := na
+	maValue
+realPriceTicker = ticker.new(prefix=syminfo.prefix, ticker=syminfo.ticker)
+actualOpen = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=open, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+actualHigh = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=high, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+actualLow = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=low, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+actualClose = request.security(symbol=realPriceTicker, timeframe=time_frame, expression=close, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_off)
+smoothedMA1open = getMAValue(actualOpen, smoothedHALength, smoothedMAType, false) 
+smoothedMA1high = getMAValue(actualHigh, smoothedHALength, smoothedMAType, false) 
+smoothedMA1low = getMAValue(actualLow, smoothedHALength, smoothedMAType, false) 
+smoothedMA1close = getMAValue(actualClose, smoothedHALength, smoothedMAType, false)
+smoothedHAClose = getHAClose(smoothedMA1open, smoothedMA1high, smoothedMA1low, smoothedMA1close)
+smoothedHAOpen = smoothedMA1open
+smoothedHAOpen := na(smoothedHAOpen[1]) ? smoothedMA1open : getHAOpen(smoothedHAOpen[1], smoothedHAClose[1])
+smoothedHAHigh = getHAHigh(smoothedHAOpen, smoothedMA1high, smoothedHAClose)
+smoothedHALow =  getHALow(smoothedHAOpen, smoothedMA1low, smoothedHAClose)
+openToPlot = smoothedHAOpen
+closeToPlot = smoothedHAClose
+highToPlot = smoothedHAHigh
+lowToPlot = smoothedHALow
+if (doDoubleSmoothing)
+    openToPlot := getMAValue(smoothedHAOpen, doubleSmoothedHALength, doubleSmoothedMAType, true)
+    closeToPlot := getMAValue(smoothedHAClose, doubleSmoothedHALength, doubleSmoothedMAType, true)
+    highToPlot := getMAValue(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType, true)
+    lowToPlot := getMAValue(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType, true)
+else
+    na
+candleColor = color.rgb(0, 0, 0, 100)
+candleColor := (closeToPlot > openToPlot) ? colorBullish : 
+     (closeToPlot < openToPlot) ? colorBearish : candleColor[1]
+plotcandle(open=openToPlot, high=highToPlot, low=lowToPlot, close=closeToPlot, title="Smoothed HA", color=candleColor, wickcolor=(showWicks ? candleColor : na), bordercolor=candleColor)
+isBullishColorChange = ((closeToPlot[1] < openToPlot[1]) ? (closeToPlot > openToPlot ? true : false) : false)
+isBearishColorChange = ((closeToPlot[1] > openToPlot[1]) ? (closeToPlot < openToPlot ? true : false) : false)
+isConfirmedBullishColorChange = isBullishColorChange and barstate.isconfirmed
+isConfirmedBearishColorChange = isBearishColorChange and barstate.isconfirmed
+alertcondition(condition=isConfirmedBullishColorChange, title="Smoothed HA Bear -> Bull", message="Smoothed Heiken Ashi detected a change in candle direction from bearish to bullish.")
+alertcondition(condition=isConfirmedBearishColorChange, title="Smoothed HA Bull -> Bear", message="Smoothed Heiken Ashi detected a change in candle direction from bullish to bearish.")
+if (isConfirmedBullishColorChange)
+    alert(freq=alert.freq_once_per_bar_close, message="Smoothed Heiken Ashi detected a change in candle direction from bearish to bullish.")
+if (isConfirmedBearishColorChange)
+    alert(freq=alert.freq_once_per_bar_close, message="Smoothed Heiken Ashi detected a change in candle direction from bullish to bearish.")
+
+-->
+
