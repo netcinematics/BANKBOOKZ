@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heiken Ashi Innovations</title>
+    <script src="./lwc_dev_deriv_4.2.js"></script>
+<style>
+    /*******************************CUSTOM -CHECKBOXES******************************/
+    input[type="checkbox"] { -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            width: 20px;height: 20px;border: 0px solid blue;border-radius: 44%;background-color: black;
+            cursor: pointer;border: 2px solid purple;background-color: #000;color:aqua;margin-left: 2em;
+        }
+        input[type="checkbox"]:after { border: 2px solid #0fd05f;border-radius: 3px;background-color: #000;
+            border-radius: 44%;color:aqua;width: 20px;padding:0 0.111em 0 0.111em;margin: -1px 0 0 -1px;
+        }
+        input[type="checkbox"]:checked { content: '\2714'; /* Checkmark character */
+            width: 20px;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
+        }   
+        input[type="checkbox"]:checked:after { content: '\2714'; /* Checkmark character */
+            width: 20px;background-color: blue;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
+        }
+    /*****************END CUSTOM -CHECKBOXES*************************/        
+</style>
+</head>
+<body style="background:black;margin-right:2em;">
+    <div><h1 style="color:steelblue;margin:1em 0 0 1em;">HEIKENASHI</h1>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- various innovations</p>
+    </div>
+    <article id="HEIKAFRAME_SPY" style="justify-content:center;
+        flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+        <i style="font-size:0.555em;margin:0.888em;"
+        class="MOBILE_Frame_Sizer">No data.</i>
+    </article>
+    <menu style="justify-content: center;border-radius: 13px;display: flex;margin-top: 2em;padding: 1em 0 0 0;
+        height: 4em;color:steelblue;flex-direction:column;align-items:center;font-weight:bold;margin-bottom:4em;font-size:0.777em;">
+        <section style="display: flex;align-items: center;">
+            <input type="checkbox" checked="true" class="HEIKA_CHECKBOX" id="price_opt_SPY">
+            <label>Price</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="origin_opt_SPY">
+            <label>HeikA</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="base_opt_SPY">
+            <label>Baseline</label>
+        </section>
+        <section style="margin: 1em 0;display: flex;align-items: center;">
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="day5_opt_SPY">
+            <label>5 days</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="day10_opt_SPY">
+            <label>10 days</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="day20_opt_SPY">
+            <label>20 days</label>
+        </section>
+        <section style="margin: 1em 0;display: flex;align-items: center;">
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="MOAVS_opt_SPY">
+            <label>MOAVS</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="NVDA_opt_SPY">
+            <label>BARNums</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="AMZN_opt_SPY">
+            <label>WIKNums</label>
+        </section>
+    </menu>
+    <div id="ha_Chart_XMPL" style="height:20em;margin-left:3em;"></div>
+
+<script type="module">
+import {getFakeData,calcMA} from "./moving_average_1.js";
+// let random_price_data = getFakeData(33);//number of recs, wicks too big?
+let random_price_data = getFakeData(99);//number of recs, wicks too big?
+//TKR TEST DATA OVERRIDE********************************************
+// let A_10 = [{"tkr":"A","time":"2024-10-01","open":184.9,"high":186.19,"low":183.4519,"close":185.13},{"tkr":"A","time":"2024-10-02","open":184.44,"high":186.6,"low":184.04,"close":184.76},{"tkr":"A","time":"2024-10-03","open":183.045,"high":183.44,"low":180.875,"close":181.96}];
+//{"time":"2024-10-04","open":185.71,"high":187.6,"low":183.6,"close":186.51},{"time":"2024-10-07","open":182.95,"high":183.6,"low":180.25,"close":180.8},{"time":"2024-10-08","open":181.915,"high":183.09,"low":180.92,"close":182.72},{"time":"2024-10-09","open":182.82,"high":185.845,"low":182.05,"close":185.17},{"time":"2024-10-10","open":187.13,"high":188.134,"low":185.83,"close":186.65},{"time":"2024-10-11","open":186.63,"high":189.9284,"low":186.3,"close":188.82},{"time":"2024-10-14","open":189.78,"high":189.83,"low":187.36,"close":187.54}
+let AMZN_10 = [{"tkr":"AMZN","time":"2024-10-01","open":184.9,"high":186.19,"low":183.4519,"close":185.13,"volume":36044906,"value":185,"volAVG":37536416,"lastClose":186.33,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-02","open":184.44,"high":186.6,"low":184.04,"close":184.76,"volume":23704056,"value":185,"volAVG":30620236,"lastClose":185.13,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-03","open":183.045,"high":183.44,"low":180.875,"close":181.96,"volume":30204302,"value":182,"volAVG":30412269,"lastClose":184.76,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-04","open":185.71,"high":187.6,"low":183.6,"close":186.51,"volume":40853327,"value":186,"volAVG":35632798,"lastClose":181.96,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-07","open":182.95,"high":183.6,"low":180.25,"close":180.8,"volume":42364201,"value":182,"volAVG":38998500,"lastClose":186.51,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-10-08","open":181.915,"high":183.09,"low":180.92,"close":182.72,"volume":26372086,"value":182,"volAVG":32685293,"lastClose":180.8,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-09","open":182.82,"high":185.845,"low":182.05,"close":185.17,"volume":26343117,"value":184,"volAVG":29514205,"lastClose":182.72,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-10","open":187.13,"high":188.134,"low":185.83,"close":186.65,"volume":27785043,"value":187,"volAVG":28649624,"lastClose":185.17,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-11","open":186.63,"high":189.9284,"low":186.3,"close":188.82,"volume":25751557,"value":188,"volAVG":27200591,"lastClose":186.65,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-10-14","open":189.78,"high":189.83,"low":187.36,"close":187.54,"volume":22425533,"value":189,"volAVG":24813062,"lastClose":188.82,"volColor":"crimson"}];
+let AMZN_09 = [{"tkr":"AMZN","time":"2024-09-03","open":177.55,"high":178.26,"low":175.26,"close":176.25,"volume":37817511,"value":177,"volAVG":66181615,"lastClose":161.02,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-04","open":174.48,"high":175.98,"low":172.54,"close":173.33,"volume":29682478,"value":174,"volAVG":47932047,"lastClose":176.25,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-05","open":175,"high":179.875,"low":174.995,"close":177.89,"volume":40170526,"value":177,"volAVG":44051287,"lastClose":173.33,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-06","open":177.24,"high":178.38,"low":171.16,"close":171.39,"volume":41466537,"value":175,"volAVG":42758912,"lastClose":177.89,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-09","open":174.53,"high":175.85,"low":173.51,"close":175.4,"volume":29037362,"value":175,"volAVG":35898137,"lastClose":171.39,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-10","open":177.49,"high":180.5,"low":176.79,"close":179.55,"volume":36233796,"value":179,"volAVG":36065967,"lastClose":175.4,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-11","open":180.095,"high":184.99,"low":175.73,"close":184.52,"volume":42564698,"value":180,"volAVG":39315333,"lastClose":179.55,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-12","open":184.8,"high":187.41,"low":183.54,"close":187,"volume":33622483,"value":185,"volAVG":36468908,"lastClose":184.52,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-13","open":187,"high":188.5,"low":185.91,"close":186.49,"volume":26495351,"value":187,"volAVG":31482130,"lastClose":187,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-16","open":185.29,"high":185.81,"low":183.36,"close":184.89,"volume":25196092,"value":185,"volAVG":28339111,"lastClose":186.49,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-17","open":186.85,"high":189.45,"low":186.14,"close":186.88,"volume":26091682,"value":188,"volAVG":27215397,"lastClose":184.89,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-18","open":186.45,"high":188.8,"low":185.06,"close":186.43,"volume":34448130,"value":187,"volAVG":30831764,"lastClose":186.88,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-19","open":190.04,"high":190.99,"low":188.47,"close":189.87,"volume":39543168,"value":190,"volAVG":35187466,"lastClose":186.43,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-20","open":190.23,"high":191.84,"low":187.41,"close":191.6,"volume":100378553,"value":190,"volAVG":67783010,"lastClose":189.87,"volColor":"limegreen"},{"tkr":"AMZN","time":"2024-09-23","open":191.64,"high":194.45,"low":190.57,"close":193.88,"volume":36993111,"value":193,"volAVG":52388061,"lastClose":191.6,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-24","open":194.27,"high":195.37,"low":190.13,"close":193.96,"volume":43478926,"value":193,"volAVG":47933494,"lastClose":193.88,"volColor":"darkgreen"},{"tkr":"AMZN","time":"2024-09-25","open":193.75,"high":193.9498,"low":192.16,"close":192.53,"volume":26391144,"value":193,"volAVG":37162319,"lastClose":193.96,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-26","open":194.31,"high":194.53,"low":189.54,"close":191.16,"volume":36334854,"value":192,"volAVG":36748587,"lastClose":192.53,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-27","open":190.68,"high":190.9,"low":187.34,"close":187.97,"volume":36002316,"value":189,"volAVG":36375452,"lastClose":191.16,"volColor":"crimson"},{"tkr":"AMZN","time":"2024-09-30","open":187.14,"high":188.49,"low":184.65,"close":186.33,"volume":41680400,"value":187,"volAVG":39027926,"lastClose":187.97,"volColor":"crimson"}];
+let NVDA_10 = [{"tkr":"NVDA","time":"2024-10-01","open":121.765,"high":122.4351,"low":115.79,"close":117,"volume":302094485,"value":119,"volAVG":279270828,"lastClose":121.44,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-02","open":116.44,"high":119.38,"low":115.14,"close":118.85,"volume":221845887,"value":117,"volAVG":250558358,"lastClose":117,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-03","open":120.92,"high":124.36,"low":120.3401,"close":122.85,"volume":277117973,"value":122,"volAVG":263838166,"lastClose":118.85,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-04","open":124.93,"high":125.02,"low":121.9,"close":124.92,"volume":243067845,"value":123,"volAVG":253453006,"lastClose":122.85,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-07","open":124.99,"high":130.64,"low":124.95,"close":127.72,"volume":346250233,"value":128,"volAVG":299851620,"lastClose":124.92,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-08","open":130.26,"high":133.48,"low":129.42,"close":132.89,"volume":285722485,"value":131,"volAVG":292787053,"lastClose":127.72,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-09","open":134.11,"high":134.52,"low":131.38,"close":132.65,"volume":246191612,"value":133,"volAVG":269489333,"lastClose":132.89,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-10","open":131.91,"high":135,"low":131,"close":134.81,"volume":242311337,"value":133,"volAVG":255900335,"lastClose":132.65,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-11","open":134.01,"high":135.78,"low":133.66,"close":134.8,"volume":170209474,"value":135,"volAVG":213054905,"lastClose":134.81,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-14","open":136.47,"high":139.6,"low":136.3,"close":138.07,"volume":229746674,"value":138,"volAVG":221400790,"lastClose":134.8,"volColor":"darkgreen"}];
+let NVDA_09 = [{"tkr":"NVDA","time":"2024-09-03","open":116.01,"high":116.21,"low":107.29,"close":108,"volume":477155100,"value":112,"volAVG":502474368,"lastClose":100.45,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-04","open":105.41,"high":113.27,"low":104.12,"close":106.21,"volume":368378810,"value":109,"volAVG":435426589,"lastClose":108,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-05","open":104.985,"high":109.65,"low":104.76,"close":107.21,"volume":306850696,"value":107,"volAVG":371138643,"lastClose":106.21,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-06","open":108.04,"high":108.15,"low":100.95,"close":102.83,"volume":413638098,"value":105,"volAVG":392388371,"lastClose":107.21,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-09","open":104.88,"high":106.55,"low":103.69,"close":106.47,"volume":273912015,"value":105,"volAVG":333150193,"lastClose":102.83,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-10","open":107.81,"high":109.4,"low":104.95,"close":108.1,"volume":268283736,"value":107,"volAVG":300716965,"lastClose":106.47,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-11","open":109.39,"high":117.19,"low":107.42,"close":116.91,"volume":441422370,"value":112,"volAVG":371069668,"lastClose":108.1,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-12","open":116.84,"high":120.79,"low":115.38,"close":119.14,"volume":367100496,"value":118,"volAVG":369085082,"lastClose":116.91,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-13","open":119.08,"high":119.955,"low":117.6,"close":119.1,"volume":238358328,"value":119,"volAVG":303721705,"lastClose":119.14,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-16","open":116.79,"high":118.18,"low":114.36,"close":116.78,"volume":248772308,"value":116,"volAVG":276247007,"lastClose":119.1,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-17","open":118.17,"high":118.8,"low":114.83,"close":115.59,"volume":231925876,"value":117,"volAVG":254086442,"lastClose":116.78,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-18","open":115.89,"high":117.7,"low":113.22,"close":113.37,"volume":310318937,"value":115,"volAVG":282202690,"lastClose":115.59,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-19","open":117.35,"high":119.66,"low":117.25,"close":117.87,"volume":293506438,"value":118,"volAVG":287854564,"lastClose":113.37,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-20","open":117.06,"high":118.6181,"low":115.3901,"close":116,"volume":382462428,"value":117,"volAVG":335158496,"lastClose":117.87,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-23","open":116.55,"high":116.99,"low":114.86,"close":116.26,"volume":206228490,"value":116,"volAVG":270693493,"lastClose":116,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-24","open":116.515,"high":121.8,"low":115.38,"close":120.87,"volume":354966772,"value":119,"volAVG":312830133,"lastClose":116.26,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-25","open":122.02,"high":124.94,"low":121.61,"close":123.51,"volume":284692948,"value":123,"volAVG":298761541,"lastClose":120.87,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-26","open":126.8,"high":127.665,"low":121.8,"close":124.04,"volume":302582868,"value":125,"volAVG":300672205,"lastClose":123.51,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-27","open":123.97,"high":124.03,"low":119.26,"close":121.4,"volume":271009175,"value":122,"volAVG":285840690,"lastClose":124.04,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-30","open":118.31,"high":121.5,"low":118.15,"close":121.44,"volume":227053651,"value":120,"volAVG":256447171,"lastClose":121.4,"volColor":"darkgreen"}];
+// random_price_data = [...AMZN_09,...AMZN_10];
+// random_price_data = [...NVDA_09,...NVDA_10];
+//ENDTEST TKR DATA********************************************
+// HA2SMTH RES TGT DATA*************************************
+let AMZN_HA2_30 = [
+    {time:'2024-09-03',open:174,high:176,low:172,close:174},
+    {time:'2024-09-04',open:174,high:176,low:172,close:174},
+    {time:'2024-09-05',open:174,high:176,low:172,close:174},
+    {time:'2024-09-06',open:174,high:177,low:172,close:175},
+    {time:'2024-09-09',open:174,high:177,low:172,close:175},
+    {time:'2024-09-10',open:174,high:177,low:173,close:175},
+    {time:'2024-09-11',open:175,high:177,low:173,close:175},
+    {time:'2024-09-12',open:175,high:178,low:173,close:175},
+    {time:'2024-09-13',open:175,high:178,low:174,close:176},
+    {time:'2024-09-16',open:176,high:179,low:175,close:177},
+    {time:'2024-09-17',open:176,high:180,low:175,close:178},
+    {time:'2024-09-18',open:177,high:181,low:176,close:179},
+    {time:'2024-09-19',open:178,high:182,low:177,close:180},
+    {time:'2024-09-20',open:179,high:182,low:178,close:180},
+    {time:'2024-09-23',open:180,high:183,low:179,close:181},
+    {time:'2024-09-24',open:181,high:184,low:180,close:183},
+    {time:'2024-09-25',open:182,high:185,low:181,close:184},
+    {time:'2024-09-26',open:183,high:186,low:182,close:185},
+    {time:'2024-09-27',open:184,high:187,low:183,close:185},
+    {time:'2024-09-30',open:184,high:188,low:184,close:185},
+    {time:'2024-10-01',open:185,high:188,low:184,close:186},
+    {time:'2024-10-02',open:186,high:188,low:184,close:186},
+    {time:'2024-10-03',open:185,high:188,low:184,close:186},
+    {time:'2024-10-04',open:186,high:188,low:184,close:186},
+    {time:'2024-10-07',open:186,high:188,low:184,close:186},
+    {time:'2024-10-08',open:186,high:187,low:184,close:186},
+    {time:'2024-10-09',open:186,high:187,low:184,close:186},
+    {time:'2024-10-10',open:186,high:187,low:184,close:185},
+    {time:'2024-10-11',open:186,high:187,low:184,close:185},
+    {time:'2024-10-14',open:185,high:187,low:184,close:185},
+]
+let NVDA_HA2_30 = [
+    {time:'2024-09-03',open:120,high:123,low:118,close:121},
+    {time:'2024-09-04',open:120,high:123,low:117,close:120},
+    {time:'2024-09-05',open:120,high:123,low:116,close:119},
+    {time:'2024-09-06',open:120,high:122,low:115,close:118},
+    {time:'2024-09-09',open:119,high:121,low:114,close:117},
+    {time:'2024-09-10',open:118,high:119,low:113,close:116},
+    {time:'2024-09-11',open:117,high:118,low:112,close:115},
+    {time:'2024-09-12',open:116,high:118,low:112,close:115},
+    {time:'2024-09-13',open:115,high:118,low:111,close:115},
+    {time:'2024-09-16',open:115,high:117,low:111,close:114},
+    {time:'2024-09-17',open:115,high:117,low:112,close:114},
+    {time:'2024-09-18',open:115,high:117,low:112,close:114},
+    {time:'2024-09-19',open:115,high:117,low:112,close:115},
+    {time:'2024-09-20',open:115,high:117,low:112,close:115},
+    {time:'2024-09-23',open:115,high:117,low:112,close:115},
+    {time:'2024-09-24',open:115,high:117,low:113,close:115},
+    {time:'2024-09-25',open:115,high:118,low:113,close:115},
+    {time:'2024-09-26',open:115,high:118,low:114,close:116},
+    {time:'2024-09-27',open:116,high:119,low:114,close:116},
+    {time:'2024-09-30',open:116,high:119,low:115,close:117},
+    {time:'2024-10-01',open:116,high:120,low:115,close:117},
+    {time:'2024-10-02',open:117,high:120,low:115,close:118},
+    {time:'2024-10-03',open:117,high:120,low:116,close:118},
+    {time:'2024-10-04',open:118,high:120,low:116,close:118},
+    {time:'2024-10-07',open:118,high:121,low:116,close:119},
+    {time:'2024-10-08',open:118,high:122,low:117,close:120},
+    {time:'2024-10-09',open:119,high:123,low:118,close:120},
+    {time:'2024-10-10',open:120,high:124,low:119,close:122},
+    {time:'2024-10-11',open:121,high:125,low:120,close:123},
+    {time:'2024-10-14',open:122,high:126,low:121,close:124},
+];
+// END HA2SMTH RES TGT DATA*************************************
+
+function getMovingAVG(data, length, type) {
+  const maValues = [];
+  if (type === 'Exponential') {
+    for (let i = 0; i < data.length; i++) {
+      const candle = data[i];
+      const avgCandle = {};
+      const prevMA = maValues[i - 1];
+      const hi = (prevMA && prevMA.high) ? (candle.high - prevMA.high) * (2 / (length + 1)) + prevMA.high : candle.high;
+      const lo = (prevMA && prevMA.low) ? (candle.low - prevMA.low) * (2 / (length + 1)) + prevMA.low : candle.low;
+      const opn = (prevMA && prevMA.open) ? (candle.open - prevMA.open) * (2 / (length + 1)) + prevMA.open : candle.open;
+      const cls = (prevMA && prevMA.close) ? (candle.close - prevMA.close) * (2 / (length + 1)) + prevMA.close : candle.close;
+      avgCandle.high = hi;
+      avgCandle.low = lo;
+      avgCandle.open = opn;
+      avgCandle.close = cls;
+      avgCandle.time = candle.time;
+      maValues.push(avgCandle);
+    }
+  }
+  return maValues;
+}
+function calculateHEIKA_Candles_Original(data) {
+    let resultData = [], prevClose = null, prevOpen = null;
+    data.forEach((candle, index) => {
+      const open = index === 0 ? candle.open : (prevOpen + prevClose) / 2;
+      const close = (candle.open + candle.high + candle.low + candle.close) / 4;
+      const high = Math.max(candle.high, (open + close) / 2);
+      const low = Math.min(candle.low, (open + close) / 2);
+      resultData.push({ time: candle.time, open, high, low, close });
+      prevClose = close;
+      prevOpen = open;
+    });
+    return resultData;
+  }
+
+  function calculateHEIKA_Base(data, smoothedHALength = 10, smoothedMAType = 'Exponential') {
+  const haData = [];
+  let prevHAOpen = null;
+  const movingAverageSet = getMovingAVG(data, smoothedHALength, smoothedMAType);
+  for (let i = 0; i < data.length; i++) {
+    const candle = data[i];
+    const smoothedMAOpen = movingAverageSet[i].open;
+    const smoothedMAHigh = movingAverageSet[i].high;
+    const smoothedMALow = movingAverageSet[i].low;
+    const smoothedMAClose = movingAverageSet[i].close;
+    let haOpen = prevHAOpen || (smoothedMAOpen + smoothedMAClose) / 2;
+    let haHigh = Math.max(smoothedMAHigh, haOpen, smoothedMAClose);
+    let haLow = Math.min(smoothedMALow, haOpen, smoothedMAClose);
+    let haClose = (smoothedMAOpen + smoothedMAHigh + smoothedMALow + smoothedMAClose) / 4;
+    haData.push({time:candle.time,open:haOpen,high:haHigh,low:haLow,close:haClose});
+    prevHAOpen = haOpen;
+  } //end loop
+  return haData;
+} //end basefn
+
+function calculateHEIKA_DBLSMOOTH(input, days) {
+    const output = [];
+    const ema1 = [];
+    const ema2 = [];
+    ema1[0] = input[0].close;
+    ema2[0] = input[0].close;
+    for (let i = 1; i < input.length; i++) { //calc ema
+    const multiplier1 = 2 / (days + 1); //ema 1
+    ema1[i] = (input[i].close - ema1[i - 1]) * multiplier1 + ema1[i - 1];
+    const multiplier2 = 2 / (days + 1); //ema 2
+    ema2[i] = (ema1[i] - ema2[i - 1]) * multiplier2 + ema2[i - 1];
+    // Calculate Heiken-Ashi values
+    const open = (ema1[i - 1] + ema2[i - 1]) / 2;
+    const high = Math.max(input[i].high, ema1[i], ema2[i]);
+    const low = Math.min(input[i].low, ema1[i], ema2[i]);
+    const close = (ema1[i] + ema2[i]) / 2;
+    output.push({time:input[i].time,open,high,low,close,});
+    }
+    return output;
+} //end 2xfn
+
+window.init_HEIKA_CHART = (tkr) => { 
+    let checkz = get_HEIKA_Checked(tkr);
+    // let tgt_Chart = document.getElementById(`HEIKAFRAME_${tkr}`)
+    let tgt_Chart = document.getElementById(`HEIKAFRAME_SPY`)
+    tgt_Chart.innerHTML = ''; //blank out frame.
+    //---------------HEIKA-CHART----------------------------------------
+    const chartOptionsHEIKA={ width:400, height:300,autoSize:false,
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        layout:{textColor: 'steelblue',background:{ type:'solid',color:'black' } },
+        rightPriceScale:{visible:true,},leftPriceScale:{visible:true} ,
+    };
+    const HEIKA_Chart = LightweightCharts.createChart(tgt_Chart, chartOptionsHEIKA);
+    //------------------------------------------------------HEIKA-DATA-----------------
+    // let candleSeriesDATA = getCandleSeriesDATA(tkr);
+    // let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
+    // lineSeriesMETADATA = fillMissingDays(lineSeriesMETADATA);
+    // lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
+    if(checkz.base_opt){ //--------------------------------
+        const BullishColor = "#006064";//"#00332a";//"#006600"; //darkgreen
+        const BearishColor = "#801922";//"#660111"; //bergundy
+        const candlestickHEIKA_Base = HEIKA_Chart.addCandlestickSeries({ //width: 600, height: 300, 
+            priceScaleId: 'right',layout: { textColor: 'steelblue',autoSize:false,
+            background: { type: 'solid', color: '#000000' } } ,
+            wickUpColor:BullishColor,upColor:BullishColor,borderVisible: false,
+            wickDownColor:BearishColor,downColor:BearishColor,
+            priceLineVisible:false
+        });
+        const baseData = calculateHEIKA_Base(random_price_data);
+        candlestickHEIKA_Base.setData(baseData); //BASELINE
+    }    
+    if(checkz.price_opt){ //console.log('RENDER price')
+        //---------------HEIKA-PRICE-SERIES-----------------
+        const candlestickHEIKA_Price = HEIKA_Chart.addCandlestickSeries({ 
+            upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+            borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_Price.setData(random_price_data); //PRICE
+        //----------------END- PRICE SERIES-------------------
+    }
+    if(checkz.origin_opt){ //console.log('RENDER origin')
+        const haCandles_original = calculateHEIKA_Candles_Original(random_price_data); //ORIGINAL
+        const candlestickHEIKA_Origin = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_Origin.setData(haCandles_original); //HA ORIGINAL
+    } 
+    if(checkz.day5_opt){  //--------DOUBLE-SMOOTH----------------
+        const output_5 = calculateHEIKA_DBLSMOOTH(random_price_data,5);
+        const candlestickHEIKA_DBLSMOOTH_5 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#3179f5',downColor: '#ab47bc',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#3179f5', wickDownColor: '#ab47bc'});
+        candlestickHEIKA_DBLSMOOTH_5.setData(output_5); //2X SMOOTH
+    }
+    if(checkz.day10_opt){
+        const output_10 = calculateHEIKA_DBLSMOOTH(random_price_data, 10);
+        const candlestickHEIKA_DBLSMOOTH_10 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#1848cc',downColor: '#7b1fa2',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#1848cc', wickDownColor: '#7b1fa2'});
+        candlestickHEIKA_DBLSMOOTH_10.setData(output_10); //2X SMOOTH
+    }
+    if(checkz.day20_opt){
+        const output_20 = calculateHEIKA_DBLSMOOTH(random_price_data,20);
+        const candlestickHEIKA_DBLSMOOTH_20 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#0c3299',downColor: '#880e4f',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#0c3299', wickDownColor: '#880e4f'});
+        candlestickHEIKA_DBLSMOOTH_20.setData(output_20); //2X SMOOTH
+    }
+    if(checkz.NVDA_opt){
+        const candlestickHEIKA_DBLSMOOTH_20 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_DBLSMOOTH_20.setData(NVDA_HA2_30); //2X SMOOTH
+    }
+    if(checkz.AMZN_opt){
+        const candlestickHEIKA_DBLSMOOTH_20 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_DBLSMOOTH_20.setData(AMZN_HA2_30); //2X SMOOTH
+    }
+    if(checkz.MOAVS_opt){
+        const maData0 = calcMA(random_price_data, 2);
+        const maDataA = calcMA(random_price_data, 10);
+        const maDataB = calcMA(random_price_data, 20);
+        const maDataC = calcMA(random_price_data, 30);
+        const maSeries0 = HEIKA_Chart.addLineSeries({ color: 'aqua', lineWidth:1,priceLineVisible:false});
+        const maSeriesA = HEIKA_Chart.addLineSeries({ color: 'orange', lineWidth:1,priceLineVisible:false});
+        const maSeriesB = HEIKA_Chart.addLineSeries({ color: 'purple', lineWidth:1,priceLineVisible:false});
+        const maSeriesC = HEIKA_Chart.addLineSeries({ color: 'steelblue', lineWidth:1,priceLineVisible:false});
+        maSeries0.setData(maData0);
+        maSeriesA.setData(maDataA);
+        maSeriesB.setData(maDataB);
+        maSeriesC.setData(maDataC);
+    }
+    //-------------------------------------------------------------------
+    HEIKA_Chart.timeScale().fitContent(); 
+    // resize_BIG_CHART(HEIKA_Chart);
+}; init_HEIKA_CHART("SPY");//END HEIKA INIT - individual chart
+function init_HEIKA_CHECKBOXES(){ //all HEIKA selectors.
+    const checkboxes = document.querySelectorAll('.HEIKA_CHECKBOX');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', (event) => {
+            // debugger;///todo somehow broke after import
+            const isChecked = event.target.checked;
+            const tkr = event.target.id.split('_')[2];
+            if(!tkr){return}
+            init_HEIKA_CHART(tkr); //refresh
+        });
+    });
+}; init_HEIKA_CHECKBOXES();
+function get_HEIKA_Checked(tkr){
+    let priceElem = document.getElementById(`price_opt_${tkr}`);
+    let originElem = document.getElementById(`origin_opt_${tkr}`);
+    let baseElem = document.getElementById(`base_opt_${tkr}`);
+    let day5Elem = document.getElementById(`day5_opt_${tkr}`);
+    let day10Elem = document.getElementById(`day10_opt_${tkr}`);
+    let day20Elem = document.getElementById(`day20_opt_${tkr}`);
+    let MOAVSElem = document.getElementById(`MOAVS_opt_${tkr}`);
+    let AMZNElem = document.getElementById(`AMZN_opt_${tkr}`);
+    let NVDAElem = document.getElementById(`NVDA_opt_${tkr}`);
+    let checked_selection = {
+        price_opt: priceElem.checked,
+        origin_opt: originElem.checked,
+        base_opt: baseElem.checked,
+        day5_opt: day5Elem.checked,
+        day10_opt: day10Elem.checked,
+        day20_opt: day20Elem.checked,
+        MOAVS_opt: MOAVSElem.checked,
+        AMZN_opt: AMZNElem.checked,
+        NVDA_opt: NVDAElem.checked,
+    }
+    return checked_selection;
+}
+// ********************************END CHECKBOXES***************************
+</script>
+</body>
+</html>

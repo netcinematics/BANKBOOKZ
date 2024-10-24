@@ -3,13 +3,254 @@
 <head>
     <title>Heiken Ashi Chart Example</title>
     <script src="./lwc_dev_deriv_4.2.js"></script>
+
+<style>
+    /*******************************CUSTOM -CHECKBOXES******************************/
+    input[type="checkbox"] { -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            width: 20px;height: 20px;border: 0px solid blue;border-radius: 44%;background-color: black;
+            cursor: pointer;border: 2px solid purple;background-color: #000;color:aqua;margin-left: 2em;
+        }
+        input[type="checkbox"]:after { border: 2px solid #0fd05f;border-radius: 3px;background-color: #000;
+            border-radius: 44%;color:aqua;width: 20px;padding:0 0.111em 0 0.111em;margin: -1px 0 0 -1px;
+        }
+        input[type="checkbox"]:checked { content: '\2714'; /* Checkmark character */
+            width: 20px;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
+        }   
+        input[type="checkbox"]:checked:after { content: '\2714'; /* Checkmark character */
+            width: 20px;background-color: blue;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
+        }
+    /*****************END CUSTOM -CHECKBOXES*************************/        
+</style>
+
+
 </head>
 <body style="background:black;margin-right:2em;">
     <div><h1 style="color:steelblue;margin:1em 0 0 1em;">HEIKENASHI</h1>
         <p style="color:limegreen;margin:1em 0 1em 4em;">- double candle example</p>
-    </div>    
+    </div>
+
+    <!-- <article id="HEIKAFRAME_${tgtTKR.tkr}" style="justify-content:center; -->
+    <article id="HEIKAFRAME_SPY" style="justify-content:center;
+        flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
+        <i style="font-size:0.555em;margin:0.888em;"
+        class="MOBILE_Frame_Sizer">No data.</i>
+    </article>
+    <menu style="justify-content: center;border-radius: 13px;display: flex;margin-top: 2em;padding: 1em 0 0 0;
+        height: 4em;color:steelblue;flex-direction:column;align-items:center;font-weight:bold;margin-bottom:4em;font-size:0.777em;">
+        <h3>HEIKA Variants:</h3>
+        <section style="display: flex;align-items: center;">
+            <input type="checkbox" checked="true" class="HEIKA_CHECKBOX" id="price_opt_SPY">
+            <label>Price</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="origin_opt_SPY">
+            <label>Original</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="base_opt_SPY">
+            <label>Baseline</label>
+        </section>    
+        <section style="margin: 1em 0;display: flex;align-items: center;">
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="day5_opt_SPY">
+            <label>5 days</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="day10_opt_SPY">
+            <label>10 days</label>
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="day20_opt_SPY">
+            <label>20 days</label>
+        </section>
+        <!--section  style="display: flex;align-items: center;">
+            <input type="checkbox" class="HEIKA_CHECKBOX" id="storsi_opt">
+            <label>STOCH_RSI</label>
+            <span><div style="background:aqua;border-radius:100%;border:solid 1px steelblue;height:0.666em;
+                width:0.666em;display: inline-block;margin-right:0.222em;font-weight:'bold';margin-left:1.444em;"></div>
+                <span style="font-size:1em;">PRICE</span>
+            </span>
+        </section-->
+    </menu>
     <div id="ha_Chart_XMPL" style="height:20em;margin-left:3em;"></div>
+
 <script type="module">
+    
+import {getFakeData,calcMA} from "./moving_average_1.js";
+let random_price_data = getFakeData(30);//number of recs
+
+function getMovingAVG(data, length, type) {
+  const maValues = [];
+  if (type === 'Exponential') {
+    for (let i = 0; i < data.length; i++) {
+      const candle = data[i];
+      const avgCandle = {};
+      const prevMA = maValues[i - 1];
+    //   const ma = prevMA ? (value - prevMA) * (2 / (length + 1)) + prevMA : value;
+      const hi = (prevMA && prevMA.high) ? (candle.high - prevMA.high) * (2 / (length + 1)) + prevMA.high : candle.high;
+      const lo = (prevMA && prevMA.low) ? (candle.low - prevMA.low) * (2 / (length + 1)) + prevMA.low : candle.low;
+      const opn = (prevMA && prevMA.open) ? (candle.open - prevMA.open) * (2 / (length + 1)) + prevMA.open : candle.open;
+      const cls = (prevMA && prevMA.close) ? (candle.close - prevMA.close) * (2 / (length + 1)) + prevMA.close : candle.close;
+      avgCandle.high = hi;
+      avgCandle.low = lo;
+      avgCandle.open = opn;
+      avgCandle.close = cls;
+      avgCandle.time = candle.time;
+      maValues.push(avgCandle);
+    }
+  }
+  return maValues;
+}
+function calculateHEIKA_Candles_Original(data) {
+    let resultData = [], prevClose = null, prevOpen = null;
+    data.forEach((candle, index) => {
+      const open = index === 0 ? candle.open : (prevOpen + prevClose) / 2;
+      const close = (candle.open + candle.high + candle.low + candle.close) / 4;
+      const high = Math.max(candle.high, (open + close) / 2);
+      const low = Math.min(candle.low, (open + close) / 2);
+      resultData.push({ time: candle.time, open, high, low, close });
+      prevClose = close;
+      prevOpen = open;
+    });
+    return resultData;
+  }
+
+  function calculateHEIKA_Base(data, smoothedHALength = 10, smoothedMAType = 'Exponential') {
+  const haData = [];
+  let prevHAOpen = null;
+  const movingAverageSet = getMovingAVG(data, smoothedHALength, smoothedMAType);
+  for (let i = 0; i < data.length; i++) {
+    const candle = data[i];
+    const smoothedMAOpen = movingAverageSet[i].open;
+    const smoothedMAHigh = movingAverageSet[i].high;
+    const smoothedMALow = movingAverageSet[i].low;
+    const smoothedMAClose = movingAverageSet[i].close;
+    let haOpen = prevHAOpen || (smoothedMAOpen + smoothedMAClose) / 2;
+    let haHigh = Math.max(smoothedMAHigh, haOpen, smoothedMAClose);
+    let haLow = Math.min(smoothedMALow, haOpen, smoothedMAClose);
+    let haClose = (smoothedMAOpen + smoothedMAHigh + smoothedMALow + smoothedMAClose) / 4;
+    haData.push({time:candle.time,open:haOpen,high:haHigh,low:haLow,close:haClose});
+    prevHAOpen = haOpen;
+  } //end loop
+  return haData;
+} //end basefn
+
+function calculateHEIKA_DBLSMOOTH(input, days) {
+  const output = [];
+  const ema1 = [];
+  const ema2 = [];
+  ema1[0] = input[0].close;
+  ema2[0] = input[0].close;
+  for (let i = 1; i < input.length; i++) { //calc ema
+    const multiplier1 = 2 / (days + 1); //ema 1
+    ema1[i] = (input[i].close - ema1[i - 1]) * multiplier1 + ema1[i - 1];
+    const multiplier2 = 2 / (days + 1); //ema 2
+    ema2[i] = (ema1[i] - ema2[i - 1]) * multiplier2 + ema2[i - 1];
+    // Calculate Heiken-Ashi values
+    const open = (ema1[i - 1] + ema2[i - 1]) / 2;
+    const high = Math.max(input[i].high, ema1[i], ema2[i]);
+    const low = Math.min(input[i].low, ema1[i], ema2[i]);
+    const close = (ema1[i] + ema2[i]) / 2;
+    output.push({time:input[i].time,open,high,low,close,});
+  }
+  return output;
+} //end 2xfn
+
+window.init_HEIKA_CHART = (tkr) => { 
+    let checkz = get_HEIKA_Checked(tkr);
+    // let tgt_Chart = document.getElementById(`HEIKAFRAME_${tkr}`)
+    let tgt_Chart = document.getElementById(`HEIKAFRAME_SPY`)
+    tgt_Chart.innerHTML = ''; //blank out frame.
+    //---------------HEIKA-CHART----------------------------------------
+    const chartOptionsHEIKA={ width:400, height:300,autoSize:false,
+        grid: { vertLines: { color: "#080808" }, horzLines: { color: "#080808" } },
+        layout:{textColor: 'steelblue',background:{ type:'solid',color:'black' } },
+        rightPriceScale:{visible:true,},leftPriceScale:{visible:true} ,
+    };
+    const HEIKA_Chart = LightweightCharts.createChart(tgt_Chart, chartOptionsHEIKA);
+    //------------------------------------------------------HEIKA-DATA-----------------
+    // let candleSeriesDATA = getCandleSeriesDATA(tkr);
+    // let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
+    // lineSeriesMETADATA = fillMissingDays(lineSeriesMETADATA);
+    // lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
+    if(checkz.price_opt){ //console.log('RENDER price')
+        //---------------HEIKA-PRICE-SERIES-----------------
+        const candlestickHEIKA_Price = HEIKA_Chart.addCandlestickSeries({ 
+            upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+            borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_Price.setData(random_price_data); //PRICE
+        //----------------END- PRICE SERIES-------------------
+    }
+    if(checkz.origin_opt){ //console.log('RENDER origin')
+        const haCandles_original = calculateHEIKA_Candles_Original(random_price_data); //ORIGINAL
+        const candlestickHEIKA_Origin = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_Origin.setData(haCandles_original); //HA ORIGINAL
+    } 
+    if(checkz.base_opt){ //--------------------------------
+        const BullishColor = "#006600"; //darkgreen
+        const BearishColor = "#660111"; //bergundy
+        const candlestickHEIKA_Base = HEIKA_Chart.addCandlestickSeries({ //width: 600, height: 300, 
+            priceScaleId: 'right',layout: { textColor: 'steelblue',autoSize:false,
+            background: { type: 'solid', color: '#000000' } } ,
+            wickUpColor:BullishColor,upColor:BullishColor,borderVisible: false,
+            wickDownColor:BearishColor,downColor:BearishColor,
+            priceLineVisible:false
+        });
+        const baseData = calculateHEIKA_Base(random_price_data);
+        candlestickHEIKA_Base.setData(baseData); //BASELINE
+    }
+    if(checkz.day5_opt){  //--------DOUBLE-SMOOTH----------------
+        const output_5 = calculateHEIKA_DBLSMOOTH(random_price_data,5);
+        const candlestickHEIKA_DBLSMOOTH_5 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_DBLSMOOTH_5.setData(output_5); //2X SMOOTH
+    }
+    if(checkz.day10_opt){
+        const output_10 = calculateHEIKA_DBLSMOOTH(random_price_data, 10);
+        const candlestickHEIKA_DBLSMOOTH_10 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_DBLSMOOTH_10.setData(output_10); //2X SMOOTH
+    }
+    if(checkz.day20_opt){
+        const output_20 = calculateHEIKA_DBLSMOOTH(random_price_data,20);
+        const candlestickHEIKA_DBLSMOOTH_20 = HEIKA_Chart.addCandlestickSeries({ 
+        upColor: '#26a69a',downColor: '#ef5350',priceLineVisible:false,
+        borderVisible: false,wickUpColor: '#26a69a', wickDownColor: '#ef5350'});
+        candlestickHEIKA_DBLSMOOTH_20.setData(output_20); //2X SMOOTH
+    }
+    //-------------------------------------------------------------------
+    HEIKA_Chart.timeScale().fitContent(); 
+    // resize_BIG_CHART(HEIKA_Chart);
+}; init_HEIKA_CHART("SPY");//END HEIKA INIT - individual chart
+function init_HEIKA_CHECKBOXES(){ //all HEIKA selectors.
+    const checkboxes = document.querySelectorAll('.HEIKA_CHECKBOX');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', (event) => {
+            // debugger;///todo somehow broke after import
+            const isChecked = event.target.checked;
+            const tkr = event.target.id.split('_')[2];
+            if(!tkr){return}
+            init_HEIKA_CHART(tkr); //refresh
+        });
+    });
+}; init_HEIKA_CHECKBOXES();
+function get_HEIKA_Checked(tkr){
+    let priceElem = document.getElementById(`price_opt_${tkr}`);
+    let originElem = document.getElementById(`origin_opt_${tkr}`);
+    let baseElem = document.getElementById(`base_opt_${tkr}`);
+    let day5Elem = document.getElementById(`day5_opt_${tkr}`);
+    let day10Elem = document.getElementById(`day10_opt_${tkr}`);
+    let day20Elem = document.getElementById(`day20_opt_${tkr}`);
+    // let hgridElem = document.getElementById(`hgrid_opt_${tkr}`);
+    let checked_selection = {
+        price_opt: priceElem.checked,
+        origin_opt: originElem.checked,
+        base_opt: baseElem.checked,
+        day5_opt: day5Elem.checked,
+        day10_opt: day10Elem.checked,
+        day20_opt: day20Elem.checked,
+        // storsi_opt: storsiElem.checked,
+    }
+    return checked_selection;
+}
+// ********************************END CHECKBOXES***************************
+
+
 // Define utility functions for working with price data
 
 // function getSecurityPrice(symbol, timeframe, expression) {
@@ -18,13 +259,13 @@
 
 
 // Example usage
-const candledata = [
-  { time: '2024-08-01', open: 64609.61, high: 65593.56, low: 62212.81, close: 64293.48 },
-  { time: '2024-08-02', open: 65293.48, high: 64557.86, low: 61150, close: 61674.93 },
-  { time: '2024-08-03', open: 66293.48, high: 63557.86, low: 62150, close: 62674.93 },
-  { time: '2024-08-04', open: 67293.48, high: 62557.86, low: 63150, close: 63674.93 },
-  // ... more data points
-];
+// const candledata = [
+//   { time: '2024-08-01', open: 64609.61, high: 65593.56, low: 62212.81, close: 64293.48 },
+//   { time: '2024-08-02', open: 65293.48, high: 64557.86, low: 61150, close: 61674.93 },
+//   { time: '2024-08-03', open: 66293.48, high: 63557.86, low: 62150, close: 62674.93 },
+//   { time: '2024-08-04', open: 67293.48, high: 62557.86, low: 63150, close: 63674.93 },
+//   // ... more data points
+// ];
 
 // const haData2 = calculateHeikinAshiSmooth(candledata);
 // console.log("TEST smooth", haData2);
@@ -313,9 +554,6 @@ const doDoubleSmoothing = false;
 function calculateHeikinAshiSmooth(data, smoothedHALength = 10, smoothedMAType = 'Exponential') {
   const haData = [];
   let prevHAOpen = null;
-
-
-//   debugger;
   const movingAverageSet = getMovingAverage(data, smoothedHALength, smoothedMAType);
   for (let i = 0; i < data.length; i++) {
     const candle = data[i];
@@ -348,22 +586,14 @@ function calculateHeikinAshiSmooth(data, smoothedHALength = 10, smoothedMAType =
     // highToPlot = getMovingAverage(smoothedHAHigh, doubleSmoothedHALength, doubleSmoothedMAType);
     // lowToPlot = getMovingAverage(smoothedHALow, doubleSmoothedHALength, doubleSmoothedMAType);
   }    
-
-    haData.push({
-      time:candle.time,
-      open: haOpen,
-      high: haHigh,
-      low: haLow,
-      close: haClose
-    });
-
+    haData.push({time:candle.time,open:haOpen,high:haHigh,low:haLow,close:haClose});
     prevHAOpen = haOpen;
   } //end loop
-
   return haData;
 } //end fn
 
   import {getFakeData,calcMA} from "./moving_average_1.js";
+  
 // const chartOptions={layout:{textColor: 'white',background:{ type:'solid',color:'black' } } };
 const chartOptions = {//width:400,height:300,autoSize:false,
         layout:{textColor:'steelblue',fontSize:9,fontFamily:'sans-serif',//'Roboto',// fontBoldWeight: 800,
@@ -386,7 +616,7 @@ let AMZN_09 = [{"tkr":"AMZN","time":"2024-09-03","open":177.55,"high":178.26,"lo
 let NVDA_10 = [{"tkr":"NVDA","time":"2024-10-01","open":121.765,"high":122.4351,"low":115.79,"close":117,"volume":302094485,"value":119,"volAVG":279270828,"lastClose":121.44,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-02","open":116.44,"high":119.38,"low":115.14,"close":118.85,"volume":221845887,"value":117,"volAVG":250558358,"lastClose":117,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-03","open":120.92,"high":124.36,"low":120.3401,"close":122.85,"volume":277117973,"value":122,"volAVG":263838166,"lastClose":118.85,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-04","open":124.93,"high":125.02,"low":121.9,"close":124.92,"volume":243067845,"value":123,"volAVG":253453006,"lastClose":122.85,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-07","open":124.99,"high":130.64,"low":124.95,"close":127.72,"volume":346250233,"value":128,"volAVG":299851620,"lastClose":124.92,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-08","open":130.26,"high":133.48,"low":129.42,"close":132.89,"volume":285722485,"value":131,"volAVG":292787053,"lastClose":127.72,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-09","open":134.11,"high":134.52,"low":131.38,"close":132.65,"volume":246191612,"value":133,"volAVG":269489333,"lastClose":132.89,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-10","open":131.91,"high":135,"low":131,"close":134.81,"volume":242311337,"value":133,"volAVG":255900335,"lastClose":132.65,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-10-11","open":134.01,"high":135.78,"low":133.66,"close":134.8,"volume":170209474,"value":135,"volAVG":213054905,"lastClose":134.81,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-10-14","open":136.47,"high":139.6,"low":136.3,"close":138.07,"volume":229746674,"value":138,"volAVG":221400790,"lastClose":134.8,"volColor":"darkgreen"}];
 let NVDA_09 = [{"tkr":"NVDA","time":"2024-09-03","open":116.01,"high":116.21,"low":107.29,"close":108,"volume":477155100,"value":112,"volAVG":502474368,"lastClose":100.45,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-04","open":105.41,"high":113.27,"low":104.12,"close":106.21,"volume":368378810,"value":109,"volAVG":435426589,"lastClose":108,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-05","open":104.985,"high":109.65,"low":104.76,"close":107.21,"volume":306850696,"value":107,"volAVG":371138643,"lastClose":106.21,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-06","open":108.04,"high":108.15,"low":100.95,"close":102.83,"volume":413638098,"value":105,"volAVG":392388371,"lastClose":107.21,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-09","open":104.88,"high":106.55,"low":103.69,"close":106.47,"volume":273912015,"value":105,"volAVG":333150193,"lastClose":102.83,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-10","open":107.81,"high":109.4,"low":104.95,"close":108.1,"volume":268283736,"value":107,"volAVG":300716965,"lastClose":106.47,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-11","open":109.39,"high":117.19,"low":107.42,"close":116.91,"volume":441422370,"value":112,"volAVG":371069668,"lastClose":108.1,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-12","open":116.84,"high":120.79,"low":115.38,"close":119.14,"volume":367100496,"value":118,"volAVG":369085082,"lastClose":116.91,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-13","open":119.08,"high":119.955,"low":117.6,"close":119.1,"volume":238358328,"value":119,"volAVG":303721705,"lastClose":119.14,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-16","open":116.79,"high":118.18,"low":114.36,"close":116.78,"volume":248772308,"value":116,"volAVG":276247007,"lastClose":119.1,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-17","open":118.17,"high":118.8,"low":114.83,"close":115.59,"volume":231925876,"value":117,"volAVG":254086442,"lastClose":116.78,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-18","open":115.89,"high":117.7,"low":113.22,"close":113.37,"volume":310318937,"value":115,"volAVG":282202690,"lastClose":115.59,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-19","open":117.35,"high":119.66,"low":117.25,"close":117.87,"volume":293506438,"value":118,"volAVG":287854564,"lastClose":113.37,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-20","open":117.06,"high":118.6181,"low":115.3901,"close":116,"volume":382462428,"value":117,"volAVG":335158496,"lastClose":117.87,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-23","open":116.55,"high":116.99,"low":114.86,"close":116.26,"volume":206228490,"value":116,"volAVG":270693493,"lastClose":116,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-24","open":116.515,"high":121.8,"low":115.38,"close":120.87,"volume":354966772,"value":119,"volAVG":312830133,"lastClose":116.26,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-25","open":122.02,"high":124.94,"low":121.61,"close":123.51,"volume":284692948,"value":123,"volAVG":298761541,"lastClose":120.87,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-26","open":126.8,"high":127.665,"low":121.8,"close":124.04,"volume":302582868,"value":125,"volAVG":300672205,"lastClose":123.51,"volColor":"darkgreen"},{"tkr":"NVDA","time":"2024-09-27","open":123.97,"high":124.03,"low":119.26,"close":121.4,"volume":271009175,"value":122,"volAVG":285840690,"lastClose":124.04,"volColor":"crimson"},{"tkr":"NVDA","time":"2024-09-30","open":118.31,"high":121.5,"low":118.15,"close":121.44,"volume":227053651,"value":120,"volAVG":256447171,"lastClose":121.4,"volColor":"darkgreen"}];
 // data = [...AMZN_09,...AMZN_10];
-data = [...NVDA_09,...NVDA_10];
+// data = [...NVDA_09,...NVDA_10];
 //ENDTEST TKR DATA********************************************
 // HA2SMTH RES TGT DATA*************************************
 let AMZN_HA2_30 = [
@@ -495,7 +725,6 @@ let NVDA_HA2_30 = [
 candlestickSeries.setData(haData1); //HA ORIGINAL
 // candlestickSeries.setData(data); //PRICE
 
-//     candlestickSeries.setData(data);
 const BullishColor = "#006600"; //darkgreen
 const BearishColor = "#660111"; //bergundy
     const candlestickSeries2 = chart.addCandlestickSeries({ //width: 600, height: 300, 
@@ -506,9 +735,9 @@ const BearishColor = "#660111"; //bergundy
         priceLineVisible:false
     });
 
-    // const haData = calculateHeikinAshiSmooth(data);
+    const haData = calculateHeikinAshiSmooth(data);
     // candlestickSeries2.setData(haData1);
-    // candlestickSeries2.setData(haData); //SMOOTH
+    // candlestickSeries2.setData(haData); //BASELINE
     // candlestickSeries2.setData(NVDA_HA2_30); //2X SMOOTH
     // candlestickSeries2.setData(AMZN_HA2_30); //2X SMOOTH
     
@@ -565,12 +794,12 @@ const BearishColor = "#660111"; //bergundy
 
 // const output_B_10 = doubleSmoothingHeikenAshi(input_A_10, 10);
 
-// console.log(output_B_10);
+
 // const output_B_10 = doubleSmoothingHeikenAshi(AMZN_HA2_30, 10);
 // const output_B_10 = doubleSmoothingHeikenAshi(NVDA_HA2_30, 10);
 const output_B_10 = doubleSmoothingHeikenAshi(data, 10);
 
-// // console.log(output_B_10);
+//RENDER TEST DATA
     candlestickSeries2.setData(output_B_10); //2X SMOOTH
 
 
