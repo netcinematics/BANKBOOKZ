@@ -18,13 +18,41 @@
         input[type="checkbox"]:checked:after { content: '\2714'; /* Checkmark character */
             width: 20px;background-color: blue;border: 2px solid #0fd05f;border-radius: 44%;background-color: #000;color:aqua;
         }
-    /*****************END CUSTOM -CHECKBOXES*************************/        
+    /*****************END CUSTOM -CHECKBOXES*************************/ 
+    /**  **************************SELECTOR*************************************/
+    .chartSELECTOR {background:black; color:steelblue;border-radius: 10px;border: 1px solid aqua;
+        padding:0.333% 0.444em 0.333% 0;font-size: 1em;height: 1.444em;text-align:right;}
+    .chartSELECTOR:hover{color:aqua;background:black;}
+    .chartSELECTOR:focus {border-color: teal;
+    }/* focus border */
+    .chartSELECTOR:focus option:checked {background-color:black;color:limegreen;
+    } /* focused item */
+    .chartSELECTOR:focus-visible{outline-color: teal;
+    } /* focused item */
 </style>
 </head>
 <body style="background:black;margin-right:2em;">
     <div><h1 style="color:steelblue;margin:1em 0 0 1em;">HEIKENASHI</h1>
-        <p style="color:limegreen;margin:1em 0 1em 4em;">- various innovations</p>
+        <p style="color:limegreen;margin:1em 0 1em 4em;">- various innovations:</p>
     </div>
+    <menu style="display: flex;margin-right:3.333%;padding-left:2.222%;
+        align-items: center;margin-bottom: 0.555em;    justify-content: flex-end;
+        font-size: 0.888em;">
+        <!-- <article id="candlestickTITLES_${tgtTKR.tkr}" 
+            style="justify-content:flex-start;flex:1; display:flex;flex-wrap: wrap;
+            width:98%;padding:0 0.444em 0 0.444em;color: limegreen;"></article> -->
+        <span>
+                <select id="DYNA_YMT_SELECTOR_SPY" class="chartSELECTOR">
+                    <option value="11" >Last 11</option>
+                    <option value="33" selected>Last 33</option>
+                    <option value="66" >Last 66</option>
+                    <option value="99" >Last 99</option>
+                    <option value="144" >Last 144</option>
+                    <option value="222" >Last 222</option>
+                    <option value="333" >Last 333</option>
+                </select>
+            </span>
+    </menu>
     <article id="HEIKAFRAME_SPY" style="justify-content:center;
         flex:1; display:flex;border:solid 1px steelblue;border-radius:22.222px;">
         <i style="font-size:0.555em;margin:0.888em;"
@@ -52,9 +80,9 @@
             <input type="checkbox" class="HEIKA_CHECKBOX" id="MOAVS_opt_SPY">
             <label>MOAVS</label>
             <input type="checkbox" class="HEIKA_CHECKBOX" id="NVDA_opt_SPY">
-            <label>BARNums</label>
+            <label>BAR_Nums</label>
             <input type="checkbox" class="HEIKA_CHECKBOX" id="AMZN_opt_SPY">
-            <label>WIKNums</label>
+            <label>WIK_Nums</label>
         </section>
     </menu>
     <div id="ha_Chart_XMPL" style="height:20em;margin-left:3em;"></div>
@@ -62,7 +90,7 @@
 <script type="module">
 import {getFakeData,calcMA} from "./moving_average_1.js";
 // let random_price_data = getFakeData(33);//number of recs, wicks too big?
-let random_price_data = getFakeData(99);//number of recs, wicks too big?
+// let random_price_data = getFakeData(99);//number of recs, wicks too big?
 //TKR TEST DATA OVERRIDE********************************************
 // let A_10 = [{"tkr":"A","time":"2024-10-01","open":184.9,"high":186.19,"low":183.4519,"close":185.13},{"tkr":"A","time":"2024-10-02","open":184.44,"high":186.6,"low":184.04,"close":184.76},{"tkr":"A","time":"2024-10-03","open":183.045,"high":183.44,"low":180.875,"close":181.96}];
 //{"time":"2024-10-04","open":185.71,"high":187.6,"low":183.6,"close":186.51},{"time":"2024-10-07","open":182.95,"high":183.6,"low":180.25,"close":180.8},{"time":"2024-10-08","open":181.915,"high":183.09,"low":180.92,"close":182.72},{"time":"2024-10-09","open":182.82,"high":185.845,"low":182.05,"close":185.17},{"time":"2024-10-10","open":187.13,"high":188.134,"low":185.83,"close":186.65},{"time":"2024-10-11","open":186.63,"high":189.9284,"low":186.3,"close":188.82},{"time":"2024-10-14","open":189.78,"high":189.83,"low":187.36,"close":187.54}
@@ -215,7 +243,9 @@ function calculateHEIKA_DBLSMOOTH(input, days) {
     }
     return output;
 } //end 2xfn
-
+let random_price_data = [];
+window.MonthlySELECTORMap = {}; //ADD to SYTEM .METASTATE.
+window.DAYZ_SELECTOR_Reload = true; //only update days
 window.init_HEIKA_CHART = (tkr) => { 
     let checkz = get_HEIKA_Checked(tkr);
     // let tgt_Chart = document.getElementById(`HEIKAFRAME_${tkr}`)
@@ -228,11 +258,27 @@ window.init_HEIKA_CHART = (tkr) => {
         rightPriceScale:{visible:true,},leftPriceScale:{visible:true} ,
     };
     const HEIKA_Chart = LightweightCharts.createChart(tgt_Chart, chartOptionsHEIKA);
+
+    let customTheme = {
+        yAxis:{
+            labels:{
+                backgroundColor:'rgba(0,0,0,0.1)',
+                border:'none'
+            }
+        }
+    }
+    HEIKA_Chart.applyOptions(customTheme);
     //------------------------------------------------------HEIKA-DATA-----------------
     // let candleSeriesDATA = getCandleSeriesDATA(tkr);
     // let lineSeriesMETADATA = getLineSeriesMETADATA(candleSeriesDATA);
     // lineSeriesMETADATA = fillMissingDays(lineSeriesMETADATA);
     // lineSeriesMETADATA = fillMissingDays_Line(lineSeriesMETADATA);
+    let num_Selected_DAYZ = (window.MonthlySELECTORMap && window.MonthlySELECTORMap[tkr])?window.MonthlySELECTORMap[tkr]:"33";
+    // if(!num_Selected_DAYZ){num_Selected_DAYZ = "33"} //DEFAULT DAYZ 
+    if(window.DAYZ_SELECTOR_Reload){ //only load on dayz change
+        random_price_data = getFakeData(parseInt(num_Selected_DAYZ));
+        window.DAYZ_SELECTOR_Reload = false;
+    } 
     if(checkz.base_opt){ //--------------------------------
         const BullishColor = "#006064";//"#00332a";//"#006600"; //darkgreen
         const BearishColor = "#801922";//"#660111"; //bergundy
@@ -245,7 +291,7 @@ window.init_HEIKA_CHART = (tkr) => {
         });
         const baseData = calculateHEIKA_Base(random_price_data);
         candlestickHEIKA_Base.setData(baseData); //BASELINE
-    }    
+    }
     if(checkz.price_opt){ //console.log('RENDER price')
         //---------------HEIKA-PRICE-SERIES-----------------
         const candlestickHEIKA_Price = HEIKA_Chart.addCandlestickSeries({ 
@@ -299,14 +345,20 @@ window.init_HEIKA_CHART = (tkr) => {
         const maDataA = calcMA(random_price_data, 10);
         const maDataB = calcMA(random_price_data, 20);
         const maDataC = calcMA(random_price_data, 30);
+        const maDataD = calcMA(random_price_data, 100);
+        const maDataE = calcMA(random_price_data, 200);
         const maSeries0 = HEIKA_Chart.addLineSeries({ color: 'aqua', lineWidth:1,priceLineVisible:false});
         const maSeriesA = HEIKA_Chart.addLineSeries({ color: 'orange', lineWidth:1,priceLineVisible:false});
-        const maSeriesB = HEIKA_Chart.addLineSeries({ color: 'purple', lineWidth:1,priceLineVisible:false});
-        const maSeriesC = HEIKA_Chart.addLineSeries({ color: 'steelblue', lineWidth:1,priceLineVisible:false});
+        const maSeriesB = HEIKA_Chart.addLineSeries({ color: 'steelblue', lineWidth:1,priceLineVisible:false});
+        const maSeriesC = HEIKA_Chart.addLineSeries({ color: '#0c3299', lineWidth:1,priceLineVisible:false});
+        const maSeriesD = HEIKA_Chart.addLineSeries({ color: 'purple', lineWidth:1,priceLineVisible:false});
+        const maSeriesE = HEIKA_Chart.addLineSeries({ color: '#880e4f', lineWidth:1,priceLineVisible:false});
         maSeries0.setData(maData0);
         maSeriesA.setData(maDataA);
         maSeriesB.setData(maDataB);
         maSeriesC.setData(maDataC);
+        maSeriesD.setData(maDataD);
+        maSeriesE.setData(maDataE);
     }
     //-------------------------------------------------------------------
     HEIKA_Chart.timeScale().fitContent(); 
@@ -348,6 +400,104 @@ function get_HEIKA_Checked(tkr){
     return checked_selection;
 }
 // ********************************END CHECKBOXES***************************
+/*********************************************DYNA_SELECTOR**********************/
+function init_DYNA_SELECTOR(tkr){ //Put all the months in the combo list.
+    let selectELEM = document.getElementById('DYNA_YMT_SELECTOR_'+tkr);
+    let selectVAL = selectELEM.value;
+    // selectELEM.innerHTML = '';
+    selectELEM.addEventListener("change", (event) => {DYNA_SELECTOR_Change(event)}); 
+    // const option1 = document.createElement("option");
+    // option1.text = "Last 33";
+    // option1.value = "Last 33"; 
+    // selectELEM.appendChild(option1);
+    // const option2 = document.createElement("option");
+    // option2.text = "All Time";
+    // option2.value = "All Time"; 
+    // selectELEM.appendChild(option2);
+    // let tgtData = bankbookz_DB.TICKR_DATA_MAP_Monthly[tkr];
+    // if(tgtData){ //error trap no data
+    //     let optionKEYS = Object.keys(tgtData);
+    //     optionKEYS.reverse();//DESC opposite of LWC
+    //     let dynaOption;
+    //     for(ymd of optionKEYS){
+    //         dynaOption = document.createElement("option");
+    //         dynaOption.text = ymd;
+    //         dynaOption.value = ymd; 
+    //         selectELEM.appendChild(dynaOption);
+    //     }
+    // }
+    // if(!bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]){ //save selection
+    //     bankbookz_DB.METASTATE.monthlySELECTORMap[tkr] = 'Last 33'; //default 
+    // }
+    // selectELEM.value = bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]
+    //SET TEXT SELECTOR TITLES
+    // const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${tkr}`);
+    // selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${bankbookz_DB.METASTATE.monthlySELECTORMap[tkr]}</span>`;
+}
+function DYNA_SELECTOR_Change(e){
+    // let TGTymt = e.target.value;
+    let TGTVAL_YMT = e.target.value;
+    let TGTID = e.target.id;
+    let TGTtkr = TGTID.split("_")[3]
+    MonthlySELECTORMap[TGTtkr] = TGTVAL_YMT;
+    // bankbookz_DB.METASTATE.monthlySELECTORMap[TGTtkr] = TGTymt;
+    // save_BANKBOOKZ_DB();
+    // DYNAMIC SELECTOR BEHAVIOR **************************************:
+    // const selector_TITLE_TXT = document.getElementById(`candlestickTITLES_${TGTtkr}`);
+    // if(TGTymt==='Last 33' || TGTymt==='All Time'){
+    //     selector_TITLE_TXT.innerHTML = `<span class="defaultTXT">${TGTymt}</span>`;
+    // }  else {
+    //     const currentSELECTORZ_TXT = selector_TITLE_TXT.innerText;
+    //     const currentSELECTORZ = selector_TITLE_TXT.children;
+    //     let newSELECTORZ = [TGTymt];//default selection
+    //     for(var f=0;f<currentSELECTORZ.length;f++){
+    //         if(currentSELECTORZ_TXT.indexOf('Last 33')>-1 ||
+    //         currentSELECTORZ_TXT.indexOf('All Time')>-1){ break; }
+    //         if(currentSELECTORZ[f].innerText.indexOf(TGTymt)>-1){//remove
+    //             continue;
+    //         }
+    //         newSELECTORZ.push(currentSELECTORZ[f].innerText.split('\nx')[0])//trim deletebtn
+    //     }
+    //     if(newSELECTORZ.length>1){ //VIEW MULTIPLE MONTHS
+    //         newSELECTORZ = fillout_YMT_KEYS(newSELECTORZ,TGTymt)
+    //         let wrappedDATA = newSELECTORZ.map( (e,i)=>{
+    //             if(i===0){return  `<span class="defaultTXT">${e}</span>`}
+    //             return `<span class="deleteTXT">${e} <button class="delTXTBTN" onclick="delete_SELECTOR_TXT(event)">x</button> </span>`;
+    //         } ) 
+    //         selector_TITLE_TXT.innerHTML = wrappedDATA.join('')
+    //     } else { //VIEW SINGULAR MONTH.
+    //         selector_TITLE_TXT.innerHTML =  `<span class="defaultTXT">${newSELECTORZ.join('')}</span>`
+    //     } //END DYNAMIC SELECTOR BEHAVIOR
+    // }
+    window.DAYZ_SELECTOR_Reload = true; //only reload data on dayz change.
+    re_init_charts_by_selector(TGTtkr); //CALL FROM SELECTOR CLICK
+    // setTimeout(re_init_charts_by_selector(TGTtkr),1888); //CALLED FROM SELECTOR CLICK
+}
+function re_init_charts_by_selector (tkr){ //this is only selector
+    try{  
+        window.init_HEIKA_CHART(tkr)
+        // init_DYNA_CHART_Candle(tkr);    //DYNA - init chart. 
+        // init_DYNA_TRENDZCHART(tkr);    //init TRENDZ chart.
+        // init_DYNA_DRAWCHART(tkr);    //init DRAW chart.
+        // if(window.init_MOMENTUM_CHART){
+        //     window.init_MOMENTUM_CHART(tkr) 
+        // } else {
+        //     show_USERMSG({txt:'ERR: MOMZ init',icon:'⚠️',time:2000}); 
+        // }
+        // init_DYNA_CHART_Baseline(tkr);
+    } catch(e){ console.log('ERR:',e); debugger;
+    }
+
+}
+function render_ALL_DYNA_SELECTORZ(){
+//     let tgtTKR;
+//     for(var k=0; k<bankbookz_DB.TICKR_LIST.length;k++){
+//         tgtTKR = bankbookz_DB.TICKR_LIST[k].tkr;
+        init_DYNA_SELECTOR('SPY'); //Put YMT into Combo & click.
+//         init_SUB_SELECTORS(tgtTKR); //assign click handlers.
+//     }   
+}; render_ALL_DYNA_SELECTORZ();
+//*************************************************END DYNA SELECTOR***********
 </script>
 </body>
 </html>
