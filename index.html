@@ -80,6 +80,9 @@
     .tkrTXT_BOX { border-radius: 13px;text-align: center;background: darkslategrey;
         color: cyan;width:5em;padding: 0;font-size:0.888em;margin: 0.444em 0px;
     }
+    .estimate_INPUT { border-radius: 13px;text-align: center;background: darkslategrey;
+        color: cyan;width:5em;padding: 0;font-size:0.888em;margin: 0.444em 1em;
+    }    
     /* END CUSTOM INPUT ***************************END INPUT***********************/
     .deleteTXT{font-size: 0.666em;margin: 0 0 0 1em;padding: 0.222em 0.222em 0.222em 0.444em;
         display: flex;
@@ -273,9 +276,18 @@
                 onclick="expander_BANKZ_Click(event)">✧</button>
         </article>
         <hr> 
+        <h1>ESTIMATES</h1>
         <article id="MARGINZ_RENDER_FRAME"></article>
         <hr> 
-        <button id="detailsBtn1" class="blackBTN" onclick="setMarginDetailsClick(event)">details💎</button> 
+        <h1>GOALS</h1>
+        <p>O - Main Total, every month, +- %</p>
+        <p>O - Monthly TARGETS ~1,500 +-</p>
+        <p>O - Year, Month, New Year Btn</p>
+        <p>O - Year Title Edit, AMT edit, calc +-</p>
+        <p>O - Auto Save to local storage</p>
+        <p>O - Try to see compounding effect.</p>
+        <p>O - Compare to S&P 500 +-, each month/qtr/year.</p>        
+        <!-- <button id="detailsBtn1" class="blackBTN" onclick="setMarginDetailsClick(event)">details💎</button>  -->
     </section><!-- END BANKZ VIEW -->
     <!-- *********************************BOOKZ_-VIEW********************************-->
     <section id="BOOK_VIEW" style="border: solid 1px steelblue;justify-content: center; 
@@ -1823,42 +1835,293 @@ const add_TKRZ_Click = ()=>{
     TKR_RENDER_FRAME.appendChild(tkrROW)      
 }
 //*********************BANKZ- TAB - LOGIC**********************/
+
 const init_BANKZ_TABZ = ()=>{
-    //combo1
-    let tkrREC = {}, tkrINPUT, tkrBOX, minmaxBTN,marginDataFrame,subMenu,tkrTTL;
+    //INIT LOCAL STORAGE
+    let calculator_data = null;
+    try{
+        calculator_data = (localStorage.calculator_data)?
+        JSON.parse( localStorage.calculator_data ):null;
+        if(!calculator_data){ //INIT first time.
+            calculator_data = {
+                years:{
+                    2025:{
+                        TOTAL:{start:0,curr:0,calc:0,comp:0},
+                        JAN:{start:0,curr:0,calc:0,comp:0},
+                        FEB:{start:0,curr:0,calc:0,comp:0},
+                        MAR:{start:0,curr:0,calc:0,comp:0},
+                        APR:{start:0,curr:0,calc:0,comp:0},
+                        MAY:{start:0,curr:0,calc:0,comp:0},
+                        JUN:{start:0,curr:0,calc:0,comp:0},
+                        JUL:{start:0,curr:0,calc:0,comp:0},
+                        AUG:{start:0,curr:0,calc:0,comp:0},
+                        SEP:{start:0,curr:0,calc:0,comp:0},
+                        OCT:{start:0,curr:0,calc:0,comp:0},
+                        NOV:{start:0,curr:0,calc:0,comp:0},
+                        DEC:{start:0,curr:0,calc:0,comp:0},
+                    }
+                }
+            }
+            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            console.log('INIT CALCULATOR DATA.'); //SAVE to LOCAL STORAGE 
+         }
+    } catch(e){ console.log('ERROR: calculator data') }
+    // - RENDER CALCULATOR DATA --------------------------------
     let MARGINZ_RENDER_FRAME = document.getElementById('MARGINZ_RENDER_FRAME');
     MARGINZ_RENDER_FRAME.innerHTML=''; //blank out
-    for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
-        tkrREC = bankbookz_DB.TICKR_LIST[i];
-        tkrTTL = document.createElement('header')
-        tkrTTL.classList = 'tkrTTL';
-        tkrINPUT = document.createElement('input')
-        tkrINPUT.value = tkrREC.tkr;
-        tkrINPUT.readOnly = false;
-        tkrINPUT.placeholder = "ticker";
-        tkrINPUT.classList.add('tkrTXT_BOX')
-        tkrINPUT.style.margin='1em 0 1em 0';
-        tkrTTL.appendChild(tkrINPUT)
-        tkrBOX = document.createElement('article')
-        tkrBOX.classList.add('tkrSubBox')
-        tkrBOX.classList.add('expanderROW')
-        minmaxBTN = document.createElement('button')
-        minmaxBTN.classList.add('expanderBTN')
-        minmaxBTN.innerText = '✴';//'✧'
-        minmaxBTN.classList.add('blackBTN')
-        minmaxBTN.style.paddingLeft = '0.222em'
-        minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
-        tkrTTL.appendChild(minmaxBTN)
-        marginDataFrame = document.createElement('section')
-        marginDataFrame.id = `marginDataFrame_${tkrREC.tkr}`;
-        marginDataFrame.classList.add('tkrSubMenu')
-        marginDataFrame.style.display = 'none'
-        subMenu = getSubMenu_MarginView(tkrREC.tkr);
-        marginDataFrame.innerHTML = (subMenu.length)?subMenu:'No Data.'
-        tkrBOX.appendChild(tkrTTL)
-        tkrBOX.appendChild(marginDataFrame)
-        MARGINZ_RENDER_FRAME.appendChild(tkrBOX)  
-    }
+    let years = [2025], year, month;
+    let months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    for(var i=0; i< years.length;i++){
+        year = years[i]; //TODO update to saved data. Next year...
+        yearFRAME = document.createElement('section')
+        yearTTL = document.createElement('header')
+        yearTTL.style.color = 'lime';
+        yearTTL.innerText = year + ' - total';
+        yearFRAME.appendChild(yearTTL)
+        yearROW_1 = document.createElement('aside')
+        yearROW_1.style.margin='1em 0 1em 1em';
+        yearROW_2 = document.createElement('aside')
+        yearROW_2.style.margin='1em 0 1em 1em';
+        startYR_LBL = document.createElement('label')
+        startYR_LBL.innerText = 'Start BAL:'
+        startYR_BAL = document.createElement('input')
+        startYR_BAL.classList.add('estimate_INPUT')
+        startYR_BAL.value = calculator_data.years[year]['TOTAL'].start || 0;
+        startYR_BAL.addEventListener("keyup",(e)=>{ let calcVAL;
+            let tgtVAL =  Math.trunc(parseFloat(e.target.value.replace(/,/g, '')));
+            let otherELEM = e.target.parentElement.children[3];
+            let otherVAL =  Math.trunc(parseFloat(otherELEM.value.replace(/,/g, '')));
+            if(!tgtVAL || !otherVAL){console.log('ERROR number'); return}
+            else{ //calculate calc val
+                let calcELEM = e.target.parentElement.parentElement.children[2].children[1];
+                calcVAL = calculatePercentageChange(tgtVAL,otherVAL)
+                calcELEM.value = calcVAL;
+            }            
+            calculator_data.years['2025']['TOTAL'].start = tgtVAL;
+            calculator_data.years['2025']['TOTAL'].calc = calcVAL;
+            localStorage.calculator_data = JSON.stringify(calculator_data); 
+        });
+        currYR_LBL = document.createElement('label')
+        currYR_LBL.innerText = 'Curr BAL:'
+        currYR_BAL = document.createElement('input')
+        currYR_BAL.value = calculator_data.years[year]['TOTAL'].curr || 0;
+        currYR_BAL.addEventListener("keyup",(e)=>{ let calcVAL;
+            let tgtVAL =  Math.trunc(parseFloat(e.target.value.replace(/,/g, '')));
+            let otherELEM = e.target.parentElement.children[1];
+            let otherVAL =  Math.trunc(parseFloat(otherELEM.value.replace(/,/g, '')));
+            if(!tgtVAL || !otherVAL){console.log('ERROR number'); return}
+            else{ //calculate calc val
+                let calcELEM = e.target.parentElement.parentElement.children[2].children[1];
+                calcVAL = calculatePercentageChange(otherVAL,tgtVAL)
+                calcELEM.value = calcVAL;
+            }            
+            calculator_data.years['2025']['TOTAL'].curr = tgtVAL;
+            calculator_data.years['2025']['TOTAL'].calc = calcVAL;
+            localStorage.calculator_data = JSON.stringify(calculator_data); 
+        });
+        currYR_BAL.readOnly = false;
+        currYR_BAL.placeholder = "curr bal";
+        currYR_BAL.classList.add('estimate_INPUT')
+        calcYR_LBL = document.createElement('label')
+        calcYR_LBL.innerText = 'Calc NET:'
+        calcYR_NET = document.createElement('input')
+        calcYR_NET.classList.add('estimate_INPUT')
+        calcYR_NET.value = calculator_data.years[year]['TOTAL'].calc || 0;
+        calcYR_NET.addEventListener("keyup",(e)=>{ 
+            calculator_data.years['2025']['TOTAL'].calc = e.target.value;
+            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
+        });
+        calcYR_NET.readOnly = false;
+        calcYR_NET.placeholder = "Calc NET";
+        compYR_LBL = document.createElement('label')
+        compYR_LBL.innerText = 'S&P NET:'
+        compYR_NET = document.createElement('input')
+        compYR_NET.classList.add('estimate_INPUT')
+        compYR_NET.value = calculator_data.years[year]['TOTAL'].comp || 0;
+        compYR_NET.addEventListener("keyup",(e)=>{ 
+            calculator_data.years['2025']['TOTAL'].comp = e.target.value;
+            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
+        });
+        compYR_NET.readOnly = false;
+        compYR_NET.placeholder = "compare IDX";
+        yearROW_1.appendChild(startYR_LBL)
+        yearROW_1.appendChild(startYR_BAL)
+        yearROW_1.appendChild(currYR_LBL)
+        yearROW_1.appendChild(currYR_BAL)
+        yearROW_2.appendChild(calcYR_LBL)
+        yearROW_2.appendChild(calcYR_NET)
+        yearROW_2.appendChild(compYR_LBL)
+        yearROW_2.appendChild(compYR_NET)
+        yearFRAME.appendChild(yearROW_1)
+        yearFRAME.appendChild(yearROW_2)
+        monthFRAME = document.createElement('article')
+        for(var j=0; j< months.length;j++){
+            month = months[j];
+            monthROW_0 = document.createElement('section')
+            monthROW_0.style.margin='1em 0 1em 1em';
+            monthBOX = document.createElement('aside')
+            monthBOX.style.margin='1em 0 1em 1em';
+            monthTTL = document.createElement('header')
+            monthTTL.style.color = 'aqua';
+            monthTTL.innerText = month;
+            monthROW_1 = document.createElement('section')
+            monthROW_1.style.margin='1em 0 1em 1em';
+            monthROW_2 = document.createElement('section')
+            monthROW_2.style.margin='1em 0 1em 1em';
+            startMO_LBL = document.createElement('label')
+            startMO_LBL.innerText = 'Start BAL:'
+            startMO_BAL = document.createElement('input')
+            startMO_BAL.value = calculator_data.years[year][month].start || 0;;
+            startMO_BAL.readOnly = false;
+            startMO_BAL.placeholder = "start bal";
+            startMO_BAL.classList.add('estimate_INPUT')
+            startMO_BAL.addEventListener("keyup",(e)=>{ let calcVAL;
+                let tgtVAL = Math.trunc(parseFloat(e.target.value.replace(/,/g,'')));
+                let otherELEM = e.target.parentElement.children[3];
+                let otherVAL = Math.trunc(parseFloat(otherELEM.value.replace(/,/g,'')));
+                let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
+                if(!tgtVAL || !otherVAL || !month){console.log('ERROR number'); return}
+                else{ //calculate calc val
+                    let calcELEM = e.target.parentElement.parentElement.children[1].children[1];
+                    calcVAL = calculatePercentageChange(tgtVAL,otherVAL)
+                    calcELEM.value = calcVAL;
+                }
+                calculator_data.years[year][month].start = tgtVAL;
+                calculator_data.years[year][month].calc = calcVAL;
+                localStorage.calculator_data = JSON.stringify(calculator_data); 
+            });
+            currMO_LBL = document.createElement('label')
+            currMO_LBL.innerText = 'Curr BAL:'
+            currMO_BAL = document.createElement('input')
+            currMO_BAL.classList.add('estimate_INPUT')
+            currMO_BAL.value = calculator_data.years[year][month].curr || 0;;
+            currMO_BAL.readOnly = false;
+            currMO_BAL.placeholder = "curr bal";
+            currMO_BAL.addEventListener("keyup",(e)=>{ let calcVAL;
+                let tgtVAL = Math.trunc(parseFloat(e.target.value.replace(/,/g,'')));
+                let otherELEM = e.target.parentElement.children[1];
+                let otherVAL = Math.trunc(parseFloat(otherELEM.value.replace(/,/g,'')));
+                let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
+                if(!tgtVAL || !otherVAL || !month){console.log('ERROR number'); return}
+                else{ //calculate calc val
+                    let calcELEM = e.target.parentElement.parentElement.children[1].children[1];
+                    calcVAL = calculatePercentageChange(otherVAL,tgtVAL)
+                    calcELEM.value = calcVAL;
+                }
+                // debugger;
+                calculator_data.years[year][month].curr = tgtVAL;
+                calculator_data.years[year][month].calc = calcVAL;
+                localStorage.calculator_data = JSON.stringify(calculator_data); 
+            });            
+            calcMO_LBL = document.createElement('label')
+            calcMO_LBL.innerText = 'Calc NET:'
+            calcMO_NET = document.createElement('input')
+            calcMO_NET.classList.add('estimate_INPUT')
+            calcMO_NET.value = calculator_data.years[year][month].calc || 0;;
+            calcMO_NET.readOnly = false;
+            calcMO_NET.placeholder = "Calc NET";
+            calcMO_NET.addEventListener("keyup",(e)=>{ 
+                let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
+                if(!month){console.log('ERROR number'); return}
+                calculator_data.years['2025'][month].calc = e.target.value;
+                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
+            });            
+            compMO_LBL = document.createElement('label')
+            compMO_LBL.innerText = 'S&P NET:'
+            compMO_NET = document.createElement('input')
+            compMO_NET.classList.add('estimate_INPUT')
+            compMO_NET.value = calculator_data.years[year][month].comp || 0;;
+            compMO_NET.readOnly = false;
+            compMO_NET.placeholder = "compare IDX";
+            compMO_NET.addEventListener("keyup",(e)=>{ 
+                let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
+                if(!month){console.log('ERROR number'); return}
+                calculator_data.years['2025'][month].comp = e.target.value;
+                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
+            });
+            monthROW_0.appendChild(monthTTL)
+            monthROW_1.appendChild(startMO_LBL)
+            monthROW_1.appendChild(startMO_BAL)
+            monthROW_1.appendChild(currMO_LBL)
+            monthROW_1.appendChild(currMO_BAL)
+            monthROW_2.appendChild(calcMO_LBL)
+            monthROW_2.appendChild(calcMO_NET)
+            monthROW_2.appendChild(compMO_LBL)
+            monthROW_2.appendChild(compMO_NET)
+            monthBOX.appendChild(monthROW_1)
+            monthBOX.appendChild(monthROW_2)
+            monthROW_0.appendChild(monthBOX)
+            monthFRAME.appendChild(monthROW_0)
+        }//END MONTH
+        yearFRAME.appendChild(monthFRAME)
+        // estimateTTL.appendChild(estimateINPUT)
+        // estimateBOX = document.createElement('article')
+        // estimateBOX.classList.add('estimateSubBox')
+        // estimateBOX.classList.add('expanderROW')
+        // minmaxBTN = document.createElement('button')
+        // minmaxBTN.classList.add('expanderBTN')
+        // minmaxBTN.innerText = '✴';//'✧'
+        // minmaxBTN.classList.add('blackBTN')
+        // minmaxBTN.style.paddingLeft = '0.222em'
+        // minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
+        // estimateTTL.appendChild(minmaxBTN)
+        // marginDataFrame = document.createElement('section')
+        // marginDataFrame.id = `marginDataFrame_${estimateREC.estimate}`;
+        // marginDataFrame.classList.add('estimateSubMenu')
+        // marginDataFrame.style.display = 'none'
+        // subMenu = getSubMenu_MarginView(estimateREC.estimate);
+        // marginDataFrame.innerHTML = (subMenu.length)?subMenu:'No Data.'
+        // estimateBOX.appendChild(estimateTTL)
+        // estimateBOX.appendChild(marginDataFrame)
+        MARGINZ_RENDER_FRAME.appendChild(yearFRAME)  
+        //---------
+    }//END YEAR
+    // for(var i=0; i<bankbookz_DB.TICKR_LIST.length;i++){
+    //     tkrREC = bankbookz_DB.TICKR_LIST[i];
+    //     tkrTTL = document.createElement('header')
+    //     tkrTTL.classList = 'tkrTTL';
+    //     tkrINPUT = document.createElement('input')
+    //     tkrINPUT.value = tkrREC.tkr;
+    //     tkrINPUT.readOnly = false;
+    //     tkrINPUT.placeholder = "ticker";
+    //     tkrINPUT.classList.add('tkrTXT_BOX')
+    //     tkrINPUT.style.margin='1em 0 1em 0';
+    //     tkrTTL.appendChild(tkrINPUT)
+    //     tkrBOX = document.createElement('article')
+    //     tkrBOX.classList.add('tkrSubBox')
+    //     tkrBOX.classList.add('expanderROW')
+    //     minmaxBTN = document.createElement('button')
+    //     minmaxBTN.classList.add('expanderBTN')
+    //     minmaxBTN.innerText = '✴';//'✧'
+    //     minmaxBTN.classList.add('blackBTN')
+    //     minmaxBTN.style.paddingLeft = '0.222em'
+    //     minmaxBTN.addEventListener("click",(event)=>{ MINMAX_Menu(event) });
+    //     tkrTTL.appendChild(minmaxBTN)
+    //     marginDataFrame = document.createElement('section')
+    //     marginDataFrame.id = `marginDataFrame_${tkrREC.tkr}`;
+    //     marginDataFrame.classList.add('tkrSubMenu')
+    //     marginDataFrame.style.display = 'none'
+    //     subMenu = getSubMenu_MarginView(tkrREC.tkr);
+    //     marginDataFrame.innerHTML = (subMenu.length)?subMenu:'No Data.'
+    //     tkrBOX.appendChild(tkrTTL)
+    //     tkrBOX.appendChild(marginDataFrame)
+    //     MARGINZ_RENDER_FRAME.appendChild(tkrBOX)  
+    // }
+}
+function calculatePercentageChange(num1, num2) {
+  if (num1 === 0 || num2===0) { return "0%"; // Avoid division by zero if both are zero
+  }
+  const difference = num2 - num1;
+  const percentageChange = (difference / num1) * 100;
+  let sign = "";
+  if (percentageChange > 0) { sign = "+";
+  } else if (percentageChange < 0) { sign = ""; // Negative sign is automatically included
+  } else{ sign = ""; }
+  return sign + percentageChange.toFixed(0) + "%"; // Round to 0 decimal places
 }
 //*********************END BANKZ- TAB - LOGIC**********************/
 </script><!--*******************************END VIEW structure LOGIC-->
