@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NET Chart</title>
+    <script type="text/javascript" src="./module/lwc_dev_deriv_4.2.js"></script>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #chart {
+            width: 800px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart"></div>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.2.0/lightweight-charts.standalone.production.min.js"></script> -->
+    <script>
+        const data = {
+            line1: [2,4,6,8,10,9],
+            line2: [4,8,10,12,11,12],
+            bar: [0,1,2,1,2,1]
+        };
+
+        // Create chart
+        const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+            layout: {
+                background: { color: 'black' },
+                textColor: 'white',
+            },
+            grid: {
+                vertLines: { color: '#404040' },
+                horzLines: { color: '#404040' },
+            },
+        });
+
+        // Create data series for plotting
+        const timeData = data.line1.map((_, index) => {
+            return { time: index + 1 };
+        });
+
+        // Prepare series data
+        const seriesData1 = timeData.map((time, index) => ({
+            ...time,
+            value: data.line1[index]
+        }));
+
+        const seriesData2 = timeData.map((time, index) => ({
+            ...time,
+            value: data.line2[index]
+        }));
+
+        const barData = timeData.map((time, index) => ({
+            ...time,
+            value: data.bar[index]
+        }));
+
+        // Add the line series
+        const lineSeries1 = chart.addLineSeries({
+            color: '#800080',
+            lineWidth: 2,
+        });
+        lineSeries1.setData(seriesData1);
+
+        const lineSeries2 = chart.addLineSeries({
+            color: '#0000FF',
+            lineWidth: 2,
+        });
+        lineSeries2.setData(seriesData2);
+
+        // Add the bar series
+        const barSeries = chart.addHistogramSeries({
+            color: '#00FF00',
+            priceFormat: {
+                type: 'volume',
+            },
+        });
+        barSeries.setData(barData);
+
+        // Fit the content
+        chart.timeScale().fitContent();
+    </script>
+</body>
+</html>

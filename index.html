@@ -188,6 +188,10 @@
     .editorBTN{color:aqua;font-size: 0.666em;padding: 0em 0.4em 0.2em 0.4em;border: solid 1px aqua; box-shadow: inset -2px 0px 1px steelblue;
         border-radius: 44%;margin-left: 1em;cursor: pointer;                
     }
+    .monthROW{
+        text-align: center;
+        color: aqua
+    }
     .EXPANDER_Item{ 
         box-shadow: inset 1px 1px 8px aqua;
         border-radius: 22px;
@@ -275,6 +279,8 @@
             <button class="expanderBTN" style="padding:0;font-size:0.777em;line-height: 1.444em;" 
                 onclick="expander_BANKZ_Click(event)">✧</button>
         </article>
+        <hr> 
+        <article id="PCT_GAIN_CHART_FRAME"></article>
         <hr> 
         <article id="CALC_MONTH_RENDER_FRAME"></article>
         <hr> 
@@ -1835,14 +1841,14 @@ const add_TKRZ_Click = ()=>{
 }
 //*********************BANKZ- TAB - LOGIC**********************/
 
-const init_BANKZ_TABZ = ()=>{
-    //INIT LOCAL STORAGE
-    let calculator_data = null;
-    try{
-        calculator_data = (localStorage.calculator_data)?
-        JSON.parse( localStorage.calculator_data ):null;
-        if(!calculator_data){ //INIT first time.
-            calculator_data = {
+let pct_gain_data = null;
+const init_BANKZ_TABZ = ()=>{   
+    try{ //INIT LOCAL STORAGE
+        // pct_gain_data = (localStorage.pct_gain_data)?
+        pct_gain_data = (localStorage.pct_gain_data)?
+        JSON.parse( localStorage.pct_gain_data ):null;
+        if(!pct_gain_data){ //INIT first time.
+            pct_gain_data = {
                 years:{
                     2025:{
                         TOTAL:{start:0,curr:0,calc:0,comp:0,crypto:0,total:0},
@@ -1861,11 +1867,15 @@ const init_BANKZ_TABZ = ()=>{
                     }
                 }
             }
-            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
             console.log('INIT CALCULATOR DATA.'); //SAVE to LOCAL STORAGE 
          }
-    } catch(e){ console.log('ERROR: calculator data') }
-    // - RENDER CALCULATOR DATA --------------------------------
+    } catch(e){ console.log('ERROR: calculator data') }        
+    render_GAIN_CALCULATOR_GRID();
+    render_PCT_GAIN_CHART();
+}
+
+function render_GAIN_CALCULATOR_GRID() {
     let CALC_MONTH_RENDER_FRAME = document.getElementById('CALC_MONTH_RENDER_FRAME');
     CALC_MONTH_RENDER_FRAME.innerHTML=''; //blank out
     let years = [2025], year, month;
@@ -1890,7 +1900,7 @@ const init_BANKZ_TABZ = ()=>{
         startYR_LBL.innerText = 'START BAL:'
         startYR_BAL = document.createElement('input')
         startYR_BAL.classList.add('estimate_INPUT')
-        startYR_BAL.value = calculator_data.years[year]['TOTAL'].start || 0;
+        startYR_BAL.value = pct_gain_data.years[year]['TOTAL'].start || 0;
         startYR_BAL.addEventListener("keyup",(e)=>{ let calcVAL;
             let tgtVAL =  Math.trunc(parseFloat(e.target.value.replace(/,/g, '')));
             let otherELEM = e.target.parentElement.children[3];
@@ -1901,14 +1911,14 @@ const init_BANKZ_TABZ = ()=>{
                 calcVAL = calculatePercentageChange(tgtVAL,otherVAL)
                 calcELEM.value = calcVAL;
             }            
-            calculator_data.years['2025']['TOTAL'].start = tgtVAL;
-            calculator_data.years['2025']['TOTAL'].calc = calcVAL;
-            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            pct_gain_data.years['2025']['TOTAL'].start = tgtVAL;
+            pct_gain_data.years['2025']['TOTAL'].calc = calcVAL;
+            localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
         });
         currYR_LBL = document.createElement('label')
         currYR_LBL.innerText = 'CURR BAL:'
         currYR_BAL = document.createElement('input')
-        currYR_BAL.value = calculator_data.years[year]['TOTAL'].curr || 0;
+        currYR_BAL.value = pct_gain_data.years[year]['TOTAL'].curr || 0;
         currYR_BAL.addEventListener("keyup",(e)=>{ let calcVAL;
             let tgtVAL =  Math.trunc(parseFloat(e.target.value.replace(/,/g, '')));
             let otherELEM = e.target.parentElement.children[1];
@@ -1919,9 +1929,9 @@ const init_BANKZ_TABZ = ()=>{
                 calcVAL = calculatePercentageChange(otherVAL,tgtVAL)
                 calcELEM.value = calcVAL;
             }            
-            calculator_data.years['2025']['TOTAL'].curr = tgtVAL;
-            calculator_data.years['2025']['TOTAL'].calc = calcVAL;
-            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            pct_gain_data.years['2025']['TOTAL'].curr = tgtVAL;
+            pct_gain_data.years['2025']['TOTAL'].calc = calcVAL;
+            localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
         });
         currYR_BAL.readOnly = false;
         currYR_BAL.placeholder = "END bal";
@@ -1930,10 +1940,10 @@ const init_BANKZ_TABZ = ()=>{
         calcYR_LBL.innerText = 'Calc NET%:'
         calcYR_NET = document.createElement('input')
         calcYR_NET.classList.add('estimate_INPUT')
-        calcYR_NET.value = calculator_data.years[year]['TOTAL'].calc || 0;
+        calcYR_NET.value = pct_gain_data.years[year]['TOTAL'].calc || 0;
         calcYR_NET.addEventListener("keyup",(e)=>{ 
-            calculator_data.years['2025']['TOTAL'].calc = e.target.value;
-            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            pct_gain_data.years['2025']['TOTAL'].calc = e.target.value;
+            localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
             console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
         });
         calcYR_NET.readOnly = false;
@@ -1942,10 +1952,10 @@ const init_BANKZ_TABZ = ()=>{
         compYR_LBL.innerText = 'vs. S&P NET%:'
         compYR_NET = document.createElement('input')
         compYR_NET.classList.add('estimate_INPUT')
-        compYR_NET.value = calculator_data.years[year]['TOTAL'].comp || 0;
+        compYR_NET.value = pct_gain_data.years[year]['TOTAL'].comp || 0;
         compYR_NET.addEventListener("keyup",(e)=>{ 
-            calculator_data.years['2025']['TOTAL'].comp = e.target.value;
-            localStorage.calculator_data = JSON.stringify(calculator_data); 
+            pct_gain_data.years['2025']['TOTAL'].comp = e.target.value;
+            localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
             console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
         });
         compYR_NET.readOnly = false;
@@ -1993,7 +2003,7 @@ const init_BANKZ_TABZ = ()=>{
             startMO_LBL = document.createElement('label')
             startMO_LBL.innerText = 'START BAL:'
             startMO_BAL = document.createElement('input')
-            startMO_BAL.value = calculator_data.years[year][month].start || 0;;
+            startMO_BAL.value = pct_gain_data.years[year][month].start || 0;;
             startMO_BAL.readOnly = false;
             startMO_BAL.placeholder = "START BAL";
             startMO_BAL.classList.add('estimate_INPUT')
@@ -2016,17 +2026,17 @@ const init_BANKZ_TABZ = ()=>{
                     calcVAL = calculatePercentageChange(tgtVAL,otherVAL, total_NET)
                     calcELEM.value = calcVAL;
                 } //save data
-                calculator_data.years[year][month].crypto = cryptoNET;
-                calculator_data.years[year][month].total = total_NET;
-                calculator_data.years[year][month].start = tgtVAL;
-                calculator_data.years[year][month].calc = calcVAL;
-                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                pct_gain_data.years[year][month].crypto = cryptoNET;
+                pct_gain_data.years[year][month].total = total_NET;
+                pct_gain_data.years[year][month].start = tgtVAL;
+                pct_gain_data.years[year][month].calc = calcVAL;
+                localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
             });
             currMO_LBL = document.createElement('label')
             currMO_LBL.innerText = 'END BAL:'
             currMO_BAL = document.createElement('input')
             currMO_BAL.classList.add('estimate_INPUT')
-            currMO_BAL.value = calculator_data.years[year][month].curr || 0;;
+            currMO_BAL.value = pct_gain_data.years[year][month].curr || 0;;
             currMO_BAL.readOnly = false;
             currMO_BAL.placeholder = "END bal";
             currMO_BAL.addEventListener("keyup",(e)=>{ 
@@ -2049,38 +2059,38 @@ const init_BANKZ_TABZ = ()=>{
                     calcVAL = calculatePercentageChange(otherVAL,tgtVAL, total_NET)
                     calcELEM.value = calcVAL;
                 } //save data
-                calculator_data.years[year][month].crypto = cryptoNET;
-                calculator_data.years[year][month].total = total_NET;
-                calculator_data.years[year][month].curr = tgtVAL;
-                calculator_data.years[year][month].calc = calcVAL;
-                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                pct_gain_data.years[year][month].crypto = cryptoNET;
+                pct_gain_data.years[year][month].total = total_NET;
+                pct_gain_data.years[year][month].curr = tgtVAL;
+                pct_gain_data.years[year][month].calc = calcVAL;
+                localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
             });
             calcMO_LBL = document.createElement('label')
             calcMO_LBL.innerText = 'Calc NET%:'
             calcMO_NET = document.createElement('input')
             calcMO_NET.classList.add('estimate_INPUT')
-            calcMO_NET.value = calculator_data.years[year][month].calc || 0;;
+            calcMO_NET.value = pct_gain_data.years[year][month].calc || 0;;
             calcMO_NET.readOnly = false;
             calcMO_NET.placeholder = "Calc NET%";
             calcMO_NET.addEventListener("keyup",(e)=>{ 
                 let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
                 if(!month){console.log('ERROR number'); return}
-                calculator_data.years['2025'][month].calc = e.target.value;
-                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                pct_gain_data.years['2025'][month].calc = e.target.value;
+                localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
                 console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
             });            
             compMO_LBL = document.createElement('label')
             compMO_LBL.innerText = 'vs. S&P NET%:'
             compMO_NET = document.createElement('input')
             compMO_NET.classList.add('estimate_INPUT')
-            compMO_NET.value = calculator_data.years[year][month].comp || 0;;
+            compMO_NET.value = pct_gain_data.years[year][month].comp || 0;;
             compMO_NET.readOnly = false;
             compMO_NET.placeholder = "compare IDX";
             compMO_NET.addEventListener("keyup",(e)=>{ 
                 let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
                 if(!month){console.log('ERROR number'); return}
-                calculator_data.years['2025'][month].comp = e.target.value;
-                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                pct_gain_data.years['2025'][month].comp = e.target.value;
+                localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
                 console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
             });
             //-- ADD ---------------CRYPTO ROW TOTALS
@@ -2088,7 +2098,7 @@ const init_BANKZ_TABZ = ()=>{
             crypto_LBL.innerText = 'Crypto NET:'
             crypto_NET = document.createElement('input')
             crypto_NET.classList.add('estimate_INPUT')
-            crypto_NET.value = calculator_data.years[year][month].crypto || 0;;
+            crypto_NET.value = pct_gain_data.years[year][month].crypto || 0;;
             crypto_NET.readOnly = false;
             crypto_NET.placeholder = "Crypto NET";
             crypto_NET.addEventListener("keyup",(e)=>{ 
@@ -2112,30 +2122,24 @@ const init_BANKZ_TABZ = ()=>{
                     calcVAL = calculatePercentageChange(otherVAL,tgtVAL, total_NET)
                     calcELEM.value = calcVAL;
                 } //save data
-                calculator_data.years[year][month].crypto = cryptoNET;
-                calculator_data.years[year][month].total = total_NET;
-                calculator_data.years[year][month].curr = tgtVAL;
-                calculator_data.years[year][month].calc = calcVAL;
-                localStorage.calculator_data = JSON.stringify(calculator_data); 
-
-                // let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
-                // if(!month){console.log('ERROR number'); return}
-                // calculator_data.years['2025'][month].crypto = e.target.value;
-                // localStorage.calculator_data = JSON.stringify(calculator_data); 
-                // console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
+                pct_gain_data.years[year][month].crypto = cryptoNET;
+                pct_gain_data.years[year][month].total = total_NET;
+                pct_gain_data.years[year][month].curr = tgtVAL;
+                pct_gain_data.years[year][month].calc = calcVAL;
+                localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
             });            
             total_LBL = document.createElement('label')
             total_LBL.innerText = 'TOT NET:'
             total_NET = document.createElement('input')
             total_NET.classList.add('estimate_INPUT')
-            total_NET.value = calculator_data.years[year][month].total || 0;;
+            total_NET.value = pct_gain_data.years[year][month].total || 0;;
             total_NET.readOnly = false;
             total_NET.placeholder = "total NET";
             total_NET.addEventListener("keyup",(e)=>{ 
                 let month = e.target.parentElement.parentElement.parentElement.children[0].innerText;
                 if(!month){console.log('ERROR number'); return}
-                calculator_data.years['2025'][month].total = e.target.value;
-                localStorage.calculator_data = JSON.stringify(calculator_data); 
+                pct_gain_data.years['2025'][month].total = e.target.value;
+                localStorage.pct_gain_data = JSON.stringify(pct_gain_data); 
                 console.log('SAVED CALCULATOR DATA.'); //SAVE to LOCAL STORAGE
             });
             //-- END ---------------CRYPTO TOTAL 
@@ -2152,9 +2156,34 @@ const init_BANKZ_TABZ = ()=>{
             monthROW_3.appendChild(crypto_NET)
             monthROW_3.appendChild(total_LBL)
             monthROW_3.appendChild(total_NET)
+            
+            // Create new row for gain/loss comparison
+            const monthROW_4 = document.createElement('section');
+            monthROW_4.classList.add('monthROW');
+            
+            const netGainLoss_LBL = document.createElement('label');
+            netGainLoss_LBL.innerText = 'NET Beat/Loss COMP:';
+            
+            const netGainLoss_VAL = document.createElement('input');
+            netGainLoss_VAL.classList.add('estimate_INPUT');
+            netGainLoss_VAL.readOnly = true;
+            
+            // Calculate difference
+            const calcValue = parseFloat(calcMO_NET.value) || 0;
+            const compValue = parseFloat(compMO_NET.value) || 0;
+            const difference = calcValue - compValue;
+            netGainLoss_VAL.value = difference.toFixed(2)+'%';
+            netGainLoss_VAL.style.color = difference >= 0 ? 'lime' : '#9a0101';
+            
+            // Add elements to row
+            monthROW_4.appendChild(netGainLoss_LBL);
+            monthROW_4.appendChild(netGainLoss_VAL);
+            
+            // Add row to monthBOX
             monthBOX.appendChild(monthROW_1)
             monthBOX.appendChild(monthROW_3)
             monthBOX.appendChild(monthROW_2)
+            monthBOX.appendChild(monthROW_4);
             monthROW_0.appendChild(monthBOX)
             monthFRAME.appendChild(monthROW_0)
         }//END MONTH
@@ -2163,7 +2192,11 @@ const init_BANKZ_TABZ = ()=>{
         //---------
     }//END YEAR
 }
-
+function render_PCT_GAIN_CHART() {
+    let PCT_GAIN_CHART_FRAME = document.getElementById('PCT_GAIN_CHART_FRAME');
+    pct_gain_data
+    // debugger; 
+}
 function calculatePercentageChange(num1, num2, totalNET) {
   if (num1 === 0 || num2===0) { return "0%"; // Avoid division by zero if both are zero
   }
